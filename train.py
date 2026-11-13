@@ -27,6 +27,8 @@ def get_args():
     p.add_argument("--min_lr_frac", type=float, default=0.1)
     p.add_argument("--warmup", type=int, default=200)
     p.add_argument("--wd", type=float, default=0.1)
+    p.add_argument("--neuron_lr_mult", type=float, default=1.0,
+                   help="learning-rate multiplier for the per-neuron dynamics parameters (beta, theta, gamma)")
     p.add_argument("--clip", type=float, default=1.0)
     p.add_argument("--eval_every", type=int, default=250)
     p.add_argument("--eval_batches", type=int, default=20)
@@ -99,10 +101,15 @@ def main():
     else:
         cfg = Config(**{f.name: getattr(a, f.name) for f in fields(Config)})
         model = SpikingLM(cfg)
+    neuron_keys = ("beta_logit", "log_theta", "gamma_logit")
+    is_neuron = lambda n: a.neuron_lr_mult != 1.0 and n.endswith(neuron_keys)
     decay = [p for n, p in model.named_parameters() if p.dim() >= 2 and p.requires_grad]
-    no_decay = [p for n, p in model.named_parameters() if p.dim() < 2 and p.requires_grad]
-    opt = torch.optim.AdamW([{"params": decay, "weight_decay": a.wd},
-                             {"params": no_decay, "weight_decay": 0.0}], lr=a.lr, betas=(0.9, 0.95))
+    no_decay = [p for n, p in model.named_parameters() if p.dim() < 2 and p.requires_grad and not is_neuron(n)]
+    groups = [{"params": decay, "weight_decay": a.wd}, {"params": no_decay, "weight_decay": 0.0}]
+    if a.neuron_lr_mult != 1.0:   # separate group only when used, so older checkpoints still resume
+        neuron = [p for n, p in model.named_parameters() if p.requires_grad and is_neuron(n)]
+        groups.append({"params": neuron, "weight_decay": 0.0, "lr_mult": a.neuron_lr_mult})
+    opt = torch.optim.AdamW(groups, lr=a.lr, betas=(0.9, 0.95))
     step = 0
     ckpt_path = os.path.join(a.out, "ckpt.pt")
     if a.resume and os.path.exists(ckpt_path):
@@ -123,7 +130,7 @@ def main():
     while step < a.steps:
         lr = lr_at(step, a)
         for g in opt.param_groups:
-            g["lr"] = lr
+            g["lr"] = lr * g.get("lr_mult", 1.0)
         x, y = train.batch(a.batch)
         with torch.autocast("cpu", dtype=torch.bfloat16):
             _, loss, _, rates = model(x, y)
