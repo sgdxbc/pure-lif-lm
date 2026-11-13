@@ -52,6 +52,7 @@ class Config:
     learn_theta: bool = True
     reset_learn: bool = False # multiplicative reset V <- V*(1 - gamma*s) with a learned gamma per neuron
     gamma_init: float = 0.9   # (only with hard_reset=True; gamma = 1 is the classic reset-to-zero)
+    gamma_init_min: float = -1.0  # >=0: initialise gamma uniformly in [gamma_init_min, gamma_init] instead
     rec_rank: int = 0         # >0: low-rank same-layer synapses R = A @ B acting on the previous step's spikes
     rec_init: float = 1.0     # std of A is rec_init/sqrt(d_hidden); B starts at 0 so R = 0 at init
 
@@ -77,7 +78,11 @@ class LIFPopulation(nn.Module):
             nn.init.zeros_(self.w_in.bias)
             nn.init.normal_(self.w_out.weight, std=cfg.out_init)
         if cfg.reset_learn:
-            self.gamma_logit = nn.Parameter(torch.full((H,), math.log(cfg.gamma_init / (1 - cfg.gamma_init))))
+            if cfg.gamma_init_min >= 0:
+                g0 = torch.empty(H).uniform_(cfg.gamma_init_min, cfg.gamma_init)
+            else:
+                g0 = torch.full((H,), cfg.gamma_init)
+            self.gamma_logit = nn.Parameter(torch.logit(g0))
         else:
             self.register_buffer("gamma_const", torch.ones(H), persistent=False)
         if cfg.rec_rank > 0:

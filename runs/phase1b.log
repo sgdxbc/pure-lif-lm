@@ -1,0 +1,10 @@
+=== reset_spread (22:13)
+params 12.63M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+step    100 loss 3.5240 lr 2.00e-03 gn 1.12 13,518 tok/s rate 0.097 [0.07 0.07 0.08 0.09 0.10 0.11 0.12 0.13]
+step    500 loss 2.9928 lr 2.58e-03 gn 0.49 13,610 tok/s rate 0.032 [0.05 0.05 0.04 0.03 0.02 0.02 0.02 0.03]
+== eval step 500 val_loss 2.7804
+step   1000 loss 2.4977 lr 1.12e-03 gn 0.41 13,213 tok/s rate 0.034 [0.05 0.06 0.04 0.03 0.02 0.02 0.02 0.03]
+== eval step 1000 val_loss 2.4730
+step   1500 loss 2.3923 lr 3.00e-04 gn 0.44 13,784 tok/s rate 0.040 [0.05 0.07 0.05 0.04 0.03 0.03 0.03 0.03]
+== eval step 1500 val_loss 2.3128
+=== done (22:28)
