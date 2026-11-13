@@ -1,0 +1,7 @@
+# CPU build is enough: pip install torch --index-url https://download.pytorch.org/whl/cpu
+torch>=2.4
+numpy
+tokenizers
+ninja
+matplotlib
+# plus a C++ compiler with OpenMP (g++) for the LIF kernel, which is JIT-compiled on first import

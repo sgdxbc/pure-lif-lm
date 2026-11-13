@@ -1,0 +1,25 @@
+=== h_fastsg: --hard_reset true --sg fast_sigmoid
+step    100 loss 3.5893 lr 2.00e-03 gn 1.10 11,107 tok/s rate 0.071 [0.05 0.06 0.06 0.06 0.07 0.07 0.09 0.11]
+step    200 loss 3.0515 lr 1.56e-03 gn 0.69 10,743 tok/s rate 0.066 [0.04 0.06 0.06 0.06 0.07 0.07 0.08 0.09]
+step    300 loss 2.9148 lr 6.58e-04 gn 0.60 10,909 tok/s rate 0.070 [0.04 0.06 0.06 0.06 0.07 0.07 0.09 0.10]
+step    400 loss 2.7810 lr 2.00e-04 gn 0.50 10,522 tok/s rate 0.075 [0.04 0.06 0.06 0.07 0.08 0.08 0.10 0.10]
+== eval step 400 val_loss 2.7793
+=== h_lr4e-3: --hard_reset true --lr 4e-3
+step    100 loss 3.5211 lr 4.00e-03 gn 1.00 9,309 tok/s rate 0.036 [0.02 0.02 0.02 0.02 0.03 0.04 0.06 0.08]
+step    200 loss 3.0397 lr 3.12e-03 gn 0.66 9,469 tok/s rate 0.027 [0.02 0.02 0.01 0.02 0.02 0.03 0.04 0.06]
+step    300 loss 2.8573 lr 1.32e-03 gn 0.94 9,212 tok/s rate 0.030 [0.02 0.02 0.01 0.02 0.03 0.03 0.05 0.06]
+step    400 loss 2.6954 lr 4.00e-04 gn 0.58 8,945 tok/s rate 0.032 [0.02 0.02 0.02 0.02 0.03 0.04 0.05 0.07]
+== eval step 400 val_loss 2.7026
+=== h_nodetach: --hard_reset true --detach_reset false
+step    100 loss 3.5471 lr 2.00e-03 gn 1.37 9,868 tok/s rate 0.067 [0.04 0.05 0.05 0.06 0.07 0.07 0.09 0.11]
+step    200 loss 3.0174 lr 1.56e-03 gn 0.75 10,298 tok/s rate 0.061 [0.04 0.05 0.05 0.05 0.06 0.07 0.08 0.09]
+step    300 loss 2.8703 lr 6.58e-04 gn 0.62 9,716 tok/s rate 0.065 [0.04 0.05 0.05 0.06 0.07 0.07 0.09 0.10]
+step    400 loss 2.7435 lr 2.00e-04 gn 0.54 8,796 tok/s rate 0.069 [0.04 0.05 0.06 0.06 0.07 0.08 0.09 0.11]
+== eval step 400 val_loss 2.7358
+=== h_lr1e-3: --hard_reset true --lr 1e-3
+=== tf: --arch tf --n_layers 5
+step    100 loss 3.8582 lr 2.00e-03 gn 1.06 9,061 tok/s rate 0.000 [0.00]
+step    200 loss 3.2226 lr 1.56e-03 gn 0.73 9,818 tok/s rate 0.000 [0.00]
+step    300 loss 2.8979 lr 6.58e-04 gn 0.69 9,812 tok/s rate 0.000 [0.00]
+step    400 loss 2.7049 lr 2.00e-04 gn 0.65 10,340 tok/s rate 0.000 [0.00]
+== eval step 400 val_loss 2.7072

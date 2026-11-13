@@ -1,0 +1,10 @@
+# regenerable data (run prepare_data.py after downloading the corpus)
+data/*.txt
+data/*.bin
+data/*.tmp
+# full checkpoints with optimizer state (>100MB, over GitHub's file limit); runs/main/model.pt has the weights
+runs/**/ckpt.pt
+# build / cache
+__pycache__/
+build/
+*.so

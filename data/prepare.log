@@ -1,0 +1,4 @@
+stories: train 2,717,495  valid 27,630  (17s)
+tokenizer trained (38s)
+valid: 5,577,952 tokens, 3.96 chars/token (40s)
+train: 552,496,754 tokens, 3.95 chars/token (317s)

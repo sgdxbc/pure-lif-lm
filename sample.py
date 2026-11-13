@@ -1,0 +1,65 @@
+"""Text completion with a trained spiking LM.
+
+  python3 sample.py --ckpt runs/main/ckpt.pt --prompt "Once upon a time" --n 200
+  python3 sample.py --ckpt runs/main/ckpt.pt -i        # interactive
+"""
+import argparse, os, time
+import torch
+from tokenizers import Tokenizer
+from model import Config, SpikingLM
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+
+
+def load(ckpt_path):
+    ck = torch.load(ckpt_path, map_location="cpu")
+    if ck.get("arch") == "tf":
+        from model_tf import GPT, TFConfig
+        model = GPT(TFConfig(**ck["cfg"]))
+    else:
+        model = SpikingLM(Config(**ck["cfg"]))
+    model.load_state_dict(ck["model"])
+    model.eval()
+    return model, ck.get("step")
+
+
+def complete(model, tok, prompt, n=200, temperature=0.8, top_k=50, seed=None):
+    g = torch.Generator().manual_seed(seed) if seed is not None else None
+    ids = torch.tensor([tok.encode(prompt).ids])
+    with torch.autocast("cpu", dtype=torch.bfloat16):
+        y = model.generate(ids, n, temperature=temperature, top_k=top_k, eos_id=0, generator=g)
+    return tok.decode([t for t in y[0].tolist() if t != 0])
+
+
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument("--ckpt", default="runs/main/ckpt.pt")
+    p.add_argument("--prompt", default="Once upon a time")
+    p.add_argument("--n", type=int, default=200)
+    p.add_argument("--temperature", type=float, default=0.8)
+    p.add_argument("--top_k", type=int, default=50)
+    p.add_argument("--num", type=int, default=1)
+    p.add_argument("--seed", type=int, default=None)
+    p.add_argument("-i", "--interactive", action="store_true")
+    a = p.parse_args()
+    torch.set_num_threads(4)
+    model, step = load(a.ckpt)
+    tok = Tokenizer.from_file(os.path.join(HERE, "data", "tok4096.json"))
+    print(f"[loaded step {step}, {model.num_params()/1e6:.1f}M params, {model.num_neurons():,} LIF neurons]")
+    if a.interactive:
+        while True:
+            try:
+                pr = input("\nprompt> ")
+            except EOFError:
+                break
+            print(pr + complete(model, tok, pr, a.n, a.temperature, a.top_k, a.seed))
+        return
+    for i in range(a.num):
+        t = time.time()
+        out = complete(model, tok, a.prompt, a.n, a.temperature, a.top_k,
+                       None if a.seed is None else a.seed + i)
+        print(f"--- sample {i+1} ({time.time()-t:.1f}s)\n{a.prompt}{out}\n")
+
+
+if __name__ == "__main__":
+    main()
