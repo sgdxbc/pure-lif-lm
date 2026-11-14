@@ -1,0 +1,55 @@
+=== spread_5k: --hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 (11:50)
+params 12.63M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+== eval step 1000 val_loss 2.6334
+== eval step 2000 val_loss 2.4134
+== eval step 3000 val_loss 2.2444
+== eval step 4000 val_loss 2.1077
+== eval step 5000 val_loss 2.0395
+=== leak64_5k: --hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --leak_rank 64 (12:51)
+params 13.62M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+== eval step 1000 val_loss 2.5629
+== eval step 2000 val_loss 2.3422
+== eval step 3000 val_loss 2.1578
+== eval step 4000 val_loss 2.0184
+== eval step 5000 val_loss 1.9519
+=== phase 6 recall probe (14:03)
+400 stories of >= 257 tokens, 35039 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+spread_5k  (runs/p6_spread_5k/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     2.361
+  repeat d=5-16            2079     2.911
+  repeat d=17-32           2410     3.389     4.784   1.395
+  repeat d=33-64           2752     3.597     4.578   0.981
+  repeat d=65-128          2048     3.697     4.307   0.611
+  repeat d=129-256          923     3.602     4.041   0.439
+  first occurrence        24485     3.559     3.764   0.197
+
+leak64_5k  (runs/p6_leak64_5k/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     2.316
+  repeat d=5-16            2079     2.816
+  repeat d=17-32           2410     3.169     4.717   1.548
+  repeat d=33-64           2752     3.344     4.530   1.186
+  repeat d=65-128          2048     3.413     4.245   0.833
+  repeat d=129-256          923     3.418     4.043   0.625
+  first occurrence        24485     3.466     3.679   0.205
+mean loss on story positions 128-191 when reading starts k tokens before 128 (600 stories)
+model              k=0      k=8      k=32     k=64     k=128    gain 8->128
+spread_5k          2.519    2.412    2.332    2.307    2.289    0.123
+leak64_5k          2.447    2.332    2.246    2.217    2.192    0.140
+spread_5k: share_slow=0.229, slow_rate=0.0293, slow_never_fire=0.708, slow_gap_median=1, slow_gap_p90=9, slow_gaps_le_10=0.911, gamma_quantiles_10_50_90=[0.1367767110466957, 0.5360304117202759, 0.911381620168686], gamma_share_below_0.5=0.468
+leak64_5k: share_slow=0.257, slow_rate=0.0454, slow_never_fire=0.477, slow_gap_median=1, slow_gap_p90=11, slow_gaps_le_10=0.896, gamma_quantiles_10_50_90=[0.12807264775037766, 0.49912796914577484, 0.8937112152576447], gamma_share_below_0.5=0.501
+== runs/p6_leak64_5k (step 5000)
+  layer  spread    p90   shift  2x long  2x short  slow  forget  |W_out|
+      0   0.589  0.898   0.326    53.1%     19.7%   642    1.2%    31.54
+      1   1.065  1.487   1.078    68.1%     19.8%   617    3.0%    28.49
+      2   1.336  1.798   1.136    66.5%     23.0%   643    5.8%    26.40
+      3   1.533  2.097   0.944    60.7%     28.4%   616   10.8%    25.25
+      4   1.570  2.093   0.872    57.2%     31.8%   610   12.3%    24.84
+      5   1.849  2.389   0.850    54.0%     36.3%   601   18.4%    24.61
+      6   1.867  2.396   0.820    52.2%     38.9%   619   20.0%    24.60
+      7   1.733  2.398   0.827    49.6%     43.7%   613   23.9%    24.39
+  layer 0, tokens that shorten slow-neuron memory most: [('Ġslide', -0.369), ('Ġpaper', -0.326), ('Ġboat', -0.104), ('Ġthere', -0.02)]
+  layer 0, tokens that lengthen it most: [('Ġmy', 1.311), ('Ġcould', 1.196), ('!', 1.168), ('Ġhas', 1.126), ('Ġdown', 1.115), ("'t", 1.085), ('ĠLily', 1.084), ('Ġbe', 1.084), ('Ġfor', 1.062), ('Ġwith', 1.06), ('!"', 1.055), ('."', 1.039), ('Ġhis', 1.022), ('Ġhim', 1.013), ('ĠTim', 1.001)]
+=== all done (14:05)

@@ -1,0 +1,72 @@
+params 12.63M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+step      1 loss 8.4367 lr 1.00e-05 gn 1.13 8,377 tok/s rate 0.085 [0.07 0.07 0.08 0.08 0.09 0.09 0.10 0.10]
+step    100 loss 3.7051 lr 1.00e-03 gn 1.53 9,577 tok/s rate 0.134 [0.08 0.09 0.10 0.12 0.14 0.16 0.18 0.19]
+step    200 loss 3.1558 lr 2.00e-03 gn 1.25 12,254 tok/s rate 0.103 [0.07 0.08 0.09 0.10 0.11 0.12 0.13 0.12]
+step    300 loss 3.0665 lr 3.00e-03 gn 0.93 12,314 tok/s rate 0.067 [0.06 0.07 0.07 0.07 0.07 0.07 0.07 0.07]
+step    400 loss 2.9362 lr 3.00e-03 gn 0.62 13,127 tok/s rate 0.047 [0.05 0.06 0.05 0.04 0.04 0.04 0.04 0.04]
+step    500 loss 3.0891 lr 2.99e-03 gn 0.55 12,105 tok/s rate 0.038 [0.05 0.06 0.04 0.04 0.03 0.03 0.03 0.03]
+step    600 loss 2.8067 lr 2.97e-03 gn 0.49 11,544 tok/s rate 0.033 [0.04 0.05 0.04 0.03 0.02 0.02 0.02 0.03]
+step    700 loss 2.7218 lr 2.95e-03 gn 0.48 11,506 tok/s rate 0.030 [0.04 0.05 0.04 0.03 0.02 0.02 0.02 0.02]
+step    800 loss 2.7874 lr 2.93e-03 gn 0.47 12,384 tok/s rate 0.028 [0.04 0.05 0.03 0.02 0.02 0.02 0.02 0.02]
+step    900 loss 2.6206 lr 2.89e-03 gn 0.42 12,004 tok/s rate 0.027 [0.04 0.05 0.03 0.02 0.02 0.02 0.02 0.02]
+step   1000 loss 2.6925 lr 2.86e-03 gn 0.41 11,507 tok/s rate 0.026 [0.04 0.05 0.03 0.02 0.02 0.01 0.02 0.02]
+== eval step 1000 val_loss 2.6334
+   >> Once upon a time|, there was a little girl named Lily. She was always happy because her mom asked her for help. Her mom loved the cake all day long. / One day, Lily found a big bottle of milk. It was big and yellow, and yummy vegetables. Mimi was very happy and wanted to play with her friends. / Lily and his friends went outside. They played near the lake and laughed. Lily and her friends. They played and laughed. They were all very happy. The sun was very hot, and Lily and her friends.
+   >> Lily wanted to go to the park, but| the ball was too high. She looked around and saw a big, wet ball. She was very fast. Lily ran fast and pushed the ball away. But the ball was there. Lily was in the ball. She ran, but the ball found a ball. Max was very happy. / Lily and Ben played together. They were very good friends. They played together every day. Lily and Tom would see what was in the sun, and the bird would not be mad. They kept walking and looking for fun things.
+   >> The little dog was sad because| he could not play with the bird anymore. / In the end, a big bird saw the bird. The bird was happy and wanted to be friends. They both wanted to play together. The bird flew away and went inside. The end.
+step   1100 loss 2.6690 lr 2.81e-03 gn 0.44 12,117 tok/s rate 0.025 [0.04 0.04 0.02 0.02 0.02 0.01 0.02 0.02]
+step   1200 loss 2.6087 lr 2.76e-03 gn 0.43 11,729 tok/s rate 0.025 [0.04 0.05 0.03 0.02 0.02 0.01 0.02 0.02]
+step   1300 loss 2.5009 lr 2.71e-03 gn 0.40 11,705 tok/s rate 0.024 [0.04 0.05 0.02 0.02 0.02 0.01 0.02 0.02]
+step   1400 loss 2.4520 lr 2.65e-03 gn 0.40 11,420 tok/s rate 0.024 [0.04 0.05 0.03 0.02 0.02 0.01 0.02 0.02]
+step   1500 loss 2.5957 lr 2.59e-03 gn 0.40 11,585 tok/s rate 0.024 [0.04 0.05 0.02 0.02 0.02 0.01 0.02 0.02]
+step   1600 loss 2.4956 lr 2.52e-03 gn 0.37 11,516 tok/s rate 0.024 [0.04 0.05 0.02 0.02 0.02 0.01 0.02 0.02]
+step   1700 loss 2.4838 lr 2.45e-03 gn 0.40 11,423 tok/s rate 0.024 [0.04 0.05 0.02 0.02 0.02 0.01 0.01 0.02]
+step   1800 loss 2.4864 lr 2.38e-03 gn 0.41 10,955 tok/s rate 0.024 [0.04 0.05 0.02 0.02 0.01 0.01 0.01 0.02]
+step   1900 loss 2.4031 lr 2.30e-03 gn 0.41 11,057 tok/s rate 0.024 [0.04 0.05 0.02 0.02 0.01 0.01 0.01 0.02]
+step   2000 loss 2.4120 lr 2.22e-03 gn 0.41 11,458 tok/s rate 0.024 [0.04 0.05 0.02 0.02 0.02 0.01 0.02 0.02]
+== eval step 2000 val_loss 2.4134
+   >> Once upon a time|, there was a little boy named Tim. Tim loved to have fun with his friends. They would run and play together. / One day, Tim found a big door. He didn't know where his friends were hiding. The bird was scared and did not know what was up. Tim ran into the dark. He had never found the ball, and he did not know. He was sad, but he listened to his mom and stayed away from it. / Tim's mom came and saw Tim playing and said, "Tim, you should not take things without asking. It might scare us and
+   >> Lily wanted to go to the park, but| her mom said it was too big. / Lily said, "Mom, can I keep my purse?" Her mom said, "Okay, let's watch the statue together." / Mia and her mom went to the library. But there was a problem. When they got there, the teacher said, "We must wait for the people who live in there." Max wanted to find the biggest owner. He bought her toy car, and it became very pretty. / The little girl was happy and said, "Thank you, Lily! You are a good friend." The king was very happy and thanked
+   >> The little dog was sad because| he had lost his problem. The cat was sad. The cat wanted to help his friend. / The cat and the cat went everywhere. They looked and looked for the toy together. They found the toy in the toy. The toy looked at the toy. The little cat was very happy. The big cat and the dog became good friends. They played together all day long.
+step   2100 loss 2.4241 lr 2.14e-03 gn 0.41 11,779 tok/s rate 0.024 [0.04 0.05 0.02 0.02 0.02 0.01 0.02 0.02]
+step   2200 loss 2.3772 lr 2.05e-03 gn 0.42 11,917 tok/s rate 0.024 [0.04 0.05 0.02 0.02 0.02 0.01 0.01 0.02]
+step   2300 loss 2.2852 lr 1.96e-03 gn 0.41 11,824 tok/s rate 0.025 [0.04 0.05 0.02 0.02 0.01 0.01 0.01 0.02]
+step   2400 loss 2.3840 lr 1.88e-03 gn 0.42 11,773 tok/s rate 0.025 [0.04 0.05 0.02 0.02 0.02 0.01 0.02 0.02]
+step   2500 loss 2.2728 lr 1.79e-03 gn 0.43 11,484 tok/s rate 0.025 [0.04 0.05 0.02 0.02 0.02 0.01 0.02 0.02]
+step   2600 loss 2.3067 lr 1.70e-03 gn 0.44 10,956 tok/s rate 0.025 [0.04 0.05 0.02 0.02 0.02 0.01 0.02 0.02]
+step   2700 loss 2.3332 lr 1.61e-03 gn 0.44 11,208 tok/s rate 0.026 [0.04 0.05 0.02 0.02 0.02 0.01 0.02 0.02]
+step   2800 loss 2.2130 lr 1.52e-03 gn 0.42 10,883 tok/s rate 0.027 [0.05 0.05 0.03 0.02 0.02 0.01 0.02 0.02]
+step   2900 loss 2.2646 lr 1.43e-03 gn 0.39 11,233 tok/s rate 0.026 [0.04 0.05 0.02 0.02 0.02 0.01 0.02 0.02]
+step   3000 loss 2.1976 lr 1.34e-03 gn 0.48 11,344 tok/s rate 0.028 [0.05 0.05 0.03 0.02 0.02 0.02 0.02 0.02]
+== eval step 3000 val_loss 2.2444
+   >> Once upon a time|, there was a big, hairy dog named Spot. Spot loved to play with his ball. He always loved his ball very much. / One day, Spot found a big red ball. He wanted to play with it. But it was not easy to take time to play with. Spot was very happy and wanted to play with his ball. / Spot had an idea. He went to his owner, the cat. Cat said, "Frrrr, I will be your friend. Let's go find the ball together." They became good friends and played all day. They were very
+   >> Lily wanted to go to the park, but| she did not know how to fly. She felt sad and wanted to go home. / Lily asked her mom, "Mom, what is your opera?" Her mom said, "We have to stay inside and play," Lily went outside. She saw a door with a lock and saw a lock. There were two kids playing with toys and treats. Tim wanted to play with them, but they both did not know how to open it. / Lily said, "Lily, you can't get the box. I just want to open it." / "Be careful, Lily, I have to
+   >> The little dog was sad because| he could not find his friend. He looked everywhere for his friend. / Tim found Sam and Sam liked to play the car. They played with the yarn ball all day. They ran, jumped, and laughed. When they were tired but happy, Tim's mom gave him a big hug. Tim was happy to have his toy back.
+step   3100 loss 2.2182 lr 1.25e-03 gn 0.42 11,098 tok/s rate 0.028 [0.05 0.06 0.03 0.02 0.02 0.02 0.02 0.02]
+step   3200 loss 2.1506 lr 1.17e-03 gn 0.43 11,248 tok/s rate 0.029 [0.05 0.05 0.03 0.02 0.02 0.02 0.02 0.02]
+step   3300 loss 2.3224 lr 1.08e-03 gn 0.41 10,957 tok/s rate 0.029 [0.05 0.06 0.03 0.02 0.02 0.02 0.02 0.02]
+step   3400 loss 2.2187 lr 1.00e-03 gn 0.43 10,751 tok/s rate 0.030 [0.05 0.06 0.03 0.02 0.02 0.02 0.02 0.02]
+step   3500 loss 2.1169 lr 9.24e-04 gn 0.43 10,991 tok/s rate 0.030 [0.05 0.06 0.03 0.03 0.02 0.02 0.02 0.02]
+step   3600 loss 2.0625 lr 8.50e-04 gn 0.45 10,766 tok/s rate 0.031 [0.05 0.06 0.03 0.03 0.02 0.02 0.02 0.03]
+step   3700 loss 2.2035 lr 7.79e-04 gn 0.46 10,929 tok/s rate 0.031 [0.05 0.06 0.03 0.03 0.02 0.02 0.02 0.03]
+step   3800 loss 2.1840 lr 7.12e-04 gn 0.45 10,908 tok/s rate 0.032 [0.05 0.06 0.03 0.03 0.02 0.02 0.02 0.03]
+step   3900 loss 2.1095 lr 6.49e-04 gn 0.43 11,262 tok/s rate 0.033 [0.05 0.06 0.03 0.03 0.02 0.02 0.02 0.03]
+step   4000 loss 2.0578 lr 5.91e-04 gn 0.43 11,052 tok/s rate 0.033 [0.05 0.06 0.03 0.03 0.02 0.02 0.02 0.03]
+== eval step 4000 val_loss 2.1077
+   >> Once upon a time|, there was a kind lady named Sue. Sue had a toy dog. She was a happy dog who loved to play with. / One day, Sue and the dog went to the park. They had a big bag with toys. Sue wanted to find a toy for her. She looked and looked, but the dog was not there. Sue was sad. / Then, she saw a big dog. The dog was mad. He asked the dog, "Why are you crying?" The dog said, "My dog wants to play with me. I will give you a ball." Sue thought about
+   >> Lily wanted to go to the park, but| she was too shy. She had to go to the park and play with Lily. She wanted to see more animals there. She saw a big tree and ran to the tree. She looked around and saw a man sitting on a bench. The man had been alone and a bad head. She had a loud voice and a smile. She felt a little scared and sad. / Lily looked at the man, who was sitting alone. She saw him and asked him what was wrong. She said she was sorry for him. She said she had to say sorry and hug her. She gave him a
+   >> The little dog was sad because| it could not go anywhere. The dog wanted to help the dog, so he said yes. The dog said, "I will get you the new toy, and I will be nice." / The dog was happy. He put the gift, but the dog was not happy anymore. It was happy too. The dog and the dog played together all day. The dog was the best friend ever.
+step   4100 loss 2.1469 lr 5.38e-04 gn 0.47 11,419 tok/s rate 0.034 [0.05 0.06 0.03 0.03 0.02 0.02 0.02 0.03]
+step   4200 loss 2.0641 lr 4.89e-04 gn 0.46 11,554 tok/s rate 0.035 [0.05 0.07 0.03 0.03 0.02 0.02 0.02 0.03]
+step   4300 loss 2.1431 lr 4.46e-04 gn 0.46 11,167 tok/s rate 0.035 [0.05 0.07 0.03 0.03 0.02 0.02 0.02 0.03]
+step   4400 loss 2.1515 lr 4.07e-04 gn 0.50 12,076 tok/s rate 0.035 [0.05 0.06 0.04 0.03 0.02 0.02 0.02 0.03]
+step   4500 loss 2.0472 lr 3.75e-04 gn 0.48 11,572 tok/s rate 0.037 [0.05 0.07 0.04 0.03 0.03 0.02 0.03 0.03]
+step   4600 loss 2.0018 lr 3.48e-04 gn 0.45 11,647 tok/s rate 0.037 [0.05 0.07 0.03 0.03 0.03 0.02 0.03 0.03]
+step   4700 loss 1.8907 lr 3.27e-04 gn 0.48 11,200 tok/s rate 0.038 [0.05 0.07 0.04 0.03 0.03 0.02 0.03 0.03]
+step   4800 loss 2.1157 lr 3.12e-04 gn 0.50 11,669 tok/s rate 0.038 [0.05 0.07 0.04 0.03 0.03 0.02 0.03 0.03]
+step   4900 loss 1.9651 lr 3.03e-04 gn 0.47 11,691 tok/s rate 0.038 [0.05 0.07 0.04 0.03 0.03 0.02 0.03 0.03]
+step   5000 loss 1.9296 lr 3.00e-04 gn 0.49 12,322 tok/s rate 0.039 [0.05 0.07 0.04 0.03 0.03 0.02 0.03 0.03]
+== eval step 5000 val_loss 2.0395
+   >> Once upon a time|, there was a little girl named Lily. She was a very independent girl. One day, she went to the park with her mom. Lily saw a big box with a word on it. The note said, "This story is for a show about a cat." Lily liked the story and wanted to learn how to dance. / Lily thought for a moment. She had an idea. She called a sign, "What a surprise!" she said. Then, a fun story came to the stage. The sign said, "Thank you, Lily. It is a beautiful story. We can share
+   >> Lily wanted to go to the park, but| she did not want to play. She thought she would have fun. She tried to jump and run, but still a bit scared. She did not want to be alone. The dog did not want to get hurt. She did not care if she reached the bottom. She tried again. She tried to push her back, but the hole was too short. Lily saw that her mom was not looking. She wanted to get a treat. She took out a small piece of her cheese and threw it into the water. / But Lily did not believe him. He got mad and bit into the hole
+   >> The little dog was sad because| he could not find his way back. He went to a big tree with a long nap on the ground. He looked under the tree and saw the bird had a hole in his neck. The little bird flew down and said, "I found you!" The bird was very happy and thanked the bird. They became good friends and played together every day.
