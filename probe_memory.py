@@ -27,6 +27,8 @@ def stories(n=600):
     keep = (ends - starts) >= P1 + 1
     return arr, starts[keep][:n]
 
+DEV = torch.device("cpu")
+
 
 @torch.no_grad()
 def context_ablation(model, arr, S):
@@ -35,9 +37,9 @@ def context_ablation(model, arr, S):
         tot = 0.0
         for b in range(0, len(S), 50):
             s = S[b:b + 50]
-            x = torch.from_numpy(np.stack([arr[i + P0 - k:i + P1] for i in s]).astype(np.int64))
-            y = torch.from_numpy(np.stack([arr[i + P0 - k + 1:i + P1 + 1] for i in s]).astype(np.int64))
-            with torch.autocast("cpu", dtype=torch.bfloat16):
+            x = torch.from_numpy(np.stack([arr[i + P0 - k:i + P1] for i in s]).astype(np.int64)).to(DEV)
+            y = torch.from_numpy(np.stack([arr[i + P0 - k + 1:i + P1 + 1] for i in s]).astype(np.int64)).to(DEV)
+            with torch.autocast(DEV.type, dtype=torch.bfloat16):
                 logits, _, _, _ = model(x)
             nll = F.cross_entropy(logits.float().transpose(1, 2), y, reduction="none")
             tot += nll[:, k:].sum().item()
@@ -47,8 +49,8 @@ def context_ablation(model, arr, S):
 
 @torch.no_grad()
 def slow_neuron_stats(model, arr, S):
-    x = torch.from_numpy(np.stack([arr[i:i + P1] for i in S[:200]]).astype(np.int64))
-    with torch.autocast("cpu", dtype=torch.bfloat16):
+    x = torch.from_numpy(np.stack([arr[i:i + P1] for i in S[:200]]).astype(np.int64)).to(DEV)
+    with torch.autocast(DEV.type, dtype=torch.bfloat16):
         _, _, _, spikes = model(x, return_spikes=True)
     gaps, never, rates, frac_slow = [], [], [], []
     for layer, s in zip(model.layers, spikes):
@@ -58,7 +60,7 @@ def slow_neuron_stats(model, arr, S):
         ss = s[:, :, slow].float()
         rates.append(ss.mean().item())
         never.append((ss.sum(1) == 0).float().mean().item())
-        for row in ss.permute(0, 2, 1).reshape(-1, ss.size(1)).numpy():
+        for row in ss.permute(0, 2, 1).reshape(-1, ss.size(1)).cpu().numpy():
             t = np.flatnonzero(row)
             if len(t) > 1:
                 gaps.append(np.diff(t))
@@ -67,7 +69,7 @@ def slow_neuron_stats(model, arr, S):
            "slow_never_fire": float(np.mean(never)), "slow_gap_median": float(np.median(g)),
            "slow_gap_p90": float(np.percentile(g, 90)), "slow_gaps_le_10": float(np.mean(g <= 10))}
     if model.cfg.reset_learn:
-        gam = torch.cat([l.gamma().detach() for l in model.layers]).numpy()
+        gam = torch.cat([l.gamma().detach() for l in model.layers]).cpu().numpy()
         res["gamma_quantiles_10_50_90"] = [float(q) for q in np.percentile(gam, [10, 50, 90])]
         res["gamma_share_below_0.5"] = float(np.mean(gam < 0.5))
     if model.cfg.rec_rank > 0:
@@ -82,7 +84,10 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument("models", nargs="+", help="name=path/to/checkpoint")
     p.add_argument("--out", default=None)
+    p.add_argument("--device", default="cpu")
     a = p.parse_args()
+    global DEV
+    DEV = torch.device(a.device)
     torch.set_num_threads(4)
     arr, S = stories()
     results = {}
@@ -91,7 +96,7 @@ def main():
     print(f"{'model':16s}" + "".join(f"   k={k:<4d}" for k in KS) + "   gain 8->128")
     for spec in a.models:
         name, path = spec.split("=", 1)
-        model, _ = load(path)
+        model, _ = load(path, device=DEV)
         r = {"context_loss": context_ablation(model, arr, S)}
         c = r["context_loss"]
         print(f"{name:16s}" + "".join(f"   {c[k]:.3f} " for k in KS) + f"   {c[8] - c[128]:.3f}", flush=True)

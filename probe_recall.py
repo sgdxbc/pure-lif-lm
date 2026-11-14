@@ -44,15 +44,17 @@ def build(n_stories):
             rows.append((i, t, d))
     return X, np.array(rows)
 
+DEV = torch.device("cpu")
+
 
 @torch.no_grad()
 def nll_full(model, X):
     out = []
     for b in range(0, len(X), 25):
-        x = torch.from_numpy(X[b:b + 25, :L]); y = torch.from_numpy(X[b:b + 25, 1:])
-        with torch.autocast("cpu", dtype=torch.bfloat16):
+        x = torch.from_numpy(X[b:b + 25, :L]).to(DEV); y = torch.from_numpy(X[b:b + 25, 1:]).to(DEV)
+        with torch.autocast(DEV.type, dtype=torch.bfloat16):
             logits = model(x)[0]
-        out.append(F.cross_entropy(logits.float().transpose(1, 2), y, reduction="none").numpy())
+        out.append(F.cross_entropy(logits.float().transpose(1, 2), y, reduction="none").cpu().numpy())
     return np.concatenate(out)
 
 
@@ -61,11 +63,11 @@ def nll_short(model, X, sel):
     out = []
     for b in range(0, len(sel), 1000):
         s = sel[b:b + 1000]
-        x = torch.from_numpy(np.stack([X[i, t - W + 1:t + 1] for i, t, _ in s]))
-        y = torch.from_numpy(np.array([X[i, t + 1] for i, t, _ in s]))
-        with torch.autocast("cpu", dtype=torch.bfloat16):
+        x = torch.from_numpy(np.stack([X[i, t - W + 1:t + 1] for i, t, _ in s])).to(DEV)
+        y = torch.from_numpy(np.array([X[i, t + 1] for i, t, _ in s])).to(DEV)
+        with torch.autocast(DEV.type, dtype=torch.bfloat16):
             logits = model(x)[0][:, -1]
-        out.append(F.cross_entropy(logits.float(), y, reduction="none").numpy())
+        out.append(F.cross_entropy(logits.float(), y, reduction="none").cpu().numpy())
     return np.concatenate(out)
 
 
@@ -75,7 +77,10 @@ def main():
     p.add_argument("--stories", type=int, default=400)
     p.add_argument("--threads", type=int, default=2)
     p.add_argument("--out", default=None)
+    p.add_argument("--device", default="cpu")
     a = p.parse_args()
+    global DEV
+    DEV = torch.device(a.device)
     torch.set_num_threads(a.threads)
     X, rows = build(a.stories)
     t_, d_ = rows[:, 1], rows[:, 2]
@@ -88,7 +93,7 @@ def main():
     results = {}
     for spec in a.models:
         name, path = spec.split("=", 1)
-        model, _ = load(path)
+        model, _ = load(path, device=DEV)
         full = nll_full(model, X)[rows[:, 0], rows[:, 1]]
         short = np.full(len(rows), np.nan)
         short[need_short] = nll_short(model, X, sel)

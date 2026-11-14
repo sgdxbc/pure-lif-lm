@@ -39,12 +39,17 @@
   turns out to be a bottleneck. /tmp on a compute node is not visible elsewhere and may be wiped after the job.
 - Claude Code's own binary lives in the shared home too: do not run Claude sessions on two login nodes at once,
   since an auto-update started on one can delete the binary the other is running.
-- Never train on the login node: downloads and git there, everything else in sbatch/srun jobs. gpu_setup.sh
-  assumes it runs where a GPU is visible; download/tokenise the data first, then run its checks in a GPU job.
-- Order of work once the GPU runs: (1) environment + gpu_setup.sh (kernel check against the reference, speed at
-  12M-117M); (2) the training-method screen in phase8.sh with DEVICE=cuda (tell the owner, so the CPU copy of
-  phase 8 in the cloud session can be stopped); (3) a stronger Transformer teacher for distillation (bigger
-  and/or longer than tf_full); (4) larger spiking models with leak synapses, on more of the 552M training tokens
-  (all runs so far used 115M).
-- Results: commit logs, args and probe JSON as usual; pull before editing README, since the cloud session may
-  still be writing up phase 7 (25.25M + leak64 on CPU, finishing around 2026-11-14 23:00 UTC).
+- Login node limits: 1 GB of virtual memory per process (torch cannot even be imported) and a 10 MB /tmp quota per
+  user. Use it only for git, downloads, sbatch/squeue and small torch-free scripts (e.g. slurm/args_of.py);
+  tokenising runs in a CPU job (slurm/prepare.sbatch). Every job sources slurm/env.sh (venv ~/venv-lif, caches).
+- Partitions, GPU types and per-user limits are in runs/gpu_setup_report.md: `gpu` allows 3 h per job, `gpu-long`
+  3 days; at most 8 GPUs at once, of which one h100-96 and one a100-80. Do not use the old `gpu:nv` cards (no bf16).
+  Measured on one H100: 25M + leak64 trains at ~665k tok/s (CPU: ~10k), 117M at ~307k tok/s.
+- Conventions: one run = one job of slurm/train.sbatch (train, then full-validation eval and both memory probes
+  into the run directory; PROBES=0 skips them). A wave of runs is submitted by a gpuN.sh script at the repo
+  root, with run directories runs/gN_*. `slurm/args_of.py runs/X` prints the flags that repeat run X exactly.
+- Division of work: the cluster session submits and watches jobs, fixes job-level problems, and commits results
+  (runs/gN_* without ckpt.pt, slurm/logs/) with `git pull --rebase` before each push. The cloud session plans the
+  waves, writes the analysis into README and edits the shared code and docs. The cloud session can send messages
+  to the cluster session and read its transcript; the cluster session cannot message the cloud session, so it
+  reports through commits (say in the commit message if something needs a decision).
