@@ -1,0 +1,97 @@
+=== spread_seed1: --hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --seed 1 (08:41)
+params 12.63M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+step    500 loss 2.8558 lr 2.58e-03 gn 0.48 12,062 tok/s rate 0.031 [0.05 0.05 0.03 0.03 0.02 0.02 0.02 0.03]
+== eval step 500 val_loss 2.7630
+step   1000 loss 2.5605 lr 1.12e-03 gn 0.40 12,265 tok/s rate 0.034 [0.05 0.06 0.03 0.03 0.02 0.02 0.02 0.03]
+== eval step 1000 val_loss 2.4775
+step   1500 loss 2.2363 lr 3.00e-04 gn 0.42 12,237 tok/s rate 0.041 [0.05 0.07 0.04 0.04 0.03 0.03 0.03 0.03]
+== eval step 1500 val_loss 2.3118
+=== leak64: --hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --leak_rank 64 (08:58)
+params 13.62M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+step    500 loss 2.9061 lr 2.58e-03 gn 0.48 6,931 tok/s rate 0.035 [0.05 0.06 0.04 0.03 0.03 0.03 0.03 0.03]
+== eval step 500 val_loss 2.6885
+step   1000 loss 2.4292 lr 1.12e-03 gn 0.42 6,396 tok/s rate 0.036 [0.05 0.06 0.04 0.03 0.03 0.03 0.03 0.03]
+== eval step 1000 val_loss 2.3918
+step   1500 loss 2.3077 lr 3.00e-04 gn 0.46 6,519 tok/s rate 0.043 [0.05 0.07 0.05 0.03 0.04 0.03 0.03 0.04]
+== eval step 1500 val_loss 2.2341
+=== leak64_seed1: --hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --leak_rank 64 --seed 1 (09:30)
+params 13.62M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+step    500 loss 2.7590 lr 2.58e-03 gn 0.49 6,805 tok/s rate 0.034 [0.05 0.05 0.04 0.03 0.03 0.02 0.02 0.02]
+== eval step 500 val_loss 2.6829
+step   1000 loss 2.4751 lr 1.12e-03 gn 0.41 6,414 tok/s rate 0.035 [0.05 0.05 0.04 0.03 0.03 0.02 0.02 0.03]
+== eval step 1000 val_loss 2.4009
+step   1500 loss 2.1438 lr 3.00e-04 gn 0.43 5,871 tok/s rate 0.043 [0.05 0.07 0.05 0.04 0.04 0.03 0.03 0.03]
+== eval step 1500 val_loss 2.2298
+=== leak256: --hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --leak_rank 256 (10:02)
+params 16.56M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+step    500 loss 2.9142 lr 2.58e-03 gn 0.51 6,609 tok/s rate 0.034 [0.05 0.05 0.04 0.03 0.03 0.03 0.02 0.03]
+== eval step 500 val_loss 2.6937
+step   1000 loss 2.4357 lr 1.12e-03 gn 0.42 5,710 tok/s rate 0.036 [0.05 0.06 0.04 0.03 0.03 0.02 0.02 0.03]
+== eval step 1000 val_loss 2.3940
+step   1500 loss 2.3034 lr 3.00e-04 gn 0.45 5,776 tok/s rate 0.042 [0.06 0.07 0.05 0.04 0.03 0.03 0.03 0.03]
+== eval step 1500 val_loss 2.2334
+=== phase 4 recall probe (10:36)
+400 stories of >= 257 tokens, 35039 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+spread  (runs/p1_reset_spread/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.335
+  repeat d=5-16            2079     3.928
+  repeat d=17-32           2410     4.337     5.026   0.688
+  repeat d=33-64           2752     4.377     4.859   0.482
+  repeat d=65-128          2048     4.288     4.642   0.354
+  repeat d=129-256          923     4.146     4.452   0.306
+  first occurrence        24485     4.028     4.199   0.160
+
+spread_seed1  (runs/p4_spread_seed1/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.404
+  repeat d=5-16            2079     3.972
+  repeat d=17-32           2410     4.331     5.064   0.733
+  repeat d=33-64           2752     4.341     4.859   0.518
+  repeat d=65-128          2048     4.238     4.617   0.378
+  repeat d=129-256          923     4.172     4.508   0.336
+  first occurrence        24485     4.014     4.207   0.177
+
+leak64  (runs/p4_leak64/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.282
+  repeat d=5-16            2079     3.858
+  repeat d=17-32           2410     4.206     4.968   0.762
+  repeat d=33-64           2752     4.172     4.766   0.594
+  repeat d=65-128          2048     4.122     4.580   0.457
+  repeat d=129-256          923     4.001     4.366   0.365
+  first occurrence        24485     3.936     4.117   0.170
+
+leak64_seed1  (runs/p4_leak64_seed1/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.238
+  repeat d=5-16            2079     3.848
+  repeat d=17-32           2410     4.157     4.999   0.842
+  repeat d=33-64           2752     4.155     4.816   0.661
+  repeat d=65-128          2048     4.062     4.577   0.515
+  repeat d=129-256          923     3.978     4.444   0.465
+  first occurrence        24485     3.911     4.125   0.198
+
+leak256  (runs/p4_leak256/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.228
+  repeat d=5-16            2079     3.877
+  repeat d=17-32           2410     4.218     4.973   0.755
+  repeat d=33-64           2752     4.214     4.776   0.562
+  repeat d=65-128          2048     4.100     4.583   0.483
+  repeat d=129-256          923     3.972     4.399   0.426
+  first occurrence        24485     3.924     4.125   0.193
+mean loss on story positions 128-191 when reading starts k tokens before 128 (600 stories)
+model              k=0      k=8      k=32     k=64     k=128    gain 8->128
+spread             2.773    2.697    2.644    2.626    2.611    0.086
+spread_seed1       2.772    2.685    2.632    2.617    2.602    0.083
+leak64             2.716    2.623    2.563    2.540    2.521    0.102
+leak64_seed1       2.710    2.617    2.553    2.534    2.515    0.102
+leak256            2.709    2.621    2.563    2.543    2.523    0.098
+spread: share_slow=0.229, slow_rate=0.0227, slow_never_fire=0.765, slow_gap_median=1, slow_gap_p90=9, slow_gaps_le_10=0.91, gamma_quantiles_10_50_90=[0.142941352725029, 0.5282116532325745, 0.9088728666305543], gamma_share_below_0.5=0.473
+spread_seed1: share_slow=0.234, slow_rate=0.0213, slow_never_fire=0.77, slow_gap_median=1, slow_gap_p90=9, slow_gaps_le_10=0.91, gamma_quantiles_10_50_90=[0.14153067171573638, 0.5291593074798584, 0.9084216177463532], gamma_share_below_0.5=0.471
+leak64: share_slow=0.247, slow_rate=0.0315, slow_never_fire=0.611, slow_gap_median=1, slow_gap_p90=12, slow_gaps_le_10=0.889, gamma_quantiles_10_50_90=[0.13818146139383317, 0.5170562267303467, 0.9018840312957765], gamma_share_below_0.5=0.483
+leak64_seed1: share_slow=0.234, slow_rate=0.0327, slow_never_fire=0.614, slow_gap_median=1, slow_gap_p90=11, slow_gaps_le_10=0.898, gamma_quantiles_10_50_90=[0.13680889457464218, 0.5176634788513184, 0.9017214000225069], gamma_share_below_0.5=0.48
+leak256: share_slow=0.246, slow_rate=0.037, slow_never_fire=0.536, slow_gap_median=1, slow_gap_p90=12, slow_gaps_le_10=0.889, gamma_quantiles_10_50_90=[0.14165745228528975, 0.5217363238334656, 0.9041755974292756], gamma_share_below_0.5=0.478
+=== all done (10:43)

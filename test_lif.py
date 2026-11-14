@@ -1,7 +1,7 @@
 """Check the C++ LIF kernels against the pure-PyTorch reference (values and every gradient), then time them."""
 import itertools, time
 import torch
-from lif import lif, lif_rec, lif_reference
+from lif import lif, lif_leak, lif_rec, lif_reference
 
 torch.manual_seed(0)
 
@@ -15,11 +15,15 @@ def check(rec, tv=False):
     worst = 0.0
     for hard, detach, sg in itertools.product([False, True], [True, False], ["sigmoid", "fast_sigmoid", "triangle"]):
         I = (torch.randn(B, L, D) * 0.8 + 0.3).requires_grad_()
-        beta = (torch.rand(B, L, D) if tv else torch.rand(D)).requires_grad_()
+        if tv:   # leak per step: beta = sigmoid(beta_logit + M)
+            beta_logit = (torch.randn(D) * 2).requires_grad_()
+            M = (torch.randn(B, L, D) * 1.5).requires_grad_()
+        else:
+            beta = torch.rand(D).requires_grad_()
         theta = (torch.rand(D) + 0.5).requires_grad_()
         gamma = (torch.rand(D) * 0.8 + 0.2).requires_grad_()
         v0 = torch.randn(B, D).requires_grad_()
-        params = [I, beta, theta, gamma, v0]
+        params = [I, M, beta_logit, theta, gamma, v0] if tv else [I, beta, theta, gamma, v0]
         if rec:
             A = (torch.randn(D, r) * 0.3).requires_grad_()
             Bm = (torch.randn(r, D) * 0.3).requires_grad_()
@@ -32,21 +36,27 @@ def check(rec, tv=False):
                 p.grad = None
             kw = dict(hard_reset=hard, alpha=4.0, detach_reset=detach, sg=sg)
             if impl == "kernel":
-                S, vl = (lif_rec(I, beta, theta, A, Bm, gamma, v0, s0, **kw) if rec
-                         else lif(I, beta, theta, gamma, v0, **kw))
+                if tv:
+                    S, vl = lif_leak(I, beta_logit, M, theta, gamma, v0, **kw)
+                else:
+                    S, vl = (lif_rec(I, beta, theta, A, Bm, gamma, v0, s0, **kw) if rec
+                             else lif(I, beta, theta, gamma, v0, **kw))
             else:
-                S, vl = (lif_reference(I, beta, theta, gamma, v0, A=A, Bm=Bm, s0=s0, **kw) if rec
-                         else lif_reference(I, beta, theta, gamma, v0, **kw))
+                if tv:
+                    S, vl = lif_reference(I, torch.sigmoid(beta_logit + M), theta, gamma, v0, **kw)
+                else:
+                    S, vl = (lif_reference(I, beta, theta, gamma, v0, A=A, Bm=Bm, s0=s0, **kw) if rec
+                             else lif_reference(I, beta, theta, gamma, v0, **kw))
             ((S * w).sum() + (vl * wv).sum()).backward()
             # gamma only matters for the multiplicative reset; in soft mode the reference gives it no grad
             g = [p.grad.clone() if p.grad is not None else torch.zeros(1) for p in params]
             if not hard:
-                g[3] = torch.zeros(1)
+                g[len(params) - 2 if not rec else 3] = torch.zeros(1)
             outs.append([S.detach().clone(), vl.detach().clone()] + g)
         errs = [rel(a, b) for a, b in zip(*outs)]
         worst = max(worst, max(errs[1:]))
         assert torch.equal(outs[0][0], outs[1][0]), "spikes differ"
-        names = "v,gI,gbeta,gtheta,ggamma,gv0" + (",gA,gB,gs0" if rec else "")
+        names = ("v,gI,gM,gbeta_logit,gtheta,ggamma,gv0" if tv else "v,gI,gbeta,gtheta,ggamma,gv0") + (",gA,gB,gs0" if rec else "")
         print(f"  rec={rec!s:5} tv={tv!s:5} hard={hard!s:5} detach={detach!s:5} sg={sg:12} spikes equal; max rel.err "
               f"[{names}] = {max(errs[1:]):.1e}")
     return worst
@@ -56,7 +66,7 @@ print("independent neurons:")
 w1 = check(rec=False)
 print("with same-layer synapses:")
 w2 = check(rec=True)
-print("with input-controlled leak (beta changes every step):")
+print("with input-controlled leak (beta = sigmoid(beta_logit + M) changes every step):")
 w3 = check(rec=False, tv=True)
 print(f"worst relative error over all checks: {max(w1, w2, w3):.1e}")
 

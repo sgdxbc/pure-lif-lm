@@ -5,7 +5,7 @@ from torch.utils.cpp_extension import load
 
 _here = os.path.dirname(os.path.abspath(__file__))
 _ext = load(
-    name="lif_ext_v2",
+    name="lif_ext_v3",
     sources=[os.path.join(_here, "lif_kernel.cpp")],
     extra_cflags=["-O3", "-march=native", "-fopenmp", "-ffast-math"],
     extra_ldflags=["-fopenmp"],
@@ -47,29 +47,32 @@ class LIFFunction(torch.autograd.Function):
         return gI, gb.sum(0), gt.sum(0), gg.sum(0), gv0, None, None, None, None
 
 
-class LIFTVFunction(torch.autograd.Function):
-    """Independent LIF neurons whose leak beta changes from step to step: beta has shape (B, L, D)."""
+class LIFLeakFunction(torch.autograd.Function):
+    """Independent LIF neurons whose leak changes from step to step: beta = sigmoid(beta_logit + M),
+    with M (B, L, D) given per step (from the leak-modulating synapses)."""
 
     @staticmethod
-    def forward(ctx, I, beta, theta, gamma, v0, hard_reset, alpha, detach_reset, sg_type):
-        I, beta, theta, gamma, v0 = _prep(I, beta, theta, gamma, v0)
-        S, Vp, vlast = _ext.tv_forward(I, beta, theta, gamma, v0, int(hard_reset))
-        ctx.save_for_backward(Vp, beta, theta, gamma, v0)
+    def forward(ctx, I, M, beta_logit, theta, gamma, v0, hard_reset, alpha, detach_reset, sg_type):
+        I, beta_logit, theta, gamma, v0 = _prep(I, beta_logit, theta, gamma, v0)
+        M = M.to(I.dtype).contiguous()
+        S, Vp, vlast = _ext.tv_forward(I, M, beta_logit, theta, gamma, v0, int(hard_reset))
+        ctx.save_for_backward(Vp, M, beta_logit, theta, gamma, v0)
         ctx.cfg = (int(hard_reset), float(alpha), int(detach_reset), int(sg_type))
         ctx.in_dtype = I.dtype
         return S, vlast
 
     @staticmethod
     def backward(ctx, gS, gvlast):
-        Vp, beta, theta, gamma, v0 = ctx.saved_tensors
+        Vp, M, beta_logit, theta, gamma, v0 = ctx.saved_tensors
         hard, alpha, detach, sg = ctx.cfg
         if gS is None:
             gS = torch.zeros_like(Vp, dtype=ctx.in_dtype)
         if gvlast is None:
             gvlast = torch.zeros_like(v0)
-        gI, gb, gt, gg, gv0 = _ext.tv_backward(gS.to(ctx.in_dtype).contiguous(), Vp, beta, theta, gamma, v0,
-                                               gvlast.float().contiguous(), hard, alpha, detach, sg)
-        return gI, gb, gt.sum(0), gg.sum(0), gv0, None, None, None, None
+        gI, gM, gbl, gt, gg, gv0 = _ext.tv_backward(gS.to(ctx.in_dtype).contiguous(), Vp, M, beta_logit, theta,
+                                                    gamma, v0, gvlast.float().contiguous(), hard, alpha,
+                                                    detach, sg)
+        return gI, gM, gbl.sum(0), gt.sum(0), gg.sum(0), gv0, None, None, None, None
 
 
 class LIFRecFunction(torch.autograd.Function):
@@ -119,12 +122,19 @@ def _defaults(I, gamma, v0):
 
 def lif(I, beta, theta, gamma=None, v0=None, hard_reset=False, alpha=4.0, detach_reset=True, sg="sigmoid"):
     """I: (B, L, D) input current. Returns spikes (B, L, D) in {0,1} and final membrane (B, D).
-    beta: per-neuron leak (D), or (B, L, D) for a leak that changes from step to step.
+    beta: per-neuron leak (D).
     gamma: per-neuron reset fraction for the multiplicative (hard_reset=True) reset; None = 1."""
     gamma, v0 = _defaults(I, gamma, v0)
-    if beta.dim() == 3:
-        return LIFTVFunction.apply(I, beta, theta, gamma, v0, hard_reset, alpha, detach_reset, SG_TYPES[sg])
     return LIFFunction.apply(I, beta, theta, gamma, v0, hard_reset, alpha, detach_reset, SG_TYPES[sg])
+
+
+def lif_leak(I, beta_logit, M, theta, gamma=None, v0=None, hard_reset=False, alpha=4.0, detach_reset=True,
+             sg="sigmoid"):
+    """Like lif(), but the leak changes every step: beta[b, t, d] = sigmoid(beta_logit[d] + M[b, t, d]).
+    beta is formed inside the kernel in float32; M may be bfloat16 (it is cast to the dtype of I)."""
+    gamma, v0 = _defaults(I, gamma, v0)
+    return LIFLeakFunction.apply(I, M, beta_logit, theta, gamma, v0, hard_reset, alpha, detach_reset,
+                                 SG_TYPES[sg])
 
 
 def lif_rec(I, beta, theta, A, Bm, gamma=None, v0=None, s0=None, hard_reset=False, alpha=4.0,

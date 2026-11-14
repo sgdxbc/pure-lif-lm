@@ -1,0 +1,29 @@
+params 13.62M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+step      1 loss 8.4700 lr 2.00e-05 gn 1.19 4,444 tok/s rate 0.087 [0.07 0.07 0.08 0.09 0.09 0.09 0.10 0.10]
+step    100 loss 3.4392 lr 2.00e-03 gn 1.02 6,930 tok/s rate 0.098 [0.07 0.08 0.08 0.09 0.10 0.11 0.12 0.13]
+step    200 loss 3.1069 lr 2.99e-03 gn 0.65 7,308 tok/s rate 0.055 [0.06 0.06 0.06 0.05 0.05 0.05 0.05 0.06]
+step    300 loss 2.8295 lr 2.92e-03 gn 0.56 7,049 tok/s rate 0.043 [0.05 0.06 0.05 0.04 0.04 0.04 0.03 0.04]
+step    400 loss 2.7285 lr 2.78e-03 gn 0.48 7,357 tok/s rate 0.036 [0.05 0.05 0.04 0.03 0.03 0.03 0.03 0.03]
+step    500 loss 2.7590 lr 2.58e-03 gn 0.49 6,805 tok/s rate 0.034 [0.05 0.05 0.04 0.03 0.03 0.02 0.02 0.02]
+== eval step 500 val_loss 2.6829
+   >> Once upon a time|, there was a little girl named Lily. She had a big, red hat that she loved very much. She would wake up to her friends and play with her friends. One day, she went to the park to play. She said, "Mom, can you want to play with me, Doggy?" The little girl got hot and her friends saw her. / Sue had an idea. She said, "Look, my ball! You are doing this when we play with it!" They went to the dog. Lucy said, "Yes, let's play together!" / So, Lily and
+   >> Lily wanted to go to the park, but| she was very mad. / She waited, the bird saw it. The bird was sad and needed fuel. The bird was so happy to hear the bird's song. The bird laughed and learned to be kind. The bird said goodbye to the bird and gave the girl a hug, and they became good.
+   >> The little dog was sad because| he did not know it. / The boy went to the park and saw an important bird's nest. The bird said, "I'm sorry, little bird. The bird can't help you." The squirrel gave the bird a bird, and the nest left the bird's nest. The bird was happy to hear the bird with its wing again. The bird taught Spot and played together and helped the bird's songs.
+step    600 loss 2.5611 lr 2.33e-03 gn 0.53 6,161 tok/s rate 0.033 [0.05 0.05 0.04 0.03 0.03 0.02 0.02 0.03]
+step    700 loss 2.5715 lr 2.04e-03 gn 0.45 6,250 tok/s rate 0.033 [0.05 0.05 0.04 0.03 0.03 0.03 0.02 0.02]
+step    800 loss 2.5464 lr 1.73e-03 gn 0.43 6,301 tok/s rate 0.033 [0.05 0.05 0.04 0.03 0.02 0.02 0.02 0.03]
+step    900 loss 2.3547 lr 1.42e-03 gn 0.46 6,162 tok/s rate 0.034 [0.05 0.05 0.04 0.03 0.03 0.02 0.02 0.03]
+step   1000 loss 2.4751 lr 1.12e-03 gn 0.41 6,414 tok/s rate 0.035 [0.05 0.05 0.04 0.03 0.03 0.02 0.02 0.03]
+== eval step 1000 val_loss 2.4009
+   >> Once upon a time|, there was a little girl named Mia. She loved to play outside. One day, she saw a big, scary dog. The dog said, "I can help you have a race for you." / The dog wanted to help, so they started to print the toy car together. They started to build the sand castle together. The sand looked very tall and strong. The dog and the dog had lots of fun. / As they played, the dog came back with the toys. The dog saw the dog and felt something unexpected. "Is this your shirt?" she asked. The dog
+   >> Lily wanted to go to the park, but| she was scared. She said, "I want to go back outside. Then I know where she can go. Let me help you." / They walked to the backyard, holding hands and sticks. They were very careful to reach the trains. They had to go home soon. They were happy. They had a lot of fun. / "You are a good friend," Ben said. The fairy chaked all of the trains. Lily and Ben waved their hands and played with their hands. They were very happy.
+   >> The little dog was sad because| he could not find a new home. / As they walked and walked, Tim saw a bird with big white feathers. The bird was sad because it could not fly. Tim said to his mom, "I have a magic your face, Tim." Tim thought about it and decided to have a new friend. / They went back to the park and played on the swings together. They found a new, beautiful butterfly. Tim was so happy! But then, something unexpected happened. The car turned into big and strong man was not a good idea. Tim's toy car did not have a good thing
+step   1100 loss 2.3294 lr 8.46e-04 gn 0.41 6,605 tok/s rate 0.037 [0.05 0.06 0.05 0.03 0.03 0.03 0.03 0.03]
+step   1200 loss 2.3973 lr 6.18e-04 gn 0.41 6,812 tok/s rate 0.038 [0.05 0.06 0.04 0.04 0.03 0.03 0.03 0.03]
+step   1300 loss 2.4038 lr 4.45e-04 gn 0.42 6,343 tok/s rate 0.040 [0.05 0.06 0.04 0.04 0.03 0.03 0.03 0.03]
+step   1400 loss 2.3240 lr 3.37e-04 gn 0.41 6,638 tok/s rate 0.040 [0.05 0.06 0.05 0.04 0.03 0.03 0.03 0.03]
+step   1500 loss 2.1438 lr 3.00e-04 gn 0.43 5,871 tok/s rate 0.043 [0.05 0.07 0.05 0.04 0.04 0.03 0.03 0.03]
+== eval step 1500 val_loss 2.2298
+   >> Once upon a time|, there was a little boy named Tim. Tim was a very adventurous boy. He liked to cook food for his family. He had many friends, but sometimes he would be patient and not play with him. / One day, Tim played a game with a big, mean bear. His mom said, "Tim, you must surrender. That rock is not for you to listen." Tim knew he had to be brave and try new things. He thought about being mean and didn't know what to do. / Tim walked around the town and got lost. He felt brave because he was
+   >> Lily wanted to go to the park, but| one day, she saw a man with a ball. He was looking for a ball. Tim was sad. / "Why are you sad?" asked Tim. / "Why are you sad?" Tim asked. / "I lost my ball," Tim said. "Why are you sad?" / "I lost my belt," Tim said. "I can't find it." Tim wanted to help Sue find his toy. He walked over to the toy bear, and there was a big, round ball. Tim was very happy and thanked Lily. / They played more the park all day. They learned
+   >> The little dog was sad because| she didn't want to play. So, Sue and the cat all played together and had fun. The cat learned that sometimes, good things can bring happiness to people.

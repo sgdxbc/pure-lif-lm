@@ -1,0 +1,29 @@
+params 16.56M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+step      1 loss 8.3981 lr 2.00e-05 gn 1.13 4,819 tok/s rate 0.083 [0.07 0.07 0.08 0.08 0.09 0.09 0.09 0.10]
+step    100 loss 3.4413 lr 2.00e-03 gn 1.21 6,443 tok/s rate 0.099 [0.07 0.08 0.08 0.09 0.10 0.11 0.12 0.14]
+step    200 loss 2.9732 lr 2.99e-03 gn 0.63 6,338 tok/s rate 0.057 [0.06 0.06 0.06 0.06 0.06 0.05 0.05 0.05]
+step    300 loss 2.8719 lr 2.92e-03 gn 0.59 5,892 tok/s rate 0.044 [0.06 0.06 0.05 0.04 0.04 0.04 0.04 0.03]
+step    400 loss 2.7678 lr 2.78e-03 gn 0.50 6,353 tok/s rate 0.037 [0.05 0.06 0.04 0.03 0.03 0.03 0.03 0.03]
+step    500 loss 2.9142 lr 2.58e-03 gn 0.51 6,609 tok/s rate 0.034 [0.05 0.05 0.04 0.03 0.03 0.03 0.02 0.03]
+== eval step 500 val_loss 2.6937
+   >> Once upon a time|, there was a little girl named Lily. She had a pretty color red hat that she read. Every morning, she could open it with his nose. / One day, a big gust of wind came and blew all the things away her name. She asked her mom, "What are you doing, Fluffy?" Lily got her hat and said, "I wanted to share Lily with you, so are it. We can be organized and take it home when we play," Lily said. / Lily shook her head. She waved her magic wand and looked at her. She was not excited.
+   >> Lily wanted to go to the park, but| she saw a big tree. She wanted to see what was inside. / "Did we send the ball with us inside," she said. / "We want to pick one to a picnic!" Tom asked. Sue asked for help. / "Can we buy the ladder, Tom, please?" Ben asked. / "Yes, let's go, Mommy, we will try and get the sandwich together," Lily said. / But then she took off the table and ran to the slide. She opened the box and ran to their room. She hoped her brother, "Mom, what are you
+   >> The little dog was sad because| it was not a toy. The dog had a small toy toy. The owner had a pretty collar. Lucy was very happy. She liked the dog too. They played together all day.
+step    600 loss 2.6501 lr 2.33e-03 gn 0.49 5,739 tok/s rate 0.033 [0.05 0.05 0.04 0.03 0.03 0.02 0.02 0.02]
+step    700 loss 2.5618 lr 2.04e-03 gn 0.43 5,666 tok/s rate 0.033 [0.05 0.05 0.04 0.03 0.03 0.02 0.02 0.02]
+step    800 loss 2.5696 lr 1.73e-03 gn 0.44 5,586 tok/s rate 0.033 [0.05 0.05 0.04 0.03 0.03 0.02 0.02 0.02]
+step    900 loss 2.4147 lr 1.42e-03 gn 0.46 5,668 tok/s rate 0.035 [0.05 0.05 0.04 0.03 0.03 0.03 0.02 0.02]
+step   1000 loss 2.4357 lr 1.12e-03 gn 0.42 5,710 tok/s rate 0.036 [0.05 0.06 0.04 0.03 0.03 0.02 0.02 0.03]
+== eval step 1000 val_loss 2.3940
+   >> Once upon a time|, there was a little girl named Lily. She loved to play outside. One day, she saw a big, sad dog. The dog said, "I can't find my toy. It's just in the place." / Lily wanted to help. She looked around and saw the comb. The girl wanted to play with the boy, but the girl said, "No, I don't want to play with it." But the little girl was scared. She wanted to be friends too. / Then, something unexpected happened. A little girl came by and took the ball and went to the boy
+   >> Lily wanted to go to the park, but| she could not. She said, "I don't know, but let's try!" / Her mom said, "Okay, but first, let's go back home, we will find a way home." Max was excited and went closer to find his home. He looked around and saw a big, friendly dog. The dog was lost and crying. / Max and Lily looked for the toy for a little. But when they got there, they found a big, shiny rock. They were very surprised but happy. / Kitty said, "I told you, Spot." They all smiled and played
+   >> The little dog was sad because| of the cat. So, the dog decided to be kind and help the cat. The cat became good friends and stayed friends. The fat cat learned that sharing is good and makes everyone happy.
+step   1100 loss 2.4067 lr 8.46e-04 gn 0.41 6,083 tok/s rate 0.038 [0.05 0.06 0.04 0.03 0.03 0.03 0.03 0.03]
+step   1200 loss 2.3332 lr 6.18e-04 gn 0.43 5,902 tok/s rate 0.039 [0.05 0.06 0.05 0.03 0.03 0.03 0.03 0.03]
+step   1300 loss 2.2270 lr 4.45e-04 gn 0.41 6,033 tok/s rate 0.040 [0.05 0.06 0.05 0.04 0.03 0.03 0.03 0.03]
+step   1400 loss 2.1947 lr 3.37e-04 gn 0.42 6,165 tok/s rate 0.042 [0.06 0.07 0.05 0.04 0.04 0.03 0.03 0.03]
+step   1500 loss 2.3034 lr 3.00e-04 gn 0.45 5,776 tok/s rate 0.042 [0.06 0.07 0.05 0.04 0.03 0.03 0.03 0.03]
+== eval step 1500 val_loss 2.2334
+   >> Once upon a time|, there was a loyal dog named Spot. Spot was a tough dog who was very reliable. He did not want to go with Spot. He thought the veterinarian was a new dog. / One day, Spot found a big, shiny box. He did not know what was in the box. He wanted to see what was inside. He opened the box and started to read. He knew he had to find out what was inside. / Spot thought about what to do. He went to the box and got the present. He was very excited. There were a big, red ball
+   >> Lily wanted to go to the park, but| he was scared at first. He looked at her and saw that he was worried. He wanted to go to his room. / Just then, his mom hugged him and said, "Mom, my car's. You don't have to be scared. I don't want to get it." / Her mom smiled and said, "No, Tommy. You are not fair. I'm sorry for your sister. I'm sorry I gave the toy car back to me." / His mom hugged him and said, "It's okay, you can. But you have to be kind and respectful
+   >> The little dog was sad because| she could not play with her dog, so it was sad and started to cry. / Then, something unexpected happened. The cat found the toy cat and told her. The cat was very happy and played with its friends. They all played together and had lots of fun. / The moral of the story is that it was not so rude, they can still have fun together.

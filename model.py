@@ -41,7 +41,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from lif import lif, lif_rec
+from lif import lif, lif_leak, lif_rec
 
 
 @dataclass
@@ -152,10 +152,11 @@ class LIFPopulation(nn.Module):
         if c.rec_rank > 0:
             s, v_last = lif_rec(I, self.beta(), self.theta(), self.rec_A, self.rec_B, self.gamma(), v0, s0, **kw)
         else:
-            beta = self.beta()
-            if c.leak_rank > 0:   # leak changes per step; computed in float32 (beta is close to 1 for slow neurons)
-                beta = torch.sigmoid(self.beta_logit + self.leak_out(self.leak_in(bus)).float())
-            s, v_last = lif(I, beta, self.theta(), self.gamma(), v0, **kw)
+            if c.leak_rank > 0:   # leak changes per step; beta = sigmoid(beta_logit + M) is formed in the kernel
+                M = self.leak_out(self.leak_in(bus))
+                s, v_last = lif_leak(I, self.beta_logit, M, self.theta(), self.gamma(), v0, **kw)
+            else:
+                s, v_last = lif(I, self.beta(), self.theta(), self.gamma(), v0, **kw)
         new_state = (v_last.detach(), s[:, -1].detach()) + ((hist,) if hist is not None else ())
         return self.w_out(s), s, new_state
 
