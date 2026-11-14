@@ -5,6 +5,8 @@
   that respects that, with the aim of matching a Transformer's *inference* performance.
 - "Spiking networks are small" is a stereotype, not a constraint of this project. Scaling up, even beyond the
   size of the Transformer baseline, is a legitimate and possibly necessary choice.
+- "Matching a Transformer" is a rough goal: the end result only has to be reasonably interpretable as reaching
+  Transformer level in some sense; no particular Transformer or metric is fixed in advance.
 - What counts is how the trained spiking network performs at inference (validation loss, recall, samples)
   compared with the Transformer. How it was trained does not matter: amount of training data, training length,
   and distillation from a Transformer (or any other teacher) are all allowed; just record them.
