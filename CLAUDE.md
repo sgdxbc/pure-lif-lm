@@ -18,5 +18,9 @@
 - Experiments run on a 4-core CPU with the C++/OpenMP kernels in lif_kernel.cpp; queue scripts are phase*.sh.
 - Wait for a queue script with an exact match, e.g. `pgrep -x -f "/bin/bash ./phase6.sh"`; plain `pgrep -f`
   also matches the shell that launched it.
+- Background jobs only survive while this cloud session has a background task of its own running: when a turn
+  ends with none, the container can be stopped and restarted, killing every job (this happened on 2026-11-14).
+  Keep a waiter (run_in_background) armed for as long as experiments run, and re-arm it when it times out.
+  Restarted jobs resume from the last ckpt.pt with --resume (saved at every eval).
 - Checkpoints (ckpt.pt) are not committed (over GitHub's size limit); logs, args and probe JSON files are.
 - The README (in Chinese) is the record of results; update it with each phase.
