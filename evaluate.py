@@ -53,7 +53,8 @@ def main():
     vl, cnt = full_val_loss(model)
     res = {"step": step, "val_loss": vl, "val_ppl": math.exp(vl), "bits_per_char": vl / math.log(2) / cpt,
            "chars_per_token": cpt, "eval_tokens": cnt, "eval_seconds": time.time() - t}
-    print(json.dumps(res, indent=1))
+    print(json.dumps(res, indent=1), flush=True)
+    json.dump(res, open(a.out, "w"), indent=1)   # saved now as well, in case generation below is interrupted
 
     # streaming generation speed (batch 1, one simulation step per token)
     ids = torch.tensor([tok.encode("Once upon a time").ids])
