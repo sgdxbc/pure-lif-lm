@@ -32,9 +32,13 @@
   has internet access; compute nodes may not (check before relying on it). The cloud session cannot reach the
   cluster (its egress gateway blocks VPN tunnels and SSH), so GPU work is done by a Claude session started on the
   login node, and the two sessions coordinate only through this git repository.
-- The home directory quota is very small. Keep everything large outside home (the owner will say where): the
-  clone, data/, the Python environment, and every cache. Point PIP_CACHE_DIR, XDG_CACHE_HOME, TORCH_HOME,
-  HF_HOME and TRITON_CACHE_DIR (Triton otherwise writes compiled kernels to ~/.triton) at that directory.
+- Storage (from the cluster's documentation): the home directory is the large-capacity storage, on a network
+  file system shared by all nodes; /tmp is fast node-local storage. Keep the clone, data/, the Python environment
+  and caches in home. Training reads small random slices of the memory-mapped data/*.bin, which the node's page
+  cache usually serves well from the network file system; copy them to /tmp inside a job only if data loading
+  turns out to be a bottleneck. /tmp on a compute node is not visible elsewhere and may be wiped after the job.
+- Claude Code's own binary lives in the shared home too: do not run Claude sessions on two login nodes at once,
+  since an auto-update started on one can delete the binary the other is running.
 - Never train on the login node: downloads and git there, everything else in sbatch/srun jobs. gpu_setup.sh
   assumes it runs where a GPU is visible; download/tokenise the data first, then run its checks in a GPU job.
 - Order of work once the GPU runs: (1) environment + gpu_setup.sh (kernel check against the reference, speed at
