@@ -10,12 +10,12 @@ def rel(a, b):
     return (a - b).abs().max().item() / (b.abs().max().item() + 1e-8)
 
 
-def check(rec):
+def check(rec, tv=False):
     B, L, D, r = 3, 37, 300, 16
     worst = 0.0
     for hard, detach, sg in itertools.product([False, True], [True, False], ["sigmoid", "fast_sigmoid", "triangle"]):
         I = (torch.randn(B, L, D) * 0.8 + 0.3).requires_grad_()
-        beta = torch.rand(D).requires_grad_()
+        beta = (torch.rand(B, L, D) if tv else torch.rand(D)).requires_grad_()
         theta = (torch.rand(D) + 0.5).requires_grad_()
         gamma = (torch.rand(D) * 0.8 + 0.2).requires_grad_()
         v0 = torch.randn(B, D).requires_grad_()
@@ -47,7 +47,7 @@ def check(rec):
         worst = max(worst, max(errs[1:]))
         assert torch.equal(outs[0][0], outs[1][0]), "spikes differ"
         names = "v,gI,gbeta,gtheta,ggamma,gv0" + (",gA,gB,gs0" if rec else "")
-        print(f"  rec={rec!s:5} hard={hard!s:5} detach={detach!s:5} sg={sg:12} spikes equal; max rel.err "
+        print(f"  rec={rec!s:5} tv={tv!s:5} hard={hard!s:5} detach={detach!s:5} sg={sg:12} spikes equal; max rel.err "
               f"[{names}] = {max(errs[1:]):.1e}")
     return worst
 
@@ -56,7 +56,9 @@ print("independent neurons:")
 w1 = check(rec=False)
 print("with same-layer synapses:")
 w2 = check(rec=True)
-print(f"worst relative error over all checks: {max(w1, w2):.1e}")
+print("with input-controlled leak (beta changes every step):")
+w3 = check(rec=False, tv=True)
+print(f"worst relative error over all checks: {max(w1, w2, w3):.1e}")
 
 # bf16 path (independent neurons): identical spikes on bf16-representable inputs
 B, L, D = 4, 50, 700

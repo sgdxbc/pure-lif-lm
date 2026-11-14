@@ -224,6 +224,117 @@ std::vector<torch::Tensor> lif_backward(torch::Tensor gS, torch::Tensor Vp, torc
     return {gI, gb, gt, gg, gv0};
 }
 
+// ============================================== kernel 1b: input-controlled leak (time-varying beta)
+// Same as kernel 1, except that beta is given for every (batch, step, neuron): a (B, L, D) float32 tensor.
+// This lets synapses from other neurons change a neuron's leak from one step to the next. The backward
+// returns dL/dbeta for every element (B, L, D) instead of a per-neuron sum.
+template <bool HARD, typename T>
+static void tv_fwd_impl(int64_t B, int64_t L, int64_t D, const T* Ip, const float* bp, const float* tp,
+                        const float* gp, const float* v0p, T* Sp, float* Vpp, float* vlp) {
+    const int64_t nchunk = (D + CHUNK - 1) / CHUNK;
+#pragma omp parallel for schedule(static)
+    for (int64_t task = 0; task < B * nchunk; ++task) {
+        const int64_t b = task / nchunk;
+        const int64_t d0 = (task % nchunk) * CHUNK;
+        const int64_t n = std::min(D, d0 + CHUNK) - d0;
+        alignas(64) float v[CHUNK];
+        const float* __restrict th = tp + d0;
+        const float* __restrict gm = gp + d0;
+        for (int64_t k = 0; k < n; ++k) v[k] = v0p[b * D + d0 + k];
+        for (int64_t t = 0; t < L; ++t) {
+            const int64_t off = (b * L + t) * D + d0;
+            const float* __restrict bt = bp + off;
+            const T* __restrict it = Ip + off;
+            T* __restrict st = Sp + off;
+            float* __restrict xt = Vpp + off;
+#pragma omp simd
+            for (int64_t k = 0; k < n; ++k) {
+                const float x = bt[k] * v[k] + tof(it[k]);
+                xt[k] = x;
+                const float s = x >= th[k] ? 1.f : 0.f;
+                st[k] = fromf<T>(s);
+                v[k] = reset<HARD>(x, s, th[k], gm[k]);
+            }
+        }
+        for (int64_t k = 0; k < n; ++k) vlp[b * D + d0 + k] = v[k];
+    }
+}
+
+std::vector<torch::Tensor> lif_tv_forward(torch::Tensor I, torch::Tensor beta, torch::Tensor theta,
+                                          torch::Tensor gamma, torch::Tensor v0, int64_t hard_reset) {
+    TORCH_CHECK(I.is_contiguous() && I.dim() == 3);
+    check_params(beta, theta, gamma, v0);
+    TORCH_CHECK(beta.sizes() == I.sizes(), "time-varying beta must have the shape of I");
+    const int64_t B = I.size(0), L = I.size(1), D = I.size(2);
+    auto S = torch::empty_like(I);
+    auto Vp = torch::empty({B, L, D}, I.options().dtype(torch::kFloat32));
+    auto vlast = torch::empty({B, D}, I.options().dtype(torch::kFloat32));
+    const float *bp = beta.data_ptr<float>(), *tp = theta.data_ptr<float>(), *gp = gamma.data_ptr<float>();
+    const float* v0p = v0.data_ptr<float>();
+    float *Vpp = Vp.data_ptr<float>(), *vlp = vlast.data_ptr<float>();
+#define FWD(T) do { \
+        if (hard_reset) tv_fwd_impl<true, T>(B, L, D, I.data_ptr<T>(), bp, tp, gp, v0p, S.data_ptr<T>(), Vpp, vlp); \
+        else            tv_fwd_impl<false, T>(B, L, D, I.data_ptr<T>(), bp, tp, gp, v0p, S.data_ptr<T>(), Vpp, vlp); } while (0)
+    if (I.dtype() == torch::kFloat32) FWD(float);
+    else if (I.dtype() == torch::kBFloat16) FWD(c10::BFloat16);
+    else TORCH_CHECK(false, "I must be float32 or bfloat16");
+#undef FWD
+    return {S, Vp, vlast};
+}
+
+// gbp: (B, L, D), zero-initialised; bwd_elem adds gx * V_post[t-1] into it, which for a zeroed element
+// is exactly dL/dbeta[b, t, d].
+template <bool HARD, bool DETACH, int SG, typename T>
+static void tv_bwd_impl(int64_t B, int64_t L, int64_t D, const T* gSp, const float* Vpp, const float* bp,
+                        const float* tp, const float* gmp, const float* v0p, const float* gvlp, T* gIp,
+                        float* gbp, float* gtp, float* ggp, float* gv0p, float alpha) {
+    const int64_t nchunk = (D + CHUNK - 1) / CHUNK;
+#pragma omp parallel for schedule(static)
+    for (int64_t task = 0; task < B * nchunk; ++task) {
+        const int64_t b = task / nchunk;
+        const int64_t d0 = (task % nchunk) * CHUNK;
+        const int64_t n = std::min(D, d0 + CHUNK) - d0;
+        alignas(64) float gpost[CHUNK], acct[CHUNK], accg[CHUNK];
+        for (int64_t k = 0; k < n; ++k) { gpost[k] = gvlp[b * D + d0 + k]; acct[k] = 0.f; accg[k] = 0.f; }
+        for (int64_t t = L - 1; t >= 0; --t) {
+            const int64_t off = (b * L + t) * D + d0;
+            bwd_elem<HARD, DETACH, SG, T, T>(n, gSp + off, (const T*)nullptr, Vpp + off,
+                                             t > 0 ? Vpp + off - D : nullptr, v0p + b * D + d0,
+                                             bp + off, tp + d0, gmp + d0, gIp + off, gpost, gbp + off, acct,
+                                             accg, alpha);
+        }
+        for (int64_t k = 0; k < n; ++k) {
+            gtp[b * D + d0 + k] = acct[k];
+            ggp[b * D + d0 + k] = accg[k];
+            gv0p[b * D + d0 + k] = gpost[k];
+        }
+    }
+}
+
+// Returns gI (B,L,D), gbeta (B,L,D) float32, gtheta_partial, ggamma_partial (B,D), gv0 (B,D)
+std::vector<torch::Tensor> lif_tv_backward(torch::Tensor gS, torch::Tensor Vp, torch::Tensor beta,
+                                           torch::Tensor theta, torch::Tensor gamma, torch::Tensor v0,
+                                           torch::Tensor gvlast, int64_t hard_reset, double alpha_d,
+                                           int64_t detach_reset, int64_t sg_type) {
+    TORCH_CHECK(gS.is_contiguous() && Vp.is_contiguous() && Vp.dtype() == torch::kFloat32);
+    check_params(beta, theta, gamma, v0);
+    const int64_t B = Vp.size(0), L = Vp.size(1), D = Vp.size(2);
+    TORCH_CHECK(beta.dim() == 3 && beta.size(0) == B && beta.size(1) == L && beta.size(2) == D);
+    auto gI = torch::empty_like(gS);
+    auto fopt = Vp.options();
+    auto gb = torch::zeros({B, L, D}, fopt);
+    auto gt = torch::empty({B, D}, fopt), gg = torch::empty({B, D}, fopt), gv0 = torch::empty({B, D}, fopt);
+    const float a = (float)alpha_d;
+#define ARGS(T) B, L, D, gS.data_ptr<T>(), Vp.data_ptr<float>(), beta.data_ptr<float>(), theta.data_ptr<float>(), \
+        gamma.data_ptr<float>(), v0.data_ptr<float>(), gvlast.data_ptr<float>(), gI.data_ptr<T>(), \
+        gb.data_ptr<float>(), gt.data_ptr<float>(), gg.data_ptr<float>(), gv0.data_ptr<float>(), a
+    if (gS.dtype() == torch::kFloat32) DISPATCH_BWD(tv_bwd_impl, float, ARGS(float));
+    else if (gS.dtype() == torch::kBFloat16) DISPATCH_BWD(tv_bwd_impl, c10::BFloat16, ARGS(c10::BFloat16));
+    else TORCH_CHECK(false, "gS must be float32 or bfloat16");
+#undef ARGS
+    return {gI, gb, gt, gg, gv0};
+}
+
 // ============================================================ kernel 2: same-layer synapses
 template <bool HARD, typename T>
 static void rec_fwd_step(int64_t B, int64_t L, int64_t D, int64_t t, const T* Ip, const T* recp,
@@ -322,6 +433,8 @@ std::vector<torch::Tensor> lif_rec_backward(torch::Tensor gS, torch::Tensor Vp, 
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.def("forward", &lif_forward, "LIF forward");
     m.def("backward", &lif_backward, "LIF backward");
+    m.def("tv_forward", &lif_tv_forward, "LIF forward with time-varying (input-controlled) leak");
+    m.def("tv_backward", &lif_tv_backward, "LIF backward with time-varying (input-controlled) leak");
     m.def("rec_forward", &lif_rec_forward, "LIF forward with same-layer synapses");
     m.def("rec_backward", &lif_rec_backward, "LIF backward with same-layer synapses");
 }

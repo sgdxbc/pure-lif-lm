@@ -47,6 +47,31 @@ class LIFFunction(torch.autograd.Function):
         return gI, gb.sum(0), gt.sum(0), gg.sum(0), gv0, None, None, None, None
 
 
+class LIFTVFunction(torch.autograd.Function):
+    """Independent LIF neurons whose leak beta changes from step to step: beta has shape (B, L, D)."""
+
+    @staticmethod
+    def forward(ctx, I, beta, theta, gamma, v0, hard_reset, alpha, detach_reset, sg_type):
+        I, beta, theta, gamma, v0 = _prep(I, beta, theta, gamma, v0)
+        S, Vp, vlast = _ext.tv_forward(I, beta, theta, gamma, v0, int(hard_reset))
+        ctx.save_for_backward(Vp, beta, theta, gamma, v0)
+        ctx.cfg = (int(hard_reset), float(alpha), int(detach_reset), int(sg_type))
+        ctx.in_dtype = I.dtype
+        return S, vlast
+
+    @staticmethod
+    def backward(ctx, gS, gvlast):
+        Vp, beta, theta, gamma, v0 = ctx.saved_tensors
+        hard, alpha, detach, sg = ctx.cfg
+        if gS is None:
+            gS = torch.zeros_like(Vp, dtype=ctx.in_dtype)
+        if gvlast is None:
+            gvlast = torch.zeros_like(v0)
+        gI, gb, gt, gg, gv0 = _ext.tv_backward(gS.to(ctx.in_dtype).contiguous(), Vp, beta, theta, gamma, v0,
+                                               gvlast.float().contiguous(), hard, alpha, detach, sg)
+        return gI, gb, gt.sum(0), gg.sum(0), gv0, None, None, None, None
+
+
 class LIFRecFunction(torch.autograd.Function):
     """LIF neurons with low-rank same-layer synapses: extra input current (s[t-1] @ A) @ Bm at step t."""
 
@@ -94,8 +119,11 @@ def _defaults(I, gamma, v0):
 
 def lif(I, beta, theta, gamma=None, v0=None, hard_reset=False, alpha=4.0, detach_reset=True, sg="sigmoid"):
     """I: (B, L, D) input current. Returns spikes (B, L, D) in {0,1} and final membrane (B, D).
+    beta: per-neuron leak (D), or (B, L, D) for a leak that changes from step to step.
     gamma: per-neuron reset fraction for the multiplicative (hard_reset=True) reset; None = 1."""
     gamma, v0 = _defaults(I, gamma, v0)
+    if beta.dim() == 3:
+        return LIFTVFunction.apply(I, beta, theta, gamma, v0, hard_reset, alpha, detach_reset, SG_TYPES[sg])
     return LIFFunction.apply(I, beta, theta, gamma, v0, hard_reset, alpha, detach_reset, SG_TYPES[sg])
 
 
@@ -143,7 +171,7 @@ def lif_reference(I, beta, theta, gamma=None, v0=None, hard_reset=False, alpha=4
     s_prev = I.new_zeros(B, D) if s0 is None else s0
     out = []
     for t in range(L):
-        x = beta * v + I[:, t]
+        x = (beta[:, t] if beta.dim() == 3 else beta) * v + I[:, t]
         if A is not None:
             x = x + (s_prev @ A) @ Bm
         s = _Spike.apply(x, theta, alpha, SG_TYPES[sg])

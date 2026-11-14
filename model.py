@@ -19,7 +19,13 @@ other only with binary spikes through linear synapses. Concretely:
                logits[t] = W_head bus_L[t]
            (a linear function of the spikes of every layer plus the input spike).
            The next-token distribution is softmax(logits).
-No attention, no normalisation layers, no gating/multiplicative interactions.
+No attention, no normalisation layers.
+Optional (leak_rank > 0): leak-modulating synapses. Besides the ordinary synapses that inject current,
+           a second set of synapses from the same presynaptic spikes changes how fast the membrane leaks
+           (as conductance-based synapses do in real neurons):
+               beta_l[t] = sigmoid(beta_logit_l + U_l bus_l[t])     (per neuron and per step)
+           so the network can make a neuron hold its potential for a long time, or clear it, depending on
+           what it reads. U_l is low-rank and starts at zero, i.e. the model starts as the plain LIF network.
 """
 import math
 from dataclasses import dataclass, asdict
@@ -55,6 +61,7 @@ class Config:
     gamma_init_min: float = -1.0  # >=0: initialise gamma uniformly in [gamma_init_min, gamma_init] instead
     rec_rank: int = 0         # >0: low-rank same-layer synapses R = A @ B acting on the previous step's spikes
     rec_init: float = 1.0     # std of A is rec_init/sqrt(d_hidden); B starts at 0 so R = 0 at init
+    leak_rank: int = 0        # >0: low-rank leak-modulating synapses (see module docstring)
 
 
 class LIFPopulation(nn.Module):
@@ -88,6 +95,13 @@ class LIFPopulation(nn.Module):
         if cfg.rec_rank > 0:
             self.rec_A = nn.Parameter(torch.randn(H, cfg.rec_rank) * cfg.rec_init / math.sqrt(H))
             self.rec_B = nn.Parameter(torch.zeros(cfg.rec_rank, H))
+        if cfg.leak_rank > 0:
+            assert cfg.rec_rank == 0, "leak-modulating synapses are implemented for independent neurons only"
+            self.leak_in = nn.Linear(d, cfg.leak_rank, bias=False)
+            self.leak_out = nn.Linear(cfg.leak_rank, H, bias=False)
+            with torch.no_grad():
+                nn.init.normal_(self.leak_in.weight, std=1.0 / math.sqrt(d))
+                nn.init.zeros_(self.leak_out.weight)
 
     def beta(self):
         return torch.sigmoid(self.beta_logit)
@@ -107,7 +121,10 @@ class LIFPopulation(nn.Module):
         if c.rec_rank > 0:
             s, v_last = lif_rec(I, self.beta(), self.theta(), self.rec_A, self.rec_B, self.gamma(), v0, s0, **kw)
         else:
-            s, v_last = lif(I, self.beta(), self.theta(), self.gamma(), v0, **kw)
+            beta = self.beta()
+            if c.leak_rank > 0:   # leak changes per step; computed in float32 (beta is close to 1 for slow neurons)
+                beta = torch.sigmoid(self.beta_logit + self.leak_out(self.leak_in(bus)).float())
+            s, v_last = lif(I, beta, self.theta(), self.gamma(), v0, **kw)
         return self.w_out(s), s, (v_last.detach(), s[:, -1].detach())
 
 
