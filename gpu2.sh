@@ -20,7 +20,7 @@ sub() {  # sub NAME GPU_TYPE train.py-flags...
   echo "$id g2_$name ($gpu)"
 }
 SNN="$SPREAD $FULL"
-sub snn117          h200-141$SNN --d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128 --lr 1.2e-3
+sub snn117          h200-141 $SNN --d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128 --lr 1.2e-3
 sub tf105           a100-80 --arch tf $FULL --d_model 896 --n_layers 10 --n_heads 14 --lr 1e-3
 sub snn117_lr8e-4   h100-96 $SNN --d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128 --lr 8e-4
 sub tf105_lr6e-4    h100-47 --arch tf $FULL --d_model 896 --n_layers 10 --n_heads 14 --lr 6e-4
