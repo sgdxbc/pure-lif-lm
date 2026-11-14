@@ -1,0 +1,6 @@
+stories: train 2,717,495  valid 27,630  (34s)
+valid: 5,577,952 tokens, 3.96 chars/token (38s)
+train: 552,496,754 tokens, 3.95 chars/token (434s)
+tok4096.json: OK
+valid.bin: OK
+train.bin: OK

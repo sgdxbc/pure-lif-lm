@@ -1,0 +1,59 @@
+xgpi3
+name, memory.total [MiB], driver_version
+NVIDIA H100 NVL, 95830 MiB, 580.173.02
+compute-node internet: HTTP 200
+== 1. GPU and PyTorch
+name, memory.total [MiB], driver_version
+NVIDIA H100 NVL, 95830 MiB, 580.173.02
+torch 2.11.0+cu128 | CUDA 12.8 | NVIDIA H100 NVL | bf16: True
+triton 3.6.0
+== 4. Triton LIF kernels vs reference
+device: cuda
+fixed leak:
+  leak=False hard=False detach=True  sg=sigmoid      spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 1.0e-06
+  leak=False hard=False detach=True  sg=fast_sigmoid spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 8.3e-06
+  leak=False hard=False detach=True  sg=triangle     spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 3.3e-06
+  leak=False hard=False detach=False sg=sigmoid      spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 2.1e-06
+  leak=False hard=False detach=False sg=fast_sigmoid spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 1.4e-06
+  leak=False hard=False detach=False sg=triangle     spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 1.2e-05
+  leak=False hard=True  detach=True  sg=sigmoid      spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 4.9e-07
+  leak=False hard=True  detach=True  sg=fast_sigmoid spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 6.2e-07
+  leak=False hard=True  detach=True  sg=triangle     spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 1.6e-06
+  leak=False hard=True  detach=False sg=sigmoid      spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 4.3e-07
+  leak=False hard=True  detach=False sg=fast_sigmoid spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 6.8e-07
+  leak=False hard=True  detach=False sg=triangle     spikes equal; max rel.err [v,gI,gbeta,gtheta,ggamma,gv0] = 3.6e-06
+leak changes every step:
+  leak=True  hard=False detach=True  sg=sigmoid      spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 8.7e-07
+  leak=True  hard=False detach=True  sg=fast_sigmoid spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 1.6e-06
+  leak=True  hard=False detach=True  sg=triangle     spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 4.1e-06
+  leak=True  hard=False detach=False sg=sigmoid      spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 7.3e-07
+  leak=True  hard=False detach=False sg=fast_sigmoid spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 1.5e-06
+  leak=True  hard=False detach=False sg=triangle     spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 8.6e-06
+  leak=True  hard=True  detach=True  sg=sigmoid      spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 6.5e-07
+  leak=True  hard=True  detach=True  sg=fast_sigmoid spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 1.8e-06
+  leak=True  hard=True  detach=True  sg=triangle     spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 9.3e-07
+  leak=True  hard=True  detach=False sg=sigmoid      spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 6.1e-07
+  leak=True  hard=True  detach=False sg=fast_sigmoid spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 1.1e-06
+  leak=True  hard=True  detach=False sg=triangle     spikes equal; max rel.err [v,gI,gM,gbeta_logit,gtheta,ggamma,gv0] = 6.9e-06
+worst relative error: 1.2e-05
+bf16 path: spikes equal to float32 path
+fwd+bwd 32x256x1536 bf16, fixed leak: 0.83 ms
+fwd+bwd 32x256x1536 bf16, leak per step: 0.72 ms
+fwd+bwd 32x256x2048 bf16, fixed leak: 0.66 ms
+fwd+bwd 32x256x2048 bf16, leak per step: 0.69 ms
+fwd+bwd 32x256x4096 bf16, fixed leak: 0.72 ms
+fwd+bwd 32x256x4096 bf16, leak per step: 0.87 ms
+== 5. training speed (20 steps each, batch 32 x 256)
+  12M: params 12.63M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+  12M: step     20 loss 4.7445 lr 2.20e-04 gn 0.83 170,422 tok/s mem 1.5GB rate 0.056 [0.05 0.04 0.04 0.03 0.05 0.06 0.07 0.11]
+  12M: == eval step 20 val_loss 4.7648
+  12M_leak: params 13.62M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+  12M_leak: step     20 loss 4.7608 lr 2.20e-04 gn 1.25 499,381 tok/s mem 1.7GB rate 0.052 [0.05 0.04 0.03 0.04 0.04 0.06 0.07 0.09]
+  12M_leak: == eval step 20 val_loss 4.7821
+  25M_leak: params 26.89M, LIF neurons 20,480, train tokens 552M, tokens/step 8,192
+  25M_leak: step     20 loss 4.9688 lr 2.20e-04 gn 1.24 664,766 tok/s mem 2.7GB rate 0.055 [0.05 0.01 0.02 0.02 0.03 0.05 0.05 0.07 0.10 0.15]
+  25M_leak: == eval step 20 val_loss 4.9987
+  117M_leak: params 117.11M, LIF neurons 49,152, train tokens 552M, tokens/step 8,192
+  117M_leak: step     20 loss 15.9905 lr 2.20e-04 gn 177.07 307,416 tok/s mem 6.6GB rate 0.117 [0.04 0.02 0.03 0.03 0.05 0.08 0.12 0.15 0.19 0.21 0.23 0.27]
+  117M_leak: == eval step 20 val_loss 13.3837
+== done
