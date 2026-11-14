@@ -1,0 +1,65 @@
+=== wide1696: --hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --d_hidden 1696 (10:44)
+params 13.62M, LIF neurons 13,568, train tokens 552M, tokens/step 8,192
+step    500 loss 2.9813 lr 2.58e-03 gn 0.49 6,756 tok/s rate 0.030 [0.04 0.05 0.03 0.02 0.02 0.02 0.02 0.03]
+== eval step 500 val_loss 2.7707
+step   1000 loss 2.5106 lr 1.12e-03 gn 0.41 11,602 tok/s rate 0.031 [0.05 0.06 0.04 0.02 0.02 0.02 0.02 0.03]
+== eval step 1000 val_loss 2.4670
+step   1500 loss 2.3818 lr 3.00e-04 gn 0.44 11,301 tok/s rate 0.037 [0.05 0.06 0.04 0.03 0.03 0.02 0.03 0.03]
+== eval step 1500 val_loss 2.3062
+=== delay2: --hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --delay_k 2 --delay_rank 64 (11:06)
+params 13.81M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+step    500 loss 2.9806 lr 2.58e-03 gn 0.46 10,040 tok/s rate 0.030 [0.05 0.05 0.04 0.03 0.02 0.02 0.01 0.02]
+== eval step 500 val_loss 2.7586
+step   1000 loss 2.4955 lr 1.12e-03 gn 0.39 10,921 tok/s rate 0.031 [0.05 0.06 0.04 0.03 0.02 0.02 0.02 0.02]
+== eval step 1000 val_loss 2.4670
+step   1500 loss 2.3799 lr 3.00e-04 gn 0.43 10,168 tok/s rate 0.036 [0.06 0.07 0.04 0.03 0.03 0.02 0.02 0.02]
+== eval step 1500 val_loss 2.3097
+=== delay2_seed1: --hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --delay_k 2 --delay_rank 64 --seed 1 (11:27)
+params 13.81M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+step    500 loss 2.8249 lr 2.58e-03 gn 0.50 10,289 tok/s rate 0.030 [0.05 0.05 0.04 0.02 0.02 0.01 0.02 0.02]
+== eval step 500 val_loss 2.7485
+step   1000 loss 2.5450 lr 1.12e-03 gn 0.39 10,338 tok/s rate 0.030 [0.05 0.06 0.03 0.02 0.02 0.01 0.02 0.02]
+== eval step 1000 val_loss 2.4704
+step   1500 loss 2.2263 lr 3.00e-04 gn 0.42 10,679 tok/s rate 0.037 [0.06 0.07 0.04 0.03 0.03 0.02 0.03 0.03]
+== eval step 1500 val_loss 2.3064
+=== phase 5 recall probe (11:47)
+400 stories of >= 257 tokens, 35039 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+wide1696  (runs/p5_wide1696/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.311
+  repeat d=5-16            2079     3.922
+  repeat d=17-32           2410     4.279     4.978   0.699
+  repeat d=33-64           2752     4.340     4.849   0.509
+  repeat d=65-128          2048     4.263     4.630   0.367
+  repeat d=129-256          923     4.138     4.397   0.259
+  first occurrence        24485     4.014     4.198   0.173
+
+delay2  (runs/p5_delay2/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.250
+  repeat d=5-16            2079     3.929
+  repeat d=17-32           2410     4.334     4.983   0.649
+  repeat d=33-64           2752     4.381     4.866   0.485
+  repeat d=65-128          2048     4.273     4.620   0.347
+  repeat d=129-256          923     4.127     4.426   0.298
+  first occurrence        24485     4.041     4.215   0.159
+
+delay2_seed1  (runs/p5_delay2_seed1/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.291
+  repeat d=5-16            2079     3.941
+  repeat d=17-32           2410     4.356     5.086   0.730
+  repeat d=33-64           2752     4.357     4.848   0.491
+  repeat d=65-128          2048     4.259     4.623   0.364
+  repeat d=129-256          923     4.161     4.513   0.352
+  first occurrence        24485     4.008     4.206   0.177
+mean loss on story positions 128-191 when reading starts k tokens before 128 (600 stories)
+model              k=0      k=8      k=32     k=64     k=128    gain 8->128
+wide1696           2.774    2.691    2.635    2.621    2.605    0.086
+delay2             2.771    2.689    2.634    2.623    2.608    0.082
+delay2_seed1       2.763    2.677    2.625    2.610    2.595    0.082
+wide1696: share_slow=0.236, slow_rate=0.0209, slow_never_fire=0.774, slow_gap_median=1, slow_gap_p90=10, slow_gaps_le_10=0.907, gamma_quantiles_10_50_90=[0.14384243339300157, 0.5287469625473022, 0.9066014289855957], gamma_share_below_0.5=0.469
+delay2: share_slow=0.23, slow_rate=0.0202, slow_never_fire=0.807, slow_gap_median=1, slow_gap_p90=9, slow_gaps_le_10=0.917, gamma_quantiles_10_50_90=[0.1443617448210716, 0.5324174463748932, 0.9093464016914368], gamma_share_below_0.5=0.466
+delay2_seed1: share_slow=0.23, slow_rate=0.0198, slow_never_fire=0.807, slow_gap_median=1, slow_gap_p90=9, slow_gaps_le_10=0.918, gamma_quantiles_10_50_90=[0.1455629885196686, 0.5298627018928528, 0.9093973875045777], gamma_share_below_0.5=0.469
+=== all done (11:50)
