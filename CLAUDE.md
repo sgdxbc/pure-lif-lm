@@ -2,11 +2,14 @@
 
 ## Goal and principle (set by the project owner)
 - Goal: keep the network purely made of spiking (LIF) neurons, and improve model quality by any means
-  that respects that, with the aim of matching a Transformer.
+  that respects that, with the aim of matching a Transformer's *inference* performance.
 - "Spiking networks are small" is a stereotype, not a constraint of this project. Scaling up, even beyond the
   size of the Transformer baseline, is a legitimate and possibly necessary choice.
-- Compare against the Transformer mainly at equal training data. Record parameter count, speed and state size,
-  and use them for compute planning, but do not reject a direction because it is bigger or slower.
+- What counts is how the trained spiking network performs at inference (validation loss, recall, samples)
+  compared with the Transformer. How it was trained does not matter: amount of training data, training length,
+  and distillation from a Transformer (or any other teacher) are all allowed; just record them.
+- Record parameter count, speed and state size, and use them for compute planning, but do not reject a direction
+  because it is bigger or slower.
 - "Pure spiking" as currently agreed: all state and nonlinearity live in LIF neurons; neurons interact only through
   spikes via synapses (plain, low-rank factorised, delayed, or leak-modulating synapses are all fine). No attention,
   no normalisation layers, no non-spiking nonlinear units. Two-compartment neurons are not used for now.
