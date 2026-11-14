@@ -8,3 +8,4 @@ runs/**/ckpt.pt
 __pycache__/
 build/
 *.so
+slurm/.reported

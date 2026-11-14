@@ -1,0 +1,18 @@
+xgpg6 NVIDIA A100-PCIE-40GB | runs/g1_p2_large | --vocab 4096 --d_model 512 --d_hidden 2048 --n_layers 10 --tau_min 0.5 --tau_max 200.0 --hard_reset true --detach_reset false --sg fast_sigmoid --alpha 4.0 --in_norm theta --out_init 0.02 --head_init 0.02 --learn_beta true --learn_theta true --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --rec_rank 0 --rec_init 1.0 --arch snn --n_heads 6 --batch 32 --seq 256 --steps 14000 --lr 0.0025 --min_lr_frac 0.1 --warmup 300 --wd 0.1 --neuron_lr_mult 1.0 --clip 1.0 --eval_every 1000 --eval_batches 40 --log_every 100 --seed 0 --sample_every 0
+params 25.25M, LIF neurons 20,480, train tokens 552M, tokens/step 8,192
+== eval step 1000 val_loss 2.6197
+== eval step 2000 val_loss 2.4563
+== eval step 3000 val_loss 2.3602
+== eval step 4000 val_loss 2.2763
+== eval step 5000 val_loss 2.2037
+== eval step 6000 val_loss 2.1456
+== eval step 7000 val_loss 2.0844
+== eval step 8000 val_loss 2.0173
+== eval step 9000 val_loss 1.9691
+== eval step 10000 val_loss 1.9154
+== eval step 11000 val_loss 1.8682
+== eval step 12000 val_loss 1.8352
+== eval step 13000 val_loss 1.8098
+== eval step 14000 val_loss 1.7940
+ "val_loss": 1.7949969659754175,
+done Sun Nov 15 03:39:50 +08 2026

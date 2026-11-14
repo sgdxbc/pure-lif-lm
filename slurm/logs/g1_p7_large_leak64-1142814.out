@@ -1,0 +1,18 @@
+xgpi14 NVIDIA H100 NVL | runs/g1_p7_large_leak64 | --vocab 4096 --d_model 512 --d_hidden 2048 --n_layers 10 --tau_min 0.5 --tau_max 200.0 --hard_reset true --detach_reset false --sg fast_sigmoid --alpha 4.0 --in_norm theta --out_init 0.02 --head_init 0.02 --learn_beta true --learn_theta true --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --rec_rank 0 --rec_init 1.0 --leak_rank 64 --delay_k 0 --delay_rank 64 --arch snn --n_heads 6 --batch 32 --seq 256 --steps 14000 --lr 0.0025 --min_lr_frac 0.1 --warmup 300 --wd 0.1 --neuron_lr_mult 1.0 --clip 1.0 --eval_every 1000 --eval_batches 40 --log_every 100 --seed 0 --sample_every 0 --distill_weight 0.0 --distill_temp 1.0 --ema 0.0
+params 26.89M, LIF neurons 20,480, train tokens 552M, tokens/step 8,192
+== eval step 1000 val_loss 2.5486
+== eval step 2000 val_loss 2.3785
+== eval step 3000 val_loss 2.2747
+== eval step 4000 val_loss 2.1961
+== eval step 5000 val_loss 2.1261
+== eval step 6000 val_loss 2.0574
+== eval step 7000 val_loss 1.9957
+== eval step 8000 val_loss 1.9348
+== eval step 9000 val_loss 1.8797
+== eval step 10000 val_loss 1.8287
+== eval step 11000 val_loss 1.7807
+== eval step 12000 val_loss 1.7450
+== eval step 13000 val_loss 1.7221
+== eval step 14000 val_loss 1.7069
+ "val_loss": 1.7093297014416786,
+done Sun Nov 15 03:29:31 +08 2026
