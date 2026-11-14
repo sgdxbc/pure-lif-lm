@@ -26,3 +26,21 @@
   Restarted jobs resume from the last ckpt.pt with --resume (saved at every eval).
 - Checkpoints (ckpt.pt) are not committed (over GitHub's size limit); logs, args and probe JSON files are.
 - The README (in Chinese) is the record of results; update it with each phase.
+
+## Running on the GPU cluster (added 2026-11-14)
+- The GPUs are on a university SLURM cluster that the owner reaches through a Cisco VPN and SSH. The login node
+  has internet access; compute nodes may not (check before relying on it). The cloud session cannot reach the
+  cluster (its egress gateway blocks VPN tunnels and SSH), so GPU work is done by a Claude session started on the
+  login node, and the two sessions coordinate only through this git repository.
+- The home directory quota is very small. Keep everything large outside home (the owner will say where): the
+  clone, data/, the Python environment, and every cache. Point PIP_CACHE_DIR, XDG_CACHE_HOME, TORCH_HOME,
+  HF_HOME and TRITON_CACHE_DIR (Triton otherwise writes compiled kernels to ~/.triton) at that directory.
+- Never train on the login node: downloads and git there, everything else in sbatch/srun jobs. gpu_setup.sh
+  assumes it runs where a GPU is visible; download/tokenise the data first, then run its checks in a GPU job.
+- Order of work once the GPU runs: (1) environment + gpu_setup.sh (kernel check against the reference, speed at
+  12M-117M); (2) the training-method screen in phase8.sh with DEVICE=cuda (tell the owner, so the CPU copy of
+  phase 8 in the cloud session can be stopped); (3) a stronger Transformer teacher for distillation (bigger
+  and/or longer than tf_full); (4) larger spiking models with leak synapses, on more of the 552M training tokens
+  (all runs so far used 115M).
+- Results: commit logs, args and probe JSON as usual; pull before editing README, since the cloud session may
+  still be writing up phase 7 (25.25M + leak64 on CPU, finishing around 2026-11-14 23:00 UTC).
