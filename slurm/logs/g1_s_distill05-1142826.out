@@ -1,0 +1,18 @@
+xgph2 NVIDIA A100 80GB PCIe | runs/g1_s_distill05 | --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --leak_rank 64 --batch 32 --seq 256 --steps 14000 --warmup 300 --eval_every 1000 --eval_batches 40 --log_every 100 --lr 3e-3 --teacher runs/g1_tf_full/ckpt.pt --distill_weight 0.5 --distill_temp 1
+params 13.62M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+== eval step 1000 val_loss 2.4155
+== eval step 2000 val_loss 2.2431
+== eval step 3000 val_loss 2.1368
+== eval step 4000 val_loss 2.0629
+== eval step 5000 val_loss 1.9934
+== eval step 6000 val_loss 1.9430
+== eval step 7000 val_loss 1.8895
+== eval step 8000 val_loss 1.8408
+== eval step 9000 val_loss 1.7989
+== eval step 10000 val_loss 1.7603
+== eval step 11000 val_loss 1.7241
+== eval step 12000 val_loss 1.6999
+== eval step 13000 val_loss 1.6834
+== eval step 14000 val_loss 1.6813
+ "val_loss": 1.6836573590220323,
+done Sun Nov 15 04:04:19 +08 2026

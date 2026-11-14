@@ -1,0 +1,18 @@
+xgpi12 NVIDIA H100 NVL | runs/g1_s_neuronlr10 | --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --leak_rank 64 --batch 32 --seq 256 --steps 14000 --warmup 300 --eval_every 1000 --eval_batches 40 --log_every 100 --lr 3e-3 --neuron_lr_mult 10
+params 13.62M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+== eval step 1000 val_loss 2.5416
+== eval step 2000 val_loss 2.3435
+== eval step 3000 val_loss 2.2436
+== eval step 4000 val_loss 2.1753
+== eval step 5000 val_loss 2.1082
+== eval step 6000 val_loss 2.0580
+== eval step 7000 val_loss 1.9932
+== eval step 8000 val_loss 1.9347
+== eval step 9000 val_loss 1.8850
+== eval step 10000 val_loss 1.8381
+== eval step 11000 val_loss 1.7949
+== eval step 12000 val_loss 1.7596
+== eval step 13000 val_loss 1.7374
+== eval step 14000 val_loss 1.7215
+ "val_loss": 1.7247778538368985,
+done Sun Nov 15 03:32:43 +08 2026

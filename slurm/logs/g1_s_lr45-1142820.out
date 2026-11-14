@@ -1,0 +1,18 @@
+xgpg7 NVIDIA A100-PCIE-40GB | runs/g1_s_lr45 | --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --leak_rank 64 --batch 32 --seq 256 --steps 14000 --warmup 300 --eval_every 1000 --eval_batches 40 --log_every 100 --lr 4.5e-3
+params 13.62M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+== eval step 1000 val_loss 2.6362
+== eval step 2000 val_loss 2.4521
+== eval step 3000 val_loss 2.3613
+== eval step 4000 val_loss 2.2797
+== eval step 5000 val_loss 2.2080
+== eval step 6000 val_loss 2.1607
+== eval step 7000 val_loss 2.0914
+== eval step 8000 val_loss 2.0237
+== eval step 9000 val_loss 1.9652
+== eval step 10000 val_loss 1.9072
+== eval step 11000 val_loss 1.8538
+== eval step 12000 val_loss 1.8130
+== eval step 13000 val_loss 1.7864
+== eval step 14000 val_loss 1.7670
+ "val_loss": 1.7695929247544668,
+done Sun Nov 15 03:41:50 +08 2026
