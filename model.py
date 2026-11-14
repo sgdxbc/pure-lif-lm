@@ -26,6 +26,13 @@ Optional (leak_rank > 0): leak-modulating synapses. Besides the ordinary synapse
                beta_l[t] = sigmoid(beta_logit_l + U_l bus_l[t])     (per neuron and per step)
            so the network can make a neuron hold its potential for a long time, or clear it, depending on
            what it reads. U_l is low-rank and starts at zero, i.e. the model starts as the plain LIF network.
+Optional (delay_k > 0): delayed synapses. Spikes also reach the population through synapses whose
+           signal arrives k = 1..delay_k steps (tokens) later, with their own weights:
+               I_l[t] = W_in_l bus_l[t] + b_l + sum_k D_lk bus_l[t-k]
+           so a neuron can respond to "this token now and that one k steps ago" directly, instead of only
+           through what is left of the earlier input in its own decaying potential. D_lk = Q_l P_lk is
+           low-rank (P_lk: delay_rank x d_model per delay, Q_l shared), Q_l starts at zero.
+           For streaming, the last delay_k values of P_lk bus_l are carried along with the potentials.
 """
 import math
 from dataclasses import dataclass, asdict
@@ -62,6 +69,8 @@ class Config:
     rec_rank: int = 0         # >0: low-rank same-layer synapses R = A @ B acting on the previous step's spikes
     rec_init: float = 1.0     # std of A is rec_init/sqrt(d_hidden); B starts at 0 so R = 0 at init
     leak_rank: int = 0        # >0: low-rank leak-modulating synapses (see module docstring)
+    delay_k: int = 0          # >0: delayed synapses with delays 1..delay_k tokens (see module docstring)
+    delay_rank: int = 64      # rank of each delay's synapse matrix
 
 
 class LIFPopulation(nn.Module):
@@ -102,6 +111,12 @@ class LIFPopulation(nn.Module):
             with torch.no_grad():
                 nn.init.normal_(self.leak_in.weight, std=1.0 / math.sqrt(d))
                 nn.init.zeros_(self.leak_out.weight)
+        if cfg.delay_k > 0:
+            self.delay_in = nn.Linear(d, cfg.delay_k * cfg.delay_rank, bias=False)   # P_l1 .. P_lK stacked
+            self.delay_out = nn.Linear(cfg.delay_rank, H, bias=False)                # Q_l
+            with torch.no_grad():
+                nn.init.normal_(self.delay_in.weight, std=1.0 / math.sqrt(d))
+                nn.init.zeros_(self.delay_out.weight)
 
     def beta(self):
         return torch.sigmoid(self.beta_logit)
@@ -112,11 +127,27 @@ class LIFPopulation(nn.Module):
     def gamma(self):
         return torch.sigmoid(self.gamma_logit) if self.cfg.reset_learn else self.gamma_const
 
+    def delayed(self, bus, hist):
+        """Current through the delayed synapses. hist: P bus of the last delay_k steps (B, K, K*r) or None."""
+        K, r = self.cfg.delay_k, self.cfg.delay_rank
+        A = self.delay_in(bus)                                          # (B, L, K*r): P_k bus[t] for every k
+        L = A.size(1)
+        if hist is None:                                                # before the first token: nothing
+            hist = A.new_zeros(A.size(0), K, K * r)
+        Af = torch.cat([hist.to(A.dtype), A], 1)                        # Af[:, K + t] = A[:, t]
+        D = sum(Af[:, K - k:K - k + L, (k - 1) * r:k * r] for k in range(1, K + 1))   # sum_k P_k bus[t-k]
+        return self.delay_out(D), Af[:, -K:].detach()
+
     def forward(self, bus, state=None):
-        """state: (membrane potentials (B,H), spikes of the previous step (B,H)) or None (= at rest)."""
+        """state: (membrane potentials (B,H), spikes of the previous step (B,H)[, delay history]) or None
+        (= at rest)."""
         c = self.cfg
-        v0, s0 = (None, None) if state is None else state
+        v0, s0 = (None, None) if state is None else state[:2]
         I = self.w_in(bus)
+        hist = None
+        if c.delay_k > 0:
+            Id, hist = self.delayed(bus, None if state is None else state[2])
+            I = I + Id
         kw = dict(hard_reset=c.hard_reset, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg)
         if c.rec_rank > 0:
             s, v_last = lif_rec(I, self.beta(), self.theta(), self.rec_A, self.rec_B, self.gamma(), v0, s0, **kw)
@@ -125,7 +156,8 @@ class LIFPopulation(nn.Module):
             if c.leak_rank > 0:   # leak changes per step; computed in float32 (beta is close to 1 for slow neurons)
                 beta = torch.sigmoid(self.beta_logit + self.leak_out(self.leak_in(bus)).float())
             s, v_last = lif(I, beta, self.theta(), self.gamma(), v0, **kw)
-        return self.w_out(s), s, (v_last.detach(), s[:, -1].detach())
+        new_state = (v_last.detach(), s[:, -1].detach()) + ((hist,) if hist is not None else ())
+        return self.w_out(s), s, new_state
 
 
 class SpikingLM(nn.Module):
