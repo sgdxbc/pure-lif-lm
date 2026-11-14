@@ -1,0 +1,180 @@
+=== recall probe, phase 2/3 (05:12)
+400 stories of >= 257 tokens, 35039 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+first_12.6M  (runs/main/model.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     2.088
+  repeat d=5-16            2079     2.526
+  repeat d=17-32           2410     2.847     4.648   1.802
+  repeat d=33-64           2752     3.117     4.447   1.330
+  repeat d=65-128          2048     3.348     4.217   0.869
+  repeat d=129-256          923     3.354     3.877   0.523
+  first occurrence        24485     3.390     3.604   0.207
+
+large_25.2M  (runs/p2_large/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     1.847
+  repeat d=5-16            2079     2.054
+  repeat d=17-32           2410     2.407     4.577   2.170
+  repeat d=33-64           2752     2.755     4.340   1.585
+  repeat d=65-128          2048     3.061     4.034   0.973
+  repeat d=129-256          923     3.136     3.819   0.684
+  first occurrence        24485     3.157     3.412   0.249
+
+g09_x1  (runs/p1_reset/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.489
+  repeat d=5-16            2079     4.141
+  repeat d=17-32           2410     4.489     5.056   0.567
+  repeat d=33-64           2752     4.504     4.896   0.392
+  repeat d=65-128          2048     4.386     4.695   0.309
+  repeat d=129-256          923     4.203     4.487   0.285
+  first occurrence        24485     4.081     4.260   0.161
+
+g09_x30  (runs/p3_g09_x30/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.420
+  repeat d=5-16            2079     4.048
+  repeat d=17-32           2410     4.380     5.069   0.689
+  repeat d=33-64           2752     4.377     4.888   0.511
+  repeat d=65-128          2048     4.292     4.658   0.366
+  repeat d=129-256          923     4.198     4.474   0.276
+  first occurrence        24485     4.067     4.241   0.157
+
+spread_x1  (runs/p1_reset_spread/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.335
+  repeat d=5-16            2079     3.928
+  repeat d=17-32           2410     4.337     5.026   0.688
+  repeat d=33-64           2752     4.377     4.859   0.482
+  repeat d=65-128          2048     4.288     4.642   0.354
+  repeat d=129-256          923     4.146     4.452   0.306
+  first occurrence        24485     4.028     4.199   0.160
+
+spread_x10  (runs/p3_spread_x10/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.308
+  repeat d=5-16            2079     3.901
+  repeat d=17-32           2410     4.276     5.034   0.758
+  repeat d=33-64           2752     4.292     4.839   0.547
+  repeat d=65-128          2048     4.236     4.630   0.394
+  repeat d=129-256          923     4.073     4.379   0.305
+  first occurrence        24485     4.010     4.200   0.177
+
+spread_x30  (runs/p3_spread_x30/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     3.339
+  repeat d=5-16            2079     3.915
+  repeat d=17-32           2410     4.261     5.054   0.793
+  repeat d=33-64           2752     4.282     4.843   0.561
+  repeat d=65-128          2048     4.230     4.617   0.387
+  repeat d=129-256          923     4.087     4.405   0.318
+  first occurrence        24485     4.026     4.208   0.173
+=== neuron drift (05:16)
+== runs/main  (step 14000, neuron lr x1)
+  log10_tau  corr 0.976  median|change| 0.112  p10/50/90 [-0.04 0.99 2.03] -> [0.11 1.09 2.13]  adam |m|/sqrt(v) 0.16
+  theta      corr 0.758  median|change| 1.304  p10/50/90 [1.06 2.32 7.37] -> [0.98 2.82 12.64]  adam |m|/sqrt(v) 0.16
+== runs/p2_large  (step 14000, neuron lr x1)
+  log10_tau  corr 0.986  median|change| 0.064  p10/50/90 [-0.03 1.00 2.04] -> [0.00 0.95 2.05]  adam |m|/sqrt(v) 0.15
+  theta      corr 0.726  median|change| 1.718  p10/50/90 [1.06 2.34 7.43] -> [1.70 3.91 11.53]  adam |m|/sqrt(v) 0.16
+  gamma      corr 0.957  median|change| 0.037  p10/50/90 [0.15 0.53 0.91] -> [0.14 0.54 0.91]  adam |m|/sqrt(v) 0.15  below 0.5: 46.8% -> 46.1%
+== runs/p1_reset  (step 1500, neuron lr x1)
+  log10_tau  corr 0.999  median|change| 0.025  p10/50/90 [-0.04 0.99 2.03] -> [0.00 1.01 2.04]  adam |m|/sqrt(v) 0.15
+  theta      corr 0.979  median|change| 0.159  p10/50/90 [1.06 2.32 7.37] -> [1.14 2.27 7.67]  adam |m|/sqrt(v) 0.16
+  gamma      corr nan  median|change| 0.010  p10/50/90 [0.90 0.90 0.90] -> [0.87 0.89 0.91]  adam |m|/sqrt(v) 0.16  below 0.5: 0.0% -> 0.0%
+== runs/p3_g09_x30  (step 1500, neuron lr x30)
+  log10_tau  corr 0.863  median|change| 0.308  p10/50/90 [-0.04 0.99 2.03] -> [0.14 1.16 2.47]  adam |m|/sqrt(v) 0.15
+  theta      corr 0.561  median|change| 2.335  p10/50/90 [1.06 2.32 7.37] -> [1.16 4.04 27.57]  adam |m|/sqrt(v) 0.15
+  gamma      corr nan  median|change| 0.123  p10/50/90 [0.90 0.90 0.90] -> [0.22 0.78 0.98]  adam |m|/sqrt(v) 0.15  below 0.5: 0.0% -> 28.6%
+== runs/p1_reset_spread  (step 1500, neuron lr x1)
+  log10_tau  corr 0.999  median|change| 0.019  p10/50/90 [-0.05 0.98 2.03] -> [-0.03 0.97 2.03]  adam |m|/sqrt(v) 0.16
+  theta      corr 0.987  median|change| 0.157  p10/50/90 [1.06 2.30 7.36] -> [1.14 2.45 7.67]  adam |m|/sqrt(v) 0.16
+  gamma      corr 0.998  median|change| 0.010  p10/50/90 [0.14 0.52 0.91] -> [0.14 0.53 0.91]  adam |m|/sqrt(v) 0.14  below 0.5: 47.5% -> 47.3%
+== runs/p3_spread_x10  (step 1500, neuron lr x10)
+  log10_tau  corr 0.959  median|change| 0.142  p10/50/90 [-0.05 0.98 2.03] -> [0.03 0.92 2.05]  adam |m|/sqrt(v) 0.15
+  theta      corr 0.693  median|change| 1.319  p10/50/90 [1.06 2.30 7.36] -> [1.44 3.32 13.54]  adam |m|/sqrt(v) 0.15
+  gamma      corr 0.898  median|change| 0.071  p10/50/90 [0.14 0.52 0.91] -> [0.11 0.55 0.94]  adam |m|/sqrt(v) 0.14  below 0.5: 47.5% -> 45.7%
+== runs/p3_spread_x30  (step 1500, neuron lr x30)
+  log10_tau  corr 0.866  median|change| 0.300  p10/50/90 [-0.05 0.98 2.03] -> [0.02 0.93 2.42]  adam |m|/sqrt(v) 0.16
+  theta      corr 0.529  median|change| 2.375  p10/50/90 [1.06 2.30 7.36] -> [1.35 4.22 26.97]  adam |m|/sqrt(v) 0.16
+  gamma      corr 0.687  median|change| 0.150  p10/50/90 [0.14 0.52 0.91] -> [0.05 0.57 0.98]  adam |m|/sqrt(v) 0.15  below 0.5: 47.5% -> 45.5%
+=== phase 2 evaluation, generation speed and samples (re-run: the first run was cut short) (05:16)
+{
+ "step": 14000,
+ "val_loss": 1.7934040378075424,
+ "val_ppl": 6.009875529744101,
+ "bits_per_char": 0.6531650722144692,
+ "chars_per_token": 3.9612269879697783,
+ "eval_tokens": 5577728,
+ "eval_seconds": 455.13228845596313
+}
+
+### Once upon a time
+  -> Once upon a time, in a small town, there was a wise old man who loved to teach. He had many wisdom. The wise old man took a toy that could print pictures of the animals who did not know. / One day, a little boy found the little boy. The boy was sad. The wise owl knew what was happening. The wise old owl told the boy to fix the broken stick. The little boy was very happy. / The wise owl found the boy and the wise owl. The wise owl knew how to help the boy. The wise owl told the boy to behave and be patient. The wise old man listened and then gave the boy a big hug. The wise old owl told him to be kind and gentle. / The boy learned that it's important to be careful. The moral of the story is to always listen to your parents and learn.
+=== tf_full: Transformer on the same 115M tokens (05:23)
+== eval step 12000 val_loss 1.5104
+== eval step 13000 val_loss 1.4919
+== eval step 14000 val_loss 1.4795
+=== tf_full evaluation and probes (08:34)
+{
+ "step": 14000,
+ "val_loss": 1.479668362437858,
+ "val_ppl": 4.391489056671522,
+ "bits_per_char": 0.5389012584061688,
+ "chars_per_token": 3.9612269879697783,
+ "eval_tokens": 5577728,
+ "eval_seconds": 181.89375948905945
+}
+
+### Once upon a time
+  -> Once upon a time, in a small town, there was a wise old man. He liked to watch the kids play. One day, the wise old man went to a place where kids could play all day. / While playing, the kids saw a little girl. She was sad. The wise old man asked, "Why are you sad, little girl?" The little girl said, "I lost my toy in the park." The wise old man wanted to help the little girl. / The wise old man had an idea. He told the little girl to look for her toy. They looked under her bed and in the toy box, but they could not find her toy. The little girl was very sad. She said, "I wish my toy was not lost." / The wise old man smiled. He said, "It's okay. Let's look for your toy together." They looked and looked, and finally found the toy. The little girl was so happy, and they all played together in the park. The wise old man was proud of his little girl.
+mean loss on story positions 128-191 when reading starts k tokens before 128 (600 stories)
+model              k=0      k=8      k=32     k=64     k=128    gain 8->128
+first_12.6M        2.402    2.283    2.187    2.155    2.136    0.148
+large_25.2M        2.286    2.160    2.052    2.013    1.991    0.169
+tf_12M_tokens      2.564    2.450    2.345    2.298    2.272    0.178
+tf_115M_tokens     2.024    1.856    1.692    1.610    1.556    0.300
+first_12.6M: share_slow=0.292, slow_rate=0.0302, slow_never_fire=0.34, slow_gap_median=5, slow_gap_p90=25, slow_gaps_le_10=0.731
+large_25.2M: share_slow=0.23, slow_rate=0.0252, slow_never_fire=0.723, slow_gap_median=1, slow_gap_p90=11, slow_gaps_le_10=0.898, gamma_quantiles_10_50_90=[0.14394709914922715, 0.5393123030662537, 0.9117697060108185], gamma_share_below_0.5=0.461
+400 stories of >= 257 tokens, 35039 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+tf_12M_tokens  (runs/p1_tf/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     2.299
+  repeat d=5-16            2079     2.670
+  repeat d=17-32           2410     2.882     4.977   2.094
+  repeat d=33-64           2752     3.126     4.789   1.663
+  repeat d=65-128          2048     3.370     4.506   1.136
+  repeat d=129-256          923     3.525     4.293   0.769
+  first occurrence        24485     3.867     4.075   0.199
+
+tf_115M_tokens  (runs/tf_full/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     1.042
+  repeat d=5-16            2079     1.198
+  repeat d=17-32           2410     1.251     4.297   3.046
+  repeat d=33-64           2752     1.461     4.093   2.632
+  repeat d=65-128          2048     1.886     3.781   1.895
+  repeat d=129-256          923     2.140     3.529   1.389
+  first occurrence        24485     2.785     3.121   0.338
+
+first_12.6M  (runs/main/model.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     2.088
+  repeat d=5-16            2079     2.526
+  repeat d=17-32           2410     2.847     4.648   1.802
+  repeat d=33-64           2752     3.117     4.447   1.330
+  repeat d=65-128          2048     3.348     4.217   0.869
+  repeat d=129-256          923     3.354     3.877   0.523
+  first occurrence        24485     3.390     3.604   0.207
+
+large_25.2M  (runs/p2_large/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     1.847
+  repeat d=5-16            2079     2.054
+  repeat d=17-32           2410     2.407     4.577   2.170
+  repeat d=33-64           2752     2.755     4.340   1.585
+  repeat d=65-128          2048     3.061     4.034   0.973
+  repeat d=129-256          923     3.136     3.819   0.684
+  first occurrence        24485     3.157     3.412   0.249
+=== all done (08:40)
