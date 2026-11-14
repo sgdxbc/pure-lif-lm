@@ -1,0 +1,23 @@
+{
+ "p4_leak64": {
+  "as trained": 2.16463041305542,
+  "average leak": 3.298783779144287,
+  "resting leak": 2.838759422302246
+ },
+ "p4_leak64_seed1": {
+  "as trained": 2.1736438274383545,
+  "average leak": 3.3142249584198,
+  "resting leak": 2.892580270767212
+ },
+ "p4_leak256": {
+  "as trained": 2.169420003890991,
+  "average leak": 3.588649034500122,
+  "resting leak": 3.1391594409942627
+ },
+ "p1_reset_spread (no leak synapses)": {
+  "as trained": 2.245
+ },
+ "p4_spread_seed1 (no leak synapses)": {
+  "as trained": 2.249
+ }
+}
