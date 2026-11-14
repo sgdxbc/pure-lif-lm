@@ -20,15 +20,16 @@ PROMPTS = [
 
 @torch.no_grad()
 def full_val_loss(model, seq=256, batch=32):
+    dev = next(model.parameters()).device
     """Non-overlapping windows over the whole validation stream; each window starts from rest (V=0)."""
     arr = np.memmap(os.path.join(HERE, "data", "valid.bin"), dtype=np.uint16, mode="r")
     n = (len(arr) - 1) // seq
     tot, cnt = 0.0, 0
     for i in range(0, n, batch):
         idx = np.arange(i, min(i + batch, n)) * seq
-        x = torch.from_numpy(np.stack([arr[j:j + seq] for j in idx]).astype(np.int64))
-        y = torch.from_numpy(np.stack([arr[j + 1:j + seq + 1] for j in idx]).astype(np.int64))
-        with torch.autocast("cpu", dtype=torch.bfloat16):
+        x = torch.from_numpy(np.stack([arr[j:j + seq] for j in idx]).astype(np.int64)).to(dev)
+        y = torch.from_numpy(np.stack([arr[j + 1:j + seq + 1] for j in idx]).astype(np.int64)).to(dev)
+        with torch.autocast(dev.type, dtype=torch.bfloat16):
             _, loss, _, _ = model(x, y)
         tot += loss.item() * y.numel(); cnt += y.numel()
     return tot / cnt, cnt
@@ -39,9 +40,12 @@ def main():
     p.add_argument("--ckpt", default="runs/main/ckpt.pt")
     p.add_argument("--out", default="runs/main/final_eval.json")
     p.add_argument("--samples_per_prompt", type=int, default=3)
+    p.add_argument("--ema", action="store_true", help="evaluate the moving-average weights (train.py --ema)")
+    p.add_argument("--device", default="cpu")
     a = p.parse_args()
     torch.set_num_threads(4)
-    model, step = load(a.ckpt)
+    model, step = load(a.ckpt, ema=a.ema, device=a.device)
+    dev = torch.device(a.device)
     tok = Tokenizer.from_file(os.path.join(HERE, "data", "tok4096.json"))
     raw = open(os.path.join(HERE, "data", "TinyStoriesV2-GPT4-valid.txt"), encoding="utf-8").read()
     stories = [s.strip() for s in raw.split("<|endoftext|>") if s.strip()]
@@ -57,11 +61,16 @@ def main():
     json.dump(res, open(a.out, "w"), indent=1)   # saved now as well, in case generation below is interrupted
 
     # streaming generation speed (batch 1, one simulation step per token)
-    ids = torch.tensor([tok.encode("Once upon a time").ids])
+    ids = torch.tensor([tok.encode("Once upon a time").ids], device=dev)
+    if dev.type == "cuda":
+        torch.cuda.synchronize()
     t = time.time()
-    with torch.autocast("cpu", dtype=torch.bfloat16):
+    with torch.autocast(dev.type, dtype=torch.bfloat16):
         y = model.generate(ids, 300, temperature=0.8, top_k=50, eos_id=None)
+    if dev.type == "cuda":
+        torch.cuda.synchronize()
     res["gen_tokens_per_s"] = y.size(1) / (time.time() - t)
+    res["device"] = a.device
 
     res["samples"] = {}
     for pr in PROMPTS:

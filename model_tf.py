@@ -52,14 +52,14 @@ class GPT(nn.Module):
 
     def forward(self, idx, targets=None, state=None, return_spikes=False):
         L = idx.size(1)
-        x = self.embed(idx) + self.pos(torch.arange(L))
+        x = self.embed(idx) + self.pos(torch.arange(L, device=idx.device))
         for b in self.blocks:
             x = b(x)
         logits = self.head(self.norm(x))
         loss = None
         if targets is not None:
             loss = F.cross_entropy(logits.float().view(-1, logits.size(-1)), targets.view(-1))
-        return logits, loss, None, torch.zeros(1)
+        return logits, loss, None, torch.zeros(1, device=idx.device)
 
     @torch.no_grad()
     def generate(self, idx, max_new_tokens, temperature=0.8, top_k=None, eos_id=None, generator=None):

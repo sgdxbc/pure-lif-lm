@@ -1,4 +1,5 @@
-# CPU build is enough: pip install torch --index-url https://download.pytorch.org/whl/cpu
+# CPU: pip install torch --index-url https://download.pytorch.org/whl/cpu
+# NVIDIA GPU: install the CUDA build of PyTorch for your driver (it includes Triton), see gpu_setup.sh
 torch>=2.4
 numpy
 tokenizers

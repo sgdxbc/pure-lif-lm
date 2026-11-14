@@ -1,16 +1,38 @@
-"""LIF neurons: autograd wrappers around the C++ scan kernels, plus a slow pure-PyTorch reference."""
+"""LIF neurons: autograd wrappers around the scan kernels, plus a slow pure-PyTorch reference.
+
+Tensors on the CPU use the C++/OpenMP kernels (lif_kernel.cpp, compiled on first use); tensors on an NVIDIA GPU
+use the Triton kernels (lif_triton.py). LIF_BACKEND=triton forces the Triton kernels also for CPU tensors
+(only useful for testing, together with TRITON_INTERPRET=1).
+"""
 import os
 import torch
 from torch.utils.cpp_extension import load
 
 _here = os.path.dirname(os.path.abspath(__file__))
-_ext = load(
-    name="lif_ext_v3",
-    sources=[os.path.join(_here, "lif_kernel.cpp")],
-    extra_cflags=["-O3", "-march=native", "-fopenmp", "-ffast-math"],
-    extra_ldflags=["-fopenmp"],
-    verbose=False,
-)
+
+
+class _LazyExt:
+    """Compiles / loads the C++ extension the first time a CPU kernel is needed."""
+    _mod = None
+
+    def __getattr__(self, name):
+        if _LazyExt._mod is None:
+            _LazyExt._mod = load(
+                name="lif_ext_v3",
+                sources=[os.path.join(_here, "lif_kernel.cpp")],
+                extra_cflags=["-O3", "-march=native", "-fopenmp", "-ffast-math"],
+                extra_ldflags=["-fopenmp"],
+                verbose=False,
+            )
+        return getattr(_LazyExt._mod, name)
+
+
+_ext = _LazyExt()
+
+
+def _use_triton(I):
+    return I.is_cuda or os.environ.get("LIF_BACKEND") == "triton"
+
 
 SG_TYPES = {"sigmoid": 0, "fast_sigmoid": 1, "triangle": 2}
 
@@ -114,9 +136,9 @@ class LIFRecFunction(torch.autograd.Function):
 def _defaults(I, gamma, v0):
     B, L, D = I.shape
     if gamma is None:
-        gamma = torch.ones(D, dtype=torch.float32)
+        gamma = torch.ones(D, dtype=torch.float32, device=I.device)
     if v0 is None:
-        v0 = torch.zeros(B, D, dtype=torch.float32)
+        v0 = torch.zeros(B, D, dtype=torch.float32, device=I.device)
     return gamma, v0
 
 
@@ -125,6 +147,9 @@ def lif(I, beta, theta, gamma=None, v0=None, hard_reset=False, alpha=4.0, detach
     beta: per-neuron leak (D).
     gamma: per-neuron reset fraction for the multiplicative (hard_reset=True) reset; None = 1."""
     gamma, v0 = _defaults(I, gamma, v0)
+    if _use_triton(I):
+        from lif_triton import TritonLIF
+        return TritonLIF.apply(I, beta, theta, gamma, v0, hard_reset, alpha, detach_reset, SG_TYPES[sg])
     return LIFFunction.apply(I, beta, theta, gamma, v0, hard_reset, alpha, detach_reset, SG_TYPES[sg])
 
 
@@ -133,6 +158,10 @@ def lif_leak(I, beta_logit, M, theta, gamma=None, v0=None, hard_reset=False, alp
     """Like lif(), but the leak changes every step: beta[b, t, d] = sigmoid(beta_logit[d] + M[b, t, d]).
     beta is formed inside the kernel in float32; M may be bfloat16 (it is cast to the dtype of I)."""
     gamma, v0 = _defaults(I, gamma, v0)
+    if _use_triton(I):
+        from lif_triton import TritonLIFLeak
+        return TritonLIFLeak.apply(I, M, beta_logit, theta, gamma, v0, hard_reset, alpha, detach_reset,
+                                   SG_TYPES[sg])
     return LIFLeakFunction.apply(I, M, beta_logit, theta, gamma, v0, hard_reset, alpha, detach_reset,
                                  SG_TYPES[sg])
 
@@ -143,7 +172,10 @@ def lif_rec(I, beta, theta, A, Bm, gamma=None, v0=None, s0=None, hard_reset=Fals
     s0: spikes of the step before the sequence (B, D), default zeros."""
     gamma, v0 = _defaults(I, gamma, v0)
     if s0 is None:
-        s0 = torch.zeros(I.shape[0], I.shape[2], dtype=I.dtype)
+        s0 = torch.zeros(I.shape[0], I.shape[2], dtype=I.dtype, device=I.device)
+    if I.is_cuda:   # no GPU kernel for same-layer synapses yet: slow but exact reference
+        return lif_reference(I, beta, theta, gamma, v0, hard_reset=hard_reset, alpha=alpha,
+                             detach_reset=detach_reset, sg=sg, A=A, Bm=Bm, s0=s0)
     return LIFRecFunction.apply(I, beta, theta, gamma, v0, s0, A, Bm, hard_reset, alpha, detach_reset,
                                 SG_TYPES[sg])
 

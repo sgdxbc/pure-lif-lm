@@ -312,12 +312,38 @@ loss 从 2.17 变为 3.30；全部换回静息漏电是 2.84，都比没有漏�
 
 - 第六阶段（`phase6.sh`）：有 / 无调节漏电的突触，各训练 5000 步（4100 万 token），看改善是否随训练量保持。
 
-## 6. 文件
+## 6. 在 GPU 上运行
+
+CPU 上用 C++/OpenMP 内核（`lif_kernel.cpp`），NVIDIA GPU 上用 Triton 内核（`lif_triton.py`），按张量所在设备自动选择，
+方程和梯度完全相同。Triton 内核已在 CPU 上通过 Triton 的解释模式验证：24 种设置下脉冲完全一致，梯度和参考实现的最大相对误差 2.8e-6；
+整个模型在两种内核下 float32 梯度相差 1e-6 量级。在真实 GPU 上的速度还没有测。同层连接（`--rec_rank`）暂时没有 GPU 内核，会退回到很慢的参考实现。
+
+需要：支持 bf16 的 NVIDIA 显卡（Ampere 及以后，24GB 显存可训练到约 2 亿参数），Linux，带 CUDA 的 PyTorch 2.x（自带 Triton）。
+
+```bash
+bash gpu_setup.sh        # 检查显卡 → 安装依赖 → 下载并处理数据（校验与已有结果用的数据逐字节相同）→ 内核正确性测试 → 各规模的训练速度
+python3 train.py --device cuda --out runs/xxx ...   # 其余参数和 CPU 上相同
+python3 evaluate.py --device cuda --ckpt runs/xxx/ckpt.pt --out runs/xxx/final_eval.json
+```
+
+**训练方法选项**（不改变网络结构，默认都关闭）：
+- `--teacher 路径 --distill_weight a --distill_temp T`：知识蒸馏。损失 = (1−a)·交叉熵 + a·T²·KL(老师 ‖ 学生)，老师是已训练好的模型
+  （例如 `runs/tf_full` 的 Transformer）在同一个 batch 上的输出。验证 loss 仍只算交叉熵。
+- `--ema d`：同时保存权重的滑动平均（例如 0.999），评估时两种权重都报告；`evaluate.py --ema`、`sample.py --ema` 使用平均后的权重。
+- `--carry_state`：每个 batch 的每一行沿着训练文本连续往下读，上一段结束时的膜电位作为下一段的起点（梯度在段与段之间截断）。
+  不加时每段都从静息状态开始。
+- 已有的：`--lr`、`--alpha`（代理梯度宽度）、`--neuron_lr_mult`（神经元自身参数的学习率倍数）、`--tau_min/--tau_max`（时间常数初始范围）等。
+
+## 7. 文件
 
 ```
 lif_kernel.cpp   LIF 前向/反向 C++ 内核
-lif.py           autograd 封装 + 纯 PyTorch 参考实现
-test_lif.py      内核正确性与速度测试
+lif.py           autograd 封装（按设备选择 C++ 或 Triton 内核）+ 纯 PyTorch 参考实现
+lif_triton.py    LIF 前向/反向 Triton 内核（GPU）
+test_lif.py      C++ 内核正确性与速度测试
+test_lif_gpu.py  Triton 内核正确性测试（无 GPU 时用 TRITON_INTERPRET=1）与 GPU 速度测试
+gpu_setup.sh     GPU 机器上的一次性准备与自检
+data/checksums.md5  分词器和 token 文件的校验和
 model.py         纯 LIF 语言模型
 model_tf.py      Transformer 对照组（仅用于比较）
 prepare_data.py  训练分词器 + 语料转 token
