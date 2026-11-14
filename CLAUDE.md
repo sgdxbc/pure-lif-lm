@@ -53,3 +53,6 @@
   waves, writes the analysis into README and edits the shared code and docs. The cloud session can send messages
   to the cluster session and read its transcript; the cluster session cannot message the cloud session, so it
   reports through commits (say in the commit message if something needs a decision).
+- In the cloud session, each send_message call asked the owner for approval until the allow rules in
+  .claude/settings.json on main (added by the owner on 2026-11-14) were loaded; that file is read when a session
+  starts. Keep messages few and hand work over through commits where possible.
