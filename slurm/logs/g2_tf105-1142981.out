@@ -1,0 +1,7 @@
+xgpj0 NVIDIA A100 80GB PCIe | runs/g2_tf105 | --arch tf --batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500 --d_model 896 --n_layers 10 --n_heads 14 --lr 1e-3
+Traceback (most recent call last):
+ModuleNotFoundError: No module named 'numpy._core._multiarray_umath'
+Traceback (most recent call last):
+    raise ImportError(msg) from exc
+ImportError: 
+train.py failed with exit code 1

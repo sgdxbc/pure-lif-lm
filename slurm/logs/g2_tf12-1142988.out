@@ -1,0 +1,18 @@
+xgpg6 NVIDIA A100-PCIE-40GB | runs/g2_tf12 | --arch tf --batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500 --d_model 384 --n_layers 5 --n_heads 6 --lr 2e-3
+params 12.39M, LIF neurons 0, train tokens 552M, tokens/step 8,192
+== eval step 5000 val_loss 1.8263
+== eval step 10000 val_loss 1.7170
+== eval step 15000 val_loss 1.6638
+== eval step 20000 val_loss 1.6322
+== eval step 25000 val_loss 1.6029
+== eval step 30000 val_loss 1.5724
+== eval step 35000 val_loss 1.5377
+== eval step 40000 val_loss 1.5048
+== eval step 45000 val_loss 1.4705
+== eval step 50000 val_loss 1.4336
+== eval step 55000 val_loss 1.4016
+== eval step 60000 val_loss 1.3746
+== eval step 65000 val_loss 1.3590
+== eval step 67000 val_loss 1.3555
+ "val_loss": 1.3568569385657425,
+done Sun Nov 15 05:33:41 +08 2026

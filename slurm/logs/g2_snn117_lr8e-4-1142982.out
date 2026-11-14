@@ -1,0 +1,18 @@
+xgpi7 NVIDIA H100 NVL | runs/g2_snn117_lr8e-4 | --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500 --d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128 --lr 8e-4
+params 117.11M, LIF neurons 49,152, train tokens 552M, tokens/step 8,192
+== eval step 5000 val_loss 2.0357
+== eval step 10000 val_loss 1.9101
+== eval step 15000 val_loss 1.8223
+== eval step 20000 val_loss 1.7627
+== eval step 25000 val_loss 1.7009
+== eval step 30000 val_loss 1.6492
+== eval step 35000 val_loss 1.5914
+== eval step 40000 val_loss 1.5467
+== eval step 45000 val_loss 1.5044
+== eval step 50000 val_loss 1.4614
+== eval step 55000 val_loss 1.4302
+== eval step 60000 val_loss 1.4066
+== eval step 65000 val_loss 1.3916
+== eval step 67000 val_loss 1.3903
+ "val_loss": 1.3904741203892181,
+done Sun Nov 15 05:20:59 +08 2026
