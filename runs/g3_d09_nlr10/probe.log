@@ -1,0 +1,15 @@
+400 stories of >= 257 tokens, 35039 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+m  (runs/g3_d09_nlr10/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     1.533
+  repeat d=5-16            2079     1.754
+  repeat d=17-32           2410     1.925     4.416   2.492
+  repeat d=33-64           2752     2.126     4.186   2.060
+  repeat d=65-128          2048     2.516     3.906   1.389
+  repeat d=129-256          923     2.708     3.652   0.944
+  first occurrence        24485     3.078     3.322   0.245
+mean loss on story positions 128-191 when reading starts k tokens before 128 (600 stories)
+model              k=0      k=8      k=32     k=64     k=128    gain 8->128
+m                  2.175    2.028    1.897    1.839    1.809    0.219
+m: share_slow=0.435, slow_rate=0.0827, slow_never_fire=0.41, slow_gap_median=1, slow_gap_p90=5, slow_gaps_le_10=0.945, gamma_quantiles_10_50_90=[0.011028055753558877, 0.21019114553928375, 0.6010930359363558], gamma_share_below_0.5=0.85

@@ -1,0 +1,18 @@
+xgpi11 NVIDIA H100 NVL | runs/g3_all | --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --leak_rank 64 --batch 32 --seq 256 --steps 14000 --warmup 300 --eval_every 1000 --eval_batches 40 --log_every 100 --lr 3e-3 --teacher runs/g1_tf_full/ckpt.pt --distill_temp 1 --distill_weight 0.9 --ema 0.998 --neuron_lr_mult 10
+params 13.62M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+== eval step 1000 val_loss 2.3152 (EMA weights 2.1719)
+== eval step 2000 val_loss 2.1265 (EMA weights 1.9826)
+== eval step 3000 val_loss 2.0310 (EMA weights 1.8885)
+== eval step 4000 val_loss 1.9606 (EMA weights 1.8295)
+== eval step 5000 val_loss 1.9114 (EMA weights 1.7895)
+== eval step 6000 val_loss 1.8682 (EMA weights 1.7583)
+== eval step 7000 val_loss 1.8261 (EMA weights 1.7321)
+== eval step 8000 val_loss 1.7869 (EMA weights 1.7101)
+== eval step 9000 val_loss 1.7525 (EMA weights 1.6927)
+== eval step 10000 val_loss 1.7223 (EMA weights 1.6760)
+== eval step 11000 val_loss 1.6935 (EMA weights 1.6626)
+== eval step 12000 val_loss 1.6763 (EMA weights 1.6522)
+== eval step 13000 val_loss 1.6627 (EMA weights 1.6442)
+== eval step 14000 val_loss 1.6579 (EMA weights 1.6394)
+ "val_loss": 1.6606098741965927,
+done Sun Nov 15 06:11:48 +08 2026

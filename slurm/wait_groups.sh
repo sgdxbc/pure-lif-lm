@@ -10,7 +10,7 @@ while true; do
     grep -qxF "$g" slurm/.reported && continue
     if ! echo "$q" | grep -qE "^($g)"; then echo "$g" >> slurm/.reported; echo "GROUP DONE: $g"; exit 0; fi
   done
-  f=$(grep -l "failed with exit code\|Traceback" slurm/logs/g[0-9]*_*.out 2>/dev/null | grep -vxFf slurm/.reported)
+  f=$(grep -l "failed with exit code\|Traceback\|DUE TO TIME LIMIT" slurm/logs/g[0-9]*_*.out 2>/dev/null | grep -vxFf slurm/.reported)
   if [ -n "$f" ]; then echo "$f" >> slurm/.reported; echo "FAILED: $f"; exit 0; fi
   sleep 60
 done

@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH -p gpu -c 8 --mem=64G -t 03:00:00 -o slurm/logs/%x-%j.out
+#SBATCH --exclude=xgpj0  # numpy C extensions fail to import on this node (g2_tf105, g3_d10)
 # One training run on one GPU, then (unless PROBES=0) full-validation evaluation and the two memory probes, all
 # written into the run directory. Submit from the repository root:
 #   sbatch -J NAME --gres=gpu:a100-40:1 slurm/train.sbatch runs/NAME [train.py flags...]

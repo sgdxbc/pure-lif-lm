@@ -1,0 +1,199 @@
+distilling from runs/g1_tf_full/ckpt.pt (weight 0.9, temperature 1.0)
+params 13.62M, LIF neurons 12,288, train tokens 552M, tokens/step 8,192
+step      1 loss 8.4162 kl 6.8456 lr 1.00e-05 gn 1.11 850 tok/s mem 1.9GB rate 0.084 [0.07 0.07 0.08 0.08 0.09 0.09 0.10 0.10]
+step    100 loss 3.5349 kl 2.0055 lr 1.00e-03 gn 1.23 487,810 tok/s mem 2.1GB rate 0.135 [0.08 0.09 0.10 0.12 0.14 0.17 0.18 0.20]
+step    200 loss 2.9289 kl 1.4526 lr 2.00e-03 gn 1.02 479,197 tok/s mem 2.1GB rate 0.112 [0.07 0.09 0.09 0.11 0.12 0.14 0.14 0.14]
+step    300 loss 2.7864 kl 1.2843 lr 3.00e-03 gn 0.83 481,276 tok/s mem 2.1GB rate 0.079 [0.06 0.08 0.08 0.08 0.09 0.08 0.09 0.08]
+step    400 loss 2.6613 kl 1.1813 lr 3.00e-03 gn 0.56 483,025 tok/s mem 2.1GB rate 0.061 [0.05 0.07 0.07 0.06 0.06 0.06 0.06 0.06]
+step    500 loss 2.7540 kl 1.1260 lr 3.00e-03 gn 0.38 482,693 tok/s mem 2.1GB rate 0.050 [0.05 0.07 0.06 0.05 0.05 0.04 0.04 0.05]
+step    600 loss 2.5123 kl 1.0400 lr 3.00e-03 gn 0.40 481,751 tok/s mem 2.1GB rate 0.048 [0.05 0.06 0.06 0.05 0.05 0.04 0.04 0.04]
+step    700 loss 2.4225 kl 0.9545 lr 2.99e-03 gn 0.40 482,706 tok/s mem 2.1GB rate 0.044 [0.05 0.06 0.05 0.04 0.04 0.04 0.04 0.04]
+step    800 loss 2.4687 kl 0.9181 lr 2.99e-03 gn 0.32 481,839 tok/s mem 2.1GB rate 0.039 [0.05 0.06 0.04 0.03 0.04 0.03 0.03 0.03]
+step    900 loss 2.3420 kl 0.8492 lr 2.99e-03 gn 0.31 481,155 tok/s mem 2.1GB rate 0.037 [0.04 0.06 0.04 0.03 0.04 0.03 0.03 0.03]
+step   1000 loss 2.3838 kl 0.8829 lr 2.98e-03 gn 0.36 481,244 tok/s mem 2.1GB rate 0.037 [0.04 0.05 0.04 0.03 0.03 0.03 0.03 0.03]
+== eval step 1000 val_loss 2.3371 (EMA weights 2.1873)
+   >> Once upon a time| there was a girl who was so excited. Suddenly, she heard a voice say, "I'm a talking bird. I am very excited to see what is it in the world." / The bird said, "I love to my dear," said the bird. "I have something magical," said the bird. The bird looked up and noticed many toys. "This one piece of us," the bird said. / The bird smiled and said "I have so many tries to take it home." / The bird was happy and said, "Thank you!" The bird said, "But I
+   >> Lily wanted to go to the park, but| she didn't want to play with her friends. So, she got scared and ran away in the forest. / Lily and her friends played on the big rock, and they had lots of fun. They were tired but also happy. They knew that the sun was amazing. Lucy and her friends played in the park. They had lots of fun together. / From that day on, Bobo and the wind went down the hill with the swing on top. They took good care of the big tree and enjoyed playing near the hill. From that day on, Bobo was always scared to fall and he would
+   >> The little dog was sad because| he was small and cold. / Tim wanted to help the bird. He told his mom that he could save the dog. The dog wanted to see the whole dog, but he could not. The dog was too high and could not help them. The dog wanted to help and the dog. / Then, a kind dog came running. The dog was playing with the car, and they found a special bird. The bird was flying on the ground. The bird was scared and ran away. The dog caught the cat and ran away. The bird said, "I will save you, Spot."
+step   1100 loss 2.3955 kl 0.8270 lr 2.98e-03 gn 0.33 472,620 tok/s mem 2.1GB rate 0.035 [0.04 0.05 0.04 0.03 0.03 0.03 0.03 0.03]
+step   1200 loss 2.3248 kl 0.8001 lr 2.97e-03 gn 0.28 480,370 tok/s mem 2.1GB rate 0.034 [0.04 0.05 0.04 0.03 0.03 0.03 0.03 0.03]
+step   1300 loss 2.2106 kl 0.7555 lr 2.96e-03 gn 0.30 480,668 tok/s mem 2.1GB rate 0.033 [0.04 0.05 0.03 0.03 0.03 0.03 0.03 0.03]
+step   1400 loss 2.1561 kl 0.7446 lr 2.96e-03 gn 0.27 483,026 tok/s mem 2.1GB rate 0.033 [0.04 0.05 0.04 0.03 0.03 0.03 0.03 0.03]
+step   1500 loss 2.3011 kl 0.7636 lr 2.95e-03 gn 0.33 481,676 tok/s mem 2.1GB rate 0.032 [0.04 0.05 0.03 0.02 0.03 0.02 0.03 0.03]
+step   1600 loss 2.2436 kl 0.7475 lr 2.94e-03 gn 0.34 481,349 tok/s mem 2.1GB rate 0.031 [0.04 0.05 0.03 0.02 0.03 0.03 0.03 0.03]
+step   1700 loss 2.2165 kl 0.7346 lr 2.93e-03 gn 0.29 482,184 tok/s mem 2.1GB rate 0.032 [0.04 0.05 0.03 0.02 0.03 0.03 0.03 0.03]
+step   1800 loss 2.2050 kl 0.7234 lr 2.92e-03 gn 0.27 481,807 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.02 0.02 0.03]
+step   1900 loss 2.1349 kl 0.6779 lr 2.91e-03 gn 0.26 481,894 tok/s mem 2.1GB rate 0.031 [0.04 0.04 0.03 0.02 0.03 0.03 0.03 0.03]
+step   2000 loss 2.1418 kl 0.6854 lr 2.90e-03 gn 0.26 481,900 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+== eval step 2000 val_loss 2.1610 (EMA weights 2.0138)
+   >> Once upon a time|, there was a big tree. In the tree, there was a small, kind dog named Max. Max liked to play all day long. One day, Max met a kind cat named Tom. / Tom said, "Max, you are very good at building. You can do it all by yourself." Max wanted to try new things. But Tom's mom said, "We are going to see a big train. Let's do it again." Tom was excited and said, "Okay, mom, can you help me with my car. I think it will be fun." / Mom looked
+   >> Lily wanted to go to the park, but| her mom said, "No, Lily, you can't have it. It is the park is not very hard. You have to wait until we work together." / Lily felt sad and angry. She looked at the swings and saw a big hill. She thought it would be fun to kick the ball. She pushed the ball and climbed it around the tree. She pulled it up and pulled it around the tree. She did not want to play with it. She ran and jumped, but it was hard. She felt happy. / She saw her friend, Tom, playing with his hoop.
+   >> The little dog was sad because| they wanted all the fun. Now, they could play together in the park again.
+step   2100 loss 2.1648 kl 0.6842 lr 2.89e-03 gn 0.28 461,085 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.02 0.02 0.03]
+step   2200 loss 2.1490 kl 0.6834 lr 2.87e-03 gn 0.28 380,238 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   2300 loss 2.0738 kl 0.6459 lr 2.86e-03 gn 0.27 430,284 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   2400 loss 2.1589 kl 0.6651 lr 2.85e-03 gn 0.25 483,355 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.03 0.02 0.03]
+step   2500 loss 2.0541 kl 0.6158 lr 2.83e-03 gn 0.29 482,093 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.03 0.03 0.03]
+step   2600 loss 2.1081 kl 0.6500 lr 2.82e-03 gn 0.26 483,261 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   2700 loss 2.1221 kl 0.6364 lr 2.80e-03 gn 0.28 483,683 tok/s mem 2.1GB rate 0.029 [0.04 0.04 0.03 0.02 0.03 0.02 0.02 0.03]
+step   2800 loss 2.0416 kl 0.5952 lr 2.78e-03 gn 0.25 458,870 tok/s mem 2.1GB rate 0.029 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   2900 loss 2.0860 kl 0.6207 lr 2.77e-03 gn 0.34 463,225 tok/s mem 2.1GB rate 0.029 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   3000 loss 2.0177 kl 0.6025 lr 2.75e-03 gn 0.26 483,954 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+== eval step 3000 val_loss 2.0679 (EMA weights 1.9223)
+   >> Once upon a time|, there was a boy named Tim. Tim loved to play with his toys. He had many toys and books. One day, he found a big box with matches. The box was not very nice. / Tim's friend, Sam, came to play. He knocked on the door. Tim pushed the box and the box opened. Inside the box, there were many toys. Tom and Sam were very happy. / The box was so big that all the toys were not nice. Tim and Sam were very upset. They didn't want to leave. Tom and Sam were sad. They had
+   >> Lily wanted to go to the park, but| her mom told her to stay close. / While playing, Lily saw a boy that he didn't like to play. The boy was angry and did not know how to say anything. Lily felt bad and left, not to play with the other animals. / Then, something unexpected happened. A little boy came to the playroom. He wanted to play with them too. Lily and the dog played together and had lots of fun. In the end, the other dog and the girl were happy again. The moral of the story is: when we help others, in their own ways.
+   >> The little dog was sad because| he could not play with his ball. The cat wanted to play with the ball. But the little dog did not want to play with the ball. / The dog saw a ball and wanted to play with it. The dog saw the ball and was scared. The dog went to the cat and said, "I want to play with your ball now. I want to play too." / The cat said, "I want to play with you. Let's play together!" The big dog and the little dog became friends. They played with the ball together and had lots of fun. / When it
+step   3100 loss 2.0577 kl 0.5800 lr 2.73e-03 gn 0.25 392,788 tok/s mem 2.1GB rate 0.028 [0.04 0.04 0.03 0.02 0.02 0.02 0.02 0.03]
+step   3200 loss 2.0146 kl 0.6086 lr 2.71e-03 gn 0.33 479,518 tok/s mem 2.1GB rate 0.029 [0.04 0.04 0.03 0.02 0.03 0.03 0.03 0.03]
+step   3300 loss 2.1597 kl 0.5953 lr 2.69e-03 gn 0.24 484,132 tok/s mem 2.1GB rate 0.029 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   3400 loss 2.0813 kl 0.6028 lr 2.67e-03 gn 0.28 483,048 tok/s mem 2.1GB rate 0.029 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   3500 loss 1.9894 kl 0.5623 lr 2.65e-03 gn 0.25 483,805 tok/s mem 2.1GB rate 0.029 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   3600 loss 1.9382 kl 0.5354 lr 2.63e-03 gn 0.27 483,886 tok/s mem 2.1GB rate 0.029 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   3700 loss 2.0645 kl 0.5646 lr 2.61e-03 gn 0.29 482,872 tok/s mem 2.1GB rate 0.029 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   3800 loss 2.0533 kl 0.5921 lr 2.59e-03 gn 0.26 418,410 tok/s mem 2.1GB rate 0.029 [0.04 0.03 0.03 0.02 0.03 0.02 0.03 0.03]
+step   3900 loss 1.9778 kl 0.5467 lr 2.57e-03 gn 0.25 482,647 tok/s mem 2.1GB rate 0.029 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   4000 loss 1.9469 kl 0.5272 lr 2.54e-03 gn 0.24 484,519 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.03 0.03 0.03]
+== eval step 4000 val_loss 1.9958 (EMA weights 1.8587)
+   >> Once upon a time|, there was a little boy named Tim. Tim had a toy car, and he was very patient. He always wanted to play with her toys and have fun. / One day, Tim went to the park with his mom and took his toys to his room. In the box, there was a big, soft toy box. Tim's mom said, "We have to go to the store to buy some stuff for our toys." Tim was so happy, he started to pick the toy. He took the fake license and opened it. / At the store, Tim saw a boy named
+   >> Lily wanted to go to the park, but| she was scared. The dog had a question. The dog barked and wagged its tail. / Lily wanted to pet the dog, but the dog was not nice. Lily felt bad for the dog. She decided to be brave and let her pet the dog. Lily and the dog became best friends. From that day on, Lily and the dog were the best of friends.
+   >> The little dog was sad because| it could not find its family. They thought she could help them find its owner. / Lucy had an idea. She told her friends to find her way home. They walked to the big tree and gave it some water. They took them to a nice place where they could find the food. The dog felt very happy and not anxious anymore because a new friend and a new friend.
+step   4100 loss 2.0262 kl 0.5810 lr 2.52e-03 gn 0.30 401,233 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   4200 loss 1.9860 kl 0.5412 lr 2.50e-03 gn 0.26 457,099 tok/s mem 2.1GB rate 0.030 [0.04 0.04 0.03 0.02 0.03 0.02 0.03 0.03]
+step   4300 loss 2.0328 kl 0.5384 lr 2.47e-03 gn 0.24 483,709 tok/s mem 2.1GB rate 0.030 [0.04 0.03 0.03 0.02 0.03 0.03 0.03 0.03]
+step   4400 loss 2.0427 kl 0.5278 lr 2.45e-03 gn 0.27 484,052 tok/s mem 2.1GB rate 0.030 [0.04 0.03 0.03 0.02 0.03 0.03 0.03 0.03]
+step   4500 loss 1.9487 kl 0.5531 lr 2.42e-03 gn 0.26 484,363 tok/s mem 2.1GB rate 0.030 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.03]
+step   4600 loss 1.9024 kl 0.4735 lr 2.40e-03 gn 0.23 483,928 tok/s mem 2.1GB rate 0.030 [0.05 0.04 0.03 0.02 0.03 0.03 0.03 0.03]
+step   4700 loss 1.7830 kl 0.4675 lr 2.37e-03 gn 0.23 484,915 tok/s mem 2.1GB rate 0.031 [0.05 0.04 0.03 0.02 0.03 0.03 0.03 0.03]
+step   4800 loss 2.0063 kl 0.4969 lr 2.34e-03 gn 0.24 484,625 tok/s mem 2.1GB rate 0.030 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.03]
+step   4900 loss 1.8766 kl 0.4705 lr 2.32e-03 gn 0.23 446,944 tok/s mem 2.1GB rate 0.031 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.03]
+step   5000 loss 1.8337 kl 0.4776 lr 2.29e-03 gn 0.25 401,731 tok/s mem 2.1GB rate 0.031 [0.05 0.04 0.03 0.02 0.03 0.03 0.03 0.03]
+== eval step 5000 val_loss 1.9359 (EMA weights 1.8152)
+   >> Once upon a time|, in a small town, there lived a boy named Tim. Tim had a toy sword that he loved very much. / One day, Tim and his sword went to a park. Tim wanted to play with his shield, but he was too small to reach it. He thought it would be fun to play with the sword. / Tim asked his friend, Sue, to help him. Sue said, "Let's use the sword!" They played with the sword for a long time. They ran and ran until the sun went down. / But then, something unexpected happened. The skull started to
+   >> Lily wanted to go to the park, but| she didn't want to. She said, "It's too boring? I want to play with the ball." Ben felt bad, but he put the ball on the ground. / Lily played a game with the ball. They kicked the ball and had lots of fun. After a while, it was time to go home. Lily said, "Thank you, Ben, for letting me play with the ball again." They played together again and again. And from that day on, Lily made sure to always remember his ball in her yard.
+   >> The little dog was sad because| he lost his favorite toy. / The king asked his friends for help. They all said, "Why have you seen my toy?" The king said, "I am sad because I have no friends." / The king was happy to find the treasure he found. He hugged all the treasures and went back to his friends. They all found the treasure and shared it with each other. / The king was happy to have a friend and his friend was not alone anymore.
+step   5100 loss 1.8897 kl 0.4632 lr 2.26e-03 gn 0.23 440,174 tok/s mem 2.1GB rate 0.030 [0.05 0.04 0.02 0.02 0.03 0.03 0.03 0.03]
+step   5200 loss 1.8952 kl 0.4730 lr 2.23e-03 gn 0.23 485,726 tok/s mem 2.1GB rate 0.032 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.03]
+step   5300 loss 1.9137 kl 0.4608 lr 2.21e-03 gn 0.24 416,393 tok/s mem 2.1GB rate 0.031 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.03]
+step   5400 loss 1.9215 kl 0.4575 lr 2.18e-03 gn 0.26 383,984 tok/s mem 2.1GB rate 0.032 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.03]
+step   5500 loss 2.0072 kl 0.4716 lr 2.15e-03 gn 0.24 384,024 tok/s mem 2.1GB rate 0.031 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.03]
+step   5600 loss 1.9740 kl 0.4735 lr 2.12e-03 gn 0.26 437,967 tok/s mem 2.1GB rate 0.031 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.03]
+step   5700 loss 1.8399 kl 0.4605 lr 2.09e-03 gn 0.25 485,651 tok/s mem 2.1GB rate 0.032 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.04]
+step   5800 loss 1.8755 kl 0.4462 lr 2.06e-03 gn 0.30 481,104 tok/s mem 2.1GB rate 0.032 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.04]
+step   5900 loss 1.9249 kl 0.4669 lr 2.03e-03 gn 0.30 485,065 tok/s mem 2.1GB rate 0.032 [0.05 0.04 0.03 0.02 0.03 0.03 0.03 0.04]
+step   6000 loss 1.9398 kl 0.4336 lr 2.00e-03 gn 0.22 480,046 tok/s mem 2.1GB rate 0.032 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.04]
+== eval step 6000 val_loss 1.8896 (EMA weights 1.7791)
+   >> Once upon a time|, there was a little dog named Spot. Spot loved to play all day with his ball. One day, Spot saw a big red ball in the yard. He wanted to play with it, but he was too small. / Spot's big sister, Sue, saw him and asked, "Spot, do you need help?" Sue said, "Yes, Spot! I can help you get the ball for you to play with."Spot wagged his tail and said, "Yes, I want to take a walk with you. I will lead you to the big red ball in the grass." / 
+   >> Lily wanted to go to the park, but| her mom said, "No, it is too dry today." Lily was sad and angry. She wanted her mom to play with her, but her mom did not permit her to go alone. / At the park, Lily saw a boy named Tim. Tim was sad because he lost his toy. Lily wanted to help Tim feel good and happy. She looked around and saw the toy on the ground. She had an idea. / Lily told Tim about the toy that she liked and wanted to play with it too. They both played with the toy and had lots of fun together. They learned
+   >> The little dog was sad because| he could not play with his friends again.
+step   6100 loss 1.8316 kl 0.4393 lr 1.97e-03 gn 0.24 476,246 tok/s mem 2.1GB rate 0.033 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.04]
+step   6200 loss 1.9127 kl 0.4269 lr 1.94e-03 gn 0.22 477,407 tok/s mem 2.1GB rate 0.033 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.04]
+step   6300 loss 1.9057 kl 0.4539 lr 1.91e-03 gn 0.25 486,115 tok/s mem 2.1GB rate 0.033 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.04]
+step   6400 loss 1.8321 kl 0.4306 lr 1.88e-03 gn 0.28 485,918 tok/s mem 2.1GB rate 0.033 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.04]
+step   6500 loss 1.9671 kl 0.4612 lr 1.85e-03 gn 0.24 484,983 tok/s mem 2.1GB rate 0.033 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.04]
+step   6600 loss 1.9638 kl 0.4211 lr 1.82e-03 gn 0.24 415,635 tok/s mem 2.1GB rate 0.033 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.04]
+step   6700 loss 1.8847 kl 0.4218 lr 1.79e-03 gn 0.22 485,622 tok/s mem 2.1GB rate 0.033 [0.05 0.03 0.03 0.02 0.03 0.03 0.03 0.04]
+step   6800 loss 1.8067 kl 0.4113 lr 1.76e-03 gn 0.24 485,674 tok/s mem 2.1GB rate 0.035 [0.05 0.04 0.03 0.02 0.03 0.03 0.03 0.04]
+step   6900 loss 1.9152 kl 0.4250 lr 1.73e-03 gn 0.27 433,190 tok/s mem 2.1GB rate 0.034 [0.05 0.04 0.03 0.02 0.03 0.03 0.03 0.04]
+step   7000 loss 1.8333 kl 0.4113 lr 1.70e-03 gn 0.30 431,713 tok/s mem 2.1GB rate 0.034 [0.05 0.03 0.03 0.03 0.03 0.03 0.03 0.04]
+== eval step 7000 val_loss 1.8430 (EMA weights 1.7484)
+   >> Once upon a time|, there was a little bird who lived in a big tree. The bird was very happy to be with its friend, the squirrel. One day, the bird found a shiny jewel. / The bird said, "Hi thank you, sparkly jewel. I am a magic bird. I can help you. I will give you a wish." The bird thought about what to wish for. The bird wished for a friend to make the pretty jewelry for the bird. The bear thought and thought. / The bird thought that very much. Then, it started to grow bigger and bigger. It had
+   >> Lily wanted to go to the park, but| she did not know how to solve the problem. She asked her mom, "Mom, can you teach me how to use my phone?" Her mom said, "Of course, but you have to be gentle and kind. We need to find a way to get the cat's phone." / So, they went on an adventure to find the lost toy. They looked under the big tree, under the tree, and in the park. Finally, they found the toy car under a big tree. Kitty was so happy that she could help her friend. They all finished their work and Lily felt good
+   >> The little dog was sad because| he didn't know how to go back to his home. He thought for a moment and then decided to work together to get his ball back. He tied his shoes to the ball and watched his friends go on long adventures. He learned that if he practiced his work, he could get tired and happy. He went home happy, and he learned that being independent is good.
+step   7100 loss 1.7357 kl 0.3932 lr 1.67e-03 gn 0.24 476,051 tok/s mem 2.1GB rate 0.035 [0.05 0.04 0.03 0.02 0.03 0.03 0.03 0.04]
+step   7200 loss 1.8460 kl 0.4020 lr 1.63e-03 gn 0.23 484,939 tok/s mem 2.1GB rate 0.035 [0.05 0.03 0.03 0.03 0.03 0.03 0.03 0.04]
+step   7300 loss 1.7244 kl 0.3853 lr 1.60e-03 gn 0.22 486,940 tok/s mem 2.1GB rate 0.036 [0.05 0.04 0.03 0.03 0.03 0.03 0.03 0.04]
+step   7400 loss 1.8371 kl 0.3978 lr 1.57e-03 gn 0.25 487,016 tok/s mem 2.1GB rate 0.035 [0.05 0.04 0.03 0.03 0.03 0.03 0.03 0.04]
+step   7500 loss 1.8212 kl 0.3915 lr 1.54e-03 gn 0.22 486,727 tok/s mem 2.1GB rate 0.035 [0.05 0.04 0.03 0.02 0.03 0.03 0.03 0.04]
+step   7600 loss 1.8078 kl 0.3924 lr 1.51e-03 gn 0.23 454,070 tok/s mem 2.1GB rate 0.036 [0.05 0.04 0.03 0.03 0.03 0.03 0.03 0.04]
+step   7700 loss 1.7253 kl 0.3593 lr 1.48e-03 gn 0.25 451,505 tok/s mem 2.1GB rate 0.036 [0.05 0.04 0.03 0.03 0.03 0.03 0.03 0.04]
+step   7800 loss 1.8273 kl 0.3829 lr 1.45e-03 gn 0.23 485,963 tok/s mem 2.1GB rate 0.036 [0.05 0.04 0.03 0.03 0.03 0.03 0.03 0.04]
+step   7900 loss 1.6998 kl 0.3475 lr 1.42e-03 gn 0.20 488,112 tok/s mem 2.1GB rate 0.037 [0.06 0.04 0.03 0.03 0.03 0.03 0.03 0.04]
+step   8000 loss 1.6831 kl 0.3440 lr 1.39e-03 gn 0.23 487,404 tok/s mem 2.1GB rate 0.037 [0.06 0.04 0.03 0.03 0.03 0.03 0.03 0.04]
+== eval step 8000 val_loss 1.8016 (EMA weights 1.7241)
+   >> Once upon a time|, there was a little boy named Tim. Tim had a big, comfortable bed. He liked to play in his yard and look for bugs. One day, Tim saw a small fire in his yard. The fire was big and shiny. / Tim wanted to play with the fire. He put on his shoes and started to run. He ran and jumped high. He did not recognize that the fire was coming down. But Tim did not know that the fire was dangerous. / Later, Tim's mom came and saw the fire. She was very angry. The fire was burning
+   >> Lily wanted to go to the park, but| she did not want to go to the park. She did not want to go to the park. She did not know what to do. She looked around and saw a man with a hat. "I am here to catch you," Lily said. / The man smiled and said, "Do not be scared. I will teach you how to bow." The man smiled and said, "Hello, little girl. What's your name?" / The man smiled and said, "Hi, little girl. I'm a magic man. I can make your day dance." Lily was so excited and happy
+   >> The little dog was sad because| it lost his toy. He looked everywhere but could not find it. Tom asked the bird, "Why do you look sad?" The bird said, "I lost my toy. I can't find it anywhere." / Tom was sad and said, "My bird is lost." The bird felt bad and flew away with Tom and his toy. Tom felt bad and wished he had been more careful. He learned his lesson and never played with the toy bird.
+step   8100 loss 1.7356 kl 0.3463 lr 1.36e-03 gn 0.22 485,365 tok/s mem 2.1GB rate 0.037 [0.06 0.04 0.03 0.03 0.04 0.03 0.04 0.04]
+step   8200 loss 1.7997 kl 0.3683 lr 1.33e-03 gn 0.20 394,868 tok/s mem 2.1GB rate 0.038 [0.06 0.04 0.03 0.03 0.04 0.03 0.04 0.04]
+step   8300 loss 1.7158 kl 0.3557 lr 1.30e-03 gn 0.23 428,290 tok/s mem 2.1GB rate 0.038 [0.06 0.04 0.03 0.03 0.03 0.03 0.04 0.04]
+step   8400 loss 1.8188 kl 0.3623 lr 1.27e-03 gn 0.23 488,463 tok/s mem 2.1GB rate 0.038 [0.06 0.04 0.03 0.03 0.04 0.03 0.04 0.04]
+step   8500 loss 1.7333 kl 0.3469 lr 1.24e-03 gn 0.20 488,240 tok/s mem 2.1GB rate 0.038 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.04]
+step   8600 loss 1.7156 kl 0.3332 lr 1.21e-03 gn 0.24 488,197 tok/s mem 2.1GB rate 0.039 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.05]
+step   8700 loss 1.7615 kl 0.3402 lr 1.18e-03 gn 0.22 488,347 tok/s mem 2.1GB rate 0.039 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.04]
+step   8800 loss 1.8846 kl 0.3725 lr 1.15e-03 gn 0.23 488,629 tok/s mem 2.1GB rate 0.039 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.05]
+step   8900 loss 1.7660 kl 0.3508 lr 1.12e-03 gn 0.23 488,194 tok/s mem 2.1GB rate 0.040 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.05]
+step   9000 loss 1.8204 kl 0.3450 lr 1.09e-03 gn 0.24 488,371 tok/s mem 2.1GB rate 0.040 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.05]
+== eval step 9000 val_loss 1.7635 (EMA weights 1.7031)
+   >> Once upon a time|, there was a clumsy dog named Spot. Spot liked to play in the park with his friends. One day, Spot got hurt while playing with his ball. / Spot's friend, a little bird, flew by. The bird said, "Spot, don't go near the ball. It is not safe." Spot felt sad and ashamed. He did not know what the bird said. / Spot was helpful and said, "I want to be good friends. Let's play together." So, Spot and the bird played with the ball. Spot was happy again. From that day on, Spot
+   >> Lily wanted to go to the park, but| her mom said she had to stay. Lily was not happy today, but she was worried. She said goodbye to her mom and hugged her. / Lily cried and cried. She did not want to go anyway. She wanted to go home. She wanted to play, but she wished she had a good night. / But she was too young. She lost her toy in the park. She felt very sad and lonely. She wished she had never tried to go home. She wished she never had a toy. She wished she had just climbed a tree. She wished they never went to the
+   >> The little dog was sad because| he wanted to find a friend. / One day, Bow met a bird. The bird said, "I lost my toy. Can you help me find your toy?" The bird said, "Yes, I can help you." They looked at the fish together and found the toy near a big tree. The little bird was happy and said, "Thank you, Big friend!" / But then, something unexpected happened. The big toy saw Bow and the little mouse. The little bird was very happy. He said, "Thank you for finding my toy!" The little mouse was very
+step   9100 loss 1.7614 kl 0.3358 lr 1.07e-03 gn 0.22 470,152 tok/s mem 2.1GB rate 0.041 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.05]
+step   9200 loss 1.6748 kl 0.3194 lr 1.04e-03 gn 0.22 488,256 tok/s mem 2.1GB rate 0.041 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.05]
+step   9300 loss 1.7979 kl 0.3406 lr 1.01e-03 gn 0.21 481,998 tok/s mem 2.1GB rate 0.041 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.05]
+step   9400 loss 1.7148 kl 0.3087 lr 9.84e-04 gn 0.20 488,153 tok/s mem 2.1GB rate 0.041 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.05]
+step   9500 loss 1.7771 kl 0.3334 lr 9.57e-04 gn 0.22 488,180 tok/s mem 2.1GB rate 0.042 [0.06 0.04 0.04 0.03 0.04 0.04 0.04 0.05]
+step   9600 loss 1.7615 kl 0.3284 lr 9.31e-04 gn 0.21 471,359 tok/s mem 2.1GB rate 0.042 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.05]
+step   9700 loss 1.6988 kl 0.3153 lr 9.05e-04 gn 0.22 483,180 tok/s mem 2.1GB rate 0.042 [0.06 0.04 0.04 0.03 0.04 0.04 0.04 0.05]
+step   9800 loss 1.7036 kl 0.3230 lr 8.79e-04 gn 0.23 487,441 tok/s mem 2.1GB rate 0.043 [0.06 0.04 0.04 0.03 0.04 0.04 0.04 0.05]
+step   9900 loss 1.7018 kl 0.3080 lr 8.54e-04 gn 0.21 488,999 tok/s mem 2.1GB rate 0.043 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.05]
+step  10000 loss 1.7151 kl 0.3094 lr 8.29e-04 gn 0.22 487,930 tok/s mem 2.1GB rate 0.043 [0.06 0.04 0.04 0.03 0.04 0.04 0.04 0.05]
+== eval step 10000 val_loss 1.7308 (EMA weights 1.6858)
+   >> Once upon a time|, there was a little girl named Amy. Amy loved to play outside with her friends. One day, Amy found a shiny gem in her yard. She was so happy to find it. / Amy wanted to show her friends, but she did not recognize them. She was very sad and didn't know what to do. Then, Amy had an idea. She would use her gem to make a picture. / Amy asked her friends to help her find a warm coat. They all went to the park and found a nice spot under a big tree. Amy made her own jewelry
+   >> Lily wanted to go to the park, but| her mom said, "No, Lucy. It is important to be quiet. We must sit in front of the truck because it is important. It helps us learn new things, even if it is hard and fast." / Lucy listened to her mom and waited for the right time to go. Soon, the bus arrived at the park. Lucy saw a big dog that was barking and running around. She felt embarrassed and sad. The dog ran to her and licked her face. Lucy knew that her mom was right. The dog told her a secret. / Lucy's mom called the dog, but
+   >> The little dog was sad because| his new friend was gone. He looked for more nuts, but he could not find any nuts. The big dog found the perfect nuts and took the big, round pieces of nuts. The dog was sad, but he could not eat the nuts anymore. The small dog went home without his nuts.
+step  10100 loss 1.6958 kl 0.3045 lr 8.05e-04 gn 0.22 478,208 tok/s mem 2.1GB rate 0.043 [0.06 0.04 0.03 0.03 0.04 0.04 0.04 0.05]
+step  10200 loss 1.6038 kl 0.2999 lr 7.81e-04 gn 0.23 486,844 tok/s mem 2.1GB rate 0.044 [0.06 0.04 0.04 0.03 0.04 0.04 0.04 0.05]
+step  10300 loss 1.7739 kl 0.3262 lr 7.58e-04 gn 0.24 488,423 tok/s mem 2.1GB rate 0.044 [0.07 0.04 0.04 0.03 0.04 0.04 0.04 0.05]
+step  10400 loss 1.7392 kl 0.2936 lr 7.35e-04 gn 0.23 446,623 tok/s mem 2.1GB rate 0.045 [0.07 0.04 0.04 0.03 0.04 0.04 0.04 0.05]
+step  10500 loss 1.6491 kl 0.2922 lr 7.12e-04 gn 0.23 487,704 tok/s mem 2.1GB rate 0.045 [0.06 0.04 0.04 0.03 0.04 0.04 0.04 0.05]
+step  10600 loss 1.6674 kl 0.2852 lr 6.90e-04 gn 0.22 488,703 tok/s mem 2.1GB rate 0.045 [0.07 0.04 0.04 0.03 0.04 0.04 0.05 0.05]
+step  10700 loss 1.6529 kl 0.2714 lr 6.69e-04 gn 0.19 488,211 tok/s mem 2.1GB rate 0.045 [0.07 0.04 0.04 0.03 0.04 0.04 0.04 0.05]
+step  10800 loss 1.7234 kl 0.2950 lr 6.48e-04 gn 0.21 488,385 tok/s mem 2.1GB rate 0.046 [0.07 0.04 0.04 0.03 0.04 0.04 0.05 0.05]
+step  10900 loss 1.6531 kl 0.2907 lr 6.27e-04 gn 0.21 482,676 tok/s mem 2.1GB rate 0.046 [0.07 0.04 0.04 0.03 0.04 0.04 0.05 0.05]
+step  11000 loss 1.6117 kl 0.2710 lr 6.07e-04 gn 0.21 417,617 tok/s mem 2.1GB rate 0.047 [0.07 0.04 0.04 0.03 0.04 0.04 0.05 0.05]
+== eval step 11000 val_loss 1.7040 (EMA weights 1.6716)
+   >> Once upon a time|, there was a little boy named Tim. He loved to collect flowers and play with his friends. One day, he went to the park with his mom and dad. They saw a big red ball that was very special. / Tim and his mom played with the big red ball all day. Tim threw the ball high in the sky. They laughed and had so much fun. When it was time to go home, Tim said, "I had a great day at the park with my ball!" / The next day, Tim went to the park and saw a girl with a big yellow ball.
+   >> Lily wanted to go to the park, but| her mom said they had to wear a apron. Lily was scared. She ran to the park with her mom. At the park, Lily saw a boy named Tom. Tom was wearing a red apron. Lily was a bit selfish. She did not like Tom. Lily felt bad for making Tom cry. / Tom said, "I'm sorry, Lily. I didn't mean to scare you. It was an accident. I broke your coat. I don't want to play with you." Lily said, "It's okay, Tom. I forgive you. But you should be nice
+   >> The little dog was sad because| he thought he had lost his ball. But the tree wanted to help the bird. / The bird told the dog, "Do not be sad too! I will help you find your ball." The dog looked and looked, but he could not find the ball. The bird flew high and found the dog's ball. The dog was happy and said, "Thank you, bird!" / They played together in the park. In the end, the bird could not get the ball back. The dog and the bird were very sad because they could not help the bird. And that is how they learned
+step  11100 loss 1.7355 kl 0.2938 lr 5.88e-04 gn 0.22 471,576 tok/s mem 2.1GB rate 0.047 [0.07 0.04 0.04 0.03 0.04 0.04 0.05 0.06]
+step  11200 loss 1.7494 kl 0.2928 lr 5.69e-04 gn 0.24 487,102 tok/s mem 2.1GB rate 0.047 [0.07 0.04 0.04 0.03 0.04 0.04 0.05 0.05]
+step  11300 loss 1.6101 kl 0.2870 lr 5.51e-04 gn 0.22 489,340 tok/s mem 2.1GB rate 0.048 [0.07 0.05 0.04 0.03 0.04 0.04 0.05 0.06]
+step  11400 loss 1.5958 kl 0.2732 lr 5.33e-04 gn 0.23 489,849 tok/s mem 2.1GB rate 0.048 [0.07 0.05 0.04 0.03 0.04 0.04 0.05 0.06]
+step  11500 loss 1.5653 kl 0.2725 lr 5.16e-04 gn 0.22 489,308 tok/s mem 2.1GB rate 0.048 [0.07 0.05 0.04 0.03 0.04 0.04 0.05 0.06]
+step  11600 loss 1.6938 kl 0.2733 lr 5.00e-04 gn 0.20 488,041 tok/s mem 2.1GB rate 0.048 [0.07 0.05 0.04 0.03 0.04 0.04 0.05 0.06]
+step  11700 loss 1.6286 kl 0.2680 lr 4.84e-04 gn 0.20 489,249 tok/s mem 2.1GB rate 0.049 [0.07 0.05 0.04 0.03 0.05 0.05 0.05 0.06]
+step  11800 loss 1.7223 kl 0.2753 lr 4.68e-04 gn 0.21 487,495 tok/s mem 2.1GB rate 0.049 [0.07 0.05 0.04 0.04 0.04 0.05 0.05 0.06]
+step  11900 loss 1.7763 kl 0.2916 lr 4.54e-04 gn 0.23 488,367 tok/s mem 2.1GB rate 0.050 [0.07 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  12000 loss 1.5767 kl 0.2673 lr 4.40e-04 gn 0.21 488,739 tok/s mem 2.1GB rate 0.049 [0.07 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+== eval step 12000 val_loss 1.6856 (EMA weights 1.6606)
+   >> Once upon a time|, there was a little boy named Tim. Tim loved to play outside. One day, he found a big drum in his yard. Tim was very happy. / Tim started to play the drum with his friend, Sam. They ran and played until it was dark. But then, Tim felt a sneeze coming. He said, "Oh no! My drum is gone now." Tim looked sad and asked, "Why did Sam sleep like that?" / Sam said, "I don't know." Tim felt sad too because he knew he should not have played with drums. They both laughed and
+   >> Lily wanted to go to the park, but| she did not want to play. She asked her mom, "Mom, can I go to the park?" Her mom said, "You can play with your toys and have fun!" / Tim played with his ball, but he did not know it was dirty. He could not play with it. His mom said, "Tim, that is not a good game. You will get to play with the ball later." / Tim was sad, but he learned that it is important to say sorry to his mom. He went to the park with his mom. At the park, Tim saw a big
+   >> The little dog was sad because| he could not find his home. The little girl wanted to help the monster, so she went to the kitchen. / The little girl looked for her own home. She found her shadow under the bed. The little girl was happy again. She thanked the monster for his help. They became good friends and played together in the forest every day.
+step  12100 loss 1.6337 kl 0.2612 lr 4.26e-04 gn 0.21 477,460 tok/s mem 2.1GB rate 0.050 [0.07 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  12200 loss 1.7246 kl 0.2711 lr 4.14e-04 gn 0.20 478,892 tok/s mem 2.1GB rate 0.050 [0.07 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  12300 loss 1.7087 kl 0.2655 lr 4.01e-04 gn 0.21 488,140 tok/s mem 2.1GB rate 0.051 [0.07 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  12400 loss 1.5970 kl 0.2554 lr 3.90e-04 gn 0.22 488,266 tok/s mem 2.1GB rate 0.051 [0.07 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  12500 loss 1.6395 kl 0.2605 lr 3.79e-04 gn 0.21 487,760 tok/s mem 2.1GB rate 0.051 [0.07 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  12600 loss 1.6130 kl 0.2628 lr 3.69e-04 gn 0.22 487,923 tok/s mem 2.1GB rate 0.051 [0.07 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  12700 loss 1.6328 kl 0.2759 lr 3.60e-04 gn 0.23 488,574 tok/s mem 2.1GB rate 0.052 [0.07 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  12800 loss 1.6966 kl 0.2712 lr 3.51e-04 gn 0.21 488,025 tok/s mem 2.1GB rate 0.052 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  12900 loss 1.7591 kl 0.2873 lr 3.43e-04 gn 0.22 488,160 tok/s mem 2.1GB rate 0.052 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  13000 loss 1.8087 kl 0.2798 lr 3.35e-04 gn 0.22 456,474 tok/s mem 2.1GB rate 0.053 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+== eval step 13000 val_loss 1.6709 (EMA weights 1.6528)
+   >> Once upon a time|, there was a little girl named Sally. She loved to play in the park with her friends. One day, Sally found a big, heavy rock in her yard. She wanted to see what was inside the square. / Sally said to her friends, "I think that rock looks like a toy at the bottom of the hill!" Her friend, Sally, came to the park and saw the rock. She said, "Let's play a game!" They all took turns rolling the rock, and they laughed and had so much fun. / After a while, Sally's friend, Tim, asked
+   >> Lily wanted to go to the park, but| her mom said, "Let's dress up, but we must be careful." / Lily started to pull the car off the bike. It was fun, but she didn't want to. She saw a big dog coming near her. The dog barked and chased Lily's bike. Lily was scared and didn't know what to do. / Lily remembered her mom's words. She remembered her mom said, "Don't worry, Lily. I will help you." She took off the bike and put it back on the bike. Lily looked at her mom and said, "I'm sorry, mom
+   >> The little dog was sad because| he did not want to play with the big dog. The dog said, "I want to play with you, but I am too small." The big dog stopped and thought for a moment.  / The big dog asked, "Why don't you share the big bone?" The small dog said, "Okay, we can play together." The big dog took the small bone to school. They played and had fun. In the end, the big dog and the small dog became good friends. They learned that it is good to share and help each other.
+step  13100 loss 1.7845 kl 0.2855 lr 3.29e-04 gn 0.23 479,784 tok/s mem 2.1GB rate 0.053 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  13200 loss 1.5863 kl 0.2562 lr 3.23e-04 gn 0.21 485,942 tok/s mem 2.1GB rate 0.053 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  13300 loss 1.6039 kl 0.2565 lr 3.17e-04 gn 0.22 481,703 tok/s mem 2.1GB rate 0.054 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.07]
+step  13400 loss 1.7249 kl 0.2603 lr 3.13e-04 gn 0.20 488,771 tok/s mem 2.1GB rate 0.053 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.07]
+step  13500 loss 1.6830 kl 0.2583 lr 3.09e-04 gn 0.22 488,297 tok/s mem 2.1GB rate 0.054 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.07]
+step  13600 loss 1.6861 kl 0.2736 lr 3.06e-04 gn 0.22 413,230 tok/s mem 2.1GB rate 0.054 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.07]
+step  13700 loss 1.6818 kl 0.2655 lr 3.03e-04 gn 0.21 383,180 tok/s mem 2.1GB rate 0.053 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.07]
+step  13800 loss 1.6777 kl 0.2765 lr 3.01e-04 gn 0.23 383,260 tok/s mem 2.1GB rate 0.054 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.06]
+step  13900 loss 1.6885 kl 0.2714 lr 3.00e-04 gn 0.23 393,355 tok/s mem 2.1GB rate 0.054 [0.08 0.05 0.04 0.04 0.05 0.05 0.05 0.07]
+step  14000 loss 1.7086 kl 0.2613 lr 3.00e-04 gn 0.22 403,325 tok/s mem 2.1GB rate 0.054 [0.08 0.05 0.04 0.04 0.05 0.05 0.06 0.07]
+== eval step 14000 val_loss 1.6663 (EMA weights 1.6479)
+   >> Once upon a time|, there was a big farm. On this farm, there was a tall horse named Spot. Spot liked to run and play all day. / One day, he found a big ball in the field. Spot wanted to play with the ball, but he remembered where he was. So, Spot thought of a plan. He would roll the ball to the other side and try to roll it. / Spot pushed the ball with his nose. But the ball did not go away. The ball rolled and rolled and rolled until Spot could not get it. He was scared, but he kept trying. Finally
+   >> Lily wanted to go to the park, but| it was too high for her to reach. She felt a bit scared. She saw her friend Tom by the tree. Lily was tall and strong. Tom gave her a big smile. / Lily smiled to Tom. She gave him a hug and a kiss. Tom decided to give her a chance to be brave. He said, "Don't worry, Lily. You can still climb. I am ready to climb that tree." / Tom sat on the grass and watched Lily. He felt scared and lonely. He wished he had not been so selfish. He wished Lily had fun with the tree
+   >> The little dog was sad because| he lost his ball. / The man saw Tom crying and asked, "Why are you sad, little dog?" Tom said, "I lost my ball by myself. I can't find it." / The dog wanted to help Tom find his ball. They looked near the water, by the pond, and near the big river. They walked and walked until they found the big dog's house. The dog's home was still there, and the dog did not want to be together anymore. / Tom and the dog became best friends. They played together in the big yard and had lots of

@@ -1,0 +1,7 @@
+xgpj0 NVIDIA A100 80GB PCIe | runs/g3_d10 | --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --leak_rank 64 --batch 32 --seq 256 --steps 14000 --warmup 300 --eval_every 1000 --eval_batches 40 --log_every 100 --lr 3e-3 --teacher runs/g1_tf_full/ckpt.pt --distill_temp 1 --distill_weight 1.0
+Traceback (most recent call last):
+ModuleNotFoundError: No module named 'numpy._core._multiarray_umath'
+Traceback (most recent call last):
+    raise ImportError(msg) from exc
+ImportError: 
+train.py failed with exit code 1
