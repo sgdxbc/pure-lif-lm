@@ -808,7 +808,7 @@ loss 从 2.17 变为 3.30；全部换回静息漏电是 2.84，都比没有漏�
   - 数据用 **PG-19**：Project Gutenberg 上 1919 年以前出版的书，训练集 28,602 本，每本平均约 40 万字符，
     原论文的分词下约 20 亿 token。它是长距离语言模型的常用测试集，结果可以和文献对照。
   - 第一步：下载、为它训练新的分词器、转换成 token（CPU 作业），保留每本书的边界
-    （`slurm/pg19_download.sh`、`prepare_pg19.py`；8192 个词的字节级 BPE，在验证集上平均每个 token 3.8 个字符，每本书约 9 万个 token）。
+    （`slurm/pg19_download.sh`、`prepare_pg19.py`；8192 个词的字节级 BPE，在 400 本训练书上训练）。已完成：训练集 28,602 本书、30.6 亿 token，验证集 50 本、457 万 token，测试集 100 本、1077 万 token；平均每个 token 3.7 个字符，每本书约 10.7 万个 token。
   - 第二步的工具已备好，都在 CPU 上测试过：
     - `train.py --data data/pg19 --tokenizer tok8192.json --vocab 8192` 读 PG-19；
     - Transformer 对照组可以用旋转位置编码（`--rope`），不再受学到的位置向量长度的限制；
