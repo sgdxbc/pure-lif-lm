@@ -1,7 +1,7 @@
 // LIF neuron scan kernels (CPU, OpenMP).
 //
 // Discrete-time LIF, one simulation step per token:
-//   V_pre[t]  = beta * V_post[t-1] + I[t] (+ R s[t-1])   (leaky integration; optional same-layer synapses)
+//   V_pre[t]  = beta * V_post[t-1] + I[t]               (leaky integration)
 //   S[t]      = Heaviside(V_pre[t] - theta)             (fire)
 //   V_post[t] = V_pre[t] - theta * S[t]                 (soft reset, "subtract")
 //            or V_pre[t] * (1 - gamma * S[t])           (multiplicative reset; gamma = 1 is the classic
@@ -9,17 +9,14 @@
 //
 // Backward uses a surrogate derivative for the Heaviside:
 //   z = (V - theta) / theta,   dS/dV ~= sg(z) / theta
-// Layouts: I, S, V_pre are (B, L, D) contiguous; beta, theta, gamma are (D); v0 / s0 are (B, D).
+// Layouts: I, S, V_pre are (B, L, D) contiguous; beta, theta, gamma are (D); v0 is (B, D).
 // I / S / dS / dI may be float32 or bfloat16 (spikes are exactly 0/1 either way); all internal
 // arithmetic and the saved membrane potential V_pre are float32.
 //
-// Two kernels:
-//  * lif_forward / lif_backward: no same-layer synapses. Every neuron is independent, so work is split
-//    over (batch, chunk-of-neurons) and each task walks through time on its own.
-//  * lif_rec_forward / lif_rec_backward: with low-rank same-layer synapses R = A @ Bm acting on the
-//    previous step's spikes. Time is the outer loop; each step does a small matmul, then an element-wise
-//    update parallelised over (batch, neuron). The weight gradients of A and Bm are formed afterwards in
-//    Python from dI and S with two large matmuls.
+// Every neuron is independent, so work is split over (batch, chunk-of-neurons) and each task walks through
+// time on its own. Two kernels: lif_forward / lif_backward (a fixed leak per neuron) and lif_tv_forward /
+// lif_tv_backward (the leak changes every step, for the leak-modulating synapses). (A third kernel for same-layer
+// synapses was removed with that option; it is in commit 490e9e6.)
 
 #include <torch/extension.h>
 #include <c10/util/BFloat16.h>
@@ -360,106 +357,9 @@ std::vector<torch::Tensor> lif_tv_backward(torch::Tensor gS, torch::Tensor Vp, t
     return {gI, gM, gbl, gt, gg, gv0};
 }
 
-// ============================================================ kernel 2: same-layer synapses
-template <bool HARD, typename T>
-static void rec_fwd_step(int64_t B, int64_t L, int64_t D, int64_t t, const T* Ip, const T* recp,
-                         const float* bp, const float* tp, const float* gp, float* vp, T* Sp, float* Vpp) {
-#pragma omp parallel for schedule(static)
-    for (int64_t b = 0; b < B; ++b) {
-        const int64_t off = (b * L + t) * D;
-        const T* __restrict it = Ip + off;
-        const T* __restrict rc = recp + b * D;
-        float* __restrict v = vp + b * D;
-        T* __restrict st = Sp + off;
-        float* __restrict xt = Vpp + off;
-#pragma omp simd
-        for (int64_t d = 0; d < D; ++d) {
-            const float x = bp[d] * v[d] + tof(it[d]) + tof(rc[d]);
-            xt[d] = x;
-            const float s = x >= tp[d] ? 1.f : 0.f;
-            st[d] = fromf<T>(s);
-            v[d] = reset<HARD>(x, s, tp[d], gp[d]);
-        }
-    }
-}
-
-std::vector<torch::Tensor> lif_rec_forward(torch::Tensor I, torch::Tensor beta, torch::Tensor theta,
-                                           torch::Tensor gamma, torch::Tensor v0, torch::Tensor s0,
-                                           torch::Tensor A, torch::Tensor Bm, int64_t hard_reset) {
-    TORCH_CHECK(I.is_contiguous() && I.dim() == 3);
-    check_params(beta, theta, gamma, v0);
-    TORCH_CHECK(s0.dtype() == I.dtype() && A.dtype() == I.dtype() && Bm.dtype() == I.dtype());
-    const int64_t B = I.size(0), L = I.size(1), D = I.size(2);
-    auto S = torch::empty_like(I);
-    auto Vp = torch::empty({B, L, D}, I.options().dtype(torch::kFloat32));
-    auto v = v0.clone();
-    torch::Tensor sprev = s0;
-    const float *bp = beta.data_ptr<float>(), *tp = theta.data_ptr<float>(), *gp = gamma.data_ptr<float>();
-    for (int64_t t = 0; t < L; ++t) {
-        auto rec = at::mm(at::mm(sprev, A), Bm).contiguous();   // (B, D): current through same-layer synapses
-#define STEP(T) do { \
-            if (hard_reset) rec_fwd_step<true, T>(B, L, D, t, I.data_ptr<T>(), rec.data_ptr<T>(), bp, tp, gp, \
-                                                  v.data_ptr<float>(), S.data_ptr<T>(), Vp.data_ptr<float>()); \
-            else rec_fwd_step<false, T>(B, L, D, t, I.data_ptr<T>(), rec.data_ptr<T>(), bp, tp, gp, \
-                                        v.data_ptr<float>(), S.data_ptr<T>(), Vp.data_ptr<float>()); } while (0)
-        if (I.dtype() == torch::kFloat32) STEP(float);
-        else if (I.dtype() == torch::kBFloat16) STEP(c10::BFloat16);
-        else TORCH_CHECK(false, "I must be float32 or bfloat16");
-#undef STEP
-        sprev = S.select(1, t);
-    }
-    return {S, Vp, v};
-}
-
-template <bool HARD, bool DETACH, int SG, typename T>
-static void rec_bwd_step(int64_t B, int64_t L, int64_t D, int64_t t, const T* gSp, const T* carryp,
-                         const float* Vpp, const float* bp, const float* tp, const float* gmp,
-                         const float* v0p, T* gIp, float* gpost, float* accb, float* acct, float* accg,
-                         float alpha) {
-#pragma omp parallel for schedule(static)
-    for (int64_t b = 0; b < B; ++b) {
-        const int64_t off = (b * L + t) * D;
-        bwd_elem<HARD, DETACH, SG, T, T>(D, gSp + off, carryp + b * D, Vpp + off,
-                                         t > 0 ? Vpp + off - D : nullptr, v0p + b * D, bp, tp, gmp,
-                                         gIp + off, gpost + b * D, accb + b * D, acct + b * D,
-                                         accg + b * D, alpha);
-    }
-}
-
-// Returns gI (B,L,D), gbeta_partial, gtheta_partial, ggamma_partial (B,D), gv0 (B,D), gs0 (B,D)
-std::vector<torch::Tensor> lif_rec_backward(torch::Tensor gS, torch::Tensor Vp, torch::Tensor beta,
-                                            torch::Tensor theta, torch::Tensor gamma, torch::Tensor v0,
-                                            torch::Tensor gvlast, torch::Tensor A, torch::Tensor Bm,
-                                            int64_t hard_reset, double alpha_d, int64_t detach_reset,
-                                            int64_t sg_type) {
-    TORCH_CHECK(gS.is_contiguous() && Vp.is_contiguous() && Vp.dtype() == torch::kFloat32);
-    check_params(beta, theta, gamma, v0);
-    const int64_t B = Vp.size(0), L = Vp.size(1), D = Vp.size(2);
-    auto gI = torch::empty_like(gS);
-    auto fopt = Vp.options();
-    auto gpost = gvlast.clone();
-    auto accb = torch::zeros({B, D}, fopt), acct = torch::zeros({B, D}, fopt), accg = torch::zeros({B, D}, fopt);
-    auto carry = torch::zeros({B, D}, gS.options());      // dL/dS[t] arriving through the same-layer synapses
-    auto At = A.t().contiguous(), Bt = Bm.t().contiguous();
-    const float a = (float)alpha_d;
-    for (int64_t t = L - 1; t >= 0; --t) {
-#define ARGS(T) B, L, D, t, gS.data_ptr<T>(), carry.data_ptr<T>(), Vp.data_ptr<float>(), beta.data_ptr<float>(), \
-            theta.data_ptr<float>(), gamma.data_ptr<float>(), v0.data_ptr<float>(), gI.data_ptr<T>(), \
-            gpost.data_ptr<float>(), accb.data_ptr<float>(), acct.data_ptr<float>(), accg.data_ptr<float>(), a
-        if (gS.dtype() == torch::kFloat32) DISPATCH_BWD(rec_bwd_step, float, ARGS(float));
-        else if (gS.dtype() == torch::kBFloat16) DISPATCH_BWD(rec_bwd_step, c10::BFloat16, ARGS(c10::BFloat16));
-        else TORCH_CHECK(false, "gS must be float32 or bfloat16");
-#undef ARGS
-        carry = at::mm(at::mm(gI.select(1, t), Bt), At).contiguous();   // dL/dS[t-1] via R
-    }
-    return {gI, accb, acct, accg, gpost, carry};
-}
-
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.def("forward", &lif_forward, "LIF forward");
     m.def("backward", &lif_backward, "LIF backward");
     m.def("tv_forward", &lif_tv_forward, "LIF forward with time-varying (input-controlled) leak");
     m.def("tv_backward", &lif_tv_backward, "LIF backward with time-varying (input-controlled) leak");
-    m.def("rec_forward", &lif_rec_forward, "LIF forward with same-layer synapses");
-    m.def("rec_backward", &lif_rec_backward, "LIF backward with same-layer synapses");
 }

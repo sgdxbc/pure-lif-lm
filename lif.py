@@ -97,42 +97,6 @@ class LIFLeakFunction(torch.autograd.Function):
         return gI, gM, gbl.sum(0), gt.sum(0), gg.sum(0), gv0, None, None, None, None
 
 
-class LIFRecFunction(torch.autograd.Function):
-    """LIF neurons with low-rank same-layer synapses: extra input current (s[t-1] @ A) @ Bm at step t."""
-
-    @staticmethod
-    def forward(ctx, I, beta, theta, gamma, v0, s0, A, Bm, hard_reset, alpha, detach_reset, sg_type):
-        I, beta, theta, gamma, v0 = _prep(I, beta, theta, gamma, v0)
-        dt = I.dtype
-        A_, B_, s0_ = A.to(dt).contiguous(), Bm.to(dt).contiguous(), s0.to(dt).contiguous()
-        S, Vp, vlast = _ext.rec_forward(I, beta, theta, gamma, v0, s0_, A_, B_, int(hard_reset))
-        ctx.save_for_backward(Vp, S, beta, theta, gamma, v0, s0_, A_, B_)
-        ctx.cfg = (int(hard_reset), float(alpha), int(detach_reset), int(sg_type))
-        ctx.dtypes = (dt, A.dtype, Bm.dtype, s0.dtype)
-        return S, vlast
-
-    @staticmethod
-    def backward(ctx, gS, gvlast):
-        Vp, S, beta, theta, gamma, v0, s0, A, Bm = ctx.saved_tensors
-        hard, alpha, detach, sg = ctx.cfg
-        dt, a_dt, b_dt, s0_dt = ctx.dtypes
-        if gS is None:
-            gS = torch.zeros_like(S)
-        if gvlast is None:
-            gvlast = torch.zeros_like(v0)
-        gI, gb, gt, gg, gv0, gs0 = _ext.rec_backward(gS.to(dt).contiguous(), Vp, beta, theta, gamma, v0,
-                                                     gvlast.float().contiguous(), A, Bm, hard, alpha,
-                                                     detach, sg)
-        # weight gradients of the same-layer synapses, as two large matmuls over all (batch, time)
-        B_, L, H = S.shape
-        S_prev = torch.cat([s0.unsqueeze(1), S[:, :-1]], 1).reshape(-1, H)
-        G = gI.reshape(-1, H)
-        gBm = (S_prev @ A).t() @ G
-        gA = S_prev.t() @ (G @ Bm.t())
-        return (gI, gb.sum(0), gt.sum(0), gg.sum(0), gv0, gs0.to(s0_dt), gA.to(a_dt), gBm.to(b_dt),
-                None, None, None, None)
-
-
 def _defaults(I, gamma, v0):
     B, L, D = I.shape
     if gamma is None:
@@ -166,20 +130,6 @@ def lif_leak(I, beta_logit, M, theta, gamma=None, v0=None, hard_reset=False, alp
                                  SG_TYPES[sg])
 
 
-def lif_rec(I, beta, theta, A, Bm, gamma=None, v0=None, s0=None, hard_reset=False, alpha=4.0,
-            detach_reset=True, sg="sigmoid"):
-    """Like lif(), plus same-layer synapses: neuron i gets sum_j (A @ Bm)[j, i] * s_j[t-1] extra current.
-    s0: spikes of the step before the sequence (B, D), default zeros."""
-    gamma, v0 = _defaults(I, gamma, v0)
-    if s0 is None:
-        s0 = torch.zeros(I.shape[0], I.shape[2], dtype=I.dtype, device=I.device)
-    if I.is_cuda:   # no GPU kernel for same-layer synapses yet: slow but exact reference
-        return lif_reference(I, beta, theta, gamma, v0, hard_reset=hard_reset, alpha=alpha,
-                             detach_reset=detach_reset, sg=sg, A=A, Bm=Bm, s0=s0)
-    return LIFRecFunction.apply(I, beta, theta, gamma, v0, s0, A, Bm, hard_reset, alpha, detach_reset,
-                                SG_TYPES[sg])
-
-
 # ---------------------------------------------------------------- reference (slow, for testing)
 class _Spike(torch.autograd.Function):
     @staticmethod
@@ -206,19 +156,15 @@ class _Spike(torch.autograd.Function):
 
 
 def lif_reference(I, beta, theta, gamma=None, v0=None, hard_reset=False, alpha=4.0, detach_reset=True,
-                  sg="sigmoid", A=None, Bm=None, s0=None):
+                  sg="sigmoid"):
     B, L, D = I.shape
     v = I.new_zeros(B, D) if v0 is None else v0
     g = I.new_ones(D) if gamma is None else gamma
-    s_prev = I.new_zeros(B, D) if s0 is None else s0
     out = []
     for t in range(L):
         x = (beta[:, t] if beta.dim() == 3 else beta) * v + I[:, t]
-        if A is not None:
-            x = x + (s_prev @ A) @ Bm
         s = _Spike.apply(x, theta, alpha, SG_TYPES[sg])
         sr = s.detach() if detach_reset else s
         v = x * (1 - g * sr) if hard_reset else x - theta * sr
         out.append(s)
-        s_prev = s
     return torch.stack(out, 1), v

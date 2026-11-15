@@ -73,11 +73,6 @@ def slow_neuron_stats(model, arr, S):
         gam = torch.cat([l.gamma().detach() for l in model.layers]).cpu().numpy()
         res["gamma_quantiles_10_50_90"] = [float(q) for q in np.percentile(gam, [10, 50, 90])]
         res["gamma_share_below_0.5"] = float(np.mean(gam < 0.5))
-    if model.cfg.rec_rank > 0:
-        res["rec_weight_rms"] = float(np.mean([(l.rec_A @ l.rec_B).detach().pow(2).mean().sqrt().item()
-                                               for l in model.layers]))
-        res["w_in_weight_rms"] = float(np.mean([l.w_in.weight.detach().pow(2).mean().sqrt().item()
-                                                for l in model.layers]))
     return res
 
 

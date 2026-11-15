@@ -37,7 +37,7 @@ def param_order(model, args):
 def analyse(run):
     ck = torch.load(os.path.join(run, "ckpt.pt"), map_location="cpu")
     args = json.load(open(os.path.join(run, "args.json")))
-    cfg = Config(**ck["cfg"])
+    cfg = Config.from_dict(ck["cfg"])
     torch.manual_seed(args.get("seed", 0))
     model = SpikingLM(cfg)
     init, final = model.state_dict(), ck["model"]

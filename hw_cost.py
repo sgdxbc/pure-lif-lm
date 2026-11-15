@@ -17,9 +17,6 @@ Spiking network, per generated token and per stream:
   key neuron that fires adds the value (mem_dv additions) to its row of S, each query neuron that fires adds its row
   to the readout (sparse adds); the decay of S is one multiplication per synapse and step; S (24-bit) and the key and
   query potentials add to the state.
-  With the spiking bus (model.py, spike_bus), W_in and the first factor of the leak synapses read spikes too: they
-  move from dense MACs to additions over the active bus channels, and from "all weights" to "the columns of the
-  channels whose relay neuron fired"; the relay potentials add to the state.
 Transformer (analytic): MACs = weights + attention over c earlier tokens; bytes read = weights (shared by the streams)
   + each stream's key/value history of c tokens (8-bit); state = that history.
 Weights are counted at 8 and 4 bits. Firing comes from --windows validation windows of 256 tokens, each read from rest,
@@ -39,13 +36,12 @@ STREAMS = 16
 @torch.no_grad()
 def firing(model, windows, seq=256, dev="cpu", data="data"):
     """Per layer: firing rate per step ("rate"), share of neurons that fire at least once in a token in one stream
-    ("token") and in any of STREAMS streams ("token_any"). With the spiking bus also the same for the bus channels
-    (a channel is active when its ON or OFF relay neuron fires): "bus_rate", "bus_token", "bus_token_any"."""
+    ("token") and in any of STREAMS streams ("token_any"); with plastic synapses also the key and query neurons'
+    firing rates."""
     arr = np.memmap(os.path.join(HERE, data, "valid.bin"), dtype=np.uint16, mode="r")   # the run's own data
     starts = np.linspace(0, len(arr) - seq - 2, windows).astype(np.int64)
     T, L, M = model.cfg.steps_per_token, len(model.layers), len(getattr(model, "mem_layers", []))
-    keys = ("rate", "token", "token_any") + (("bus_rate", "bus_token", "bus_token_any") if model.cfg.spike_bus else ())
-    f = {k: np.zeros(L) for k in keys}
+    f = {k: np.zeros(L) for k in ("rate", "token", "token_any")}
     f.update({k: np.zeros(M) for k in (("mem_key_rate", "mem_query_rate") if M else ())})
     n = 0
     for g in range(0, windows - STREAMS + 1, STREAMS):
@@ -58,17 +54,12 @@ def firing(model, windows, seq=256, dev="cpu", data="data"):
                 f["mem_key_rate"][l] += (s[..., :hm] > 0.5).float().mean().item()
                 f["mem_query_rate"][l] += (s[..., hm:] > 0.5).float().mean().item()
             spikes = spikes[:-M]
-        for j, s in enumerate(spikes):
-            l, pre = (j, "") if j < L else (j - L, "bus_")
-            s = s > 0.5
-            if pre:                                          # relay spikes: channel active if ON or OFF fired
-                d = s.size(-1) // 2
-                s = s[..., :d] | s[..., d:]
-            s = s.view(STREAMS, seq, T, -1)
+        for l, s in enumerate(spikes):
+            s = (s > 0.5).view(STREAMS, seq, T, -1)
             tok = s.any(2)                                   # fired at any of the token's T steps
-            f[pre + "rate"][l] += s.float().mean().item()
-            f[pre + "token"][l] += tok.float().mean().item()
-            f[pre + "token_any"][l] += tok.any(0).float().mean().item()   # ... in any of the streams
+            f["rate"][l] += s.float().mean().item()
+            f["token"][l] += tok.float().mean().item()
+            f["token_any"][l] += tok.any(0).float().mean().item()   # ... in any of the streams
         n += 1
     return {k: v / n for k, v in f.items()}
 
@@ -76,16 +67,9 @@ def firing(model, windows, seq=256, dev="cpu", data="data"):
 def snn_cost(model, f):
     c = model.cfg
     V, d, H, L, r, T = c.vocab, c.d_model, c.d_hidden, c.n_layers, c.leak_rank, c.steps_per_token
-    assert c.rec_rank == 0 and c.delay_k == 0, "cost model covers neither same-layer nor delayed synapses"
     into = d * H + (d * r if r else 0)                       # W_in and the leak synapses' first factor: read the bus
     leak2 = r * H if r else 0                                # second factor of the leak synapses: dense (rank-r input)
-    if c.spike_bus:   # the bus reaches W_in and the leak synapses as spikes: only active channels' columns are used
-        dense_step, dense_w = leak2, L * (leak2 + H) + d * V
-        bus_adds = float(sum(f["bus_rate"][l] * (H + r) * d * T for l in range(L)))
-        bus_rows = lambda k: sum(f[k][l] * (H + r) * d for l in range(L))
-    else:
-        dense_step, dense_w = into + leak2, L * (into + leak2 + H) + d * V
-        bus_adds, bus_rows = 0.0, lambda k: 0.0
+    dense_step, dense_w = into + leak2, L * (into + leak2 + H) + d * V
     M = len(getattr(model, "mem_layers", []))
     mem_w = mem_macs = mem_adds = mem_state = 0
     if M:
@@ -95,16 +79,16 @@ def snn_cost(model, f):
         mem_adds = float(sum((f["mem_key_rate"][l] + f["mem_query_rate"][l]) * h * m * dv for l in range(M)))
         mem_state = M * (h * m * dv + 2 * h * m) * 3
         dense_w += mem_w
-    out = {"arch": "snn", "params": model.num_params(), "steps_per_token": T, "spike_bus": c.spike_bus,
+    out = {"arch": "snn", "params": model.num_params(), "steps_per_token": T,
            "dense_macs": T * L * dense_step + d * V + mem_macs,
-           "sparse_adds": float(sum(f["rate"][l] * H * T * d for l in range(L))) + bus_adds + mem_adds,
-           "state_bytes": L * H * 3 + (L * 2 * d * 3 if c.spike_bus else 0) + mem_state,
+           "sparse_adds": float(sum(f["rate"][l] * H * T * d for l in range(L))) + mem_adds,
+           "state_bytes": L * H * 3 + mem_state,
            "dense_weights": dense_w, "plastic_layers": M,
            "firing": {k: v.tolist() for k, v in f.items()}}
     for bits in (8, 4):
         b = bits / 8
-        one = (dense_w + sum(f["token"][l] * H * d for l in range(L)) + bus_rows("bus_token")) * b + d * b
-        many = (dense_w + sum(f["token_any"][l] * H * d for l in range(L)) + bus_rows("bus_token_any")) * b / STREAMS + d * b
+        one = (dense_w + sum(f["token"][l] * H * d for l in range(L))) * b + d * b
+        many = (dense_w + sum(f["token_any"][l] * H * d for l in range(L))) * b / STREAMS + d * b
         out[f"weights_bytes_{bits}bit"] = out["params"] * b
         out[f"bytes_per_token_{bits}bit"] = {"1 stream": one, "%d streams" % STREAMS: many}
     return out

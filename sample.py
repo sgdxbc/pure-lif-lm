@@ -18,7 +18,7 @@ def load(ckpt_path, ema=False, device="cpu"):
         from model_tf import GPT, TFConfig
         model = GPT(TFConfig(**ck["cfg"]))
     else:
-        model = SpikingLM(Config(**ck["cfg"]))
+        model = SpikingLM(Config.from_dict(ck["cfg"]))
     sd = ck["model"]
     if ema:
         assert "ema" in ck, f"{ckpt_path} has no EMA weights"

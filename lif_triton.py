@@ -5,7 +5,6 @@ Each Triton program handles BLOCK neurons of one sequence and walks through time
 (batch, neuron-blocks) exactly like the C++ kernel. Two variants:
   plain : per-neuron leak beta (D)
   leak  : leak changes every step, beta[b, t, d] = sigmoid(beta_logit[d] + M[b, t, d])
-Same-layer synapses (lif_rec) are not implemented here; on the GPU they fall back to the slow reference.
 
 Without a GPU the kernels can still be run (slowly) by Triton's interpreter: TRITON_INTERPRET=1.
 """

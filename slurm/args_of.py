@@ -9,12 +9,18 @@ win over these, since argparse keeps the last value.
 import json, os, sys
 
 SKIP = {"out", "device", "threads", "resume"}
+# options removed from model.py (its REMOVED; this script must not import torch): left out when off
+REMOVED_OFF = {"rec_rank": 0, "rec_init": None, "delay_k": 0, "delay_rank": None, "leak_gate": False,
+               "spike_bus": False, "bus_tau_min": None, "bus_tau_max": None, "bus_theta": None}
 STORE_TRUE = {"carry_state"}
 
 a = json.load(open(os.path.join(sys.argv[1], "args.json")))
 flags = []
 for k, v in a.items():
     if k in SKIP or v is None or v == "":
+        continue
+    if k in REMOVED_OFF:
+        assert REMOVED_OFF[k] is None or v == REMOVED_OFF[k], f"{k}={v}: removed from the code (commit 490e9e6 has it)"
         continue
     if k in STORE_TRUE:
         if v:

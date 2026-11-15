@@ -78,8 +78,7 @@ def qfrac(p, bits):
 def run(model, x, q, cal=None, rec=None):
     """Step-by-step forward pass with the rounding in q. rec: dict that collects the calibration maxima."""
     c = model.cfg
-    assert c.rec_rank == 0 and c.delay_k == 0 and not c.spike_bus and not getattr(c, "mem_heads", 0), \
-        "not implemented for same-layer, delayed or plastic synapses or the spiking bus"
+    assert not c.mem_heads, "not implemented for the plastic synapses"
     T, w, g_ = c.steps_per_token, q.get("w", 0), q.get("group", 0)
     A, Vb, Bb = q.get("a", 0), q.get("v", 0), q.get("b", 0)
     f32 = lambda t: t.float()
@@ -101,8 +100,6 @@ def run(model, x, q, cal=None, rec=None):
         gam = layer.gamma().float()
         if Bb:
             beta, gam = qfrac(beta, Bb), qfrac(gam, Bb)
-        if c.leak_gate:   # current scaled by (1 - beta), from the same lookup table
-            I = I * (1 - beta)
         if Vb:
             intb = cal["v_int_p" if q.get("vp") else "v_int"][li]
             frac = Vb - 1 - intb

@@ -133,8 +133,10 @@
 - **不包含**：注意力、归一化层（LayerNorm 等）、非脉冲的非线性单元。
 - **时间步**：每个 token 对应一个模拟时间步，同一时间步内脉冲逐层向上传完。
 - **可选扩展**（默认关闭，详见 [`docs/running.md`](docs/running.md#全部选项) 和 `model.py` 开头的说明）：
-  - 带延迟的突触、同层连接、每个 token 模拟多步、脉冲化总线、输入电流按 (1 − β) 缩放；
+  - 每个 token 模拟多步（`--steps_per_token`）；
   - **可塑突触**（`--mem_heads`）：一个用脉冲读写的联想记忆，是目前唯一偏离"纯 LIF"的选项，正在第十七批中试验。
+  - 试过但没有带来改善的结构选项（同层连接、带延迟的突触、脉冲化总线、输入电流缩放）已从代码里删掉，记录仍在实验记录里，
+    代码在提交 490e9e6。
   - 按第 0 节第 4 条，偏离纯 LIF 时要记录理由，并保留硬件上的好处：神经元之间传脉冲，状态大小固定。
 
 ## 训练方法
@@ -193,8 +195,8 @@ CLAUDE.md            给参与本项目的 Claude 会话的工作约定（英文
   probe_memory.py, probe_recall.py   TinyStories 上的两种回看测量
   scaling.py         验证 loss 对训练算力的图
   sample.py          文本补全
-  analyze.py         loss 曲线、发放图、时间常数分布（figs/）
-  neuron_drift.py, leak_stats.py, leak_ablate.py   早期的专项诊断（神经元参数、调节漏电的突触）
+  analyze.py         loss 曲线、发放图、时间常数分布（figs/，早期模型用，不再维护）
+  neuron_drift.py, leak_stats.py, leak_ablate.py   早期的专项诊断（神经元参数、调节漏电的突触），不再维护
 
 硬件代价
   hw_cost.py         每个 token 的计算量、要读的数据量、状态大小

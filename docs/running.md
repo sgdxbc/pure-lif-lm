@@ -10,7 +10,7 @@
 - **NVIDIA GPU**：用 Triton 内核（`lif_triton.py`，PyTorch 自带 Triton）。需要支持 bf16 的显卡（Ampere 及以后）。
   两种内核按张量所在的设备自动选择，方程和梯度完全相同（`test_lif.py`、`test_lif_gpu.py`；无 GPU 时可用 `TRITON_INTERPRET=1`
   在 CPU 上验证 Triton 内核：24 种设置下脉冲完全一致，梯度和参考实现的最大相对误差 2.8e-6；
-  整个模型在两种内核下 float32 梯度相差 1e-6 量级）。同层连接（`--rec_rank`）暂时没有 GPU 内核，会退回到很慢的参考实现。
+  整个模型在两种内核下 float32 梯度相差 1e-6 量级）。
 - `bash gpu_setup.sh`：在一台有 GPU 的机器上一次做完：检查显卡、安装依赖、下载并处理 TinyStories（和已有结果用的数据逐字节相同，
   见 `data/checksums.md5`）、内核正确性测试、各规模的训练速度。集群上的实测速度见 `runs/gpu_setup_report.md`。
 - 零样本基准另需 `lm_eval`、`transformers`、`datasets`；GPU 推理实测（`bench_gpu.py`）需要 `vllm`，建议单独的环境。
@@ -98,13 +98,7 @@ python3 train.py --device cuda --out runs/my_snn \
   `--tau_min/--tau_max`（时间常数的初始范围，单位 token）、`--in_norm`（慢神经元的初始化方式）、`--learn_beta/--learn_theta`。
 - `--leak_rank r`：调节漏电的突触（秩 r）。同一批脉冲除了注入电流，还通过另一组突触改变神经元漏电的快慢，
   `β[t] = sigmoid(β_logit + U·总线[t])`，网络可以按读到的内容决定一个神经元"保持"还是"清空"。现在的标准设置都用它（5.8 节起）。
-- `--delay_k k --delay_rank r`：带延迟的突触（1..k 个 token 之后到达），5.9 节。
-- `--rec_rank r`：低秩的同层连接（上一步的脉冲经突触回到同一层），5.2 节。
 - `--steps_per_token T`：每个 token 模拟 T 个时间步（5.21 节）。
-- `--spike_bus true`：脉冲化总线（每个神经元群之前，总线先经过一组中继 LIF 神经元，每个通道一对，一个由 +总线驱动，一个由 −总线驱动；
-  神经元群读的是它们的脉冲）。`--bus_tau_min/--bus_tau_max`、`--bus_theta` 是中继神经元的初始值。损失大、省得少，不再使用（5.23 节）。
-- `--leak_gate true`（需要 `--leak_rank`）：输入电流乘以 (1 − β[t])，即 `V[t] = β[t]·V[t-1] + (1 − β[t])·I[t]`；
-  阈值的初始值同时乘以 (1 − β)，所以初始化时和不加时是同一个网络。两个规模都变差，不再使用（5.26 节）。
 - `--mem_heads h [--mem_keys m --mem_dv dv --mem_every k]`：**可塑突触**（5.28 节）。每隔 k 层（默认每层），在神经元群之前加 h 组
   键神经元和查询神经元（每组各 m 个，时间常数短，减法复位）和一个 m × dv 的突触矩阵 S：
   `S[t] = λ·S[t-1] + k[t]·v[t]ᵀ`（k 是键神经元的脉冲，v = W_v·总线，λ 每组一个、可学习，初始时间常数在
@@ -118,6 +112,10 @@ python3 train.py --device cuda --out runs/my_snn \
   - **硬件代价**：键、查询、值的突触和 W_o 是稠密乘加（和 W_in 同类）；写入和读出是加法（每个发放的键或查询神经元 dv 次）；
     每步 S 整体衰减一次（每个突触一次乘法）；状态多出 h·m·dv 个数（每层），固定大小。`hw_cost.py`、`fpga_est.py`、`scaling.py` 都已计入，
     `quant_sim.py` 还不支持。
+
+**已删除的选项**：试过、没有带来改善的结构选项已从代码里删掉，以免每次改动都要照顾它们：同层连接 `--rec_rank`（5.2 节）、
+带延迟的突触 `--delay_k`（5.9 节）、脉冲化总线 `--spike_bus`（5.23 节）、输入电流按 (1 − β) 缩放 `--leak_gate`（5.26 节）。
+要重复用到它们的实验，请检出提交 490e9e6（那里的代码和文档都还在）。
 
 **训练方法**（不改变网络结构，默认都关闭）：
 - `--teacher 路径 --distill_weight a --distill_temp T`：知识蒸馏。损失 = (1−a)·交叉熵 + a·T²·KL(老师 ‖ 学生)，老师是已训练好的模型
