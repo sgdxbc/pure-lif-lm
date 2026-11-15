@@ -1,8 +1,9 @@
 #!/bin/bash
-#SBATCH -p gpu -c 8 --mem=64G -t 01:30:00 -o slurm/logs/%x-%j.out
+#SBATCH -p gpu -c 8 --mem=64G -t 03:00:00 -o slurm/logs/%x-%j.out
 #SBATCH --exclude=xgpj0  # numpy C extensions fail to import on this node (g2_tf105, g3_d10)
 # Validation loss on FineWeb-Edu of Hugging Face models with GPT-2's tokenizer (ref_loss.py -> runs/ref_loss.json):
-# targets for stage goal 1 and candidate teachers. From the repository root:
+# targets for stage goal 1 and candidate teachers. Weights in float32 (TF32 multiplies; the first run, 0e77aaf, used
+# bfloat16 and took 52 min on an A100-80). From the repository root:
 #   sbatch -J ref_loss --gres=gpu:a100-80:1 slurm/ref_loss.sbatch
 source slurm/env.sh
 python3 ref_loss.py --device cuda openai-community/gpt2 openai-community/gpt2-medium openai-community/gpt2-large \

@@ -19,7 +19,12 @@ def main():
     p.add_argument("--device", default="cuda")
     p.add_argument("--seq", type=int, default=1024)
     p.add_argument("--batch_tokens", type=int, default=32768)
+    p.add_argument("--dtype", default="float32", choices=["float32", "bfloat16"],
+                   help="weights; float32 multiplies in TF32 on the GPU (bfloat16 distorted Pythia's zero-shot results, "
+                        "README 5.24)")
     a = p.parse_args()
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
     from transformers import AutoModelForCausalLM, AutoTokenizer
     ours = json.load(open(os.path.join(HERE, "data", "fineweb", "gpt2.json")))["model"]["vocab"]
     arr = np.memmap(os.path.join(HERE, "data", "fineweb", "valid.bin"), dtype=np.uint16, mode="r")
@@ -35,7 +40,7 @@ def main():
         if bad:
             print(f"{name}: tokenizer differs from GPT-2's on {bad} tokens; skipped", flush=True)
             continue
-        model = AutoModelForCausalLM.from_pretrained(name, torch_dtype=torch.bfloat16).to(dev).eval()
+        model = AutoModelForCausalLM.from_pretrained(name, torch_dtype=getattr(torch, a.dtype)).to(dev).eval()
         params = sum(q.numel() for q in model.parameters())
         B = max(1, a.batch_tokens // a.seq)
         tot, cnt = 0.0, 0
@@ -47,7 +52,7 @@ def main():
                 logits = model(x).logits.float()
                 tot += F.cross_entropy(logits.flatten(0, 1), y.flatten(), reduction="sum").item()
                 cnt += y.numel()
-        res[name] = {"val_loss": tot / cnt, "params": params, "tokens": cnt, "seq": a.seq}
+        res[name] = {"val_loss": tot / cnt, "params": params, "tokens": cnt, "seq": a.seq, "dtype": a.dtype}
         print(f"{name:40s} {params / 1e6:7.0f}M  val_loss {tot / cnt:.4f}  ppl {math.exp(tot / cnt):7.2f}  "
               f"({time.time() - t0:.0f}s)", flush=True)
         json.dump(res, open(out_path, "w"), indent=1)
