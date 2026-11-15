@@ -1,0 +1,129 @@
+{
+ "model": "openai-community/gpt2-medium",
+ "gpu": "NVIDIA H100 NVL",
+ "idle_W": 95.86887245654282,
+ "max_model_len": 1024,
+ "rows": [
+  {
+   "streams": 1,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 826.0823144645057,
+   "decode_tok_s_per_stream": 826.0823144645057,
+   "ms_per_token": 1.210533118177495,
+   "decode_J_per_token": 0.25567716535433066,
+   "decode_avg_W": 211.2103845116296,
+   "prefill_s": 0.0060049789972254075,
+   "prefill_J": 0.0
+  },
+  {
+   "streams": 4,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 3196.997440485227,
+   "decode_tok_s_per_stream": 799.2493601213067,
+   "ms_per_token": 1.2511739763522918,
+   "decode_J_per_token": 0.06671259842519685,
+   "decode_avg_W": 213.2800064134731,
+   "prefill_s": 0.01130462499713758,
+   "prefill_J": 0.0
+  },
+  {
+   "streams": 16,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 11228.59327670572,
+   "decode_tok_s_per_stream": 701.7870797941075,
+   "ms_per_token": 1.4249336141859195,
+   "decode_J_per_token": 0.018414862204724408,
+   "decode_avg_W": 206.77299794343077,
+   "prefill_s": 0.023836740998376627,
+   "prefill_J": 0.0
+  },
+  {
+   "streams": 64,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 30606.749205472366,
+   "decode_tok_s_per_stream": 478.2304563355057,
+   "ms_per_token": 2.0910420629890694,
+   "decode_J_per_token": 0.009518577755905512,
+   "decode_avg_W": 291.332722167788,
+   "prefill_s": 0.041231393995985854,
+   "prefill_J": 0.0
+  },
+  {
+   "streams": 256,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 54065.55450783747,
+   "decode_tok_s_per_stream": 211.19357229624012,
+   "ms_per_token": 4.734992590576124,
+   "decode_J_per_token": 0.007356453001968503,
+   "decode_avg_W": 397.7307107622727,
+   "prefill_s": 0.09676419999595964,
+   "prefill_J": 26.03
+  },
+  {
+   "streams": 1,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 805.6212674182507,
+   "decode_tok_s_per_stream": 805.6212674182507,
+   "ms_per_token": 1.241278055139568,
+   "decode_J_per_token": 0.27379527559055117,
+   "decode_avg_W": 220.57529693438906,
+   "prefill_s": 0.01029299099900527,
+   "prefill_J": 0.0
+  },
+  {
+   "streams": 4,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 2967.1051420226686,
+   "decode_tok_s_per_stream": 741.7762855056671,
+   "ms_per_token": 1.3481153543730537,
+   "decode_J_per_token": 0.08513582677165354,
+   "decode_avg_W": 252.60694938452443,
+   "prefill_s": 0.020840565994149074,
+   "prefill_J": 0.0
+  },
+  {
+   "streams": 16,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 8510.152197061807,
+   "decode_tok_s_per_stream": 531.8845123163629,
+   "ms_per_token": 1.880107385802585,
+   "decode_J_per_token": 0.0421496062992126,
+   "decode_avg_W": 358.69956465253426,
+   "prefill_s": 0.05200067300029332,
+   "prefill_J": 0.0
+  },
+  {
+   "streams": 64,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 16448.000303644567,
+   "decode_tok_s_per_stream": 257.00000474444636,
+   "ms_per_token": 3.8910505118253678,
+   "decode_J_per_token": 0.019494586614173227,
+   "decode_avg_W": 320.6469665493466,
+   "prefill_s": 0.13705002200003946,
+   "prefill_J": 68.951
+  },
+  {
+   "streams": 256,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 20030.6081270829,
+   "decode_tok_s_per_stream": 78.24456299641759,
+   "ms_per_token": 12.78044073229452,
+   "decode_J_per_token": 0.019475824311023623,
+   "decode_avg_W": 390.1126047260285,
+   "prefill_s": 0.5473777110019,
+   "prefill_J": 221.232
+  }
+ ],
+ "vllm": "0.33.0"
+}
