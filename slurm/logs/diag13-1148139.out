@@ -1,0 +1,20 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+5153 passages, 81.5% of the last words appear earlier in the passage; 84 tokens per passage on average
+g13_snn212 (EMA)         acc 0.010 ppl   24591.1 | word earlier in passage (82%): acc 0.011 loss 10.47 (short 11.80, gain +1.33) | not: acc 0.006 loss 8.52 (gain +0.86) | net gain +0.47 | passage loss 4.494 | check {'passages': 20, 'max_diff_single_fp32': 1.0067863464355469, 'max_diff_stepwise_fp32': 1.006826400756836}
+g13_snn138 (EMA)         acc 0.013 ppl   31823.8 | word earlier in passage (82%): acc 0.014 loss 10.73 (short 11.91, gain +1.18) | not: acc 0.007 loss 8.76 (gain +0.75) | net gain +0.42 | passage loss 4.598 | check {'passages': 20, 'max_diff_single_fp32': 1.1566085815429688, 'max_diff_stepwise_fp32': 1.1566009521484375}
+g13_tf163                acc 0.197 ppl     329.3 | word earlier in passage (82%): acc 0.235 loss 5.42 (short 11.14, gain +5.72) | not: acc 0.030 loss 7.45 (gain +1.42) | net gain +4.31 | passage loss 4.130 | check {'passages': 20, 'max_diff_single_fp32': 0.0918734073638916}
+g13_tf77                 acc 0.147 ppl    1008.8 | word earlier in passage (82%): acc 0.176 loss 6.65 (short 11.53, gain +4.88) | not: acc 0.023 loss 8.07 (gain +1.21) | net gain +3.67 | passage loss 4.393 | check {'passages': 20, 'max_diff_single_fp32': 0.08513736724853516}
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights:  61%|██████▏   | 91/148 [00:00<00:00, 876.72it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 1234.34it/s]
+gpt2                     acc 0.321 ppl      34.2 | word earlier in passage (82%): acc 0.380 loss 2.99 (short 9.60, gain +6.61) | not: acc 0.062 loss 5.91 (gain +2.00) | net gain +4.61 | passage loss 3.653 | check {'passages': 20, 'max_diff_single_fp32': 0.5781717300415039}
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  33%|███▎      | 97/292 [00:00<00:00, 957.83it/s]Loading weights:  72%|███████▏  | 210/292 [00:00<00:00, 1051.50it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 1111.04it/s]
+gpt2-medium              acc 0.419 ppl      16.8 | word earlier in passage (82%): acc 0.485 loss 2.36 (short 9.19, gain +6.83) | not: acc 0.128 loss 4.85 (gain +2.50) | net gain +4.33 | passage loss 3.450 | check {'passages': 20, 'max_diff_single_fp32': 0.3340024948120117}
+probe_lambada: exit 0 Mon Nov 16 07:14:11 AM +08 2026
+g13_snn212: 2528 books of >= 1024 tokens, mean 3.7683  0-64 3.931  64-128 3.699  128-256 3.691  256-512 3.729  512-1024 3.796
+runs/g13_snn212 eval_long: exit 0 Mon Nov 16 07:14:35 AM +08 2026
+g13_snn138: 2528 books of >= 1024 tokens, mean 3.8619  0-64 4.024  64-128 3.796  128-256 3.787  256-512 3.824  512-1024 3.887
+runs/g13_snn138 eval_long: exit 0 Mon Nov 16 07:14:56 AM +08 2026
+g13_tf163: 2528 books of >= 1024 tokens, mean 3.2486  0-64 3.581  64-128 3.255  128-256 3.211  256-512 3.213  512-1024 3.233
+runs/g13_tf163 eval_long: exit 0 Mon Nov 16 07:15:16 AM +08 2026
+g13_tf77: 2528 books of >= 1024 tokens, mean 3.4749  0-64 3.817  64-128 3.485  128-256 3.441  256-512 3.437  512-1024 3.458
+runs/g13_tf77 eval_long: exit 0 Mon Nov 16 07:15:33 AM +08 2026
