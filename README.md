@@ -9,6 +9,8 @@
 2. **随算力提升的趋势**：展示投入的训练算力越多、质量越好，而且这个趋势能持续（loss 随训练算力变化的曲线，
    和同样数据上训练的 Transformer 并排比较）。真正的大规模训练留给以后。
 3. **硬件**：在目标硬件（FPGA、数据流加速器）上展现出某种实在的优势，最好不局限于很窄的场景；在没有优势的场景也不明显落后。
+   **比较口径**：Transformer 一方用它表现最好的硬件上的对应指标，可以是 GPU，用成熟的推理软件实测；
+   不把不适合在非 GPU 硬件上跑的 Transformer 硬搬到 FPGA 或数据流加速器上来比。
 4. **结构**：纯 LIF 不再是硬性要求，硬性要求是能在目标硬件上跑起来。但尽量保留（或接近保留）LIF 神经元，结构保持单纯，
    给以后的扩展和更多的部署方式留余地。
 
@@ -42,6 +44,9 @@
   - **近期可以主张的：多路并发、长文本时每个 token 的成本。** 按现在"257M 脉冲网络约等于 30M Transformer"的水平，
     只有在这个场景下脉冲网络读显存的量更少；前提是长文本上的质量得到验证。
 - 每批实验除了验证 loss 和回看能力，同时报告硬件代价（`hw_cost.py`，口径见 5.20 节），并和同样算法下的 Transformer 对照。
+  这些"同样算法下"的数字只用来理解两种网络各自的代价从哪里来；**正式的硬件比较**按第 0 节第 3 条的口径：
+  Transformer 在 GPU 上实测（`bench_gpu.py`：吞吐量、每个 token 的延迟、显卡功耗折算的每 token 能耗，按并发路数和文本长度分别测），
+  脉冲网络在 FPGA 或数据流加速器上估算，以后用原型实测。
 
 ## 1. "纯 LIF"具体指什么
 
@@ -977,6 +982,7 @@ prepare_pg19.py  PG-19：分词器 + 转 token，保留每本书的起点（5.22
 eval_long.py     长文本评测：从书的开头读到 8192 个 token，按位置区间报告 loss（5.22 节）
 prepare_fineweb.py  FineWeb-Edu：GPT-2 分词器转 token（分词器 data/fineweb/gpt2.json 在仓库里；5.24 节）
 eval_lm.py       零样本基准（lm-evaluation-harness：HellaSwag、LAMBADA、PIQA、ARC、WinoGrande），也可测 Hugging Face 上的参考模型
+bench_gpu.py     Transformer 在 GPU 上的实测推理代价（vLLM：按并发路数和文本长度，吞吐量、每 token 延迟、每 token 能耗；第 0 节）
 train.py         训练（--arch snn|tf）
 sample.py        文本补全（-i 交互模式）
 evaluate.py      完整验证集评估 + 批量样例

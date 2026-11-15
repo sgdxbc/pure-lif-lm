@@ -7,7 +7,9 @@
   2. Scaling: show that quality keeps improving as more training compute is put in (loss against compute, next to a
      Transformer trained on the same data). Real large-scale training is left for later.
   3. Hardware: on the target hardware (FPGA, dataflow accelerators) show some concrete advantage, ideally not tied
-     to a narrow scenario, and not fall clearly behind where there is no advantage.
+     to a narrow scenario, and not fall clearly behind where there is no advantage. Compare against the
+     Transformer's corresponding numbers on the hardware where it performs best (a GPU is fine, measured with a mature
+     inference stack); do not force a Transformer onto non-GPU hardware it is ill-suited to (owner, 2026-11-15).
   4. Structure: pure LIF is no longer a hard requirement (running on the target hardware is). Keep LIF neurons as
      fully as possible, keep the structure simple, and leave room for extensions and wider deployment.
 - Considered and set aside for now (2026-11-15): matching a current frontier 7-9B model. Training at that level
