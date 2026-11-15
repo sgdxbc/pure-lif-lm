@@ -12,6 +12,8 @@ First occurrences of content words are reported as a control: there the long con
 through the general topic of the story, not by recalling the same word.
 
   python3 probe_recall.py tf=runs/p1_tf/ckpt.pt snn=runs/p1_reset_spread/ckpt.pt --out runs/recall.json
+With --length 512 the stories are read up to 512 tokens and a d=257-512 bucket is added (only stories of at least
+513 tokens qualify, about 2% of them, so the earlier buckets are measured on different stories than by default).
 """
 import argparse, json, os
 import numpy as np
@@ -20,8 +22,8 @@ import torch.nn.functional as F
 from sample import load
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-L, W = 256, 16
-BUCKETS = [(1, 5), (5, 17), (17, 33), (33, 65), (65, 129), (129, 257)]
+L, W = 256, 16   # L: tokens read per story (--length)
+BUCKETS = [(1, 5), (5, 17), (17, 33), (33, 65), (65, 129), (129, 257), (257, 513), (513, 1025)]   # those with lo <= L
 N_FREQUENT = 150
 
 
@@ -79,13 +81,15 @@ def main():
     p.add_argument("--out", default=None)
     p.add_argument("--device", default="cpu")
     p.add_argument("--ema", action="store_true", help="use the moving-average weights (train.py --ema)")
+    p.add_argument("--length", type=int, default=256, help="tokens read per story (stories shorter than this are skipped)")
     a = p.parse_args()
-    global DEV
+    global DEV, L
     DEV = torch.device(a.device)
+    L = a.length
     torch.set_num_threads(a.threads)
     X, rows = build(a.stories)
     t_, d_ = rows[:, 1], rows[:, 2]
-    groups = {f"repeat d={lo}-{hi - 1}": (d_ >= lo) & (d_ < hi) for lo, hi in BUCKETS}
+    groups = {f"repeat d={lo}-{hi - 1}": (d_ >= lo) & (d_ < hi) for lo, hi in BUCKETS if lo <= L}
     groups["first occurrence"] = d_ == 0
     need_short = (t_ >= W - 1) & ((d_ > W) | (d_ == 0))   # earlier occurrence (if any) lies outside the window
     sel = rows[need_short]
