@@ -35,7 +35,10 @@
   streams and long text, once quality on long text is shown. Report the hardware cost (hw_cost.py, README 5.20)
   with every wave.
 - The owner has left it to the cloud session to decide how to proceed (2026-11-15): plan and launch waves without
-  asking first, and report results and decisions afterwards.
+  asking first, and report results and decisions afterwards. Confirmed again for the new stage goals: keep going on
+  your own until they are reached, exploring any improvement freely. The spiking network may have more parameters
+  than the Transformer it is compared with, as long as it reaches the goals. The owner suggests (without firm
+  grounds) trying improvements to the training method first.
 
 ## Working conventions
 - Experiments run on a 4-core CPU with the C++/OpenMP kernels in lif_kernel.cpp; queue scripts are phase*.sh.

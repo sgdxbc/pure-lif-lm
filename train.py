@@ -10,6 +10,15 @@ Optional training methods (all off by default; the architecture is unchanged by 
         each batch row reads a continuous stretch of the training text, segment after segment, and the membrane
         potentials at the end of one segment are the starting state of the next (gradients stop at the segment
         boundary). Without it every segment starts from rest.
+  --optim muon
+        Muon (Jordan et al. 2024: momentum, then the update matrix is replaced by the nearest semi-orthogonal matrix,
+        computed by a Newton-Schulz iteration) for the 2-D weights inside the layers (W_in, W_out, the leak and delay
+        synapses; in the Transformer the attention and MLP matrices); AdamW, as before, for the input and readout
+        synapses (embedding, head, positions), biases and the per-neuron parameters. The Muon update is scaled by
+        0.2 * sqrt(max(rows, cols)) (Liu et al. 2025, "Muon is scalable"), so the AdamW learning rate carries over.
+  --teacher hf:NAME
+        a Hugging Face model as the teacher (needs transformers), e.g. hf:openai-community/gpt2-large on data
+        tokenized with GPT-2's tokenizer; its logits are padded to the student's vocabulary.
 """
 import argparse, json, math, os, time
 from dataclasses import asdict, fields
@@ -60,6 +69,8 @@ def get_args():
     p.add_argument("--data", default="data", help="directory with train.bin / valid.bin (e.g. data/pg19)")
     p.add_argument("--tokenizer", default="tok4096.json", help="tokenizer file in --data")
     p.add_argument("--rope", action="store_true", help="tf: rotary position embedding instead of learned positions")
+    p.add_argument("--optim", default="adamw", choices=["adamw", "muon"])
+    p.add_argument("--muon_momentum", type=float, default=0.95)
     a = p.parse_args()
     if a.device == "auto":
         a.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -126,6 +137,70 @@ class EMA:
             self.shadow[k] = cur.float()
 
 
+def newton_schulz(G, steps=5):
+    """Approximately the nearest semi-orthogonal matrix to G (U V^T of its SVD), by the quintic Newton-Schulz
+    iteration of Muon; computed in bfloat16 on the GPU."""
+    a_, b_, c_ = 3.4445, -4.7750, 2.0315
+    X = G.to(torch.bfloat16 if G.is_cuda else torch.float32)
+    tall = X.size(0) > X.size(1)
+    if tall:
+        X = X.T
+    X = X / (X.norm() + 1e-7)
+    for _ in range(steps):
+        A = X @ X.T
+        X = a_ * X + (b_ * A + c_ * A @ A) @ X
+    return (X.T if tall else X).float()
+
+
+class Muon(torch.optim.Optimizer):
+    """Muon for 2-D weights: Nesterov momentum, orthogonalised update, decoupled weight decay."""
+
+    def __init__(self, params, lr, momentum=0.95, weight_decay=0.0, ns_steps=5):
+        super().__init__(params, dict(lr=lr, momentum=momentum, weight_decay=weight_decay, ns_steps=ns_steps))
+
+    @torch.no_grad()
+    def step(self):
+        for g in self.param_groups:
+            for p in g["params"]:
+                if p.grad is None:
+                    continue
+                st = self.state[p]
+                if "buf" not in st:
+                    st["buf"] = torch.zeros_like(p, dtype=torch.float32)
+                grad = p.grad.float()
+                buf = st["buf"].mul_(g["momentum"]).add_(grad)
+                u = newton_schulz(grad.add(buf, alpha=g["momentum"]), g["ns_steps"])
+                u.mul_(0.2 * math.sqrt(max(p.size(0), p.size(1))))
+                p.mul_(1 - g["lr"] * g["weight_decay"])
+                p.add_(u.to(p.dtype), alpha=-g["lr"])
+
+
+class Optimizers:
+    """Several optimizers stepped together (Muon for some weights, AdamW for the rest), seen as one."""
+
+    def __init__(self, opts):
+        self.opts = opts
+
+    @property
+    def param_groups(self):
+        return [g for o in self.opts for g in o.param_groups]
+
+    def zero_grad(self, set_to_none=True):
+        for o in self.opts:
+            o.zero_grad(set_to_none=set_to_none)
+
+    def step(self):
+        for o in self.opts:
+            o.step()
+
+    def state_dict(self):
+        return {"optimizers": [o.state_dict() for o in self.opts]}
+
+    def load_state_dict(self, sd):
+        for o, s_ in zip(self.opts, sd["optimizers"]):
+            o.load_state_dict(s_)
+
+
 def lr_at(step, a):
     if step < a.warmup:
         return a.lr * (step + 1) / a.warmup
@@ -183,13 +258,20 @@ def main():
     model.to(dev)
     neuron_keys = ("beta_logit", "log_theta", "gamma_logit")
     is_neuron = lambda n: a.neuron_lr_mult != 1.0 and n.endswith(neuron_keys)
-    decay = [p for n, p in model.named_parameters() if p.dim() >= 2 and p.requires_grad]
-    no_decay = [p for n, p in model.named_parameters() if p.dim() < 2 and p.requires_grad and not is_neuron(n)]
+    # Muon: the 2-D weights inside the layers; the input/readout synapses (embedding, head, positions) stay on AdamW
+    is_muon = lambda n, p: a.optim == "muon" and p.dim() == 2 and not n.split(".")[0] in ("embed", "head", "pos")
+    named = [(n, p) for n, p in model.named_parameters() if p.requires_grad]
+    decay = [p for n, p in named if p.dim() >= 2 and not is_muon(n, p)]
+    no_decay = [p for n, p in named if p.dim() < 2 and not is_neuron(n)]
     groups = [{"params": decay, "weight_decay": a.wd}, {"params": no_decay, "weight_decay": 0.0}]
     if a.neuron_lr_mult != 1.0:   # separate group only when used, so older checkpoints still resume
-        neuron = [p for n, p in model.named_parameters() if p.requires_grad and is_neuron(n)]
+        neuron = [p for n, p in named if is_neuron(n)]
         groups.append({"params": neuron, "weight_decay": 0.0, "lr_mult": a.neuron_lr_mult})
     opt = torch.optim.AdamW(groups, lr=a.lr, betas=(0.9, 0.95))
+    if a.optim == "muon":
+        muon = [p for n, p in named if is_muon(n, p)]
+        opt = Optimizers([opt, Muon(muon, lr=a.lr, momentum=a.muon_momentum, weight_decay=a.wd)])
+        print(f"Muon for {len(muon)} matrices ({sum(p.numel() for p in muon) / 1e6:.1f}M weights), AdamW for the rest")
     step = 0
     ckpt_path = os.path.join(a.out, "ckpt.pt")
     if a.resume and os.path.exists(ckpt_path):
@@ -203,8 +285,21 @@ def main():
             ema.shadow = {k: v.to(dev) for k, v in ck["ema"].items()}
     teacher = None
     if a.teacher and a.distill_weight > 0:
-        from sample import load
-        teacher, _ = load(a.teacher)
+        if a.teacher.startswith("hf:"):   # a Hugging Face model, e.g. hf:openai-community/gpt2-large
+            from transformers import AutoModelForCausalLM
+            hf = AutoModelForCausalLM.from_pretrained(a.teacher[3:], torch_dtype=torch.bfloat16)
+
+            class HFTeacher(torch.nn.Module):
+                def __init__(self, m):
+                    super().__init__()
+                    self.m = m
+
+                def forward(self, x):
+                    return (self.m(x).logits,)
+            teacher = HFTeacher(hf)
+        else:
+            from sample import load
+            teacher, _ = load(a.teacher)
         teacher.to(dev).eval()
         for p_ in teacher.parameters():
             p_.requires_grad_(False)
@@ -225,6 +320,15 @@ def main():
     t0 = time.time(); tl = time.time(); tokens_seen = step * a.batch * a.seq
     amp = lambda: torch.autocast(dev.type, dtype=torch.bfloat16)
     state = None   # carried membrane potentials (--carry_state)
+    if teacher is not None and step == 0:   # the teacher's own loss on the validation batches, for reference
+        rng, tot = np.random.default_rng(1234), 0.0
+        for _ in range(a.eval_batches):
+            xv, yv = val.batch(a.batch, rng)
+            with torch.no_grad(), amp():
+                tv = teacher(xv.to(dev))[0]
+            tot += F.cross_entropy(tv.float().flatten(0, 1), yv.to(dev).flatten()).item()
+        print(f"teacher val_loss {tot / a.eval_batches:.4f}", flush=True)
+        logf.write(json.dumps({"step": 0, "teacher_val_loss": tot / a.eval_batches}) + "\n"); logf.flush()
     while step < a.steps:
         lr = lr_at(step, a)
         for g in opt.param_groups:
@@ -247,6 +351,8 @@ def main():
                 t_logits = teacher(x)[0]
             T = a.distill_temp
             V = logits.size(-1)
+            if t_logits.size(-1) < V:   # e.g. GPT-2's 50257 against the padded 50304: the rest get no probability
+                t_logits = F.pad(t_logits.float(), (0, V - t_logits.size(-1)), value=-1e4)
             kd = F.kl_div(F.log_softmax(logits.float().view(-1, V) / T, -1),
                           F.log_softmax(t_logits.float().view(-1, V) / T, -1),
                           log_target=True, reduction="batchmean") * T * T

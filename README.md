@@ -912,6 +912,16 @@ loss 从 2.17 变为 3.30；全部换回静息漏电是 2.84，都比没有漏�
     Transformer 163M（GPT-2 small 的形状）和 77M，都读 25 亿 token（1024 个 token 的片段），暂不用老师。
     跑完后自动做完整验证、零样本基准和硬件代价；同时测四个参考模型的零样本基准。
     长训练按 3 小时一段自动接力（`slurm/train.sbatch` 的 `RELAY`）。
+  - 参数量可以比 Transformer 大，只要达到目标（2026-11-15 确认）。项目负责人建议优先考虑改进训练方式。
+- **第十四批**（`gpu14.sh`，TinyStories 上快速筛选）：**换优化器 Muon**（`--optim muon`，见第 6 节）。
+  层内的二维权重（`W_in`、`W_out`、调节漏电的突触；Transformer 里是注意力和前馈层的矩阵）改用 Muon：
+  先做动量平均，再把更新矩阵换成最接近它的"正交"矩阵（各个方向的步长拉平）。
+  在 Transformer 的训练里（modded-nanogpt、Moonlight），它达到同样的 loss 所需的 token 明显少于 AdamW；
+  对脉冲网络是否也有效，是这一批要回答的问题。输入和读出的突触、偏置和神经元自身的参数仍用 AdamW。
+  117M + 三种方法用 Muon（学习率 6e-4 和 1.2e-3），和第四批的 1.278 比较；105M Transformer 也用 Muon，和 1.139 比较
+  （如果对 Transformer 也有效，通用文本上的 Transformer 对照组也要用它，比较才公平）。
+  另外，训练现在可以直接用 Hugging Face 上的模型当老师（`--teacher hf:名字`），GPT-2 系列和 FineWeb-Edu 的数据用同一个分词器，
+  可以直接给通用文本上的脉冲网络当老师。
 
 ## 6. 在 GPU 上运行
 
@@ -933,6 +943,10 @@ python3 evaluate.py --device cuda --ckpt runs/xxx/ckpt.pt --out runs/xxx/final_e
 - `--ema d`：同时保存权重的滑动平均（例如 0.999），评估时两种权重都报告；`evaluate.py --ema`、`sample.py --ema` 使用平均后的权重。
 - `--carry_state`：每个 batch 的每一行沿着训练文本连续往下读，上一段结束时的膜电位作为下一段的起点（梯度在段与段之间截断）。
   不加时每段都从静息状态开始。
+- `--optim muon`：层内的二维权重用 Muon（动量 `--muon_momentum`，默认 0.95；更新乘以 0.2·√max(行数, 列数)，
+  所以 AdamW 的学习率可以直接沿用），输入和读出的突触、偏置和神经元自身的参数仍用 AdamW（5.24 节）。
+- `--teacher hf:名字`：用 Hugging Face 上的模型当老师（需要 transformers），例如 `hf:openai-community/gpt2-large`；
+  老师的词表比学生小时，多出来的词概率记为 0。有老师时，训练开始前先报告老师自己的验证 loss。
 - 已有的：`--lr`、`--alpha`（代理梯度宽度）、`--neuron_lr_mult`（神经元自身参数的学习率倍数）、`--tau_min/--tau_max`（时间常数初始范围）等。
 
 **网络选项**（默认都关闭，见 `model.py` 开头的说明）：
