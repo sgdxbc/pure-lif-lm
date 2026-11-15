@@ -1,128 +1,178 @@
 {
  "model": "openai-community/gpt2-medium",
  "gpu": "NVIDIA H100 NVL",
- "idle_W": 95.86887245654282,
+ "idle_W": 97.75277774359282,
  "max_model_len": 1024,
  "rows": [
   {
    "streams": 1,
    "context": 128,
    "gen": 128,
-   "decode_tok_s": 826.0823144645057,
-   "decode_tok_s_per_stream": 826.0823144645057,
-   "ms_per_token": 1.210533118177495,
-   "decode_J_per_token": 0.25567716535433066,
-   "decode_avg_W": 211.2103845116296,
-   "prefill_s": 0.0060049789972254075,
-   "prefill_J": 0.0
+   "decode_tok_s": 824.8614742749875,
+   "decode_tok_s_per_stream": 824.8614742749875,
+   "ms_per_token": 1.212324773537218,
+   "decode_J_per_token": 0.20721931331177956,
+   "decode_avg_W": 170.92722827660504,
+   "decode_J_per_token_above_idle": 0.0887111991711444,
+   "prefill_s": 0.005663004443245716,
+   "prefill_J": 0.7339408602153831,
+   "calls": [
+    1674,
+    63
+   ]
   },
   {
    "streams": 4,
    "context": 128,
    "gen": 128,
-   "decode_tok_s": 3196.997440485227,
-   "decode_tok_s_per_stream": 799.2493601213067,
-   "ms_per_token": 1.2511739763522918,
-   "decode_J_per_token": 0.06671259842519685,
-   "decode_avg_W": 213.2800064134731,
-   "prefill_s": 0.01130462499713758,
-   "prefill_J": 0.0
+   "decode_tok_s": 3182.130916060516,
+   "decode_tok_s_per_stream": 795.532729015129,
+   "ms_per_token": 1.257019307348928,
+   "decode_J_per_token": 0.05652677914504059,
+   "decode_avg_W": 179.8756115027585,
+   "decode_J_per_token_above_idle": 0.0258074969023694,
+   "prefill_s": 0.010411140763319759,
+   "prefill_J": 1.5598029739776214,
+   "calls": [
+    807,
+    59
+   ]
   },
   {
    "streams": 16,
    "context": 128,
    "gen": 128,
-   "decode_tok_s": 11228.59327670572,
-   "decode_tok_s_per_stream": 701.7870797941075,
-   "ms_per_token": 1.4249336141859195,
-   "decode_J_per_token": 0.018414862204724408,
-   "decode_avg_W": 206.77299794343077,
-   "prefill_s": 0.023836740998376627,
-   "prefill_J": 0.0
+   "decode_tok_s": 11122.609275713316,
+   "decode_tok_s_per_stream": 695.1630797320822,
+   "ms_per_token": 1.438511378345068,
+   "decode_J_per_token": 0.01936676184899166,
+   "decode_avg_W": 215.4089249821254,
+   "decode_J_per_token_above_idle": 0.010578106658429487,
+   "prefill_s": 0.016417268052247157,
+   "prefill_J": 3.1454950248757703,
+   "calls": [
+    402,
+    49
+   ]
   },
   {
    "streams": 64,
    "context": 128,
    "gen": 128,
-   "decode_tok_s": 30606.749205472366,
-   "decode_tok_s_per_stream": 478.2304563355057,
-   "ms_per_token": 2.0910420629890694,
-   "decode_J_per_token": 0.009518577755905512,
-   "decode_avg_W": 291.332722167788,
-   "prefill_s": 0.041231393995985854,
-   "prefill_J": 0.0
+   "decode_tok_s": 30541.18367227213,
+   "decode_tok_s_per_stream": 477.20599487925205,
+   "ms_per_token": 2.0955310929256683,
+   "decode_J_per_token": 0.009666113071776896,
+   "decode_avg_W": 295.21453472208873,
+   "decode_J_per_token_above_idle": 0.00646542580331516,
+   "prefill_s": 0.035885291757261004,
+   "prefill_J": 9.566538834953409,
+   "calls": [
+    206,
+    34
+   ]
   },
   {
    "streams": 256,
    "context": 128,
    "gen": 128,
-   "decode_tok_s": 54065.55450783747,
-   "decode_tok_s_per_stream": 211.19357229624012,
-   "ms_per_token": 4.734992590576124,
-   "decode_J_per_token": 0.007356453001968503,
-   "decode_avg_W": 397.7307107622727,
-   "prefill_s": 0.09676419999595964,
-   "prefill_J": 26.03
+   "decode_tok_s": 54218.55953172266,
+   "decode_tok_s_per_stream": 211.79124817079165,
+   "ms_per_token": 4.721630419749851,
+   "decode_J_per_token": 0.00727626467234997,
+   "decode_avg_W": 394.50858930637736,
+   "decode_J_per_token_above_idle": 0.005473325262157806,
+   "prefill_s": 0.10436250419194829,
+   "prefill_J": 31.853868686866882,
+   "calls": [
+    99,
+    14
+   ]
   },
   {
    "streams": 1,
    "context": 896,
    "gen": 128,
-   "decode_tok_s": 805.6212674182507,
-   "decode_tok_s_per_stream": 805.6212674182507,
-   "ms_per_token": 1.241278055139568,
-   "decode_J_per_token": 0.27379527559055117,
-   "decode_avg_W": 220.57529693438906,
-   "prefill_s": 0.01029299099900527,
-   "prefill_J": 0.0
+   "decode_tok_s": 802.6048331734736,
+   "decode_tok_s_per_stream": 802.6048331734736,
+   "ms_per_token": 1.2459431574141318,
+   "decode_J_per_token": 0.23307945477885758,
+   "decode_avg_W": 187.07069691894918,
+   "decode_J_per_token_above_idle": 0.11128505023100371,
+   "prefill_s": 0.009445974275106744,
+   "prefill_J": 1.7805425764191651,
+   "calls": [
+    916,
+    60
+   ]
   },
   {
    "streams": 4,
    "context": 896,
    "gen": 128,
-   "decode_tok_s": 2967.1051420226686,
-   "decode_tok_s_per_stream": 741.7762855056671,
-   "ms_per_token": 1.3481153543730537,
-   "decode_J_per_token": 0.08513582677165354,
-   "decode_avg_W": 252.60694938452443,
-   "prefill_s": 0.020840565994149074,
-   "prefill_J": 0.0
+   "decode_tok_s": 2978.611526676954,
+   "decode_tok_s_per_stream": 744.6528816692385,
+   "ms_per_token": 1.3429075809904436,
+   "decode_J_per_token": 0.07371075158963464,
+   "decode_avg_W": 219.5556943249073,
+   "decode_J_per_token_above_idle": 0.04089251501594846,
+   "prefill_s": 0.019571799983535396,
+   "prefill_J": 5.054495884772436,
+   "calls": [
+    486,
+    52
+   ]
   },
   {
    "streams": 16,
    "context": 896,
    "gen": 128,
-   "decode_tok_s": 8510.152197061807,
-   "decode_tok_s_per_stream": 531.8845123163629,
-   "ms_per_token": 1.880107385802585,
-   "decode_J_per_token": 0.0421496062992126,
-   "decode_avg_W": 358.69956465253426,
-   "prefill_s": 0.05200067300029332,
-   "prefill_J": 0.0
+   "decode_tok_s": 8974.421083049227,
+   "decode_tok_s_per_stream": 560.9013176905767,
+   "ms_per_token": 1.7828448043540768,
+   "decode_J_per_token": 0.034309684439291825,
+   "decode_avg_W": 307.90955538474657,
+   "decode_J_per_token_above_idle": 0.023417307444832874,
+   "prefill_s": 0.05071404358997033,
+   "prefill_J": 15.71294979079311,
+   "calls": [
+    239,
+    35
+   ]
   },
   {
    "streams": 64,
    "context": 896,
    "gen": 128,
-   "decode_tok_s": 16448.000303644567,
-   "decode_tok_s_per_stream": 257.00000474444636,
-   "ms_per_token": 3.8910505118253678,
-   "decode_J_per_token": 0.019494586614173227,
-   "decode_avg_W": 320.6469665493466,
-   "prefill_s": 0.13705002200003946,
-   "prefill_J": 68.951
+   "decode_tok_s": 17167.37831655208,
+   "decode_tok_s_per_stream": 268.24028619612625,
+   "ms_per_token": 3.728000794290985,
+   "decode_J_per_token": 0.023345539083003988,
+   "decode_avg_W": 400.7817014417818,
+   "decode_J_per_token_above_idle": 0.017651438566249858,
+   "prefill_s": 0.15227911187503196,
+   "prefill_J": 53.69845833334451,
+   "calls": [
+    72,
+    16
+   ]
   },
   {
    "streams": 256,
    "context": 896,
    "gen": 128,
-   "decode_tok_s": 20030.6081270829,
-   "decode_tok_s_per_stream": 78.24456299641759,
-   "ms_per_token": 12.78044073229452,
-   "decode_J_per_token": 0.019475824311023623,
-   "decode_avg_W": 390.1126047260285,
-   "prefill_s": 0.5473777110019,
-   "prefill_J": 221.232
+   "decode_tok_s": 20300.816758569177,
+   "decode_tok_s_per_stream": 79.30006546316085,
+   "ms_per_token": 12.61033006920472,
+   "decode_J_per_token": 0.019792395682250153,
+   "decode_avg_W": 401.8017979584561,
+   "decode_J_per_token_above_idle": 0.014977181648936423,
+   "prefill_s": 0.5390996822105464,
+   "prefill_J": 203.09963157890658,
+   "calls": [
+    19,
+    5
+   ]
   }
  ],
  "vllm": "0.33.0"

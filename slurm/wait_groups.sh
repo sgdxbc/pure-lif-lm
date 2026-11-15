@@ -10,7 +10,10 @@ while true; do
     grep -qxF "$g" slurm/.reported && continue
     if ! echo "$q" | grep -qE "^($g)"; then echo "$g" >> slurm/.reported; echo "GROUP DONE: $g"; exit 0; fi
   done
-  f=$(grep -l "failed with exit code\|Traceback\|DUE TO TIME LIMIT" slurm/logs/g[0-9]*_*.out 2>/dev/null | grep -vxFf slurm/.reported)
+  # RELAY=1: runs continue by themselves after the 3 h limit (slurm/train.sbatch RELAY), so a time-limit stop is not a
+  # failure; their real failures leave runs/NAME/FAILED and "failed with exit code" in the job log.
+  pat="failed with exit code\|Traceback"; [ "${RELAY:-0}" = "1" ] || pat="$pat\|DUE TO TIME LIMIT"
+  f=$(grep -l "$pat" slurm/logs/g[0-9]*_*.out 2>/dev/null | grep -vxFf slurm/.reported)
   if [ -n "$f" ]; then echo "$f" >> slurm/.reported; echo "FAILED: $f"; exit 0; fi
   sleep 60
 done

@@ -1,0 +1,247 @@
+NVIDIA H100 NVL, 400.00 W
+(EngineCore pid=183988) INFO 11-16 01:11:39 [torch_utils.py:281] Reducing Torch threads from 8 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=183988) INFO 11-16 01:11:39 [utils.py:381] Using LBNHC KV cache layout.
+(EngineCore pid=183988) INFO 11-16 01:11:41 [caching.py:342] reconstructed serializable fn from standalone compile artifacts. num_artifacts=3 num_submods=13
+(EngineCore pid=183988) INFO 11-16 01:11:41 [decorators.py:326] [backbone] Directly load AOT compilation from path /home/s/sung/.cache/vllm/torch_compile_cache/torch_aot_compile/251ebca637c355269aea78e6af8463b9df48b624b523ec35db561fc052c61352/rank_0_0/model
+(EngineCore pid=183988) INFO 11-16 01:11:41 [monitor.py:62] [backbone] torch.compile took 0.24 s in total
+(EngineCore pid=183988) INFO 11-16 01:11:41 [monitor.py:91] [backbone] Initial profiling/warmup run took 0.03 s
+(EngineCore pid=183988) INFO 11-16 01:11:45 [model_runner.py:1163] Graph capturing finished in 2 secs, took 0.16 GiB
+(EngineCore pid=183988) INFO 11-16 01:11:45 [gpu_worker.py:772] Available KV cache memory: 78.31 GiB
+(EngineCore pid=183988) INFO 11-16 01:11:45 [gpu_worker.py:787] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8500 is equivalent to --gpu-memory-utilization=0.8474 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8526. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=183988) INFO 11-16 01:11:45 [kv_cache_utils.py:1147] GPU KV cache size: 2,280,928 tokens, Maximum concurrency for 1,024 tokens per request: 2227.47x
+(EngineCore pid=183988) INFO 11-16 01:11:45 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=183988) INFO 11-16 01:11:45 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=183988) INFO 11-16 01:11:45 [kernel_warmup.py:485] Using FlashInfer managed autotune cache (root=flashinfer default). Pass --disable-flashinfer-autotune to skip autotuning.
+2026-11-16 01:11:45,599 - INFO - autotuner.py:1048 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-11-16 01:11:45,817 - INFO - autotune_cache.py:495 - flashinfer.jit: [Autotuner]: Managed autotune cache attached for this process: ManagedAutotuneCache(env_dir='/home/s/sung/.cache/flashinfer/autotune/v2/dfbe7a891ade0bb6', hits=0, misses=0)
+(EngineCore pid=183988) INFO 11-16 01:11:45 [kernel_warmup.py:371] Running FlashInfer autotune with 16384 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192, 16384).
+2026-11-16 01:11:45,836 - INFO - autotuner.py:1071 - flashinfer.jit: [Autotuner]: Autotuning process ends
+(EngineCore pid=183988) INFO 11-16 01:11:47 [model_runner.py:1163] Graph capturing finished in 2 secs, took 0.10 GiB
+(EngineCore pid=183988) INFO 11-16 01:11:47 [gpu_worker.py:1003] CUDA graph pool memory: 0.1 GiB (actual), 0.24 GiB (estimated), difference: 0.14 GiB (143.1%).
+(EngineCore pid=183988) INFO 11-16 01:11:47 [gpu_worker.py:1066] Free memory on device (92.39/93.09 GiB) on startup. Desired GPU memory utilization is (0.85, 79.12 GiB). Actual usage is 0.38 GiB for consumed memory (weights + non-torch), 0.44 GiB for peak activation, and 0.1 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=83820161434` (78.06 GiB) to fit into requested memory, or `--kv-cache-memory=98060914688` (91.33 GiB) to fully utilize gpu memory. Current kv cache memory in use is 78.31 GiB.
+(EngineCore pid=183988) INFO 11-16 01:11:48 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=183988) INFO 11-16 01:11:49 [core.py:405] init engine (profile, create kv cache, warmup model) took 9.55 s (compilation: 0.24 s)
+(EngineCore pid=183988) INFO 11-16 01:11:49 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=183946) INFO 11-16 01:11:49 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+openai-community/gpt2 NVIDIA H100 NVL streams    1 context   128:        985 tok/s (1.02 ms/token per stream),   128.84 mJ/token (above idle 33.85), 127 W
+openai-community/gpt2 NVIDIA H100 NVL streams    4 context   128:      3,760 tok/s (1.06 ms/token per stream),    34.93 mJ/token (above idle 10.04), 131 W
+openai-community/gpt2 NVIDIA H100 NVL streams   16 context   128:     13,339 tok/s (1.20 ms/token per stream),    11.06 mJ/token (above idle 4.05), 148 W
+openai-community/gpt2 NVIDIA H100 NVL streams   64 context   128:     36,481 tok/s (1.75 ms/token per stream),     4.98 mJ/token (above idle 2.41), 182 W
+openai-community/gpt2 NVIDIA H100 NVL streams  256 context   128:     68,822 tok/s (3.72 ms/token per stream),     3.51 mJ/token (above idle 2.15), 242 W
+openai-community/gpt2 NVIDIA H100 NVL streams    1 context   896:        994 tok/s (1.01 ms/token per stream),   139.07 mJ/token (above idle 44.95), 138 W
+openai-community/gpt2 NVIDIA H100 NVL streams    4 context   896:      3,776 tok/s (1.06 ms/token per stream),    41.22 mJ/token (above idle 16.44), 156 W
+openai-community/gpt2 NVIDIA H100 NVL streams   16 context   896:     14,024 tok/s (1.14 ms/token per stream),    15.97 mJ/token (above idle 9.30), 224 W
+openai-community/gpt2 NVIDIA H100 NVL streams   64 context   896:     37,229 tok/s (1.72 ms/token per stream),     9.78 mJ/token (above idle 7.26), 364 W
+openai-community/gpt2 NVIDIA H100 NVL streams  256 context   896:     53,785 tok/s (4.76 ms/token per stream),     7.62 mJ/token (above idle 5.88), 410 W
+wrote /home/s/sung/pure-lif-lm/runs/bench_gpu/NVIDIA_H100_NVL_gpt2.json (idle 94 W)
+(MainProcess pid=183946) INFO 11-16 01:15:07 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=183988) INFO 11-16 01:15:07 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=183988) INFO 11-16 01:15:07 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=183988) INFO 11-16 01:15:07 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=183988) INFO 11-16 01:15:07 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+openai-community/gpt2: exit 0 Mon Nov 16 01:15:10 AM +08 2026
+(EngineCore pid=184168) INFO 11-16 01:15:36 [torch_utils.py:281] Reducing Torch threads from 8 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=184168) INFO 11-16 01:15:36 [utils.py:381] Using LBNHC KV cache layout.
+(EngineCore pid=184168) INFO 11-16 01:15:38 [caching.py:342] reconstructed serializable fn from standalone compile artifacts. num_artifacts=3 num_submods=25
+(EngineCore pid=184168) INFO 11-16 01:15:38 [decorators.py:326] [backbone] Directly load AOT compilation from path /home/s/sung/.cache/vllm/torch_compile_cache/torch_aot_compile/b42d4317c4db92ece8e494c11549a147d016f120ebb690aa4a5d2512154e6fbc/rank_0_0/model
+(EngineCore pid=184168) INFO 11-16 01:15:38 [monitor.py:62] [backbone] torch.compile took 0.24 s in total
+(EngineCore pid=184168) INFO 11-16 01:15:38 [monitor.py:91] [backbone] Initial profiling/warmup run took 0.03 s
+(EngineCore pid=184168) INFO 11-16 01:15:42 [model_runner.py:1163] Graph capturing finished in 2 secs, took 0.25 GiB
+(EngineCore pid=184168) INFO 11-16 01:15:43 [gpu_worker.py:772] Available KV cache memory: 77.71 GiB
+(EngineCore pid=184168) INFO 11-16 01:15:43 [gpu_worker.py:787] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8500 is equivalent to --gpu-memory-utilization=0.8464 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8536. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=184168) INFO 11-16 01:15:43 [kv_cache_utils.py:1147] GPU KV cache size: 848,752 tokens, Maximum concurrency for 1,024 tokens per request: 828.86x
+(EngineCore pid=184168) INFO 11-16 01:15:43 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=184168) INFO 11-16 01:15:43 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=184168) INFO 11-16 01:15:43 [kernel_warmup.py:485] Using FlashInfer managed autotune cache (root=flashinfer default). Pass --disable-flashinfer-autotune to skip autotuning.
+2026-11-16 01:15:43,272 - INFO - autotuner.py:1048 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-11-16 01:15:43,397 - INFO - autotune_cache.py:495 - flashinfer.jit: [Autotuner]: Managed autotune cache attached for this process: ManagedAutotuneCache(env_dir='/home/s/sung/.cache/flashinfer/autotune/v2/dfbe7a891ade0bb6', hits=0, misses=0)
+(EngineCore pid=184168) INFO 11-16 01:15:43 [kernel_warmup.py:371] Running FlashInfer autotune with 16384 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192, 16384).
+2026-11-16 01:15:43,412 - INFO - autotuner.py:1071 - flashinfer.jit: [Autotuner]: Autotuning process ends
+(EngineCore pid=184168) INFO 11-16 01:15:46 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.12 GiB
+(EngineCore pid=184168) INFO 11-16 01:15:46 [gpu_worker.py:1003] CUDA graph pool memory: 0.12 GiB (actual), 0.34 GiB (estimated), difference: 0.22 GiB (179.0%).
+(EngineCore pid=184168) INFO 11-16 01:15:46 [gpu_worker.py:1066] Free memory on device (92.39/93.09 GiB) on startup. Desired GPU memory utilization is (0.85, 79.12 GiB). Actual usage is 0.83 GiB for consumed memory (weights + non-torch), 0.59 GiB for peak activation, and 0.12 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=83148424090` (77.44 GiB) to fit into requested memory, or `--kv-cache-memory=97389177344` (90.7 GiB) to fully utilize gpu memory. Current kv cache memory in use is 77.71 GiB.
+(EngineCore pid=184168) INFO 11-16 01:15:47 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=184168) INFO 11-16 01:15:47 [core.py:405] init engine (profile, create kv cache, warmup model) took 10.83 s (compilation: 0.24 s)
+(EngineCore pid=184168) INFO 11-16 01:15:47 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=184131) INFO 11-16 01:15:47 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+openai-community/gpt2-medium NVIDIA H100 NVL streams    1 context   128:        825 tok/s (1.21 ms/token per stream),   207.22 mJ/token (above idle 88.71), 171 W
+openai-community/gpt2-medium NVIDIA H100 NVL streams    4 context   128:      3,182 tok/s (1.26 ms/token per stream),    56.53 mJ/token (above idle 25.81), 180 W
+openai-community/gpt2-medium NVIDIA H100 NVL streams   16 context   128:     11,123 tok/s (1.44 ms/token per stream),    19.37 mJ/token (above idle 10.58), 215 W
+openai-community/gpt2-medium NVIDIA H100 NVL streams   64 context   128:     30,541 tok/s (2.10 ms/token per stream),     9.67 mJ/token (above idle 6.47), 295 W
+openai-community/gpt2-medium NVIDIA H100 NVL streams  256 context   128:     54,219 tok/s (4.72 ms/token per stream),     7.28 mJ/token (above idle 5.47), 395 W
+openai-community/gpt2-medium NVIDIA H100 NVL streams    1 context   896:        803 tok/s (1.25 ms/token per stream),   233.08 mJ/token (above idle 111.29), 187 W
+openai-community/gpt2-medium NVIDIA H100 NVL streams    4 context   896:      2,979 tok/s (1.34 ms/token per stream),    73.71 mJ/token (above idle 40.89), 220 W
+openai-community/gpt2-medium NVIDIA H100 NVL streams   16 context   896:      8,974 tok/s (1.78 ms/token per stream),    34.31 mJ/token (above idle 23.42), 308 W
+openai-community/gpt2-medium NVIDIA H100 NVL streams   64 context   896:     17,167 tok/s (3.73 ms/token per stream),    23.35 mJ/token (above idle 17.65), 401 W
+openai-community/gpt2-medium NVIDIA H100 NVL streams  256 context   896:     20,301 tok/s (12.61 ms/token per stream),    19.79 mJ/token (above idle 14.98), 402 W
+wrote /home/s/sung/pure-lif-lm/runs/bench_gpu/NVIDIA_H100_NVL_gpt2-medium.json (idle 98 W)
+(MainProcess pid=184131) INFO 11-16 01:19:20 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=184168) INFO 11-16 01:19:20 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=184168) INFO 11-16 01:19:20 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=184168) INFO 11-16 01:19:20 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=184168) INFO 11-16 01:19:20 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+openai-community/gpt2-medium: exit 0 Mon Nov 16 01:19:22 AM +08 2026
+(EngineCore pid=184337) INFO 11-16 01:19:50 [monitor.py:40] [backbone] Starting torch.compile
+(EngineCore pid=184337) WARNING 11-16 01:19:54 [backends.py:1081] Failed to read file <frozen _collections_abc>
+(EngineCore pid=184337) INFO 11-16 01:19:54 [backends.py:1125] [backbone] Using cache directory: /home/s/sung/.cache/vllm/torch_compile_cache/b9663132ab/rank_0_0/backbone for vLLM's torch.compile
+(EngineCore pid=184337) INFO 11-16 01:19:54 [backends.py:1187] [backbone] Dynamo bytecode transform time: 3.95 s
+(EngineCore pid=184337) INFO 11-16 01:19:55 [backends.py:417] [backbone] Compiling a graph for compile range (1, 16384) takes 0.25 s
+(EngineCore pid=184337) INFO 11-16 01:19:55 [monitor.py:62] [backbone] torch.compile and initial profiling/warmup run together took 4.46 s in total
+(EngineCore pid=184337) INFO 11-16 01:19:59 [model_runner.py:1163] Graph capturing finished in 2 secs, took 0.17 GiB
+(EngineCore pid=184337) INFO 11-16 01:19:59 [gpu_worker.py:772] Available KV cache memory: 78.22 GiB
+(EngineCore pid=184337) INFO 11-16 01:19:59 [gpu_worker.py:787] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8500 is equivalent to --gpu-memory-utilization=0.8474 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8526. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=184337) INFO 11-16 01:19:59 [kv_cache_utils.py:1147] GPU KV cache size: 2,278,272 tokens, Maximum concurrency for 2,048 tokens per request: 1112.44x
+(EngineCore pid=184337) INFO 11-16 01:19:59 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=184337) INFO 11-16 01:19:59 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=184337) INFO 11-16 01:19:59 [kernel_warmup.py:485] Using FlashInfer managed autotune cache (root=flashinfer default). Pass --disable-flashinfer-autotune to skip autotuning.
+2026-11-16 01:19:59,594 - INFO - autotuner.py:1048 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-11-16 01:19:59,787 - INFO - autotune_cache.py:495 - flashinfer.jit: [Autotuner]: Managed autotune cache attached for this process: ManagedAutotuneCache(env_dir='/home/s/sung/.cache/flashinfer/autotune/v2/dfbe7a891ade0bb6', hits=0, misses=0)
+(EngineCore pid=184337) INFO 11-16 01:19:59 [kernel_warmup.py:371] Running FlashInfer autotune with 16384 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192, 16384).
+2026-11-16 01:19:59,800 - INFO - autotuner.py:1071 - flashinfer.jit: [Autotuner]: Autotuning process ends
+(EngineCore pid=184337) INFO 11-16 01:20:02 [model_runner.py:1163] Graph capturing finished in 2 secs, took 0.10 GiB
+(EngineCore pid=184337) INFO 11-16 01:20:02 [gpu_worker.py:1003] CUDA graph pool memory: 0.1 GiB (actual), 0.25 GiB (estimated), difference: 0.14 GiB (142.3%).
+(EngineCore pid=184337) INFO 11-16 01:20:02 [gpu_worker.py:1066] Free memory on device (92.39/93.09 GiB) on startup. Desired GPU memory utilization is (0.85, 79.12 GiB). Actual usage is 0.45 GiB for consumed memory (weights + non-torch), 0.46 GiB for peak activation, and 0.1 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=83719898010` (77.97 GiB) to fit into requested memory, or `--kv-cache-memory=97960651264` (91.23 GiB) to fully utilize gpu memory. Current kv cache memory in use is 78.22 GiB.
+(EngineCore pid=184337) INFO 11-16 01:20:03 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=184337) INFO 11-16 01:20:03 [core.py:405] init engine (profile, create kv cache, warmup model) took 13.07 s (compilation: 4.46 s)
+(EngineCore pid=184337) INFO 11-16 01:20:03 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=184298) INFO 11-16 01:20:03 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+EleutherAI/pythia-160m NVIDIA H100 NVL streams    1 context   128:        976 tok/s (1.02 ms/token per stream),   130.18 mJ/token (above idle 30.39), 127 W
+EleutherAI/pythia-160m NVIDIA H100 NVL streams    4 context   128:      3,625 tok/s (1.10 ms/token per stream),    35.80 mJ/token (above idle 8.93), 130 W
+EleutherAI/pythia-160m NVIDIA H100 NVL streams   16 context   128:     13,170 tok/s (1.21 ms/token per stream),    10.95 mJ/token (above idle 3.55), 144 W
+EleutherAI/pythia-160m NVIDIA H100 NVL streams   64 context   128:     36,837 tok/s (1.74 ms/token per stream),     4.97 mJ/token (above idle 2.32), 183 W
+EleutherAI/pythia-160m NVIDIA H100 NVL streams  256 context   128:     69,679 tok/s (3.67 ms/token per stream),     3.44 mJ/token (above idle 2.04), 240 W
+EleutherAI/pythia-160m NVIDIA H100 NVL streams    1 context  1920:        993 tok/s (1.01 ms/token per stream),   146.36 mJ/token (above idle 48.28), 145 W
+EleutherAI/pythia-160m NVIDIA H100 NVL streams    4 context  1920:      3,805 tok/s (1.05 ms/token per stream),    47.97 mJ/token (above idle 22.38), 183 W
+EleutherAI/pythia-160m NVIDIA H100 NVL streams   16 context  1920:     13,895 tok/s (1.15 ms/token per stream),    22.23 mJ/token (above idle 15.22), 309 W
+EleutherAI/pythia-160m NVIDIA H100 NVL streams   64 context  1920:     25,765 tok/s (2.48 ms/token per stream),    15.66 mJ/token (above idle 11.88), 404 W
+EleutherAI/pythia-160m NVIDIA H100 NVL streams  256 context  1920:     28,410 tok/s (9.01 ms/token per stream),    14.28 mJ/token (above idle 10.85), 406 W
+wrote /home/s/sung/pure-lif-lm/runs/bench_gpu/NVIDIA_H100_NVL_pythia-160m.json (idle 97 W)
+(MainProcess pid=184298) INFO 11-16 01:23:22 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=184337) INFO 11-16 01:23:22 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=184337) INFO 11-16 01:23:22 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=184337) INFO 11-16 01:23:22 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=184337) INFO 11-16 01:23:22 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+EleutherAI/pythia-160m: exit 0 Mon Nov 16 01:23:25 AM +08 2026
+(EngineCore pid=184506) INFO 11-16 01:23:52 [monitor.py:40] [backbone] Starting torch.compile
+(EngineCore pid=184506) WARNING 11-16 01:23:57 [backends.py:1081] Failed to read file <frozen _collections_abc>
+(EngineCore pid=184506) INFO 11-16 01:23:57 [backends.py:1125] [backbone] Using cache directory: /home/s/sung/.cache/vllm/torch_compile_cache/3a7e44d380/rank_0_0/backbone for vLLM's torch.compile
+(EngineCore pid=184506) INFO 11-16 01:23:57 [backends.py:1187] [backbone] Dynamo bytecode transform time: 5.08 s
+(EngineCore pid=184506) INFO 11-16 01:23:58 [backends.py:417] [backbone] Compiling a graph for compile range (1, 16384) takes 0.26 s
+(EngineCore pid=184506) INFO 11-16 01:23:59 [monitor.py:62] [backbone] torch.compile and initial profiling/warmup run together took 6.18 s in total
+(EngineCore pid=184506) INFO 11-16 01:24:03 [model_runner.py:1163] Graph capturing finished in 2 secs, took 0.26 GiB
+(EngineCore pid=184506) INFO 11-16 01:24:03 [gpu_worker.py:772] Available KV cache memory: 77.57 GiB
+(EngineCore pid=184506) INFO 11-16 01:24:03 [gpu_worker.py:787] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8500 is equivalent to --gpu-memory-utilization=0.8463 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8537. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=184506) INFO 11-16 01:24:03 [kv_cache_utils.py:1147] GPU KV cache size: 847,264 tokens, Maximum concurrency for 2,048 tokens per request: 413.70x
+(EngineCore pid=184506) INFO 11-16 01:24:03 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=184506) INFO 11-16 01:24:03 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=184506) INFO 11-16 01:24:03 [kernel_warmup.py:485] Using FlashInfer managed autotune cache (root=flashinfer default). Pass --disable-flashinfer-autotune to skip autotuning.
+2026-11-16 01:24:03,626 - INFO - autotuner.py:1048 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-11-16 01:24:03,881 - INFO - autotune_cache.py:495 - flashinfer.jit: [Autotuner]: Managed autotune cache attached for this process: ManagedAutotuneCache(env_dir='/home/s/sung/.cache/flashinfer/autotune/v2/dfbe7a891ade0bb6', hits=0, misses=0)
+(EngineCore pid=184506) INFO 11-16 01:24:03 [kernel_warmup.py:371] Running FlashInfer autotune with 16384 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192, 16384).
+2026-11-16 01:24:03,902 - INFO - autotuner.py:1071 - flashinfer.jit: [Autotuner]: Autotuning process ends
+(EngineCore pid=184506) INFO 11-16 01:24:06 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.12 GiB
+(EngineCore pid=184506) INFO 11-16 01:24:06 [gpu_worker.py:1003] CUDA graph pool memory: 0.12 GiB (actual), 0.34 GiB (estimated), difference: 0.22 GiB (183.9%).
+(EngineCore pid=184506) INFO 11-16 01:24:06 [gpu_worker.py:1066] Free memory on device (92.39/93.09 GiB) on startup. Desired GPU memory utilization is (0.85, 79.12 GiB). Actual usage is 0.93 GiB for consumed memory (weights + non-torch), 0.63 GiB for peak activation, and 0.12 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=83002672026` (77.3 GiB) to fit into requested memory, or `--kv-cache-memory=97243425280` (90.56 GiB) to fully utilize gpu memory. Current kv cache memory in use is 77.57 GiB.
+(EngineCore pid=184506) INFO 11-16 01:24:07 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=184506) INFO 11-16 01:24:08 [core.py:405] init engine (profile, create kv cache, warmup model) took 15.82 s (compilation: 6.18 s)
+(EngineCore pid=184506) INFO 11-16 01:24:08 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=184469) INFO 11-16 01:24:08 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+EleutherAI/pythia-410m NVIDIA H100 NVL streams    1 context   128:        802 tok/s (1.25 ms/token per stream),   209.59 mJ/token (above idle 89.70), 168 W
+EleutherAI/pythia-410m NVIDIA H100 NVL streams    4 context   128:      3,015 tok/s (1.33 ms/token per stream),    57.90 mJ/token (above idle 26.03), 175 W
+EleutherAI/pythia-410m NVIDIA H100 NVL streams   16 context   128:     10,763 tok/s (1.49 ms/token per stream),    19.40 mJ/token (above idle 10.47), 209 W
+EleutherAI/pythia-410m NVIDIA H100 NVL streams   64 context   128:     29,840 tok/s (2.14 ms/token per stream),     9.69 mJ/token (above idle 6.47), 289 W
+EleutherAI/pythia-410m NVIDIA H100 NVL streams  256 context   128:     53,383 tok/s (4.80 ms/token per stream),     7.43 mJ/token (above idle 5.63), 396 W
+EleutherAI/pythia-410m NVIDIA H100 NVL streams    1 context  1920:        752 tok/s (1.33 ms/token per stream),   257.98 mJ/token (above idle 130.10), 194 W
+EleutherAI/pythia-410m NVIDIA H100 NVL streams    4 context  1920:      2,600 tok/s (1.54 ms/token per stream),    95.68 mJ/token (above idle 58.72), 249 W
+EleutherAI/pythia-410m NVIDIA H100 NVL streams   16 context  1920:      6,988 tok/s (2.29 ms/token per stream),    53.87 mJ/token (above idle 40.11), 376 W
+EleutherAI/pythia-410m NVIDIA H100 NVL streams   64 context  1920:     10,053 tok/s (6.37 ms/token per stream),    39.64 mJ/token (above idle 30.08), 398 W
+EleutherAI/pythia-410m NVIDIA H100 NVL streams  256 context  1920:     10,399 tok/s (24.62 ms/token per stream),    38.55 mJ/token (above idle 29.31), 401 W
+wrote /home/s/sung/pure-lif-lm/runs/bench_gpu/NVIDIA_H100_NVL_pythia-410m.json (idle 96 W)
+(MainProcess pid=184469) INFO 11-16 01:27:39 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=184506) INFO 11-16 01:27:39 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=184506) INFO 11-16 01:27:39 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=184506) INFO 11-16 01:27:39 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=184506) INFO 11-16 01:27:39 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+EleutherAI/pythia-410m: exit 0 Mon Nov 16 01:27:42 AM +08 2026
+(EngineCore pid=184669) INFO 11-16 01:28:10 [torch_utils.py:281] Reducing Torch threads from 8 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=184669) INFO 11-16 01:28:10 [utils.py:381] Using LBNHC KV cache layout.
+(EngineCore pid=184669) INFO 11-16 01:28:13 [caching.py:342] reconstructed serializable fn from standalone compile artifacts. num_artifacts=3 num_submods=31
+(EngineCore pid=184669) INFO 11-16 01:28:13 [decorators.py:326] [backbone] Directly load AOT compilation from path /home/s/sung/.cache/vllm/torch_compile_cache/torch_aot_compile/c11361d11dca782c4537308a821490683f921f155a06451b7d132c8b2c615e53/rank_0_0/model
+(EngineCore pid=184669) INFO 11-16 01:28:13 [monitor.py:62] [backbone] torch.compile took 0.26 s in total
+(EngineCore pid=184669) INFO 11-16 01:28:13 [monitor.py:91] [backbone] Initial profiling/warmup run took 0.03 s
+(EngineCore pid=184669) INFO 11-16 01:28:17 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.26 GiB
+(EngineCore pid=184669) INFO 11-16 01:28:17 [gpu_worker.py:772] Available KV cache memory: 78.22 GiB
+(EngineCore pid=184669) INFO 11-16 01:28:17 [gpu_worker.py:787] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8500 is equivalent to --gpu-memory-utilization=0.8466 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8534. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=184669) INFO 11-16 01:28:17 [kv_cache_utils.py:1147] GPU KV cache size: 3,645,360 tokens, Maximum concurrency for 8,192 tokens per request: 444.99x
+(EngineCore pid=184669) INFO 11-16 01:28:17 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=184669) INFO 11-16 01:28:17 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=184669) INFO 11-16 01:28:17 [kernel_warmup.py:485] Using FlashInfer managed autotune cache (root=flashinfer default). Pass --disable-flashinfer-autotune to skip autotuning.
+2026-11-16 01:28:17,901 - INFO - autotuner.py:1048 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-11-16 01:28:18,143 - INFO - autotune_cache.py:495 - flashinfer.jit: [Autotuner]: Managed autotune cache attached for this process: ManagedAutotuneCache(env_dir='/home/s/sung/.cache/flashinfer/autotune/v2/dfbe7a891ade0bb6', hits=0, misses=0)
+(EngineCore pid=184669) INFO 11-16 01:28:18 [kernel_warmup.py:371] Running FlashInfer autotune with 16384 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192, 16384).
+2026-11-16 01:28:18,170 - INFO - autotuner.py:1071 - flashinfer.jit: [Autotuner]: Autotuning process ends
+(EngineCore pid=184669) INFO 11-16 01:28:21 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.10 GiB
+(EngineCore pid=184669) INFO 11-16 01:28:21 [gpu_worker.py:1003] CUDA graph pool memory: 0.1 GiB (actual), 0.32 GiB (estimated), difference: 0.21 GiB (205.7%).
+(EngineCore pid=184669) INFO 11-16 01:28:21 [gpu_worker.py:1066] Free memory on device (92.39/93.09 GiB) on startup. Desired GPU memory utilization is (0.85, 79.12 GiB). Actual usage is 0.39 GiB for consumed memory (weights + non-torch), 0.51 GiB for peak activation, and 0.1 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=83720946586` (77.97 GiB) to fit into requested memory, or `--kv-cache-memory=97961699840` (91.23 GiB) to fully utilize gpu memory. Current kv cache memory in use is 78.22 GiB.
+(EngineCore pid=184669) INFO 11-16 01:28:22 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=184669) INFO 11-16 01:28:22 [core.py:405] init engine (profile, create kv cache, warmup model) took 11.84 s (compilation: 0.26 s)
+(EngineCore pid=184669) INFO 11-16 01:28:22 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=184627) INFO 11-16 01:28:23 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+HuggingFaceTB/SmolLM2-135M NVIDIA H100 NVL streams    1 context   128:        781 tok/s (1.28 ms/token per stream),   169.75 mJ/token (above idle 44.96), 133 W
+HuggingFaceTB/SmolLM2-135M NVIDIA H100 NVL streams    4 context   128:      3,092 tok/s (1.29 ms/token per stream),    43.23 mJ/token (above idle 11.72), 134 W
+HuggingFaceTB/SmolLM2-135M NVIDIA H100 NVL streams   16 context   128:     11,762 tok/s (1.36 ms/token per stream),    12.05 mJ/token (above idle 3.77), 142 W
+HuggingFaceTB/SmolLM2-135M NVIDIA H100 NVL streams   64 context   128:     38,442 tok/s (1.66 ms/token per stream),     4.55 mJ/token (above idle 2.01), 175 W
+HuggingFaceTB/SmolLM2-135M NVIDIA H100 NVL streams  256 context   128:     68,605 tok/s (3.73 ms/token per stream),     3.00 mJ/token (above idle 1.58), 206 W
+HuggingFaceTB/SmolLM2-135M NVIDIA H100 NVL streams    1 context  8064:        738 tok/s (1.36 ms/token per stream),   218.16 mJ/token (above idle 86.11), 161 W
+HuggingFaceTB/SmolLM2-135M NVIDIA H100 NVL streams    4 context  8064:      2,546 tok/s (1.57 ms/token per stream),    84.49 mJ/token (above idle 46.23), 215 W
+HuggingFaceTB/SmolLM2-135M NVIDIA H100 NVL streams   16 context  8064:      5,641 tok/s (2.84 ms/token per stream),    53.70 mJ/token (above idle 36.43), 303 W
+HuggingFaceTB/SmolLM2-135M NVIDIA H100 NVL streams   64 context  8064:      9,530 tok/s (6.72 ms/token per stream),    41.67 mJ/token (above idle 31.45), 397 W
+HuggingFaceTB/SmolLM2-135M NVIDIA H100 NVL streams  256 context  8064:      9,153 tok/s (27.97 ms/token per stream),    43.39 mJ/token (above idle 32.75), 397 W
+wrote /home/s/sung/pure-lif-lm/runs/bench_gpu/NVIDIA_H100_NVL_SmolLM2-135M.json (idle 97 W)
+(MainProcess pid=184627) INFO 11-16 01:32:11 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=184669) INFO 11-16 01:32:11 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=184669) INFO 11-16 01:32:11 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=184669) INFO 11-16 01:32:11 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=184669) INFO 11-16 01:32:11 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+HuggingFaceTB/SmolLM2-135M: exit 0 Mon Nov 16 01:32:14 AM +08 2026
+(EngineCore pid=184838) INFO 11-16 01:32:41 [torch_utils.py:281] Reducing Torch threads from 8 to 1 for serving. Set OMP_NUM_THREADS in the external environment to override.
+(EngineCore pid=184838) INFO 11-16 01:32:41 [utils.py:381] Using LBNHC KV cache layout.
+(EngineCore pid=184838) INFO 11-16 01:32:43 [caching.py:342] reconstructed serializable fn from standalone compile artifacts. num_artifacts=3 num_submods=33
+(EngineCore pid=184838) INFO 11-16 01:32:44 [decorators.py:326] [backbone] Directly load AOT compilation from path /home/s/sung/.cache/vllm/torch_compile_cache/torch_aot_compile/5cb49800aae7a867b83e7804e909a37cf9ff3054a553b0f5bdfb64501a2897ef/rank_0_0/model
+(EngineCore pid=184838) INFO 11-16 01:32:44 [monitor.py:62] [backbone] torch.compile took 0.26 s in total
+(EngineCore pid=184838) INFO 11-16 01:32:44 [monitor.py:91] [backbone] Initial profiling/warmup run took 0.02 s
+(EngineCore pid=184838) INFO 11-16 01:32:50 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.31 GiB
+(EngineCore pid=184838) INFO 11-16 01:32:50 [gpu_worker.py:772] Available KV cache memory: 77.57 GiB
+(EngineCore pid=184838) INFO 11-16 01:32:50 [gpu_worker.py:787] CUDA graph memory profiling is enabled (default since v0.21.0). The current --gpu-memory-utilization=0.8500 is equivalent to --gpu-memory-utilization=0.8460 without CUDA graph memory profiling. To maintain the same effective KV cache size as before, increase --gpu-memory-utilization to 0.8540. To disable, set VLLM_MEMORY_PROFILER_ESTIMATE_CUDAGRAPHS=0.
+(EngineCore pid=184838) INFO 11-16 01:32:50 [kv_cache_utils.py:1147] GPU KV cache size: 2,033,360 tokens, Maximum concurrency for 8,192 tokens per request: 248.21x
+(EngineCore pid=184838) INFO 11-16 01:32:50 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=184838) INFO 11-16 01:32:50 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=184838) INFO 11-16 01:32:50 [kernel_warmup.py:485] Using FlashInfer managed autotune cache (root=flashinfer default). Pass --disable-flashinfer-autotune to skip autotuning.
+2026-11-16 01:32:50,873 - INFO - autotuner.py:1048 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-11-16 01:32:51,090 - INFO - autotune_cache.py:495 - flashinfer.jit: [Autotuner]: Managed autotune cache attached for this process: ManagedAutotuneCache(env_dir='/home/s/sung/.cache/flashinfer/autotune/v2/dfbe7a891ade0bb6', hits=0, misses=0)
+(EngineCore pid=184838) INFO 11-16 01:32:51 [kernel_warmup.py:371] Running FlashInfer autotune with 16384 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192, 16384).
+2026-11-16 01:32:51,108 - INFO - autotuner.py:1071 - flashinfer.jit: [Autotuner]: Autotuning process ends
+(EngineCore pid=184838) INFO 11-16 01:32:55 [model_runner.py:1163] Graph capturing finished in 3 secs, took 0.13 GiB
+(EngineCore pid=184838) INFO 11-16 01:32:55 [gpu_worker.py:1003] CUDA graph pool memory: 0.13 GiB (actual), 0.38 GiB (estimated), difference: 0.24 GiB (183.8%).
+(EngineCore pid=184838) INFO 11-16 01:32:55 [gpu_worker.py:1066] Free memory on device (92.39/93.09 GiB) on startup. Desired GPU memory utilization is (0.85, 79.12 GiB). Actual usage is 0.86 GiB for consumed memory (weights + non-torch), 0.7 GiB for peak activation, and 0.13 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=82986943386` (77.29 GiB) to fit into requested memory, or `--kv-cache-memory=97227696640` (90.55 GiB) to fully utilize gpu memory. Current kv cache memory in use is 77.57 GiB.
+(EngineCore pid=184838) INFO 11-16 01:32:56 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=184838) INFO 11-16 01:32:57 [core.py:405] init engine (profile, create kv cache, warmup model) took 15.90 s (compilation: 0.26 s)
+(EngineCore pid=184838) INFO 11-16 01:32:57 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(MainProcess pid=184798) INFO 11-16 01:32:57 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+HuggingFaceTB/SmolLM2-360M NVIDIA H100 NVL streams    1 context   128:        656 tok/s (1.52 ms/token per stream),   238.15 mJ/token (above idle 90.27), 156 W
+HuggingFaceTB/SmolLM2-360M NVIDIA H100 NVL streams    4 context   128:      2,576 tok/s (1.55 ms/token per stream),    61.89 mJ/token (above idle 24.24), 159 W
+HuggingFaceTB/SmolLM2-360M NVIDIA H100 NVL streams   16 context   128:      9,936 tok/s (1.61 ms/token per stream),    18.03 mJ/token (above idle 8.26), 179 W
+HuggingFaceTB/SmolLM2-360M NVIDIA H100 NVL streams   64 context   128:     32,496 tok/s (1.97 ms/token per stream),     6.99 mJ/token (above idle 4.01), 227 W
+HuggingFaceTB/SmolLM2-360M NVIDIA H100 NVL streams  256 context   128:     71,125 tok/s (3.60 ms/token per stream),     4.40 mJ/token (above idle 3.03), 313 W
+HuggingFaceTB/SmolLM2-360M NVIDIA H100 NVL streams    1 context  8064:        611 tok/s (1.64 ms/token per stream),   319.26 mJ/token (above idle 160.43), 195 W
+HuggingFaceTB/SmolLM2-360M NVIDIA H100 NVL streams    4 context  8064:      1,970 tok/s (2.03 ms/token per stream),   131.94 mJ/token (above idle 82.72), 260 W
+HuggingFaceTB/SmolLM2-360M NVIDIA H100 NVL streams   16 context  8064:      3,884 tok/s (4.12 ms/token per stream),    91.22 mJ/token (above idle 66.25), 354 W
+HuggingFaceTB/SmolLM2-360M NVIDIA H100 NVL streams   64 context  8064:      5,722 tok/s (11.19 ms/token per stream),    69.08 mJ/token (above idle 52.13), 395 W
+HuggingFaceTB/SmolLM2-360M NVIDIA H100 NVL streams  256 context  8064:      5,192 tok/s (49.30 ms/token per stream),    76.27 mJ/token (above idle 57.59), 396 W
+wrote /home/s/sung/pure-lif-lm/runs/bench_gpu/NVIDIA_H100_NVL_SmolLM2-360M.json (idle 97 W)
+(MainProcess pid=184798) INFO 11-16 01:37:09 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=184838) INFO 11-16 01:37:09 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=184838) INFO 11-16 01:37:09 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=184838) INFO 11-16 01:37:09 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=184838) INFO 11-16 01:37:09 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+HuggingFaceTB/SmolLM2-360M: exit 0 Mon Nov 16 01:37:11 AM +08 2026
