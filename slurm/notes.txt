@@ -31,3 +31,26 @@ tmux server is younger than 06:05 SGT on 11-15, it is (b)); also `loginctl show-
 Fix for either: keep no long-lived process on the login node, e.g. start Claude inside tmux on the compute node
 from a batch job (sbatch -p long ... --wrap "tmux new -d -s cc 'cd ~/pure-lif-lm && claude remote-control -c';
 sleep infinity"), and attach only briefly with `srun --jobid=<id> --overlap --pty tmux attach -t cc`.
+
+Handover state, 2026-11-15 10:55 SGT (written by the cluster session before it is moved to slurm/claude_session.sbatch)
+Jobs (all submitted from this repo; results go to runs/<name>):
+  wave 5  1143726 g5_wide2x_lr8e-4    RUNNING (xgph15, A100-40)
+          1143727 g5_wide2x_lr1.2e-3  RUNNING (xgph14, A100-40)
+          1143728 g5_wide3x_lr8e-4    PENDING (a100-80; may near the 3 h limit on the slow A100-80 node)
+  wave 6  1143736 g6_snn257_best_2ep  RUNNING (xgpk0, H200)
+          1143737 g6_snn117_best_2ep  RUNNING (xgpi1, H100-96)
+          1143738 g6_snn117_best_3ep  RUNNING (xgpi11, H100-47; 201000 steps, expected to hit the 3 h limit once:
+                                       resubmit the same command, `bash gpu6.sh` line for snn117_best_3ep, it resumes)
+          1143739 g6_tf105_2ep        RUNNING (xgpi11, H100-47)
+  probes  1143740 probes_ema          PENDING (a100-40, waits for a wave-5 A100-40 to free up; command in the
+                                       cloud session's request: slurm/probes_ema.sbatch on g1_s_ema998 g3_all
+                                       g3_d09_ema g3_ema_nlr10 g4_snn117_best g4_snn257_best)
+Still to commit (each separately, pull --rebase first):
+  - wave 5: runs/g5_* + slurm/logs/g5_*; message: final_eval val_loss, card, tok/s, and
+    `python3 slurm/recall_gains.py runs/g5_* runs/g2_snn117 runs/g2_snn117_lr8e-4`
+  - wave 6: runs/g6_* + slurm/logs/g6_*; final_eval (and final_eval_ema) val_loss, card, tok/s, recall gains
+  - probes_ema: runs/<6 runs>/{recall_ema.json,probe_memory_ema.json,probe_ema.log} + slurm/logs/probes_ema-*;
+    message: `python3 slurm/recall_gains.py <the 6 runs>`
+Watching: `slurm/wait_groups.sh "g5_" "g6_" "probes_ema"` (run_in_background) wakes on a finished group, a
+"Traceback"/"failed with exit code" or "DUE TO TIME LIMIT" in slurm/logs/g*_*.out; reported items are listed in
+slurm/.reported (not committed). Avoid node xgpj0 (train.sbatch and probes_ema.sbatch already exclude it).
