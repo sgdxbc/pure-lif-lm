@@ -1,0 +1,5 @@
+runs/g7_seq512: exit 0 Sun Nov 15 03:09:29 PM +08 2026
+runs/g7_seq1024: exit 0 Sun Nov 15 03:09:42 PM +08 2026
+runs/g2_snn117_lr8e-4: exit 0 Sun Nov 15 03:09:54 PM +08 2026
+runs/g4_snn117_best: exit 0, ema 0 Sun Nov 15 03:10:19 PM +08 2026
+runs/g4_snn257_best: exit 0, ema 0 Sun Nov 15 03:11:01 PM +08 2026

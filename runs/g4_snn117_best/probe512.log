@@ -1,0 +1,24 @@
+400 stories of >= 513 tokens, 70668 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+m  (runs/g4_snn117_best/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              719     1.206
+  repeat d=5-16            4422     1.348
+  repeat d=17-32           4450     1.392     3.762   2.370
+  repeat d=33-64           5838     1.614     3.647   2.032
+  repeat d=65-128          5995     1.729     3.208   1.479
+  repeat d=129-256         4236     2.071     3.161   1.089
+  repeat d=257-512         1839     2.432     3.159   0.727
+  first occurrence        43169     2.274     2.693   0.415
+400 stories of >= 513 tokens, 70668 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+m  (runs/g4_snn117_best/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              719     1.202
+  repeat d=5-16            4422     1.330
+  repeat d=17-32           4450     1.346     3.712   2.365
+  repeat d=33-64           5838     1.575     3.599   2.024
+  repeat d=65-128          5995     1.697     3.174   1.477
+  repeat d=129-256         4236     2.030     3.125   1.095
+  repeat d=257-512         1839     2.385     3.120   0.735
+  first occurrence        43169     2.254     2.667   0.408
