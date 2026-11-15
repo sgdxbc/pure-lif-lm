@@ -16,6 +16,7 @@ Optional training methods (all off by default; the architecture is unchanged by 
         synapses; in the Transformer the attention and MLP matrices); AdamW, as before, for the input and readout
         synapses (embedding, head, positions), biases and the per-neuron parameters. The Muon update is scaled by
         0.2 * sqrt(max(rows, cols)) (Liu et al. 2025, "Muon is scalable"), so the AdamW learning rate carries over.
+        --muon_skip leak_ keeps the matrices whose names contain "leak_" (the leak-modulating synapses) on AdamW.
   --teacher hf:NAME
         a Hugging Face model as the teacher (needs transformers), e.g. hf:openai-community/gpt2-large on data
         tokenized with GPT-2's tokenizer; its logits are padded to the student's vocabulary.
@@ -78,6 +79,8 @@ def get_args():
     p.add_argument("--rope", action="store_true", help="tf: rotary position embedding instead of learned positions")
     p.add_argument("--optim", default="adamw", choices=["adamw", "muon"])
     p.add_argument("--muon_momentum", type=float, default=0.95)
+    p.add_argument("--muon_skip", default="", help="with --optim muon: comma-separated name parts of 2-D weights "
+                   "kept on AdamW, e.g. leak_ (the leak-modulating synapses)")
     p.add_argument("--hint_weight", type=float, default=0.0, help="hidden-state distillation weight (needs --teacher)")
     p.add_argument("--hint_layers", type=int, default=0, help="layer pairs for --hint_weight (0: one per teacher layer)")
     a = p.parse_args()
@@ -301,7 +304,9 @@ def main():
     neuron_keys = ("beta_logit", "log_theta", "gamma_logit")
     is_neuron = lambda n: a.neuron_lr_mult != 1.0 and n.endswith(neuron_keys)
     # Muon: the 2-D weights inside the layers; the input/readout synapses (embedding, head, positions) stay on AdamW
-    is_muon = lambda n, p: a.optim == "muon" and p.dim() == 2 and not n.split(".")[0] in ("embed", "head", "pos")
+    skip = [k for k in a.muon_skip.split(",") if k]
+    is_muon = lambda n, p: (a.optim == "muon" and p.dim() == 2 and not n.split(".")[0] in ("embed", "head", "pos")
+                            and not any(k in n for k in skip))
     named = [(n, p) for n, p in model.named_parameters() if p.requires_grad]
     decay = [p for n, p in named if p.dim() >= 2 and not is_muon(n, p)]
     no_decay = [p for n, p in named if p.dim() < 2 and not is_neuron(n)]
