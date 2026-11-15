@@ -228,6 +228,8 @@ class SpikingLM(nn.Module):
             self.relays = nn.ModuleList([RelayPopulation(cfg) for _ in range(cfg.n_layers)])
         self.head = nn.Linear(cfg.d_model, cfg.vocab, bias=False)
         nn.init.normal_(self.head.weight, std=cfg.head_init)
+        self.keep_bus = False   # training only (train.py --hint_weight): keep the bus after each layer in last_bus
+        self.last_bus = None
 
     def forward(self, idx, targets=None, state=None, return_spikes=False):
         """idx: (B, L) token ids. state: per-layer (membrane potentials, last spikes) or None (at rest).
@@ -237,7 +239,7 @@ class SpikingLM(nn.Module):
         bus = self.embed(idx)
         if T > 1:   # each token is shown for T steps: its input neuron fires at every one of them
             bus = bus.repeat_interleave(T, dim=1)
-        new_state, rates, spikes, relay_spikes = [], [], [], []
+        new_state, rates, spikes, relay_spikes, buses = [], [], [], [], []
         for i, layer in enumerate(self.layers):
             st = None if state is None else state[i]
             if self.cfg.spike_bus:   # state[i] = (relay potentials,) + the population's state
@@ -249,12 +251,16 @@ class SpikingLM(nn.Module):
             else:
                 out, s, layer_state = layer(bus, st)
             bus = bus + out
+            if self.keep_bus:
+                buses.append(bus)
             new_state.append(layer_state)
             rates.append(s.detach().mean())
             if return_spikes:
                 spikes.append(s.detach())
         if T > 1:   # readout neurons integrate over the token's T steps, then are read and cleared
             bus = bus.view(bus.size(0), -1, T, bus.size(-1)).mean(2)
+        if self.keep_bus:
+            self.last_bus = [b.view(b.size(0), -1, T, b.size(-1)).mean(2) if T > 1 else b for b in buses]
         logits = self.head(bus)
         loss = None
         if targets is not None:

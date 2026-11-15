@@ -19,6 +19,13 @@ Optional training methods (all off by default; the architecture is unchanged by 
   --teacher hf:NAME
         a Hugging Face model as the teacher (needs transformers), e.g. hf:openai-community/gpt2-large on data
         tokenized with GPT-2's tokenizer; its logits are padded to the student's vocabulary.
+  --hint_weight w [--hint_layers K]
+        hidden-state distillation (with a teacher; spiking student): K pairs of layers at matching relative depth
+        (default: one per teacher layer). For each pair, a linear map, used only in training, predicts the teacher's
+        residual stream after its layer (each channel standardised over the batch) from the student's bus after its
+        layer (scaled to unit RMS per token); loss += w * mean squared error, averaged over the pairs. The aim is a
+        denser training signal about what the teacher has gathered from the context at every position. The maps are
+        not part of the model and cost nothing at inference.
 """
 import argparse, json, math, os, time
 from dataclasses import asdict, fields
@@ -71,6 +78,8 @@ def get_args():
     p.add_argument("--rope", action="store_true", help="tf: rotary position embedding instead of learned positions")
     p.add_argument("--optim", default="adamw", choices=["adamw", "muon"])
     p.add_argument("--muon_momentum", type=float, default=0.95)
+    p.add_argument("--hint_weight", type=float, default=0.0, help="hidden-state distillation weight (needs --teacher)")
+    p.add_argument("--hint_layers", type=int, default=0, help="layer pairs for --hint_weight (0: one per teacher layer)")
     a = p.parse_args()
     if a.device == "auto":
         a.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -256,33 +265,6 @@ def main():
         cfg = Config(**{f.name: getattr(a, f.name) for f in fields(Config)})
         model = SpikingLM(cfg)
     model.to(dev)
-    neuron_keys = ("beta_logit", "log_theta", "gamma_logit")
-    is_neuron = lambda n: a.neuron_lr_mult != 1.0 and n.endswith(neuron_keys)
-    # Muon: the 2-D weights inside the layers; the input/readout synapses (embedding, head, positions) stay on AdamW
-    is_muon = lambda n, p: a.optim == "muon" and p.dim() == 2 and not n.split(".")[0] in ("embed", "head", "pos")
-    named = [(n, p) for n, p in model.named_parameters() if p.requires_grad]
-    decay = [p for n, p in named if p.dim() >= 2 and not is_muon(n, p)]
-    no_decay = [p for n, p in named if p.dim() < 2 and not is_neuron(n)]
-    groups = [{"params": decay, "weight_decay": a.wd}, {"params": no_decay, "weight_decay": 0.0}]
-    if a.neuron_lr_mult != 1.0:   # separate group only when used, so older checkpoints still resume
-        neuron = [p for n, p in named if is_neuron(n)]
-        groups.append({"params": neuron, "weight_decay": 0.0, "lr_mult": a.neuron_lr_mult})
-    opt = torch.optim.AdamW(groups, lr=a.lr, betas=(0.9, 0.95))
-    if a.optim == "muon":
-        muon = [p for n, p in named if is_muon(n, p)]
-        opt = Optimizers([opt, Muon(muon, lr=a.lr, momentum=a.muon_momentum, weight_decay=a.wd)])
-        print(f"Muon for {len(muon)} matrices ({sum(p.numel() for p in muon) / 1e6:.1f}M weights), AdamW for the rest")
-    step = 0
-    ckpt_path = os.path.join(a.out, "ckpt.pt")
-    if a.resume and os.path.exists(ckpt_path):
-        ck = torch.load(ckpt_path, map_location="cpu")
-        model.load_state_dict(ck["model"]); opt.load_state_dict(ck["opt"]); step = ck["step"]
-        print(f"resumed from step {step}")
-    ema = None
-    if a.ema > 0:
-        ema = EMA(model, a.ema)
-        if a.resume and os.path.exists(ckpt_path) and "ema" in ck:
-            ema.shadow = {k: v.to(dev) for k, v in ck["ema"].items()}
     teacher = None
     if a.teacher and a.distill_weight > 0:
         if a.teacher.startswith("hf:"):   # a Hugging Face model, e.g. hf:openai-community/gpt2-large
@@ -294,8 +276,9 @@ def main():
                     super().__init__()
                     self.m = m
 
-                def forward(self, x):
-                    return (self.m(x).logits,)
+                def forward(self, x, hidden=False):   # (logits, None, residual streams after each layer)
+                    o = self.m(x, output_hidden_states=hidden)
+                    return o.logits, None, list(o.hidden_states[1:]) if hidden else None
             teacher = HFTeacher(hf)
         else:
             from sample import load
@@ -304,6 +287,48 @@ def main():
         for p_ in teacher.parameters():
             p_.requires_grad_(False)
         print(f"distilling from {a.teacher} (weight {a.distill_weight}, temperature {a.distill_temp})")
+    hint, hint_pairs = None, []
+    if a.hint_weight > 0:
+        assert teacher is not None and a.arch == "snn", "--hint_weight needs a teacher and a spiking student"
+        with torch.no_grad():
+            hs = teacher(torch.zeros(1, 2, dtype=torch.long, device=dev), hidden=True)[2]
+        K, Ls = a.hint_layers or len(hs), a.n_layers
+        hint_pairs = [(round(k * Ls / K) - 1, round(k * len(hs) / K) - 1) for k in range(1, K + 1)]
+        hint = torch.nn.ModuleList([torch.nn.Linear(a.d_model, hs[0].size(-1), bias=False) for _ in hint_pairs]).to(dev)
+        for m_ in hint:
+            torch.nn.init.zeros_(m_.weight)
+        print(f"hidden-state distillation (weight {a.hint_weight}): (student layer, teacher layer) {hint_pairs}")
+    neuron_keys = ("beta_logit", "log_theta", "gamma_logit")
+    is_neuron = lambda n: a.neuron_lr_mult != 1.0 and n.endswith(neuron_keys)
+    # Muon: the 2-D weights inside the layers; the input/readout synapses (embedding, head, positions) stay on AdamW
+    is_muon = lambda n, p: a.optim == "muon" and p.dim() == 2 and not n.split(".")[0] in ("embed", "head", "pos")
+    named = [(n, p) for n, p in model.named_parameters() if p.requires_grad]
+    decay = [p for n, p in named if p.dim() >= 2 and not is_muon(n, p)]
+    no_decay = [p for n, p in named if p.dim() < 2 and not is_neuron(n)]
+    groups = [{"params": decay, "weight_decay": a.wd}, {"params": no_decay, "weight_decay": 0.0}]
+    if a.neuron_lr_mult != 1.0:   # separate group only when used, so older checkpoints still resume
+        neuron = [p for n, p in named if is_neuron(n)]
+        groups.append({"params": neuron, "weight_decay": 0.0, "lr_mult": a.neuron_lr_mult})
+    if hint is not None:   # the training-only maps of --hint_weight
+        groups.append({"params": list(hint.parameters()), "weight_decay": 0.0})
+    opt = torch.optim.AdamW(groups, lr=a.lr, betas=(0.9, 0.95))
+    if a.optim == "muon":
+        muon = [p for n, p in named if is_muon(n, p)]
+        opt = Optimizers([opt, Muon(muon, lr=a.lr, momentum=a.muon_momentum, weight_decay=a.wd)])
+        print(f"Muon for {len(muon)} matrices ({sum(p.numel() for p in muon) / 1e6:.1f}M weights), AdamW for the rest")
+    step = 0
+    ckpt_path = os.path.join(a.out, "ckpt.pt")
+    if a.resume and os.path.exists(ckpt_path):
+        ck = torch.load(ckpt_path, map_location="cpu")
+        model.load_state_dict(ck["model"]); opt.load_state_dict(ck["opt"]); step = ck["step"]
+        if hint is not None:
+            hint.load_state_dict(ck["hint"])
+        print(f"resumed from step {step}")
+    ema = None
+    if a.ema > 0:
+        ema = EMA(model, a.ema)
+        if a.resume and os.path.exists(ckpt_path) and "ema" in ck:
+            ema.shadow = {k: v.to(dev) for k, v in ck["ema"].items()}
     from tokenizers import Tokenizer
     tok = Tokenizer.from_file(os.path.join(HERE, a.data, a.tokenizer))
     assert tok.get_vocab_size() <= a.vocab, f"--vocab {a.vocab} is smaller than the tokenizer's {tok.get_vocab_size()}"
@@ -341,14 +366,17 @@ def main():
         else:
             x, y = train.batch(a.batch)
             x, y = x.to(dev), y.to(dev)
+        model.keep_bus = hint is not None
         with amp():
             logits, ce, new_state, rates = model(x, y, state=state)
+        model.keep_bus = False
         if a.carry_state:
             state = new_state
-        loss, kd = ce, None
+        loss, kd, hl = ce, None, None
         if teacher is not None:
             with torch.no_grad(), amp():
-                t_logits = teacher(x)[0]
+                t_out = teacher(x, hidden=True) if hint is not None else teacher(x)
+                t_logits = t_out[0]
             T = a.distill_temp
             V = logits.size(-1)
             if t_logits.size(-1) < V:   # e.g. GPT-2's 50257 against the padded 50304: the rest get no probability
@@ -357,6 +385,17 @@ def main():
                           F.log_softmax(t_logits.float().view(-1, V) / T, -1),
                           log_target=True, reduction="batchmean") * T * T
             loss = (1 - a.distill_weight) * ce + a.distill_weight * kd
+        if hint is not None:   # hidden-state distillation (see the top of this file)
+            hl = 0.0
+            for (si, ti), proj in zip(hint_pairs, hint):
+                h = t_out[2][ti].float()
+                z = (h - h.mean((0, 1))) / (h.std((0, 1)) + 1e-4)
+                b = model.last_bus[si].float()
+                b = b * torch.rsqrt(b.pow(2).mean(-1, keepdim=True) + 1e-6)
+                hl = hl + F.mse_loss(proj(b), z)
+            hl = hl / len(hint_pairs)
+            model.last_bus = None
+            loss = loss + a.hint_weight * hl
         opt.zero_grad(set_to_none=True)
         loss.backward()
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), a.clip).item()
@@ -373,11 +412,14 @@ def main():
                    "rates": [round(r, 4) for r in rates.float().tolist()]}
             if kd is not None:
                 rec["distill_kl"] = kd.item()
+            if hl is not None:
+                rec["hint_mse"] = hl.item()
             mem = ""
             if dev.type == "cuda":
                 rec["gpu_mem_gb"] = torch.cuda.max_memory_allocated(dev) / 2**30
                 mem = f" mem {rec['gpu_mem_gb']:.1f}GB"
             print(f"step {step:6d} loss {ce.item():.4f}" + (f" kl {kd.item():.4f}" if kd is not None else "") +
+                  (f" hint {hl.item():.4f}" if hl is not None else "") +
                   f" lr {lr:.2e} gn {gn:.2f} {tps:,.0f} tok/s{mem} "
                   f"rate {rates.float().mean().item():.3f} [{' '.join(f'{r:.2f}' for r in rates.float().tolist())}]",
                   flush=True)
@@ -400,6 +442,8 @@ def main():
                   "cfg": asdict(cfg), "arch": a.arch}
             if ema is not None:
                 ck["ema"] = ema.shadow
+            if hint is not None:
+                ck["hint"] = hint.state_dict()
             torch.save(ck, ckpt_path)
             tl = time.time()
 
