@@ -64,8 +64,12 @@ Optional (mem_heads > 0): plastic synapses (a fast Hebbian memory) in front of t
            same time), and all of them decay back with the group's time constant:
                S[t] = lambda S[t-1] + k[t] v[t]^T            (lambda = sigmoid(decay_beta_logit), per group, learned)
            The query neurons that fire read it out, r[t] = S[t]^T q[t] (the sum of the rows of S whose query neuron
-           fired), scaled to unit RMS per group, and the result enters the bus through ordinary synapses:
-               bus_l <- bus_l + W_o (g * r / rms(r))
+           fired), scaled to unit RMS per group when it is large, and the result enters the bus through ordinary
+           synapses:
+               bus_l <- bus_l + W_o (g * r / sqrt(mean(r^2) + mem_eps))
+           (mem_eps = 1, the size of one value read once at initialisation: at many positions no query neuron meets
+           a written key and r = 0, and a tiny eps there multiplies the gradients by 1/sqrt(eps); 1e-6 made training
+           diverge.)
            A word that made some key neurons fire can thus be brought back later, by a word that makes the matching
            query neurons fire, as long ago as the decay allows. With binary k and q, writing and reading are additions;
            S is a fixed-size state per stream, like the membrane potentials (no history that grows with the text).
@@ -123,6 +127,7 @@ class Config:
     mem_tau_max: float = 1024.0
     mem_theta: float = 1.5    # key and query neurons' threshold at initialisation
     mem_chunk: int = 128      # training: positions per chunk of plastic_scan
+    mem_eps: float = 1.0      # read-out scaling r / sqrt(mean(r^2) + mem_eps) (see module docstring)
 
 
 class LIFPopulation(nn.Module):
@@ -299,7 +304,7 @@ class PlasticSynapses(nn.Module):
         val = self.v_in(bus).view(B, L, h, dv).transpose(1, 2)
         r, S = plastic_scan(q.to(val.dtype), k.to(val.dtype), val, F.logsigmoid(self.decay_beta_logit), S0, c.mem_chunk)
         r = r.float()
-        r = (r * torch.rsqrt(r.pow(2).mean(-1, keepdim=True) + 1e-6)).to(val.dtype)
+        r = (r * torch.rsqrt(r.pow(2).mean(-1, keepdim=True) + c.mem_eps)).to(val.dtype)
         r = r.transpose(1, 2).reshape(B, L, h * dv) * self.gain.to(val.dtype)
         return self.w_out(r), s, (S.detach(), v_last.detach())
 
