@@ -13,6 +13,8 @@ the differences are paired. From the repository root:
   V16 / V24          membrane potentials in fixed point after dividing by each neuron's threshold (the threshold folds
                      into W_in and the bias, so the neuron fires at V >= 1), with 16 or 24 bits; the integer bits per
                      layer come from the calibration, the rest are fractional. Rounded after the update and the reset.
+  V16p               as V16, but the integer bits cover the 99.99th percentile of |V| in the calibration instead of
+                     its maximum (a few neurons drift thousands of thresholds away); values beyond saturate.
   B12 / B16          the leak factor beta (every step, after the sigmoid: a lookup table in hardware) and the reset
                      fraction gamma, with 12 or 16 fractional bits.
 "fp32" runs the same step-by-step code without rounding; "model" is the network's own forward pass (bfloat16, fused
@@ -35,6 +37,8 @@ CONFIGS = [
     ("W8 A8 V16 B12", dict(w=8, a=8, v=16, b=12)),
     ("W4g128 A8 V24 B16", dict(w=4, group=128, a=8, v=24, b=16)),
     ("W4g128 A8 V16 B12", dict(w=4, group=128, a=8, v=16, b=12)),
+    # V16p: integer bits from the 99.99th percentile of |V| instead of the maximum; rarer values saturate
+    ("V16p", dict(v=16, vp=1)), ("W8 A8 V16p B12", dict(w=8, a=8, v=16, vp=1, b=12)),
 ]
 
 
@@ -98,10 +102,10 @@ def run(model, x, q, cal=None, rec=None):
         if Bb:
             beta, gam = qfrac(beta, Bb), qfrac(gam, Bb)
         if Vb:
-            intb = cal["v_int"][li]
+            intb = cal["v_int_p" if q.get("vp") else "v_int"][li]
             frac = Vb - 1 - intb
         v = bus.new_zeros(B, I.size(-1))
-        vmax = 0.0
+        vmax, vsamp = 0.0, []
         out = []
         for t in range(LT):
             xt = (beta[:, t] if beta.dim() == 3 else beta) * v + I[:, t]
@@ -113,6 +117,8 @@ def run(model, x, q, cal=None, rec=None):
                 v = qfix(v, frac, intb)
             if rec is not None:
                 vmax = max(vmax, xt.abs().max().item())
+                if t % 8 == 0:
+                    vsamp.append(xt.abs().flatten())
             out.append(s)
         S = torch.stack(out, 1)
         if rec is not None:
@@ -120,6 +126,8 @@ def run(model, x, q, cal=None, rec=None):
             if c.leak_rank:
                 rec.setdefault("m", []).append(m.abs().amax((0, 1)))
             rec.setdefault("vmax", []).append(vmax)
+            vs = torch.cat(vsamp)
+            rec.setdefault("vp9999", []).append(vs.kthvalue(max(1, int(0.9999 * vs.numel()))).values.item())
             rec.setdefault("rate", []).append(S.mean().item())
         bus = bus + F.linear(S, qw(f32(layer.w_out.weight), w, g_))
     if T > 1:
@@ -156,7 +164,8 @@ def main():
     xc, _ = windows(16, seq, seq // 2, dev)
     run(model, xc, {}, rec=rec)
     cal = {"bus": rec["bus"], "m": rec.get("m"), "head": rec["head"],
-           "v_int": [max(0, math.ceil(math.log2(max(vm, 1.0) * 1.25))) for vm in rec["vmax"]]}
+           "v_int": [max(0, math.ceil(math.log2(max(vm, 1.0) * 1.25))) for vm in rec["vmax"]],
+           "v_int_p": [max(0, math.ceil(math.log2(max(vm, 1.0) * 1.25))) for vm in rec["vp9999"]]}
     x, y = windows(a.windows, seq, 0, dev)
 
     def loss_of(fn):
@@ -172,7 +181,8 @@ def main():
             return model(xb)[0]
 
     res = {"ema": has_ema, "windows": a.windows, "tokens": y.numel(), "v_int_bits": cal["v_int"],
-           "calibration_vmax": rec["vmax"], "rate": rec["rate"], "loss": {}}
+           "v_int_bits_p9999": cal["v_int_p"], "calibration_vmax": rec["vmax"], "calibration_v_p9999": rec["vp9999"],
+           "rate": rec["rate"], "loss": {}}
     res["loss"]["model"] = loss_of(own)
     print(f"{'model (bf16, fused kernel)':22s} {res['loss']['model']:.4f}", flush=True)
     keep = set(s.strip() for s in a.configs.split(",") if s.strip())
