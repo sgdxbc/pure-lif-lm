@@ -1,0 +1,18 @@
+xgph2 NVIDIA A100 80GB PCIe | runs/g4_tf105_lr4e-4 | --arch tf --batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500 --d_model 896 --n_layers 10 --n_heads 14 --lr 4e-4
+params 104.61M, LIF neurons 0, train tokens 552M, tokens/step 8,192
+== eval step 5000 val_loss 1.6213
+== eval step 10000 val_loss 1.4818
+== eval step 15000 val_loss 1.4060
+== eval step 20000 val_loss 1.3588
+== eval step 25000 val_loss 1.3248
+== eval step 30000 val_loss 1.2929
+== eval step 35000 val_loss 1.2609
+== eval step 40000 val_loss 1.2340
+== eval step 45000 val_loss 1.2083
+== eval step 50000 val_loss 1.1840
+== eval step 55000 val_loss 1.1632
+== eval step 60000 val_loss 1.1489
+== eval step 65000 val_loss 1.1395
+== eval step 67000 val_loss 1.1370
+ "val_loss": 1.1362970922328977,
+done Sun Nov 15 07:07:06 +08 2026
