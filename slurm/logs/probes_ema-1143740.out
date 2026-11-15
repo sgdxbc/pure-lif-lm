@@ -1,0 +1,6 @@
+runs/g1_s_ema998: exit 0 Sun Nov 15 12:58:28 PM +08 2026
+runs/g3_all: exit 0 Sun Nov 15 12:58:41 PM +08 2026
+runs/g3_d09_ema: exit 0 Sun Nov 15 12:58:52 PM +08 2026
+runs/g3_ema_nlr10: exit 0 Sun Nov 15 12:59:03 PM +08 2026
+runs/g4_snn117_best: exit 0 Sun Nov 15 12:59:35 PM +08 2026
+runs/g4_snn257_best: exit 0 Sun Nov 15 01:00:28 PM +08 2026
