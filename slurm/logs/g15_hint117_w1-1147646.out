@@ -1,0 +1,3 @@
+queued the next part of runs/g15_hint117_w1: job 1147662
+xgph15 NVIDIA A100 80GB PCIe | runs/g15_hint117_w1 | --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500 --d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128 --teacher runs/g2_tf105_lr6e-4/ckpt.pt --distill_weight 0.9 --distill_temp 1 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --hint_weight 1.0
+[2026-11-16T06:33:51.001] error: *** JOB 1147646 ON xgph15 CANCELLED AT 2026-11-16T06:33:51 DUE TO TIME LIMIT ***
