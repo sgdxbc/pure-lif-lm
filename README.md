@@ -904,7 +904,8 @@ loss 从 2.17 变为 3.30；全部换回静息漏电是 2.84，都比没有漏�
   - **数据**：FineWeb-Edu 的 100 亿 token 样本（从 Common Crawl 网页中筛出的教育类文本，近年 GPT-2 规模复现常用的数据），
     用 GPT-2 的分词器（词表 50,257，模型里补到 50,304）。这样验证 loss 能和 GPT-2 规模的复现直接对照，
     GPT-2 系列的模型以后也能直接当老师。每篇文档前加 `<|endoftext|>`，验证集是最前面约 1000 万 token 的文档
-    （`slurm/fineweb_download.sh`、`prepare_fineweb.py`）。
+    （`slurm/fineweb_download.sh`、`prepare_fineweb.py`）。**已完成**：训练集 966 万篇文档、99.4 亿 token，
+    验证集 9,671 篇、1000 万 token；平均每个 token 4.59 个字符，每篇约 1030 个 token。
   - **怎么比"经典小模型"**：用 EleutherAI 的 lm-evaluation-harness 跑零样本基准（HellaSwag、LAMBADA、PIQA、ARC-Easy、
     ARC-Challenge、WinoGrande），这是 GPT-2、Pythia 这类模型通常报告的一组任务。我们的网络通过 `eval_lm.py` 接入它；
     参考模型（GPT-2 124M / 355M、Pythia 160M / 410M）用同一版本的工具在同一台机器上测，避免和文献数字之间的口径差异。
@@ -913,7 +914,7 @@ loss 从 2.17 变为 3.30；全部换回静息漏电是 2.84，都比没有漏�
     WinoGrande 51.9；Pythia-410M 依次是 40.6、51.4、66.9、52.1、53.8。GPT-2 124M 在 FineWeb 上训练 100 亿 token 的复现，
     验证 loss 约 3.29，HellaSwag 约 30。
   - **随算力提升的趋势**：每批都记录训练用的 token 数和计算量，把脉冲网络和 Transformer 的验证 loss 画在同一张"loss 对训练算力"的图上。
-  - **第十三批**（`gpu13.sh`，数据准备好后提交）：脉冲网络 212M（TinyStories 上 117M 的结构，词表变大）和 138M，
+  - **第十三批**（`gpu13.sh`，**已提交**）：脉冲网络 212M（TinyStories 上 117M 的结构，词表变大）和 138M，
     Transformer 163M（GPT-2 small 的形状）和 77M，都读 25 亿 token（1024 个 token 的片段），暂不用老师。
     跑完后自动做完整验证、零样本基准和硬件代价；同时测四个参考模型的零样本基准。
     长训练按 3 小时一段自动接力（`slurm/train.sbatch` 的 `RELAY`）。
