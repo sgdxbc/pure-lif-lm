@@ -13,6 +13,10 @@ Spiking network, per generated token and per stream:
                With 16 streams generated together, dense weights are read once for all 16 and the W_out row of every
                neuron that fired in any stream once; divided by 16. Plus one embedding row per stream.
   state        membrane potentials, 24-bit, per stream (they stay on chip).
+  Plastic synapses (model.py, mem_heads): the key, query and value synapses and W_o are dense MACs, like W_in; each
+  key neuron that fires adds the value (mem_dv additions) to its row of S, each query neuron that fires adds its row
+  to the readout (sparse adds); the decay of S is one multiplication per synapse and step; S (24-bit) and the key and
+  query potentials add to the state.
   With the spiking bus (model.py, spike_bus), W_in and the first factor of the leak synapses read spikes too: they
   move from dense MACs to additions over the active bus channels, and from "all weights" to "the columns of the
   channels whose relay neuron fired"; the relay potentials add to the state.
@@ -39,14 +43,21 @@ def firing(model, windows, seq=256, dev="cpu", data="data"):
     (a channel is active when its ON or OFF relay neuron fires): "bus_rate", "bus_token", "bus_token_any"."""
     arr = np.memmap(os.path.join(HERE, data, "valid.bin"), dtype=np.uint16, mode="r")   # the run's own data
     starts = np.linspace(0, len(arr) - seq - 2, windows).astype(np.int64)
-    T, L = model.cfg.steps_per_token, len(model.layers)
+    T, L, M = model.cfg.steps_per_token, len(model.layers), len(getattr(model, "mem_layers", []))
     keys = ("rate", "token", "token_any") + (("bus_rate", "bus_token", "bus_token_any") if model.cfg.spike_bus else ())
     f = {k: np.zeros(L) for k in keys}
+    f.update({k: np.zeros(M) for k in (("mem_key_rate", "mem_query_rate") if M else ())})
     n = 0
     for g in range(0, windows - STREAMS + 1, STREAMS):
         x = torch.from_numpy(np.stack([arr[i:i + seq] for i in starts[g:g + STREAMS]]).astype(np.int64)).to(dev)
         with torch.autocast(dev.type, dtype=torch.bfloat16):
             _, _, _, spikes = model(x, return_spikes=True)
+        if M:   # key and query spikes of the plastic synapses come last
+            for l, s in enumerate(spikes[-M:]):
+                hm = s.size(-1) // 2
+                f["mem_key_rate"][l] += (s[..., :hm] > 0.5).float().mean().item()
+                f["mem_query_rate"][l] += (s[..., hm:] > 0.5).float().mean().item()
+            spikes = spikes[:-M]
         for j, s in enumerate(spikes):
             l, pre = (j, "") if j < L else (j - L, "bus_")
             s = s > 0.5
@@ -75,10 +86,20 @@ def snn_cost(model, f):
     else:
         dense_step, dense_w = into + leak2, L * (into + leak2 + H) + d * V
         bus_adds, bus_rows = 0.0, lambda k: 0.0
+    M = len(getattr(model, "mem_layers", []))
+    mem_w = mem_macs = mem_adds = mem_state = 0
+    if M:
+        h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
+        mem_w = M * d * (2 * h * m + 2 * h * dv)                       # key/query, value synapses and W_o: dense
+        mem_macs = mem_w + M * (h * m * dv + 3 * h * dv)                # + decay of S, RMS scaling and gain
+        mem_adds = float(sum((f["mem_key_rate"][l] + f["mem_query_rate"][l]) * h * m * dv for l in range(M)))
+        mem_state = M * (h * m * dv + 2 * h * m) * 3
+        dense_w += mem_w
     out = {"arch": "snn", "params": model.num_params(), "steps_per_token": T, "spike_bus": c.spike_bus,
-           "dense_macs": T * L * dense_step + d * V,
-           "sparse_adds": float(sum(f["rate"][l] * H * T * d for l in range(L))) + bus_adds,
-           "state_bytes": L * H * 3 + (L * 2 * d * 3 if c.spike_bus else 0),
+           "dense_macs": T * L * dense_step + d * V + mem_macs,
+           "sparse_adds": float(sum(f["rate"][l] * H * T * d for l in range(L))) + bus_adds + mem_adds,
+           "state_bytes": L * H * 3 + (L * 2 * d * 3 if c.spike_bus else 0) + mem_state,
+           "dense_weights": dense_w, "plastic_layers": M,
            "firing": {k: v.tolist() for k, v in f.items()}}
     for bits in (8, 4):
         b = bits / 8

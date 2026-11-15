@@ -55,7 +55,7 @@ if [ "${PROBES:-1}" != "0" ]; then
 fi
 if [ "${HW:-0}" = "1" ]; then
   python3 hw_cost.py --device cuda --ema "$out" > "$out/hw_cost.log" 2>&1; tail -3 "$out/hw_cost.log"
-  if python3 -c "import json, sys; a = json.load(open('$out/args.json')); sys.exit(0 if a.get('arch', 'snn') == 'snn' and not (a.get('spike_bus') or a.get('rec_rank') or a.get('delay_k')) else 1)"; then
+  if python3 -c "import json, sys; a = json.load(open('$out/args.json')); sys.exit(0 if a.get('arch', 'snn') == 'snn' and not (a.get('spike_bus') or a.get('rec_rank') or a.get('delay_k') or a.get('mem_heads')) else 1)"; then
     python3 quant_sim.py --device cuda --ema "$out" > "$out/quant.log" 2>&1; cat "$out/quant.log"
   fi
 fi

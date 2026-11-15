@@ -31,7 +31,7 @@ def estimate(hw, args, bits, dev):
     V, d, H, L, r = args["vocab"], args["d_model"], args["d_hidden"], args["n_layers"], args.get("leak_rank", 0)
     b = bits / 8
     f = hw["firing"]
-    dense_w = L * (d * H + (d * r + r * H if r else 0) + H) + d * V          # as in hw_cost.py (no spiking bus)
+    dense_w = hw.get("dense_weights", L * (d * H + (d * r + r * H if r else 0) + H) + d * V)   # as in hw_cost.py
     weights = hw["params"] * b
     ops = hw["dense_macs"] + hw["sparse_adds"]                               # per token and stream
     rate = dev["dsp"] * 3 * dev["clock_mhz"] * 1e6 * dev["eff"]              # MAC/s reached

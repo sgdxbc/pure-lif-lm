@@ -39,7 +39,13 @@ def macs_per_token(a):
         per += a["delay_k"] * a["delay_rank"] * d + a["delay_rank"] * H
     if a.get("rec_rank", 0):
         per += 2 * a["rec_rank"] * H
-    return L * T * per + d * V
+    mem = 0
+    if a.get("mem_heads", 0):   # plastic synapses: key/query/value synapses and W_o, plus the pairs within a
+        h, m, dv = a["mem_heads"], a.get("mem_keys", 64), a.get("mem_dv", 64)   # training chunk (q.k and A v)
+        C = min(a.get("mem_chunk", 128), a["seq"])
+        n = sum(1 for i in range(L) if (i + 1) % a.get("mem_every", 1) == 0)
+        mem = n * (d * (2 * h * m + 2 * h * dv) + h * (C * (m + dv) // 2 + 2 * m * dv))
+    return L * T * per + d * V + mem
 
 
 def teacher_macs(a):

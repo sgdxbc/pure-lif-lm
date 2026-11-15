@@ -56,6 +56,21 @@ Optional (spike_bus): spiking bus. Before each population, the bus passes throug
                I_l[t] = W_in_l z_l[t] + b_l      (and the leak-modulating synapses read z_l too)
            so every synapse into a population is driven by spikes, and on hardware only the channels that fired cost
            anything. The bus itself is still the sum of weighted spikes; the readout still reads bus_L.
+Optional (mem_heads > 0): plastic synapses (a fast Hebbian memory) in front of the population of every mem_every-th
+           layer. Two small sets of LIF neurons read the bus: key neurons k and query neurons q, mem_heads groups of
+           mem_keys each (short time constants, soft reset). Each group has a matrix of plastic synapses S
+           (mem_keys x mem_dv) from its query neurons to mem_dv value channels. When key neuron j fires, the synapses
+           of query neuron j are strengthened by the current value v = W_v bus (pre- and postsynaptic activity at the
+           same time), and all of them decay back with the group's time constant:
+               S[t] = lambda S[t-1] + k[t] v[t]^T            (lambda = sigmoid(decay_beta_logit), per group, learned)
+           The query neurons that fire read it out, r[t] = S[t]^T q[t] (the sum of the rows of S whose query neuron
+           fired), scaled to unit RMS per group, and the result enters the bus through ordinary synapses:
+               bus_l <- bus_l + W_o (g * r / rms(r))
+           A word that made some key neurons fire can thus be brought back later, by a word that makes the matching
+           query neurons fire, as long ago as the decay allows. With binary k and q, writing and reading are additions;
+           S is a fixed-size state per stream, like the membrane potentials (no history that grows with the text).
+           W_o starts at zero, so the model starts as the network without them. Training computes all positions at
+           once, in chunks of mem_chunk (plastic_scan).
 """
 import math
 from dataclasses import dataclass, asdict
@@ -100,6 +115,14 @@ class Config:
     bus_tau_min: float = 0.5  # relay time constants (tokens), initialised log-uniform in [bus_tau_min, bus_tau_max]
     bus_tau_max: float = 4.0
     bus_theta: float = 1.0    # relay threshold at initialisation (the bus starts with roughly unit scale)
+    mem_heads: int = 0        # >0: plastic synapses with this many groups (see module docstring)
+    mem_keys: int = 64        # key neurons (and query neurons) per group
+    mem_dv: int = 64          # value channels per group
+    mem_every: int = 1        # plastic synapses in front of every mem_every-th population (the last of each group)
+    mem_tau_min: float = 8.0  # their decay time constants (tokens), initialised log-uniform over the groups
+    mem_tau_max: float = 1024.0
+    mem_theta: float = 1.5    # key and query neurons' threshold at initialisation
+    mem_chunk: int = 128      # training: positions per chunk of plastic_scan
 
 
 class LIFPopulation(nn.Module):
@@ -216,6 +239,71 @@ class RelayPopulation(nn.Module):
         return s[..., :d] - s[..., d:], s, v.detach()
 
 
+def plastic_scan(q, k, v, log_lam, S0=None, chunk=128):
+    """Plastic synapses over a sequence. q, k: (B, h, L, m) spikes; v: (B, h, L, dv); log_lam: (h,) log of the decay
+    per step; S0: (B, h, m, dv) synapses before the first position, or None (all zero). Returns
+        r[t] = sum_{s<=t} lam^(t-s) (q[t] . k[s]) v[s] + lam^(t+1) S0^T q[t]        (B, h, L, dv)
+    and the synapses after the last position, S[L-1] (B, h, m, dv; float32). Chunks of `chunk` positions: within a
+    chunk all pairs at once, between chunks through S (the same result as stepping S[t] = lam S[t-1] + k[t] v[t]^T)."""
+    B, h, L, m = q.shape
+    S = q.new_zeros(B, h, m, v.size(-1), dtype=torch.float32) if S0 is None else S0.float()
+    ll = log_lam.float().view(1, h, 1, 1)
+    out = []
+    for a in range(0, L, chunk):
+        qc, kc, vc = q[:, :, a:a + chunk], k[:, :, a:a + chunk], v[:, :, a:a + chunk]
+        n = qc.size(2)
+        i = torch.arange(n, device=q.device, dtype=torch.float32)
+        diff = i[:, None] - i[None, :]
+        D = torch.exp(ll * diff.clamp(min=0)) * (diff >= 0)                       # (1, h, n, n): lam^(t-s), s <= t
+        A = (qc @ kc.transpose(-1, -2)) * D.to(qc.dtype)
+        inter = (qc * torch.exp(ll * (i + 1).view(1, 1, n, 1)).to(qc.dtype)) @ S.to(qc.dtype)
+        out.append(A @ vc + inter)
+        w = torch.exp(ll * (n - 1 - i).view(1, 1, n, 1)).to(kc.dtype)           # decay of each write to the chunk end
+        S = torch.exp(ll * n) * S + ((kc * w).transpose(-1, -2) @ vc).float()
+    return torch.cat(out, 2), S
+
+
+class PlasticSynapses(nn.Module):
+    """Key and query neurons and the plastic synapses between them and the value channels (module docstring)."""
+
+    def __init__(self, cfg: Config):
+        super().__init__()
+        self.cfg = cfg
+        h, m, dv, d = cfg.mem_heads, cfg.mem_keys, cfg.mem_dv, cfg.d_model
+        self.kq_in = nn.Linear(d, 2 * h * m, bias=True)    # input synapses of the key and the query neurons
+        self.v_in = nn.Linear(d, h * dv, bias=False)       # value channels
+        self.w_out = nn.Linear(h * dv, d, bias=False)      # readout into the bus (starts at zero)
+        self.gain = nn.Parameter(torch.ones(h * dv))
+        tau = torch.exp(torch.linspace(math.log(cfg.mem_tau_min), math.log(cfg.mem_tau_max), h))
+        self.decay_beta_logit = nn.Parameter(torch.logit(torch.exp(-1.0 / tau)))
+        kq_tau = torch.exp(torch.empty(2 * h * m).uniform_(math.log(0.5), math.log(2.0)))   # short: mostly this token
+        self.kq_beta_logit = nn.Parameter(torch.logit(torch.exp(-1.0 / kq_tau)))
+        self.kq_log_theta = nn.Parameter(torch.full((2 * h * m,), math.log(cfg.mem_theta)))
+        with torch.no_grad():
+            nn.init.normal_(self.kq_in.weight, std=1.0 / math.sqrt(d))
+            nn.init.zeros_(self.kq_in.bias)
+            nn.init.normal_(self.v_in.weight, std=1.0 / math.sqrt(d))
+            nn.init.zeros_(self.w_out.weight)
+
+    def forward(self, bus, state=None):
+        """state: (synapses S (B, h, m, dv), key and query potentials (B, 2hm)) or None. Returns the current into the
+        bus, the key and query spikes (B, L, 2hm) and the new state."""
+        c = self.cfg
+        B, L, _ = bus.shape
+        h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
+        S0, v0 = (None, None) if state is None else state
+        s, v_last = lif(self.kq_in(bus), torch.sigmoid(self.kq_beta_logit), self.kq_log_theta.exp(), None, v0,
+                        hard_reset=False, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg)
+        k = s[..., :h * m].reshape(B, L, h, m).transpose(1, 2)
+        q = s[..., h * m:].reshape(B, L, h, m).transpose(1, 2)
+        val = self.v_in(bus).view(B, L, h, dv).transpose(1, 2)
+        r, S = plastic_scan(q.to(val.dtype), k.to(val.dtype), val, F.logsigmoid(self.decay_beta_logit), S0, c.mem_chunk)
+        r = r.float()
+        r = (r * torch.rsqrt(r.pow(2).mean(-1, keepdim=True) + 1e-6)).to(val.dtype)
+        r = r.transpose(1, 2).reshape(B, L, h * dv) * self.gain.to(val.dtype)
+        return self.w_out(r), s, (S.detach(), v_last.detach())
+
+
 class SpikingLM(nn.Module):
     def __init__(self, cfg: Config):
         super().__init__()
@@ -224,6 +312,9 @@ class SpikingLM(nn.Module):
         self.embed = nn.Embedding(cfg.vocab, cfg.d_model)
         nn.init.normal_(self.embed.weight, std=1.0)
         self.layers = nn.ModuleList([LIFPopulation(cfg) for _ in range(cfg.n_layers)])
+        self.mem_layers = [i for i in range(cfg.n_layers) if cfg.mem_heads and (i + 1) % cfg.mem_every == 0]
+        if self.mem_layers:   # plastic synapses in front of these populations
+            self.mems = nn.ModuleDict({str(i): PlasticSynapses(cfg) for i in self.mem_layers})
         if cfg.spike_bus:
             self.relays = nn.ModuleList([RelayPopulation(cfg) for _ in range(cfg.n_layers)])
         self.head = nn.Linear(cfg.d_model, cfg.vocab, bias=False)
@@ -232,16 +323,27 @@ class SpikingLM(nn.Module):
         self.last_bus = None
 
     def forward(self, idx, targets=None, state=None, return_spikes=False):
-        """idx: (B, L) token ids. state: per-layer (membrane potentials, last spikes) or None (at rest).
+        """idx: (B, L) token ids. state: per-layer (membrane potentials, last spikes) or None (at rest); with plastic
+        synapses followed by one more entry, the list of their states.
         Returns logits, loss, new_state, and per-layer firing rates (or spike tensors, (B, L*T, H) with
-        T = steps_per_token, followed with spike_bus by the relay spikes, (B, L*T, 2 d_model) per layer)."""
+        T = steps_per_token, followed with spike_bus by the relay spikes, (B, L*T, 2 d_model) per layer, and with
+        plastic synapses by their key and query spikes, (B, L, 2 mem_heads mem_keys) per such layer)."""
         T = self.cfg.steps_per_token
+        assert T == 1 or not self.mem_layers, "plastic synapses are written once per token: not combined with T > 1"
+        mem_state, mem_spikes = [], []
         bus = self.embed(idx)
         if T > 1:   # each token is shown for T steps: its input neuron fires at every one of them
             bus = bus.repeat_interleave(T, dim=1)
         new_state, rates, spikes, relay_spikes, buses = [], [], [], [], []
         for i, layer in enumerate(self.layers):
             st = None if state is None else state[i]
+            if i in self.mem_layers:
+                j = self.mem_layers.index(i)
+                cur, sk, ms = self.mems[str(i)](bus, None if state is None else state[-1][j])
+                bus = bus + cur
+                mem_state.append(ms)
+                if return_spikes:
+                    mem_spikes.append(sk.detach())
             if self.cfg.spike_bus:   # state[i] = (relay potentials,) + the population's state
                 z, sz, vz = self.relays[i](bus, None if st is None else st[0])
                 out, s, layer_state = layer(z, None if st is None else st[1:])
@@ -265,7 +367,9 @@ class SpikingLM(nn.Module):
         loss = None
         if targets is not None:
             loss = F.cross_entropy(logits.float().view(-1, logits.size(-1)), targets.view(-1))
-        extra = spikes + relay_spikes if return_spikes else torch.stack(rates)   # relay spikes (B, L*T, 2d) last
+        extra = spikes + relay_spikes + mem_spikes if return_spikes else torch.stack(rates)
+        if self.mem_layers:
+            new_state.append(mem_state)
         return logits, loss, new_state, extra
 
     @torch.no_grad()
