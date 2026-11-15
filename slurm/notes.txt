@@ -4,3 +4,30 @@ g2_tf105 numpy import failure on xgpj0 (job 1142981); resubmitted as 1142994 wit
 there is also a 5-minute CPU-time cap). It now runs on a compute node instead, in tmux window "cn" on the login node:
   srun -p long -c 2 --mem=8G -t 3-00:00:00 --pty bash   then   cd ~/pure-lif-lm && claude remote-control -c
 Compute nodes have no such limits, reach the internet and GitHub, and can run sbatch/squeue. Renew within 3 days.
+
+2026-11-15: why the Claude session in interactive job 1143176 (xcnc9) exited at 22:05 UTC on 2026-11-14 (read-only check)
+Evidence:
+- sacct: step 1143176.0 (the bash running claude) ended 06:05:39 SGT = 22:05:39 UTC after 29:32, State
+  "CANCELLED by 42425", ExitCode 0:9 (SIGKILL); MaxRSS 507 MB of the 8 GB requested, so not the cgroup OOM killer.
+  The job allocation itself stayed RUNNING until the owner cancelled it at 10:46 SGT.
+- Last transcript entry 22:01:59 UTC; nothing written under ~/.claude, ~/.local/share/claude, ~/.local/state,
+  ~/.cache between 21:55 and 22:15 UTC (no debug log; ~/.claude/debug does not exist).
+- No auto-update: only versions/2.1.325 exists, installed 2026-11-15 02:21 SGT.
+- ssh from compute nodes to xlogin1 times out (port 22 blocked), so the login node's tmux and processes could not
+  be read from here.
+Reading: the step was killed from outside (SIGKILL, recorded as a cancel by our own uid) while the allocation was
+not released. That is what happens when the srun client on the login node dies abruptly: slurmstepd kills the
+step, and a SIGKILLed srun never releases its allocation. A clean exit of claude, Ctrl-C or closing the tmux
+window would let srun exit normally and end the job too. So the srun process on the login node was killed.
+Candidates for what killed it:
+  (a) the login node's 5-minute CPU-time hard limit (ulimit -t 300 = soft = hard, so SIGKILL right after
+      SIGXCPU): srun --pty relays every byte of Claude's terminal output, and a 29.5-minute life fits if it
+      used ~17% of a core;
+  (b) the owner's login session ending (VPN/ssh drop) and systemd stopping the user's processes, tmux included
+      (the earlier tmux on xlogin1 had also been recreated at 04:33 SGT).
+To tell them apart, on the login node: `ps -o pid,etime,time,cmd -C srun` (if TIME of the srun for job 1143722
+approaches 5:00, it is (a), and the current session will die the same way) and `tmux ls` (creation time: if the
+tmux server is younger than 06:05 SGT on 11-15, it is (b)); also `loginctl show-user $USER -p Linger`.
+Fix for either: keep no long-lived process on the login node, e.g. start Claude inside tmux on the compute node
+from a batch job (sbatch -p long ... --wrap "tmux new -d -s cc 'cd ~/pure-lif-lm && claude remote-control -c';
+sleep infinity"), and attach only briefly with `srun --jobid=<id> --overlap --pty tmux attach -t cc`.
