@@ -57,10 +57,16 @@
   send_message calls go through without the owner's approval. Scheduled wake-ups (send_later / triggers) are
   refused for the cloud session (it is limited to the owner's trusted devices), so keep a background task
   running instead of relying on them.
-- The cluster session runs on a compute node inside an interactive SLURM job (partition `long`, 3-day limit,
-  started 2026-11-14), because the login node kept killing it; how to restart it is in slurm/notes.txt.
-  On 2026-11-14 22:06 UTC its Claude process died anyway (the interactive job on xcnc9 kept running, empty), and
-  nothing was committed for 4.5 h. `claude remote-control -c` then said no recent session was found; plain
-  `claude remote-control` (on xcnc28) reattached the old session with its context and queued messages, and also
-  opened an empty new one, which is not used. If the cluster goes quiet for much longer than a wave should take,
-  check the session with get_session (connection_status) and ask the owner to restart it.
+- The cluster session (`claude remote-control`) runs from a batch job, `sbatch slurm/claude_session.sbatch`
+  (partition `long`, 3-day limit; since 2026-11-15, job 1143785), in tmux on a compute node, with no process left
+  on the login node. Start, look at its screen, and renew as described in that script and slurm/notes.txt; only
+  one Claude may run in the clone at a time (a second remote-control in the same directory exits at once).
+- Why not an interactive `srun --pty`: its srun client stays on the login node relaying Claude's terminal output,
+  and the login node SIGKILLs processes after 5 min of CPU time (or when the owner's login session ends); slurmstepd
+  then kills Claude too, while the allocation stays (job 1143176 died that way after 29.5 min; nothing was
+  committed for 4.5 h).
+- After a restart, the new remote-control process reattaches the old session, with its context, once a message
+  is waiting for it: if only an empty session appears, send the old session (session_017FuF8wVUfCZdqUSmMn5iLC,
+  "xlogin1-memoized-panda") a message. `claude remote-control -c` does not work here. If the cluster goes quiet for
+  much longer than a wave should take, check the session with get_session (connection_status) and ask the owner
+  to restart it.
