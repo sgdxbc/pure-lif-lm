@@ -1,0 +1,65 @@
+g10_bus117               snn  117.2M  8-bit  117.2 MB  dense MACs   10.5M + sparse adds 32.07M  state  221.2 KB  MB/token 8-bit: 1 stream   42.6, 16 streams   5.2  (rate 0.043)
+g10_bus117_T2            snn  117.2M  8-bit  117.2 MB  dense MACs   16.8M + sparse adds 58.99M  state  221.2 KB  MB/token 8-bit: 1 stream   48.1, 16 streams   5.3  (rate 0.032)
+g10_snn257_T2            snn  257.1M  8-bit  257.1 MB  dense MACs  268.2M + sparse adds  4.81M  state  221.2 KB  MB/token 8-bit: 1 stream  140.6, 16 streams  10.9  (rate 0.021)
+g10_snn257_t250          snn  257.1M  8-bit  257.1 MB  dense MACs  137.2M + sparse adds  3.25M  state  221.2 KB  MB/token 8-bit: 1 stream  140.6, 16 streams  10.9  (rate 0.029)
+hw_cost exit 0 Sun Nov 15 10:53:10 PM +08 2026
+runs/g10_bus117: quant_sim exit 1 Sun Nov 15 10:53:16 PM +08 2026
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/quant_sim.py", line 201, in <module>
+    main()
+  File "/home/s/sung/pure-lif-lm/quant_sim.py", line 167, in main
+    run(model, xc, {}, rec=rec)
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/quant_sim.py", line 81, in run
+    assert c.rec_rank == 0 and c.delay_k == 0 and not c.spike_bus, \
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: not implemented for same-layer or delayed synapses or the spiking bus
+runs/g10_bus117_T2: quant_sim exit 1 Sun Nov 15 10:53:22 PM +08 2026
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/quant_sim.py", line 201, in <module>
+    main()
+  File "/home/s/sung/pure-lif-lm/quant_sim.py", line 167, in main
+    run(model, xc, {}, rec=rec)
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/quant_sim.py", line 81, in run
+    assert c.rec_rank == 0 and c.delay_k == 0 and not c.spike_bus, \
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: not implemented for same-layer or delayed synapses or the spiking bus
+runs/g10_snn257_T2: quant_sim exit 0 Sun Nov 15 10:55:59 PM +08 2026
+model (bf16, fused kernel) 1.2153
+fp32                   1.2156  (+0.0000 vs fp32)
+W8                     1.2159  (+0.0002 vs fp32)
+W4                     1.2538  (+0.0382 vs fp32)
+W4g128                 1.2302  (+0.0146 vs fp32)
+A8                     1.2163  (+0.0007 vs fp32)
+V24                    1.2157  (+0.0000 vs fp32)
+V16                    1.4182  (+0.2026 vs fp32)
+B16                    1.2154  (-0.0002 vs fp32)
+B12                    1.2155  (-0.0001 vs fp32)
+W8 A8 V24 B16          1.2161  (+0.0005 vs fp32)
+W8 A8 V16 B12          1.4191  (+0.2035 vs fp32)
+W4g128 A8 V24 B16      1.2316  (+0.0160 vs fp32)
+W4g128 A8 V16 B12      1.4411  (+0.2255 vs fp32)
+V16p                   1.3445  (+0.1289 vs fp32)
+W8 A8 V16p B12         1.3455  (+0.1299 vs fp32)
+runs/g10_snn257_t250: quant_sim exit 0 Sun Nov 15 10:57:15 PM +08 2026
+model (bf16, fused kernel) 1.2226
+fp32                   1.2219  (+0.0000 vs fp32)
+W8                     1.2219  (+0.0000 vs fp32)
+W4                     1.2928  (+0.0709 vs fp32)
+W4g128                 1.2417  (+0.0198 vs fp32)
+A8                     1.2235  (+0.0016 vs fp32)
+V24                    1.2235  (+0.0016 vs fp32)
+V16                    1.3381  (+0.1162 vs fp32)
+B16                    1.2216  (-0.0004 vs fp32)
+B12                    1.2220  (+0.0001 vs fp32)
+W8 A8 V24 B16          1.2225  (+0.0006 vs fp32)
+W8 A8 V16 B12          1.3382  (+0.1163 vs fp32)
+W4g128 A8 V24 B16      1.2432  (+0.0213 vs fp32)
+W4g128 A8 V16 B12      1.3603  (+0.1383 vs fp32)
+V16p                   1.3755  (+0.1536 vs fp32)
+W8 A8 V16p B12         1.3763  (+0.1544 vs fp32)

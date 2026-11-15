@@ -1,0 +1,30 @@
+400 stories of >= 257 tokens, 35039 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+m  (runs/g10_snn257_T2/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     0.815
+  repeat d=5-16            2079     0.967
+  repeat d=17-32           2410     1.039     3.768   2.729
+  repeat d=33-64           2752     1.171     3.591   2.420
+  repeat d=65-128          2048     1.462     3.381   1.919
+  repeat d=129-256          923     1.606     3.161   1.554
+  first occurrence        24485     2.110     2.548   0.457
+mean loss on story positions 128-191 when reading starts k tokens before 128 (600 stories)
+model              k=0      k=8      k=32     k=64     k=128    gain 8->128
+m                  1.744    1.561    1.385    1.307    1.255    0.306
+m: share_slow=0.342, slow_rate=0.0193, slow_never_fire=0.617, slow_gap_median=0.5, slow_gap_p90=7, slow_gaps_le_10=0.929, gamma_quantiles_10_50_90=[0.12419526502490046, 0.47036632895469666, 0.9155745327472687], gamma_share_below_0.5=0.528
+400 stories of >= 257 tokens, 35039 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+m  (runs/g10_snn257_T2/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     0.812
+  repeat d=5-16            2079     0.951
+  repeat d=17-32           2410     1.029     3.754   2.725
+  repeat d=33-64           2752     1.149     3.585   2.436
+  repeat d=65-128          2048     1.434     3.374   1.941
+  repeat d=129-256          923     1.578     3.125   1.547
+  first occurrence        24485     2.091     2.532   0.461
+mean loss on story positions 128-191 when reading starts k tokens before 128 (600 stories)
+model              k=0      k=8      k=32     k=64     k=128    gain 8->128
+m                  1.736    1.551    1.374    1.294    1.242    0.309
+m: share_slow=0.342, slow_rate=0.0191, slow_never_fire=0.619, slow_gap_median=0.5, slow_gap_p90=7, slow_gaps_le_10=0.929, gamma_quantiles_10_50_90=[0.12464431524276734, 0.47139595448970795, 0.9158870398998261], gamma_share_below_0.5=0.527

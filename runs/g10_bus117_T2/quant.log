@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/quant_sim.py", line 201, in <module>
+    main()
+  File "/home/s/sung/pure-lif-lm/quant_sim.py", line 167, in main
+    run(model, xc, {}, rec=rec)
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/quant_sim.py", line 81, in run
+    assert c.rec_rank == 0 and c.delay_k == 0 and not c.spike_bus, \
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: not implemented for same-layer or delayed synapses or the spiking bus

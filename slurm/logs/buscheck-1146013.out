@@ -1,0 +1,22 @@
+xgpi15
+NVIDIA H100 NVL
+== spike_bus T=1
+distilling from runs/g2_tf105_lr6e-4/ckpt.pt (weight 0.9, temperature 1.0)
+params 117.16M, LIF neurons 49,152, train tokens 552M, tokens/step 8,192
+step      1 loss 8.6443 kl 7.4580 lr 6.00e-05 gn 1.78 5,595 tok/s mem 6.6GB rate 0.038 [0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.04 0.04 0.05 0.05 0.05]
+step     10 loss 7.6141 kl 6.4547 lr 6.00e-04 gn 16.93 82,221 tok/s mem 8.4GB rate 0.073 [0.03 0.03 0.03 0.04 0.05 0.06 0.08 0.09 0.10 0.11 0.12 0.13]
+step     20 loss 4.8133 kl 3.6591 lr 5.35e-04 gn 2.25 73,307 tok/s mem 8.4GB rate 0.028 [0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.03 0.03 0.04 0.05 0.06]
+step     30 loss 4.2811 kl 3.1615 lr 3.51e-04 gn 0.83 73,798 tok/s mem 8.4GB rate 0.024 [0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.03 0.03 0.04 0.04]
+step     40 loss 3.9834 kl 2.8469 lr 1.55e-04 gn 0.73 101,865 tok/s mem 8.4GB rate 0.028 [0.02 0.02 0.02 0.02 0.02 0.02 0.03 0.03 0.03 0.03 0.04 0.04]
+step     50 loss 4.0743 kl 2.8817 lr 6.08e-05 gn 0.64 176,681 tok/s mem 8.4GB rate 0.029 [0.02 0.02 0.02 0.02 0.02 0.03 0.03 0.03 0.03 0.03 0.04 0.04]
+== eval step 50 val_loss 3.9739 (EMA weights 4.0084)
+== spike_bus T=2
+distilling from runs/g2_tf105_lr6e-4/ckpt.pt (weight 0.9, temperature 1.0)
+params 117.16M, LIF neurons 49,152, train tokens 552M, tokens/step 8,192
+step      1 loss 8.6543 kl 7.4699 lr 6.00e-05 gn 2.47 8,703 tok/s mem 10.7GB rate 0.057 [0.04 0.04 0.05 0.05 0.05 0.06 0.06 0.06 0.07 0.07 0.07 0.08]
+step     10 loss 6.9272 kl 5.8039 lr 6.00e-04 gn 13.57 123,854 tok/s mem 13.4GB rate 0.073 [0.04 0.04 0.04 0.05 0.06 0.07 0.08 0.09 0.09 0.10 0.11 0.11]
+step     20 loss 4.8141 kl 3.6535 lr 5.35e-04 gn 3.11 107,636 tok/s mem 13.4GB rate 0.043 [0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.05 0.05 0.06 0.07]
+step     30 loss 4.2400 kl 3.1181 lr 3.51e-04 gn 1.05 107,397 tok/s mem 13.4GB rate 0.035 [0.03 0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.04 0.05 0.05]
+step     40 loss 3.9312 kl 2.7914 lr 1.55e-04 gn 0.72 52,839 tok/s mem 13.4GB rate 0.038 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.04 0.04 0.05 0.05]
+step     50 loss 4.0133 kl 2.8178 lr 6.08e-05 gn 0.62 46,493 tok/s mem 13.4GB rate 0.039 [0.03 0.03 0.03 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.05 0.05]
+== eval step 50 val_loss 3.9091 (EMA weights 3.9449)
