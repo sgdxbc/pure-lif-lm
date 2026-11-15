@@ -1,0 +1,11 @@
+xgpg2
+NVIDIA A100-PCIE-40GB
+distilling from runs/g2_tf105_lr6e-4/ckpt.pt (weight 0.9, temperature 1.0)
+params 117.11M, LIF neurons 49,152, train tokens 552M, tokens/step 8,192
+step      1 loss 8.8945 kl 7.6906 lr 6.00e-05 gn 5.21 6,867 tok/s mem 8.8GB rate 0.133 [0.07 0.08 0.09 0.10 0.11 0.13 0.14 0.15 0.16 0.17 0.18 0.20]
+step     10 loss 7.7082 kl 6.5801 lr 6.00e-04 gn 40.97 52,534 tok/s mem 10.5GB rate 0.162 [0.06 0.07 0.09 0.10 0.13 0.15 0.18 0.19 0.22 0.23 0.25 0.27]
+step     20 loss 5.2885 kl 4.1443 lr 5.35e-04 gn 4.40 49,596 tok/s mem 10.5GB rate 0.106 [0.05 0.06 0.07 0.08 0.09 0.10 0.11 0.12 0.13 0.14 0.15 0.17]
+step     30 loss 4.3379 kl 3.2143 lr 3.51e-04 gn 2.77 49,902 tok/s mem 10.5GB rate 0.087 [0.04 0.05 0.06 0.06 0.07 0.08 0.09 0.09 0.10 0.11 0.13 0.14]
+step     40 loss 3.9012 kl 2.7614 lr 1.55e-04 gn 1.05 51,796 tok/s mem 10.5GB rate 0.085 [0.04 0.05 0.06 0.07 0.07 0.08 0.09 0.09 0.10 0.11 0.12 0.14]
+step     50 loss 3.9487 kl 2.7629 lr 6.08e-05 gn 0.80 51,577 tok/s mem 10.5GB rate 0.087 [0.04 0.06 0.06 0.07 0.07 0.08 0.09 0.09 0.10 0.11 0.12 0.14]
+== eval step 50 val_loss 3.8433 (EMA weights 3.8768)
