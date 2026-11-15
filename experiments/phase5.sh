@@ -1,7 +1,7 @@
 #!/bin/bash
 # Phase 5: is the gain from leak-modulating synapses just extra parameters? (width-matched control)
 # and do delayed synapses (direction C) help?  Same 1500-step setting as phases 1 and 4.
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 COMMON="--steps 1500 --batch 32 --seq 256 --warmup 150 --eval_every 500 --eval_batches 40 --log_every 100"
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"
 run() { name=$1; shift; echo "=== $name: $@ ($(date +%H:%M))"; mkdir -p runs/p5_$name

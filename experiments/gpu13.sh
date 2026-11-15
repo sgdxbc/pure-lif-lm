@@ -1,7 +1,7 @@
 #!/bin/bash
 # GPU wave 13: the first runs on general text (README section 0, stage goals of 2026-11-15). From the repository root,
 # once slurm/prepare_fineweb.sbatch has written data/fineweb/{train,valid}.bin and lm_eval + transformers are in the
-# venv (slurm/zeroshot.sbatch):   bash gpu13.sh
+# venv (slurm/zeroshot.sbatch):   bash experiments/gpu13.sh
 # Data: FineWeb-Edu (10B-token sample), GPT-2's tokenizer (vocabulary padded to 50304), 1024-token windows. Every run
 # sees 2.5B tokens (76,300 steps of 32 x 1024), about 20 tokens per parameter for a GPT-2-small-sized model; no teacher
 # yet. Questions: where does the spiking network stand on general text against a Transformer trained the same way,
@@ -16,7 +16,7 @@
 # Each run chains 3-hour jobs (RELAY in slurm/train.sbatch) until it is finished, then writes the full-validation
 # evaluation, the zero-shot benchmarks and the hardware cost (HW=1) into its directory.
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 for s in train valid; do [ -s data/fineweb/$s.bin ] || { echo "data/fineweb/$s.bin missing: run slurm/prepare_fineweb.sbatch first"; exit 1; }; done
 source slurm/env.sh

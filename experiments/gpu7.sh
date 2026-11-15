@@ -1,6 +1,6 @@
 #!/bin/bash
 # GPU wave 7: is long-range recall limited by how rarely the training windows contain long-range context?
-# Run on the cluster from the repository root:  bash gpu7.sh
+# Run on the cluster from the repository root:  bash experiments/gpu7.sh
 # Wave 5 found that more neurons (state) do not improve recall at 129-256 tokens, and wave 4 that more parameters do
 # not either, while distillation did (117M: 1.29 -> 1.51). So the limit looks like the training signal rather than
 # capacity. One reason the signal is weak: TinyStories stories are short (mean 202 tokens, median 179; 13% reach 256
@@ -16,7 +16,7 @@
 # time, so longer windows with smaller batches are slower; the 1024 run may stop at the 3 h limit once: then submit the
 # same command again (it resumes), and submit the probe job again by hand after both runs are done.
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"
 RUN="--steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500"

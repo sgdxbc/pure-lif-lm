@@ -34,7 +34,7 @@
 - Hardware targets (agreed 2026-11-15, README section 0): FPGAs and dataflow accelerators; neuromorphic chips are
   not targeted for now (real-valued bus, far more synapses per neuron than they are built for). Long-term aim:
   parity with a Transformer of the same parameter count; claimable sooner: per-token cost with many concurrent
-  streams and long text, once quality on long text is shown. Report the hardware cost (hw_cost.py, README 5.20)
+  streams and long text, once quality on long text is shown. Report the hardware cost (hw_cost.py, docs/experiments.md 5.20)
   with every wave.
 - The owner has left it to the cloud session to decide how to proceed (2026-11-15): plan and launch waves without
   asking first, and report results and decisions afterwards. Confirmed again for the new stage goals: keep going on
@@ -42,16 +42,26 @@
   than the Transformer it is compared with, as long as it reaches the goals. The owner suggests (without firm
   grounds) trying improvements to the training method first.
 
+## Repository layout (tidied 2026-11-15)
+- README.md (Chinese): goals (section 0), current status, network structure, file guide. Keep it short and current.
+- docs/experiments.md (Chinese): the chronological lab record, sections 3-5 with the old numbering (5.1-5.30...),
+  so "5.28" in code comments, commit messages and scripts means a section of this file. New results go here as new
+  5.x sections; update README's "当前进展" when the overall picture changes.
+- docs/running.md (Chinese): how to prepare data, train, evaluate and estimate hardware cost; every option.
+- experiments/: one launch script per wave (gpuN.sh; the early CPU queue scripts phase*.sh, ablate*.sh), with an index
+  in experiments/README.md (script -> section). Scripts cd to the repo root themselves.
+- runs/: one directory per run (runs/README.md explains prefixes and files). slurm/: job scripts, cluster notes.
+- Python modules stay at the repo root (the slurm job scripts call them by path).
+
 ## Working conventions
-- Experiments run on a 4-core CPU with the C++/OpenMP kernels in lif_kernel.cpp; queue scripts are phase*.sh.
-- Wait for a queue script with an exact match, e.g. `pgrep -x -f "/bin/bash ./phase6.sh"`; plain `pgrep -f`
-  also matches the shell that launched it.
+- Early experiments ran on a 4-core CPU with the C++/OpenMP kernels in lif_kernel.cpp (queue scripts
+  experiments/phase*.sh); since 2026-11-14 the GPU cluster (below) runs everything.
 - Background jobs only survive while this cloud session has a background task of its own running: when a turn
   ends with none, the container can be stopped and restarted, killing every job (this happened on 2026-11-14).
   Keep a waiter (run_in_background) armed for as long as experiments run, and re-arm it when it times out.
   Restarted jobs resume from the last ckpt.pt with --resume (saved at every eval).
 - Checkpoints (ckpt.pt) are not committed (over GitHub's size limit); logs, args and probe JSON files are.
-- The README (in Chinese) is the record of results; update it with each phase.
+- docs/experiments.md (in Chinese) is the record of results; update it with each wave.
 
 ## Running on the GPU cluster (added 2026-11-14)
 - The GPUs are on a university SLURM cluster that the owner reaches through a Cisco VPN and SSH. The login node
@@ -72,11 +82,11 @@
   3 days; at most 8 GPUs at once, of which one h100-96 and one a100-80. Do not use the old `gpu:nv` cards (no bf16).
   Measured on one H100: 25M + leak64 trains at ~665k tok/s (CPU: ~10k), 117M at ~307k tok/s.
 - Conventions: one run = one job of slurm/train.sbatch (train, then full-validation eval and both memory probes
-  into the run directory; PROBES=0 skips them). A wave of runs is submitted by a gpuN.sh script at the repo
-  root, with run directories runs/gN_*. `slurm/args_of.py runs/X` prints the flags that repeat run X exactly.
+  into the run directory; PROBES=0 skips them). A wave of runs is submitted by an experiments/gpuN.sh script
+  (`bash experiments/gpuN.sh`), with run directories runs/gN_*. `slurm/args_of.py runs/X` prints the flags that repeat run X exactly.
 - Division of work: the cluster session submits and watches jobs, fixes job-level problems, and commits results
   (runs/gN_* without ckpt.pt, slurm/logs/) with `git pull --rebase` before each push. The cloud session plans the
-  waves, writes the analysis into README and edits the shared code and docs. The cloud session can send messages
+  waves, writes the analysis into docs/experiments.md (and README's status) and edits the shared code and docs. The cloud session can send messages
   to the cluster session and read its transcript; the cluster session cannot message the cloud session, so it
   reports through commits (say in the commit message if something needs a decision).
 - Messaging: since the cloud session restarted with the allow rules in .claude/settings.json (main branch), its

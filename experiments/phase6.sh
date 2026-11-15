@@ -1,7 +1,7 @@
 #!/bin/bash
 # Phase 6: does the gain from leak-modulating synapses hold up with more training?
 # Same settings as phase 4, but 5000 steps (41M tokens) instead of 1500 (12.3M).
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 while pgrep -x -f "/bin/bash ./phase5.sh" > /dev/null; do sleep 30; done
 COMMON="--steps 5000 --batch 32 --seq 256 --warmup 300 --eval_every 1000 --eval_batches 40 --log_every 100"
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"

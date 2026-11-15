@@ -1,6 +1,6 @@
 #!/bin/bash
 # Extra phase-1 run: gamma initialised spread over [0.05, 0.999] so some neurons start almost without reset.
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 until grep -q "=== done" runs/phase1.log; do sleep 20; done
 COMMON="--steps 1500 --batch 32 --seq 256 --warmup 150 --eval_every 500 --eval_batches 40 --log_every 100"
 SNN="--hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3"

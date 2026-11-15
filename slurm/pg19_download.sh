@@ -1,5 +1,5 @@
 #!/bin/bash
-# Long-text track (README 5.22), step 1a: download PG-19 (the Parquet mirror emozilla/pg19 on Hugging Face, 25 files,
+# Long-text track (docs/experiments.md 5.22), step 1a: download PG-19 (the Parquet mirror emozilla/pg19 on Hugging Face, 25 files,
 # about 7 GB) into data/pg19/raw, and install pyarrow into the venv if it is missing. Run on the LOGIN node, which has
 # internet (compute nodes may not):  bash slurm/pg19_download.sh
 # Then step 1b on a CPU node:  sbatch slurm/prepare_pg19.sbatch

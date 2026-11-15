@@ -1,7 +1,7 @@
 #!/bin/bash
 # Runs after after_phase2.sh: recall probe and parameter-drift diagnostics on the phase-2/3 models,
 # then the fair Transformer reference trained on the same 115M tokens as the spiking models.
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 while pgrep -x -f "/bin/bash ./after_phase2.sh" > /dev/null; do sleep 30; done
 echo "=== recall probe, phase 2/3 ($(date +%H:%M))"
 python3 probe_recall.py --threads 4 first_12.6M=runs/main/model.pt large_25.2M=runs/p2_large/ckpt.pt \

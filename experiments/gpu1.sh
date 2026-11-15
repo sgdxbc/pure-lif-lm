@@ -1,5 +1,5 @@
 #!/bin/bash
-# GPU wave 1. Run on the cluster login node from the repository root:  bash gpu1.sh
+# GPU wave 1. Run on the cluster login node from the repository root:  bash experiments/gpu1.sh
 # Only submits jobs (slurm/train.sbatch, one GPU each) and prints their ids; SLURM queues whatever exceeds the
 # per-user GPU limits. Results go to runs/g1_*.
 #  (a) Does the GPU reproduce the CPU results? Same settings as runs/tf_full (Transformer, 1.480),
@@ -10,7 +10,7 @@
 #      full length (14000 steps = 115M tokens) instead of the 1500-step CPU screen; s_base is the reference.
 #      The two distillation runs wait for the Transformer from (a), their teacher.
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"
 LONG="--batch 32 --seq 256 --steps 14000 --warmup 300 --eval_every 1000 --eval_batches 40 --log_every 100"

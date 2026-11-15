@@ -1,7 +1,7 @@
 #!/bin/bash
 # Phase 4 (after the fair Transformer reference): leak-modulating synapses (direction A), plus seed replicates
 # to measure how much two runs with identical settings differ.
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 while pgrep -x -f "/bin/bash ./after_phase3.sh" > /dev/null; do sleep 30; done
 COMMON="--steps 1500 --batch 32 --seq 256 --warmup 150 --eval_every 500 --eval_batches 40 --log_every 100"
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --lr 3e-3 --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"

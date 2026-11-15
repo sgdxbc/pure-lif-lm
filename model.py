@@ -1,4 +1,5 @@
-"""A language model made only of LIF neurons.
+"""A language model made only of LIF neurons (by default; of the options below, only the plastic synapses add state
+outside the neurons, and they are marked as a deviation).
 
 Everything that carries state or applies a nonlinearity is a LIF neuron. Neurons talk to each
 other only with binary spikes through linear synapses. Concretely:

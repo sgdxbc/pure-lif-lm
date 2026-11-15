@@ -1,7 +1,7 @@
 #!/bin/bash
 # GPU wave 12: the input current scaled by (1 - beta) (--leak_gate, model.py). From the repository root:
-#   bash gpu12.sh
-# Wave 10 (README 5.23): the spiking bus costs 0.09 and saves little on the target hardware; 2 steps per token gain
+#   bash experiments/gpu12.sh
+# Wave 10 (docs/experiments.md 5.23): the spiking bus costs 0.09 and saves little on the target hardware; 2 steps per token gain
 # the 257M 0.010 and the 250M teacher 0.005. The gap to the Transformer grows with context (5.19), so this wave tries
 # a change aimed at memory:
 #  - leak_gate: V[t] = beta[t] V[t-1] + (1 - beta[t]) I[t], the exact one-step discretisation of the LIF equation
@@ -15,7 +15,7 @@
 # Expected times: 117M ~1.5 h (A100 40GB), 257M ~1.5 h (H200). A run stopped at the 3 h limit resumes when its sub
 # line is submitted again (then also submit the hw job again by hand).
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"
 RUN="--batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500"

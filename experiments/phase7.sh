@@ -1,7 +1,7 @@
 #!/bin/bash
 # Phase 7: the 25.25M model of phase 2 (runs/p2_large, val loss 1.793) with leak-modulating synapses added,
 # everything else identical, on the full 115M tokens.
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 while pgrep -x -f "/bin/bash ./phase6.sh" > /dev/null; do sleep 30; done
 mkdir -p runs/p7_large_leak64
 echo "=== p7_large_leak64 ($(date +%H:%M))"

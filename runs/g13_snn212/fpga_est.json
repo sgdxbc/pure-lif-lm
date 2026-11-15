@@ -1,0 +1,64 @@
+{
+ "device": {
+  "bw_gbs": 820.0,
+  "onchip_mb": 84.0,
+  "dsp": 10848,
+  "clock_mhz": 400.0,
+  "eff": 0.6,
+  "watts": 190.0
+ },
+ "bits": 8,
+ "params": 211746816,
+ "rows": [
+  {
+   "streams": 1,
+   "where": "weights in HBM",
+   "bytes_per_step": 112909422.875,
+   "ops_per_step": 112859246.875,
+   "bound": "memory",
+   "tok_s": 4357.475111219765,
+   "ms_per_token": 0.2294906969004065,
+   "mJ_per_token": 43.60323241107724
+  },
+  {
+   "streams": 4,
+   "where": "weights in HBM",
+   "bytes_per_step": 117845751.40780485,
+   "ops_per_step": 451436987.5,
+   "bound": "memory",
+   "tok_s": 16699.795932309364,
+   "ms_per_token": 0.2395238849752131,
+   "mJ_per_token": 11.377384536322623
+  },
+  {
+   "streams": 16,
+   "where": "weights in HBM",
+   "bytes_per_step": 133633076.0,
+   "ops_per_step": 1805747950.0,
+   "bound": "memory",
+   "tok_s": 58907.571655388674,
+   "ms_per_token": 0.2716119430894309,
+   "mJ_per_token": 3.2253918241869917
+  },
+  {
+   "streams": 64,
+   "where": "weights in HBM",
+   "bytes_per_step": 152374315.7579443,
+   "ops_per_step": 7222991800.0,
+   "bound": "compute",
+   "tok_s": 69206.2034460568,
+   "ms_per_token": 0.9247725899295313,
+   "mJ_per_token": 2.745418626353296
+  },
+  {
+   "streams": 256,
+   "where": "weights in HBM",
+   "bytes_per_step": 159808828.85258773,
+   "ops_per_step": 28891967200.0,
+   "bound": "compute",
+   "tok_s": 69206.2034460568,
+   "ms_per_token": 3.699090359718125,
+   "mJ_per_token": 2.745418626353296
+  }
+ ]
+}

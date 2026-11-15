@@ -1,4 +1,4 @@
-"""Why LAMBADA is so hard for our models (README 5.29). lm-evaluation-harness's lambada_openai asks for the last word
+"""Why LAMBADA is so hard for our models (docs/experiments.md 5.28, 5.30). lm-evaluation-harness's lambada_openai asks for the last word
 of a passage of fiction; most of these words (names above all) already appear earlier in the passage, so the task
 mostly measures whether a model can bring back a word it read tens of tokens before. For every passage the last word's
 log-probability is computed in two conditions:

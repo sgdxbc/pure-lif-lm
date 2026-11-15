@@ -1,5 +1,5 @@
 #!/bin/bash
-# GPU wave 6: is the spiking network short of data? Run on the cluster from the repository root:  bash gpu6.sh
+# GPU wave 6: is the spiking network short of data? Run on the cluster from the repository root:  bash experiments/gpu6.sh
 # In wave 4, going from 117M to 257M parameters gained only 0.030 (plain) / 0.036 (with the three methods), against
 # about 0.065 per doubling from 27M to 117M in wave 2. The 257M network saw 549M tokens, about 2 tokens per
 # parameter (117M: 4.7), so it may simply not have seen enough text. Here the two "best" networks of wave 4
@@ -11,7 +11,7 @@
 # Expected times: snn257 2 passes ~1.9 h on the H200; snn117 3 passes ~3 h on an h100-47, so it may stop at the 3 h
 # limit once: submit the same command again and it continues from its last checkpoint (--resume).
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"
 RUN="--batch 32 --seq 256 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500"

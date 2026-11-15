@@ -1,6 +1,6 @@
 #!/bin/bash
-# GPU wave 11: first runs of the long-text track on PG-19 (README 5.22). From the repository root, once
-# slurm/prepare_pg19.sbatch has written data/pg19/{train,valid,test}.bin:   bash gpu11.sh
+# GPU wave 11: first runs of the long-text track on PG-19 (docs/experiments.md 5.22). From the repository root, once
+# slurm/prepare_pg19.sbatch has written data/pg19/{train,valid,test}.bin:   bash experiments/gpu11.sh
 # Questions: does the spiking network keep improving deeper into a book, as a Transformer does, and how do the two
 # compare in quality and in hardware cost on long text? No teacher yet (a PG-19 Transformer from this wave can be the
 # teacher of the next one). All runs see ~1.0B tokens (about a third of PG-19's training books), 8192 tokens per step.
@@ -15,7 +15,7 @@
 # sliding window) and hw_cost.py, both submitted to run after all four (slurm/long_eval.sbatch, slurm/hw.sbatch).
 # PROBES=0: the TinyStories evaluation and probes of slurm/train.sbatch do not apply here.
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 for s in train valid test; do [ -s data/pg19/$s.bin ] || { echo "data/pg19/$s.bin missing: run slurm/prepare_pg19.sbatch first"; exit 1; }; done
 DATA="--data data/pg19 --tokenizer tok8192.json --vocab 8192"

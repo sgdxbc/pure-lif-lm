@@ -2,7 +2,7 @@
 # Phase 8: training methods, same network (12.6M, gamma spread + leak-modulating synapses rank 64), 1500 steps
 # each as a first screen; compare with runs/p4_leak64 (2.234) and runs/p4_leak64_seed1 (2.230).
 # DEVICE=cuda bash phase8.sh  to run on a GPU.
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 DEVICE=${DEVICE:-cpu}
 while pgrep -x -f "/bin/bash ./phase7.sh" > /dev/null; do sleep 60; done
 COMMON="--device $DEVICE --steps 1500 --batch 32 --seq 256 --warmup 150 --eval_every 500 --eval_batches 40 --log_every 100"

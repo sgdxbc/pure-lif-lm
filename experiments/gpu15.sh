@@ -1,7 +1,7 @@
 #!/bin/bash
-# GPU wave 15: hidden-state distillation, screened on TinyStories (README 5.24). From the repository root:  bash gpu15.sh
+# GPU wave 15: hidden-state distillation, screened on TinyStories (docs/experiments.md 5.24). From the repository root:  bash experiments/gpu15.sh
 # So far the only training change that clearly improved the spiking network's far recall is distillation from the
-# Transformer's output distribution (README 5.16-5.18); a better teacher passes on less and less (5.19, 5.23). This
+# Transformer's output distribution (docs/experiments.md 5.16-5.18); a better teacher passes on less and less (5.19, 5.23). This
 # wave gives the student a denser signal from the same teacher: at 10 pairs of layers at matching relative depth, a
 # linear map (training only) must predict the teacher's residual stream from the student's bus (train.py
 # --hint_weight). The teacher's residual stream holds what its attention gathered from the context at every position.
@@ -9,7 +9,7 @@
 #    g4_snn117_best (EMA 1.2776, same settings without hints)
 # Expected: ~2-2.5 h each (H100 47GB / A100 40GB); each run chains 3-hour parts by itself (RELAY).
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"
 RUN="--batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500"

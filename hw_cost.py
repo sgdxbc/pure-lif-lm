@@ -1,4 +1,4 @@
-"""Hardware cost of a trained network (README 5.20): what one generated token costs on an FPGA or a dataflow
+"""Hardware cost of a trained network (docs/experiments.md 5.20): what one generated token costs on an FPGA or a dataflow
 accelerator, with the spiking network's own firing measured on validation text, next to the same figures for a
 Transformer. From the repository root:
   python3 hw_cost.py --device cuda [--ema] runs/A runs/B ...     (writes runs/X/hw_cost.json and prints a summary)

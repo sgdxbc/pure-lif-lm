@@ -1,4 +1,4 @@
-"""Long-text evaluation (README 5.22): loss at each position of whole books, read from the start of the book.
+"""Long-text evaluation (docs/experiments.md 5.22): loss at each position of whole books, read from the start of the book.
 On data without a list of books (FineWeb-Edu) the documents are used instead, each from its <|endoftext|>.
 For every validation (or test) book of at least --length tokens, the first --length tokens are read in one go:
   spiking network   streamed in chunks of --chunk tokens with the membrane potentials carried over (the same as one

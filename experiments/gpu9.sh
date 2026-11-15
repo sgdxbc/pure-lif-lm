@@ -1,7 +1,7 @@
 #!/bin/bash
 # GPU wave 9: several simulation steps per token; a 250M Transformer; the best spiking setup so far for two passes.
-# Run from the repository root:  bash gpu9.sh
-# Wave 8 (README 5.19): neither the shape (27 layers at the 117M width = 12 wider layers, EMA 1.2429 vs 1.2420) nor
+# Run from the repository root:  bash experiments/gpu9.sh
+# Wave 8 (docs/experiments.md 5.19): neither the shape (27 layers at the 117M width = 12 wider layers, EMA 1.2429 vs 1.2420) nor
 # the learning rate (5e-4 stays best) explains why 117M -> 257M gained so little, while a better teacher helped
 # (g6_tf105_2ep, 1.091, instead of g2_tf105_lr6e-4, 1.139: 1.2420 -> 1.2292). Three questions here:
 #  - steps per token. So far every token is one simulation step, so a neuron sends at most one spike (one bit) per
@@ -20,7 +20,7 @@
 # ~2.5-3.5 h on an H100 47GB: either may stop at the 3 h limit once; then submit the same sub line again (it resumes),
 # and submit the probe job again by hand once all three spiking runs are done.
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"
 RUN="--batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500"

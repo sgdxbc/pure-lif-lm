@@ -1,6 +1,6 @@
 #!/bin/bash
 # Runs after the phase-2 training: evaluate it, then phase 3 (learning rate of per-neuron parameters).
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 while pgrep -f "train.py --out runs/p2_large" > /dev/null; do sleep 30; done
 grep -q "== eval step 14000" runs/p2_large/stdout.log && echo "=== phase 2 finished ($(date +%H:%M))" \
   || echo "=== PHASE2_INCOMPLETE: training process exited before step 14000 ($(date +%H:%M))"

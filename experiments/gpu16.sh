@@ -1,5 +1,5 @@
 #!/bin/bash
-# GPU wave 16: why Muon hurts the spiking network (README 5.27), on TinyStories. From the repository root:  bash gpu16.sh
+# GPU wave 16: why Muon hurts the spiking network (docs/experiments.md 5.27), on TinyStories. From the repository root:  bash experiments/gpu16.sh
 # Wave 14: Muon improved the 105M Transformer by 0.023 but made the spiking 117M worse (+0.013 at lr 6e-4, +0.023 at
 # 1.2e-3), and the loss is concentrated in far recall (net d=129-256 1.10 -> 0.87), while short context barely moved.
 # Two cheap checks before setting Muon aside for the spiking network:
@@ -9,7 +9,7 @@
 # Both against g4_snn117_best (AdamW, EMA 1.2776) and g14_muon117 (Muon, lr 6e-4, EMA 1.2904).
 # Expected: ~2.5 h each (A100 40GB); each run chains 3-hour parts by itself (RELAY).
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"
 RUN="--batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500"

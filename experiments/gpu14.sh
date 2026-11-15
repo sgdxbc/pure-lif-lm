@@ -1,5 +1,5 @@
 #!/bin/bash
-# GPU wave 14: a better optimizer, screened on TinyStories (README 5.24). From the repository root:  bash gpu14.sh
+# GPU wave 14: a better optimizer, screened on TinyStories (docs/experiments.md 5.24). From the repository root:  bash experiments/gpu14.sh
 # The owner suggested trying improvements to the training method first. Muon (train.py --optim muon) replaces AdamW
 # for the 2-D weights inside the layers (W_in, W_out, the leak synapses; attention and MLP matrices in the
 # Transformer): momentum, then the update matrix is orthogonalised (Newton-Schulz). In Transformer training
@@ -11,7 +11,7 @@
 #    baselines should use the better optimizer too if it helps them
 # Expected: ~1.5 h each (A100 40GB / H100 47GB); each run chains 3-hour parts by itself (RELAY).
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"
 RUN="--batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500"

@@ -1,4 +1,4 @@
-"""Low-precision simulation (README 5.20): how much validation loss a trained spiking network loses when its weights,
+"""Low-precision simulation (docs/experiments.md 5.20): how much validation loss a trained spiking network loses when its weights,
 the current bus and the membrane potentials are kept in the low-precision integers that an FPGA or a dataflow
 accelerator would use. Nothing is retrained: the trained weights are rounded, and the network is run step by step
 with every quantity rounded the way the hardware would. Every setting is measured on the same validation windows, so

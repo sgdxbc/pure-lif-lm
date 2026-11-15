@@ -1,6 +1,6 @@
 #!/bin/bash
 # GPU wave 2: scaling on the whole training set. Run on the cluster login node from the repository root:
-#   bash gpu2.sh
+#   bash experiments/gpu2.sh
 # Every run sees 67000 steps x 8192 tokens = 549M tokens (about one pass over the 552M training tokens; all
 # earlier runs saw 115M). Batch, sequence length, warm-up and schedule are the same as before, so the only
 # changes are model size and data.
@@ -10,7 +10,7 @@
 # Learning rates: 27M spiking 2.5e-3 and 12M Transformer 2e-3 as before; 117M spiking 1.2e-3 (best of the
 # 2000-step sweep in wave 1); the rest interpolated. Expected time per run 20-70 min depending on the card.
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"
 FULL="--batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500"

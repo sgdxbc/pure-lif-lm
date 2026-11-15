@@ -1,4 +1,5 @@
-"""Pretrain the all-LIF spiking LM on TinyStories (CPU or NVIDIA GPU, bf16 matmuls via autocast).
+"""Pretrain the spiking LM (or, with --arch tf, the Transformer baseline) on TinyStories, PG-19 or FineWeb-Edu
+(--data, see docs/running.md), on CPU or an NVIDIA GPU, bf16 matmuls via autocast.
 
 Optional training methods (all off by default; the architecture is unchanged by any of them):
   --teacher PATH --distill_weight a --distill_temp T

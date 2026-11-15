@@ -1,6 +1,6 @@
 #!/bin/bash
 # GPU wave 8: why did doubling the spiking network from 117M to 257M gain so little? Run from the repository root:
-#   bash gpu8.sh
+#   bash experiments/gpu8.sh
 # With the three methods, 117M -> 257M improved validation loss by only 0.036 with one pass over the data and 0.039
 # with two (wave 6), against about 0.065 per doubling from 27M to 117M in wave 2. Wave 6 ruled out the data: the
 # second pass helped 117M and 257M equally (0.040 / 0.043). Two causes remain, tested here on one pass, each against
@@ -13,7 +13,7 @@
 # Everything else as in gpu4.sh (three methods: distillation 0.9 / temperature 1, EMA 0.999, neuron lr x10).
 # Expected times: 257M ~55 min on the H200 and ~1.5 h on an H100; deep27 is slower per token (more layers and neurons).
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 SPREAD="--hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05"
 RUN="--batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500"

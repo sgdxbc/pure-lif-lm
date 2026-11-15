@@ -1,5 +1,5 @@
 #!/bin/bash
-# GPU wave 17: short screening runs on general text (README 5.24, 5.28). From the repository root:  bash gpu17.sh
+# GPU wave 17: short screening runs on general text (docs/experiments.md 5.24, 5.28). From the repository root:  bash experiments/gpu17.sh
 # Wave 13: on FineWeb-Edu the spiking 212M is 0.50 behind the 163M Transformer (3.814 against 3.310), and the gap
 # grows during training (0.42 at step 5000, 0.40 at 20000, 0.50 at the end). Its zero-shot results are close to GPT-2
 # 124M except LAMBADA (1%), which mostly asks for a word seen earlier in the passage. This wave screens the candidate
@@ -11,16 +11,16 @@
 #  - mem138      plastic synapses (--mem_heads 8: 8 groups of 64 key and 64 query neurons, 64 values each, in front of
 #                every population; model.py), lr 6e-4: a memory that can bring back a word read long before
 #  - kd138       distillation from g13_tf163 (output distribution, weight 0.9, temperature 1), lr 6e-4: on TinyStories
-#                the biggest single gain, and the only training change that improved far recall (README 5.16-5.18)
+#                the biggest single gain, and the only training change that improved far recall (docs/experiments.md 5.16-5.18)
 #  - kdmem138    both
-#  - tf163m      the 163M Transformer with Muon at lr 6e-4 (on TinyStories Muon helped the Transformer, README 5.27),
+#  - tf163m      the 163M Transformer with Muon at lr 6e-4 (on TinyStories Muon helped the Transformer, docs/experiments.md 5.27),
 #                the same 20,000 steps: the Transformer side of the comparison at this budget
 # All spiking runs: the methods without the teacher (EMA 0.999, neuron lr x10). Distillation over the full 50k-word
 # vocabulary needs an 80 GB card or more (the 212M alone peaked at 40 GB). Also: the reference losses of GPT-2 124M /
 # 355M and GPT-Neo 125M again, in float32 (ref_loss.py now defaults to it; the first run used bfloat16).
 # Expected: ~1-2 h each; each run chains 3-hour parts by itself (RELAY).
 set -e
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
 for f in data/fineweb/train.bin runs/g13_tf163/ckpt.pt; do [ -s $f ] || { echo "$f missing"; exit 1; }; done
 DATA="--data data/fineweb --tokenizer gpt2.json --vocab 50304"

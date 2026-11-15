@@ -1,4 +1,4 @@
-"""Print the recall gains (repeat d=65-128 and d=129-256; "net" subtracts the first-occurrence gain, README 5.1)
+"""Print the recall gains (repeat d=65-128 and d=129-256; "net" subtracts the first-occurrence gain, docs/experiments.md 5.1)
 and the context gain (measurement A, loss at k=8 minus
 k=128) of runs, with the EMA weights too where recall_ema.json / probe_memory_ema.json exist, and the gains on
 512-token stories where recall512.json exists (slurm/probe_long.sbatch):
@@ -11,7 +11,7 @@ def gains(r, suffix):
     p = os.path.join(r, f"recall{suffix}.json")
     if os.path.exists(p):
         d = json.load(open(p))["m"]
-        g0 = d["first occurrence"]["gain"]   # net = gain minus the first-occurrence (control) gain, README 5.1
+        g0 = d["first occurrence"]["gain"]   # net = gain minus the first-occurrence (control) gain, docs/experiments.md 5.1
         out += (f"recall d=65-128 {d['repeat d=65-128']['gain']:.3f}  d=129-256 {d['repeat d=129-256']['gain']:.3f}"
                 f"  net d=65-128 {d['repeat d=65-128']['gain'] - g0:.3f} / d=129-256 {d['repeat d=129-256']['gain'] - g0:.3f}")
     p = os.path.join(r, f"probe_memory{suffix}.json")

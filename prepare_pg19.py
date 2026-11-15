@@ -1,4 +1,4 @@
-"""PG-19 for the long-text track (README 5.22): train a byte-level BPE tokenizer on part of the training books and write
+"""PG-19 for the long-text track (docs/experiments.md 5.22): train a byte-level BPE tokenizer on part of the training books and write
 each split as one uint16 token stream, books separated by <|endoftext|> (id 0), plus the offset where each book starts.
 
   python3 prepare_pg19.py                      # reads data/pg19/raw/*.parquet (slurm/pg19_download.sh)

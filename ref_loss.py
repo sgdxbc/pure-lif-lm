@@ -21,7 +21,7 @@ def main():
     p.add_argument("--batch_tokens", type=int, default=32768)
     p.add_argument("--dtype", default="float32", choices=["float32", "bfloat16"],
                    help="weights; float32 multiplies in TF32 on the GPU (bfloat16 distorted Pythia's zero-shot results, "
-                        "README 5.24)")
+                        "docs/experiments.md 5.24)")
     a = p.parse_args()
     torch.backends.cuda.matmul.allow_tf32 = True
     torch.backends.cudnn.allow_tf32 = True
