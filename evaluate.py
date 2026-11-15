@@ -1,4 +1,6 @@
-"""Full-validation-set evaluation + sample generation + streaming-speed measurement."""
+"""Full-validation-set evaluation + sample generation + streaming-speed measurement.
+The data directory, tokenizer and (for general text) window length come from the run's args.json next to the
+checkpoint; TinyStories runs keep 256-token windows and the story prompts, as before."""
 import argparse, json, math, os, time
 import numpy as np
 import torch
@@ -16,13 +18,21 @@ PROMPTS = [
     "One day, a little bird could not fly. It",
     "Sara had a red ball. She",
 ]
+GENERAL_PROMPTS = [   # PG-19, FineWeb-Edu
+    "The history of the city",
+    "In mathematics, a prime number is",
+    "Plants need sunlight because",
+    "The French Revolution began in",
+    "To make bread, you first",
+    "Water boils at a lower temperature on a mountain because",
+]
 
 
 @torch.no_grad()
-def full_val_loss(model, seq=256, batch=32):
-    dev = next(model.parameters()).device
+def full_val_loss(model, seq=256, batch=32, data="data"):
     """Non-overlapping windows over the whole validation stream; each window starts from rest (V=0)."""
-    arr = np.memmap(os.path.join(HERE, "data", "valid.bin"), dtype=np.uint16, mode="r")
+    dev = next(model.parameters()).device
+    arr = np.memmap(os.path.join(HERE, data, "valid.bin"), dtype=np.uint16, mode="r")
     n = (len(arr) - 1) // seq
     tot, cnt = 0.0, 0
     for i in range(0, n, batch):
@@ -46,16 +56,25 @@ def main():
     torch.set_num_threads(4)
     model, step = load(a.ckpt, ema=a.ema, device=a.device)
     dev = torch.device(a.device)
-    tok = Tokenizer.from_file(os.path.join(HERE, "data", "tok4096.json"))
-    raw = open(os.path.join(HERE, "data", "TinyStoriesV2-GPT4-valid.txt"), encoding="utf-8").read()
-    stories = [s.strip() for s in raw.split("<|endoftext|>") if s.strip()]
-    n_chars = sum(len(s) for s in stories) + len(stories)   # +1 per story for the EOS token
-    n_tok = len(np.memmap(os.path.join(HERE, "data", "valid.bin"), dtype=np.uint16, mode="r"))
-    cpt = n_chars / n_tok
+    args_path = os.path.join(os.path.dirname(a.ckpt), "args.json")
+    args = json.load(open(args_path)) if os.path.exists(args_path) else {}
+    data = args.get("data", "data")
+    tok = Tokenizer.from_file(os.path.join(HERE, data, args.get("tokenizer", "tok4096.json")))
+    valid = np.memmap(os.path.join(HERE, data, "valid.bin"), dtype=np.uint16, mode="r")
+    if data == "data":   # TinyStories: characters of the raw validation text
+        raw = open(os.path.join(HERE, "data", "TinyStoriesV2-GPT4-valid.txt"), encoding="utf-8").read()
+        stories = [s.strip() for s in raw.split("<|endoftext|>") if s.strip()]
+        n_chars = sum(len(s) for s in stories) + len(stories)   # +1 per story for the EOS token
+        seq, prompts = 256, PROMPTS
+    else:                # general text: characters of the decoded validation tokens, +1 per end-of-text token
+        eot = tok.token_to_id("<|endoftext|>")
+        n_chars = len(tok.decode(valid.tolist())) + int((valid == eot).sum())
+        seq, prompts = args.get("seq", 1024), GENERAL_PROMPTS
+    cpt = n_chars / len(valid)
 
     t = time.time()
-    vl, cnt = full_val_loss(model)
-    res = {"step": step, "val_loss": vl, "val_ppl": math.exp(vl), "bits_per_char": vl / math.log(2) / cpt,
+    vl, cnt = full_val_loss(model, seq, max(1, 8192 // seq), data)
+    res = {"step": step, "data": data, "seq": seq, "val_loss": vl, "val_ppl": math.exp(vl), "bits_per_char": vl / math.log(2) / cpt,
            "chars_per_token": cpt, "eval_tokens": cnt, "eval_seconds": time.time() - t}
     print(json.dumps(res, indent=1), flush=True)
     json.dump(res, open(a.out, "w"), indent=1)   # saved now as well, in case generation below is interrupted
@@ -73,7 +92,7 @@ def main():
     res["device"] = a.device
 
     res["samples"] = {}
-    for pr in PROMPTS:
+    for pr in prompts:
         res["samples"][pr] = [complete(model, tok, pr, 250, 0.8, 50, seed=s) for s in range(a.samples_per_prompt)]
         print(f"\n### {pr}")
         for s in res["samples"][pr]:

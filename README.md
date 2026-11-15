@@ -4,7 +4,18 @@
 
 ## 0. 项目目标与原则
 
-**目标**：在网络结构保持纯粹由脉冲神经元构成的前提下，用任何方式尽可能提升模型性能，最终目标是**推理性能**匹配 Transformer。
+**阶段性目标**（2026-11-15 重新确定）：
+1. **质量**：在通用文本上达到经典小模型的水平（GPT-2 124M–355M、Pythia 160M–410M 这一级），在一些任务上基本可用。
+2. **随算力提升的趋势**：展示投入的训练算力越多、质量越好，而且这个趋势能持续（loss 随训练算力变化的曲线，
+   和同样数据上训练的 Transformer 并排比较）。真正的大规模训练留给以后。
+3. **硬件**：在目标硬件（FPGA、数据流加速器）上展现出某种实在的优势，最好不局限于很窄的场景；在没有优势的场景也不明显落后。
+4. **结构**：纯 LIF 不再是硬性要求，硬性要求是能在目标硬件上跑起来。但尽量保留（或接近保留）LIF 神经元，结构保持单纯，
+   给以后的扩展和更多的部署方式留余地。
+
+考虑过但暂时放下的目标：追平当前前沿的 7–9B 模型（如 Qwen3.5-9B）。从零训练到这个水平远超现有算力；
+以后如果要做，路线是从开源模型改造并蒸馏（SpikingBrain、RADLADS 等已有先例）。
+
+**长期方向**（原目标，保留）：用任何方式尽可能提升模型性能，最终让**推理性能**匹配 Transformer。
 
 **原则**：
 - "脉冲神经网络规模小"是一种刻板印象，不是这个项目的约束。扩大规模，极端情况下扩大到比 Transformer 还大，是合理的选择，
@@ -16,7 +27,8 @@
 - 参数量、训练和生成速度、状态大小也照常记录，它们是实际算力预算要考虑的因素，但不作为否定一个改进方向的理由。
 - "纯粹由脉冲神经元构成"按目前的约定是指：所有状态和非线性都在 LIF 神经元里，神经元之间只通过脉冲经突触传递
   （突触可以是普通突触、低秩分解的突触、带延迟的突触、调节漏电的突触）；不使用注意力、归一化层或非脉冲的非线性单元。
-  双室神经元暂不采用。
+  双室神经元暂不采用。这仍是默认做法；从 2026-11-15 起，为了上面的目标可以有所放宽，但每一处都要记录理由，
+  并优先选择保留硬件优势的做法（神经元之间传脉冲或小整数、状态大小固定）。
 
 **硬件目标**：
 - 当前的硬件实现候选是 **FPGA** 和**数据流加速器**（权重常驻片上、按数据流动计算的芯片，如 Groq、Tenstorrent、SambaNova、
@@ -883,6 +895,23 @@ loss 从 2.17 变为 3.30；全部换回静息漏电是 2.84，都比没有漏�
   - 阈值的初始值同时乘以 (1 − β)，所以初始化时和原来的网络完全相同（CPU 上检查过：1 步和 2 步、分段读和一次读完、
     `quant_sim.py` 的逐步计算都一致），只有训练后的行为不同。硬件上每个神经元每步多一次乘法，可以和 β 用同一张查找表，代价可以忽略。
   - 在 117M（和第四批的 1.278 比较）和 257M（和第八批的 1.229 比较）上各一组，之后算硬件代价。
+- **新阶段：通用文本**（第 0 节的阶段性目标）。TinyStories 只用来快速试验结构上的改动，主线转到通用文本：
+  - **数据**：FineWeb-Edu 的 100 亿 token 样本（从 Common Crawl 网页中筛出的教育类文本，近年 GPT-2 规模复现常用的数据），
+    用 GPT-2 的分词器（词表 50,257，模型里补到 50,304）。这样验证 loss 能和 GPT-2 规模的复现直接对照，
+    GPT-2 系列的模型以后也能直接当老师。每篇文档前加 `<|endoftext|>`，验证集是最前面约 1000 万 token 的文档
+    （`slurm/fineweb_download.sh`、`prepare_fineweb.py`）。
+  - **怎么比"经典小模型"**：用 EleutherAI 的 lm-evaluation-harness 跑零样本基准（HellaSwag、LAMBADA、PIQA、ARC-Easy、
+    ARC-Challenge、WinoGrande），这是 GPT-2、Pythia 这类模型通常报告的一组任务。我们的网络通过 `eval_lm.py` 接入它；
+    参考模型（GPT-2 124M / 355M、Pythia 160M / 410M）用同一版本的工具在同一台机器上测，避免和文献数字之间的口径差异。
+    检查过：用 `eval_lm.py` 的打分方式评 GPT-2 124M，和这个工具自带的 Hugging Face 打分在 5 个任务上（各取前 60 题）结果完全相同。
+    文献中的参考值（零样本，Mamba 论文表 3）：Pythia-160M 的 HellaSwag 30.2、LAMBADA 33.0、PIQA 61.4、ARC-Easy 43.2、
+    WinoGrande 51.9；Pythia-410M 依次是 40.6、51.4、66.9、52.1、53.8。GPT-2 124M 在 FineWeb 上训练 100 亿 token 的复现，
+    验证 loss 约 3.29，HellaSwag 约 30。
+  - **随算力提升的趋势**：每批都记录训练用的 token 数和计算量，把脉冲网络和 Transformer 的验证 loss 画在同一张"loss 对训练算力"的图上。
+  - **第十三批**（`gpu13.sh`，数据准备好后提交）：脉冲网络 212M（TinyStories 上 117M 的结构，词表变大）和 138M，
+    Transformer 163M（GPT-2 small 的形状）和 77M，都读 25 亿 token（1024 个 token 的片段），暂不用老师。
+    跑完后自动做完整验证、零样本基准和硬件代价；同时测四个参考模型的零样本基准。
+    长训练按 3 小时一段自动接力（`slurm/train.sbatch` 的 `RELAY`）。
 
 ## 6. 在 GPU 上运行
 
@@ -915,7 +944,7 @@ python3 evaluate.py --device cuda --ckpt runs/xxx/ckpt.pt --out runs/xxx/final_e
   阈值的初始值同时乘以 (1 − β)，所以初始化时和不加时是同一个网络（5.24 节）。
 
 **数据选项**：`--data 目录 --tokenizer 文件`（默认 `data` 和 `tok4096.json`，即 TinyStories；PG-19 是 `data/pg19` 和 `tok8192.json`，
-另加 `--vocab 8192`）。Transformer 另有 `--rope`（旋转位置编码），最长长度取 1024 和 `--seq` 中较大的一个。
+另加 `--vocab 8192`；FineWeb-Edu 是 `data/fineweb` 和 `gpt2.json`，另加 `--vocab 50304`）。Transformer 另有 `--rope`（旋转位置编码），最长长度取 1024 和 `--seq` 中较大的一个。
 
 ## 7. 文件
 
@@ -932,6 +961,8 @@ model_tf.py      Transformer 对照组（仅用于比较）
 prepare_data.py  训练分词器 + 语料转 token
 prepare_pg19.py  PG-19：分词器 + 转 token，保留每本书的起点（5.22 节）
 eval_long.py     长文本评测：从书的开头读到 8192 个 token，按位置区间报告 loss（5.22 节）
+prepare_fineweb.py  FineWeb-Edu：GPT-2 分词器转 token（分词器 data/fineweb/gpt2.json 在仓库里；5.24 节）
+eval_lm.py       零样本基准（lm-evaluation-harness：HellaSwag、LAMBADA、PIQA、ARC、WinoGrande），也可测 Hugging Face 上的参考模型
 train.py         训练（--arch snn|tf）
 sample.py        文本补全（-i 交互模式）
 evaluate.py      完整验证集评估 + 批量样例

@@ -32,9 +32,10 @@ def complete(model, tok, prompt, n=200, temperature=0.8, top_k=50, seed=None):
     dev = next(model.parameters()).device
     g = torch.Generator(device=dev).manual_seed(seed) if seed is not None else None
     ids = torch.tensor([tok.encode(prompt).ids], device=dev)
+    eos = tok.token_to_id("<|endoftext|>")   # 0 in our own tokenizers, 50256 in GPT-2's
     with torch.autocast(dev.type, dtype=torch.bfloat16):
-        y = model.generate(ids, n, temperature=temperature, top_k=top_k, eos_id=0, generator=g)
-    return tok.decode([t for t in y[0].tolist() if t != 0])
+        y = model.generate(ids, n, temperature=temperature, top_k=top_k, eos_id=eos, generator=g)
+    return tok.decode([t for t in y[0].tolist() if t != eos])
 
 
 def main():

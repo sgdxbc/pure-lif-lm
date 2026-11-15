@@ -1,8 +1,20 @@
 # Project notes for Claude
 
 ## Goal and principle (set by the project owner)
-- Goal: keep the network purely made of spiking (LIF) neurons, and improve model quality by any means
-  that respects that, with the aim of matching a Transformer's *inference* performance.
+- Stage goals (revised by the owner on 2026-11-15, README section 0):
+  1. Quality: match classic small language models (GPT-2 124M-355M, Pythia 160M-410M class) on general text, and be
+     basically usable on some tasks.
+  2. Scaling: show that quality keeps improving as more training compute is put in (loss against compute, next to a
+     Transformer trained on the same data). Real large-scale training is left for later.
+  3. Hardware: on the target hardware (FPGA, dataflow accelerators) show some concrete advantage, ideally not tied
+     to a narrow scenario, and not fall clearly behind where there is no advantage.
+  4. Structure: pure LIF is no longer a hard requirement (running on the target hardware is). Keep LIF neurons as
+     fully as possible, keep the structure simple, and leave room for extensions and wider deployment.
+- Considered and set aside for now (2026-11-15): matching a current frontier 7-9B model. Training at that level
+  from scratch is far beyond this compute; the route for later is converting an open model (Qwen3.5-9B, itself a
+  3:1 Gated DeltaNet / attention hybrid) and distilling, as SpikingBrain and RADLADS did.
+- Long-term direction (the earlier goal): improve model quality by any means, with the aim of matching a
+  Transformer's *inference* performance.
 - "Spiking networks are small" is a stereotype, not a constraint of this project. Scaling up, even beyond the
   size of the Transformer baseline, is a legitimate and possibly necessary choice.
 - "Matching a Transformer" is a rough goal: the end result only has to be reasonably interpretable as reaching
@@ -14,7 +26,9 @@
   because it is bigger or slower.
 - "Pure spiking" as currently agreed: all state and nonlinearity live in LIF neurons; neurons interact only through
   spikes via synapses (plain, low-rank factorised, delayed, or leak-modulating synapses are all fine). No attention,
-  no normalisation layers, no non-spiking nonlinear units. Two-compartment neurons are not used for now.
+  no normalisation layers, no non-spiking nonlinear units. Two-compartment neurons are not used for now. This is
+  still the default, but since 2026-11-15 deviations are allowed when they serve the goals: record and justify
+  each, and prefer ones that keep the hardware benefits (spikes or small integers between neurons, fixed-size state).
 - Hardware targets (agreed 2026-11-15, README section 0): FPGAs and dataflow accelerators; neuromorphic chips are
   not targeted for now (real-valued bus, far more synapses per neuron than they are built for). Long-term aim:
   parity with a Transformer of the same parameter count; claimable sooner: per-token cost with many concurrent

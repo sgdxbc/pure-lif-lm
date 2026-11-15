@@ -150,13 +150,14 @@ def evaluate(model, val, a):
 
 
 def sample(model, tok, prompts, n=120, seed=0, device="cpu"):
+    eos = tok.token_to_id("<|endoftext|>")
     g = torch.Generator(device=device).manual_seed(seed)
     outs = []
     model.eval()
     for pr in prompts:
         ids = torch.tensor([tok.encode(pr).ids], device=device)
         with torch.autocast(torch.device(device).type, dtype=torch.bfloat16):
-            y = model.generate(ids, n, temperature=0.8, top_k=50, eos_id=0, generator=g)
+            y = model.generate(ids, n, temperature=0.8, top_k=50, eos_id=eos, generator=g)
         outs.append(pr + "|" + tok.decode(y[0].tolist()))
     model.train()
     return outs
@@ -218,6 +219,8 @@ def main():
         json.dump(vars(a), f, indent=1)
     logf = open(os.path.join(a.out, "log.jsonl"), "a")
     prompts = ["Once upon a time", "Lily wanted to go to the park, but", "The little dog was sad because"]
+    if a.data != "data":   # general text (PG-19, FineWeb-Edu)
+        prompts = ["The history of the city", "In mathematics, a prime number is", "Plants need sunlight because"]
 
     t0 = time.time(); tl = time.time(); tokens_seen = step * a.batch * a.seq
     amp = lambda: torch.autocast(dev.type, dtype=torch.bfloat16)

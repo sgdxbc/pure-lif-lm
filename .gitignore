@@ -12,3 +12,6 @@ slurm/.reported
 data/pg19/raw/
 data/pg19/*.bin
 data/pg19/*.tmp
+data/fineweb/raw/
+data/fineweb/*.bin
+data/fineweb/*.tmp
