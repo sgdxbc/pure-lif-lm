@@ -15,6 +15,13 @@
 - "Pure spiking" as currently agreed: all state and nonlinearity live in LIF neurons; neurons interact only through
   spikes via synapses (plain, low-rank factorised, delayed, or leak-modulating synapses are all fine). No attention,
   no normalisation layers, no non-spiking nonlinear units. Two-compartment neurons are not used for now.
+- Hardware targets (agreed 2026-11-15, README section 0): FPGAs and dataflow accelerators; neuromorphic chips are
+  not targeted for now (real-valued bus, far more synapses per neuron than they are built for). Long-term aim:
+  parity with a Transformer of the same parameter count; claimable sooner: per-token cost with many concurrent
+  streams and long text, once quality on long text is shown. Report the hardware cost (hw_cost.py, README 5.20)
+  with every wave.
+- The owner has left it to the cloud session to decide how to proceed (2026-11-15): plan and launch waves without
+  asking first, and report results and decisions afterwards.
 
 ## Working conventions
 - Experiments run on a 4-core CPU with the C++/OpenMP kernels in lif_kernel.cpp; queue scripts are phase*.sh.
