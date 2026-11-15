@@ -138,8 +138,8 @@ def run(model, x, q, cal=None, rec=None):
     return F.linear(hin, qw(f32(model.head.weight), w, g_))
 
 
-def windows(n, seq, offset, dev):
-    arr = np.memmap(os.path.join(HERE, "data", "valid.bin"), dtype=np.uint16, mode="r")
+def windows(n, seq, offset, dev, data="data"):
+    arr = np.memmap(os.path.join(HERE, data, "valid.bin"), dtype=np.uint16, mode="r")
     starts = np.linspace(0, len(arr) - seq - 2, n + 1).astype(np.int64)[:-1] + offset
     x = torch.from_numpy(np.stack([arr[i:i + seq] for i in starts]).astype(np.int64)).to(dev)
     y = torch.from_numpy(np.stack([arr[i + 1:i + seq + 1] for i in starts]).astype(np.int64)).to(dev)
@@ -156,17 +156,19 @@ def main():
     p.add_argument("--configs", default="", help="comma-separated subset of the setting names")
     a = p.parse_args()
     dev = torch.device(a.device)
-    has_ema = bool(a.ema and json.load(open(os.path.join(a.run, "args.json"))).get("ema", 0))
+    args = json.load(open(os.path.join(a.run, "args.json")))
+    has_ema = bool(a.ema and args.get("ema", 0))
+    data = args.get("data", "data")   # the run's own data
     model, _ = load(os.path.join(a.run, "ckpt.pt"), ema=has_ema, device=dev)
     seq = 256
     # calibration on separate windows (shifted by half a window), unrounded
     rec = {}
-    xc, _ = windows(16, seq, seq // 2, dev)
+    xc, _ = windows(16, seq, seq // 2, dev, data)
     run(model, xc, {}, rec=rec)
     cal = {"bus": rec["bus"], "m": rec.get("m"), "head": rec["head"],
            "v_int": [max(0, math.ceil(math.log2(max(vm, 1.0) * 1.25))) for vm in rec["vmax"]],
            "v_int_p": [max(0, math.ceil(math.log2(max(vm, 1.0) * 1.25))) for vm in rec["vp9999"]]}
-    x, y = windows(a.windows, seq, 0, dev)
+    x, y = windows(a.windows, seq, 0, dev, data)
 
     def loss_of(fn):
         tot = 0.0

@@ -33,11 +33,11 @@ STREAMS = 16
 
 
 @torch.no_grad()
-def firing(model, windows, seq=256, dev="cpu"):
+def firing(model, windows, seq=256, dev="cpu", data="data"):
     """Per layer: firing rate per step ("rate"), share of neurons that fire at least once in a token in one stream
     ("token") and in any of STREAMS streams ("token_any"). With the spiking bus also the same for the bus channels
     (a channel is active when its ON or OFF relay neuron fires): "bus_rate", "bus_token", "bus_token_any"."""
-    arr = np.memmap(os.path.join(HERE, "data", "valid.bin"), dtype=np.uint16, mode="r")
+    arr = np.memmap(os.path.join(HERE, data, "valid.bin"), dtype=np.uint16, mode="r")   # the run's own data
     starts = np.linspace(0, len(arr) - seq - 2, windows).astype(np.int64)
     T, L = model.cfg.steps_per_token, len(model.layers)
     keys = ("rate", "token", "token_any") + (("bus_rate", "bus_token", "bus_token_any") if model.cfg.spike_bus else ())
@@ -135,7 +135,7 @@ def main():
         has_ema = bool(a.ema and args.get("ema", 0))
         model, _ = load(os.path.join(run, "ckpt.pt"), ema=has_ema, device=dev)
         if isinstance(model, SpikingLM):
-            o = snn_cost(model, firing(model, a.windows, dev=dev))
+            o = snn_cost(model, firing(model, a.windows, dev=dev, data=args.get("data", "data")))
         else:
             o = tf_cost(model)
         o["ema"] = has_ema

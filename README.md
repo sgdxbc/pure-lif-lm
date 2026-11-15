@@ -797,9 +797,16 @@ loss 从 2.17 变为 3.30；全部换回静息漏电是 2.84，都比没有漏�
   而 TinyStories 的故事平均只有约 200 个 token，做不到。和 TinyStories 主线并行，分步进行：
   - 数据用 **PG-19**：Project Gutenberg 上 1919 年以前出版的书，训练集 28,602 本，每本平均约 40 万字符，
     原论文的分词下约 20 亿 token。它是长距离语言模型的常用测试集，结果可以和文献对照。
-  - 第一步：下载、为它训练新的分词器、转换成 token（CPU 作业），保留每本书的边界。
-  - 第二步：Transformer 对照组改用旋转位置编码，以便在比训练时更长的文本上评测；在 117M 量级上，脉冲网络和 Transformer 各训练一组，
-    看 loss 随位置（到 8192 个 token）的变化，以及硬件代价。
+  - 第一步：下载、为它训练新的分词器、转换成 token（CPU 作业），保留每本书的边界
+    （`slurm/pg19_download.sh`、`prepare_pg19.py`；8192 个词的字节级 BPE，在验证集上平均每个 token 3.8 个字符，每本书约 9 万个 token）。
+  - 第二步的工具已备好，都在 CPU 上测试过：
+    - `train.py --data data/pg19 --tokenizer tok8192.json --vocab 8192` 读 PG-19；
+    - Transformer 对照组可以用旋转位置编码（`--rope`），不再受学到的位置向量长度的限制；
+    - `eval_long.py` 从每本书的开头读到 8192 个 token，按位置区间（0–64、64–128、……、4096–8192）报告平均 loss。
+      脉冲网络分段读、膜电位接着往下传（和一次读完逐位相同）；Transformer 可以用全部上文，或只用最近 W 个 token（滑动窗口）。
+      如果 loss 在后面的位置继续下降，说明模型用上了更长的上文。
+  - 第二步的计划：在 117M 量级上，脉冲网络和 Transformer 各训练一组，看 loss 随位置的变化，以及硬件代价。
+    脉冲网络用 `--carry_state` 沿着书连续往下读（每段几百个 token，膜电位传给下一段）；Transformer 用 2048 或更长的片段。
 
 ## 6. 在 GPU 上运行
 
@@ -829,6 +836,9 @@ python3 evaluate.py --device cuda --ckpt runs/xxx/ckpt.pt --out runs/xxx/final_e
   一个由 −总线驱动，减法复位），神经元群读的是它们的脉冲（每个通道 −1、0 或 1），而不是实数总线。
   `--bus_tau_min/--bus_tau_max`、`--bus_theta` 是中继神经元时间常数和阈值的初始值。
 
+**数据选项**：`--data 目录 --tokenizer 文件`（默认 `data` 和 `tok4096.json`，即 TinyStories；PG-19 是 `data/pg19` 和 `tok8192.json`，
+另加 `--vocab 8192`）。Transformer 另有 `--rope`（旋转位置编码），最长长度取 1024 和 `--seq` 中较大的一个。
+
 ## 7. 文件
 
 ```
@@ -842,6 +852,8 @@ data/checksums.md5  分词器和 token 文件的校验和
 model.py         纯 LIF 语言模型
 model_tf.py      Transformer 对照组（仅用于比较）
 prepare_data.py  训练分词器 + 语料转 token
+prepare_pg19.py  PG-19：分词器 + 转 token，保留每本书的起点（5.22 节）
+eval_long.py     长文本评测：从书的开头读到 8192 个 token，按位置区间报告 loss（5.22 节）
 train.py         训练（--arch snn|tf）
 sample.py        文本补全（-i 交互模式）
 evaluate.py      完整验证集评估 + 批量样例

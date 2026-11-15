@@ -57,6 +57,9 @@ def get_args():
     p.add_argument("--ema", type=float, default=0.0, help="EMA decay of the weights; 0 = off")
     p.add_argument("--carry_state", action="store_true",
                    help="continue each batch row through the text and carry the membrane potentials over")
+    p.add_argument("--data", default="data", help="directory with train.bin / valid.bin (e.g. data/pg19)")
+    p.add_argument("--tokenizer", default="tok4096.json", help="tokenizer file in --data")
+    p.add_argument("--rope", action="store_true", help="tf: rotary position embedding instead of learned positions")
     a = p.parse_args()
     if a.device == "auto":
         a.device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -64,8 +67,8 @@ def get_args():
 
 
 class Data:
-    def __init__(self, split, seq, seed):
-        self.arr = np.memmap(os.path.join(HERE, "data", f"{split}.bin"), dtype=np.uint16, mode="r")
+    def __init__(self, split, seq, seed, data="data"):
+        self.arr = np.memmap(os.path.join(HERE, data, f"{split}.bin"), dtype=np.uint16, mode="r")
         self.seq = seq
         self.rng = np.random.default_rng(seed)
         self.pos = None   # stream positions (one per batch row) for --carry_state
@@ -170,7 +173,8 @@ def main():
     os.makedirs(a.out, exist_ok=True)
     if a.arch == "tf":
         from model_tf import GPT, TFConfig
-        cfg = TFConfig(vocab=a.vocab, d_model=a.d_model, n_layers=a.n_layers, n_heads=a.n_heads)
+        cfg = TFConfig(vocab=a.vocab, d_model=a.d_model, n_layers=a.n_layers, n_heads=a.n_heads,
+                       max_len=max(1024, a.seq), rope=a.rope)
         model = GPT(cfg)
     else:
         cfg = Config(**{f.name: getattr(a, f.name) for f in fields(Config)})
@@ -205,8 +209,9 @@ def main():
             p_.requires_grad_(False)
         print(f"distilling from {a.teacher} (weight {a.distill_weight}, temperature {a.distill_temp})")
     from tokenizers import Tokenizer
-    tok = Tokenizer.from_file(os.path.join(HERE, "data", "tok4096.json"))
-    train, val = Data("train", a.seq, a.seed + step), Data("valid", a.seq, 0)
+    tok = Tokenizer.from_file(os.path.join(HERE, a.data, a.tokenizer))
+    assert tok.get_vocab_size() <= a.vocab, f"--vocab {a.vocab} is smaller than the tokenizer's {tok.get_vocab_size()}"
+    train, val = Data("train", a.seq, a.seed + step, a.data), Data("valid", a.seq, 0, a.data)
     print(f"params {model.num_params()/1e6:.2f}M, LIF neurons {model.num_neurons():,}, "
           f"train tokens {len(train.arr)/1e6:.0f}M, tokens/step {a.batch*a.seq:,}")
     with open(os.path.join(a.out, "args.json"), "w") as f:

@@ -15,11 +15,23 @@ class TFConfig:
     n_layers: int = 5
     n_heads: int = 6
     max_len: int = 1024
+    rope: bool = False        # rotary position embedding on queries and keys instead of learned absolute positions
+
+
+def rotary(x, base=10000.0):
+    """Rotary position embedding of x (B, heads, L, head_dim): pairs of channels rotated by position-dependent angles."""
+    hd, L = x.size(-1), x.size(-2)
+    inv = base ** (-torch.arange(0, hd, 2, device=x.device, dtype=torch.float32) / hd)
+    ang = torch.outer(torch.arange(L, device=x.device, dtype=torch.float32), inv)
+    cos, sin = ang.cos(), ang.sin()
+    x1, x2 = x[..., 0::2].float(), x[..., 1::2].float()
+    return torch.stack([x1 * cos - x2 * sin, x1 * sin + x2 * cos], -1).flatten(-2).to(x.dtype)
 
 
 class Block(nn.Module):
     def __init__(self, c):
         super().__init__()
+        self.rope = c.rope
         self.n1 = nn.RMSNorm(c.d_model)
         self.qkv = nn.Linear(c.d_model, 3 * c.d_model, bias=False)
         self.proj = nn.Linear(c.d_model, c.d_model, bias=False)
@@ -31,6 +43,8 @@ class Block(nn.Module):
     def forward(self, x):
         B, L, D = x.shape
         q, k, v = self.qkv(self.n1(x)).view(B, L, 3, self.h, D // self.h).permute(2, 0, 3, 1, 4)
+        if self.rope:
+            q, k = rotary(q), rotary(k)
         a = F.scaled_dot_product_attention(q, k, v, is_causal=True)
         x = x + self.proj(a.transpose(1, 2).reshape(B, L, D))
         return x + self.fc2(F.gelu(self.fc(self.n2(x))))
@@ -41,7 +55,7 @@ class GPT(nn.Module):
         super().__init__()
         self.cfg = c
         self.embed = nn.Embedding(c.vocab, c.d_model)
-        self.pos = nn.Embedding(c.max_len, c.d_model)
+        self.pos = None if c.rope else nn.Embedding(c.max_len, c.d_model)
         self.blocks = nn.ModuleList([Block(c) for _ in range(c.n_layers)])
         self.norm = nn.RMSNorm(c.d_model)
         self.head = nn.Linear(c.d_model, c.vocab, bias=False)
@@ -52,7 +66,9 @@ class GPT(nn.Module):
 
     def forward(self, idx, targets=None, state=None, return_spikes=False):
         L = idx.size(1)
-        x = self.embed(idx) + self.pos(torch.arange(L, device=idx.device))
+        x = self.embed(idx)
+        if not self.cfg.rope:
+            x = x + self.pos(torch.arange(L, device=idx.device))
         for b in self.blocks:
             x = b(x)
         logits = self.head(self.norm(x))
