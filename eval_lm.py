@@ -116,12 +116,14 @@ def main():
     p.add_argument("--limit", type=int, default=0, help="only the first N examples of each task (a quick check)")
     p.add_argument("--batch_tokens", type=int, default=16384, help="tokens per forward pass")
     p.add_argument("--max_len", type=int, default=0, help="longest input (default: the run's training length)")
+    p.add_argument("--dtype", default="float32", help="--hf models: weights' dtype (float32: Pythia, trained in fp16, "
+                   "loses much of its LAMBADA accuracy in bfloat16)")
     a = p.parse_args()
     import lm_eval
     tasks = [t.strip() for t in a.tasks.split(",") if t.strip()]
     kw = dict(tasks=tasks, num_fewshot=0, limit=a.limit or None)
     if a.hf:
-        res = lm_eval.simple_evaluate(model="hf", model_args=f"pretrained={a.hf},dtype=bfloat16", device=a.device,
+        res = lm_eval.simple_evaluate(model="hf", model_args=f"pretrained={a.hf},dtype={a.dtype}", device=a.device,
                                       batch_size=16, **kw)
         out_dir, name = os.path.join(HERE, "runs", "ref_" + a.hf.split("/")[-1]), "zeroshot"
     else:
