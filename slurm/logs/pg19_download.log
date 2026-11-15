@@ -1,0 +1,26 @@
+data/pg19/raw/test-00000-of-00001-29a571947c0b5ccc.parquet 512
+data/pg19/raw/train-00000-of-00023-5263dc4323e881d2.parquet 171M
+data/pg19/raw/train-00001-of-00023-2b13c68dbeba63b5.parquet 75M
+data/pg19/raw/train-00002-of-00023-8e4dd6b70d51dfcf.parquet 512
+data/pg19/raw/train-00003-of-00023-e7f0ba0d3c2eb6c0.parquet 512
+data/pg19/raw/train-00004-of-00023-3f9e7e096fa07f4b.parquet 512
+data/pg19/raw/train-00005-of-00023-87dece6a0ab708e8.parquet 151M
+data/pg19/raw/train-00006-of-00023-c50fea56d0518a87.parquet 74M
+data/pg19/raw/train-00007-of-00023-e9fea5c158e172e2.parquet 512
+data/pg19/raw/train-00008-of-00023-275017526d706c9d.parquet 286M
+data/pg19/raw/train-00009-of-00023-f07a29af90b71085.parquet 128M
+data/pg19/raw/train-00010-of-00023-dd5d8583a9f6a549.parquet 32M
+data/pg19/raw/train-00011-of-00023-6c0bc91e6df2e661.parquet 512
+data/pg19/raw/train-00012-of-00023-78d820574bddc6bb.parquet 512
+data/pg19/raw/train-00013-of-00023-5b853732c713dded.parquet 186M
+data/pg19/raw/train-00014-of-00023-54b567998cd5eb4b.parquet 76M
+data/pg19/raw/train-00015-of-00023-7a78b1e66cfe52de.parquet 512
+data/pg19/raw/train-00016-of-00023-8269d10108995a28.parquet 512
+data/pg19/raw/train-00017-of-00023-e240b232c0daddca.parquet 130M
+data/pg19/raw/train-00018-of-00023-f59d477d80180c78.parquet 512
+data/pg19/raw/train-00019-of-00023-198af082bd917d87.parquet 288M
+data/pg19/raw/train-00020-of-00023-f9b058c5e9338514.parquet 152M
+data/pg19/raw/train-00021-of-00023-e221306b7359a366.parquet 41M
+data/pg19/raw/train-00022-of-00023-5a956eb2a5d6cab5.parquet 512
+data/pg19/raw/validation-00000-of-00001-0f92e2337f79aeac.parquet 512
+25 files, 6.3G

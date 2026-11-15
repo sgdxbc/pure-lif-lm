@@ -1,0 +1,18 @@
+tokenizer trained on 400 books, 158M characters (16s)
+valid: 50 books, 4,570,187 tokens, 3.74 characters per token, 91,404 tokens per book (19s)
+test: 100 books, 10,769,772 tokens, 3.71 characters per token, 107,698 tokens per book (26s)
+train: 28,602 books, 3,055,695,486 tokens, 3.68 characters per token, 106,835 tokens per book (1655s)
+total 4893750
+drwxr-xr-x 3 sung grad         10 Nov 15 20:53 .
+drwxr-xr-x 3 sung grad         10 Nov 15 20:22 ..
+drwxr-xr-x 2 sung grad         27 Nov 15 20:25 raw
+-rw-r--r-- 1 sung grad   21539544 Nov 15 20:26 test.bin
+-rw-r--r-- 1 sung grad        928 Nov 15 20:26 test_books.npy
+-rw-r--r-- 1 sung grad     547323 Nov 15 20:26 tok8192.json
+-rw-r--r-- 1 sung grad 6111390972 Nov 15 20:53 train.bin
+-rw-r--r-- 1 sung grad     228944 Nov 15 20:53 train_books.npy
+-rw-r--r-- 1 sung grad    9140374 Nov 15 20:26 valid.bin
+-rw-r--r-- 1 sung grad        528 Nov 15 20:26 valid_books.npy
+8866a3170d52d94093589523075fe716  tok8192.json
+2120478d03cae55ca5a18a84ccd6c91c  valid.bin
+d6ac76ed0f0f6dcb05fd9a0c74656511  test.bin
