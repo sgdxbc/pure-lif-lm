@@ -1,4 +1,5 @@
 """Long-text evaluation (README 5.22): loss at each position of whole books, read from the start of the book.
+On data without a list of books (FineWeb-Edu) the documents are used instead, each from its <|endoftext|>.
 For every validation (or test) book of at least --length tokens, the first --length tokens are read in one go:
   spiking network   streamed in chunks of --chunk tokens with the membrane potentials carried over (the same as one
                     pass; only the memory is bounded)
@@ -69,6 +70,7 @@ def main():
     p.add_argument("--chunk", type=int, default=1024, help="spiking network: tokens per forward pass")
     p.add_argument("--window", type=int, default=0, help="Transformer: at most this many tokens of context (0 = all)")
     p.add_argument("--batch", type=int, default=4)
+    p.add_argument("--max_books", type=int, default=0, help="only the first N qualifying books / documents")
     a = p.parse_args()
     dev = torch.device(a.device)
     args = json.load(open(os.path.join(a.run, "args.json")))
@@ -76,9 +78,17 @@ def main():
     model, _ = load(os.path.join(a.run, "ckpt.pt"), ema=has_ema, device=dev)
     data = os.path.join(HERE, args.get("data", "data"))
     arr = np.memmap(os.path.join(data, f"{a.split}.bin"), dtype=np.uint16, mode="r")
-    starts = np.load(os.path.join(data, f"{a.split}_books.npy"))
+    books = os.path.join(data, f"{a.split}_books.npy")
+    if os.path.exists(books):
+        starts = np.load(books)
+    else:   # web documents (FineWeb-Edu): each begins with <|endoftext|>, read as its first token
+        from tokenizers import Tokenizer
+        eot = Tokenizer.from_file(os.path.join(data, args.get("tokenizer", "tok4096.json"))).token_to_id("<|endoftext|>")
+        starts = np.flatnonzero(np.asarray(arr) == eot)
     ends = np.append(starts[1:], len(arr))
     use = [s for s, e in zip(starts, ends) if e - s >= a.length + 1]
+    if a.max_books:
+        use = use[:a.max_books]
     snn = isinstance(model, SpikingLM)
     if not snn and not a.window:
         assert model.cfg.rope or a.length <= model.cfg.max_len, "learned positions end at max_len: use --window"
