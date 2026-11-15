@@ -9,3 +9,6 @@ __pycache__/
 build/
 *.so
 slurm/.reported
+data/pg19/raw/
+data/pg19/*.bin
+data/pg19/*.tmp
