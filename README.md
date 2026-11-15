@@ -965,6 +965,20 @@ Transformer 用 2048 个 token 的滑动窗口，也就是每个位置最多看�
     文献中的参考值（零样本，Mamba 论文表 3）：Pythia-160M 的 HellaSwag 30.2、LAMBADA 33.0、PIQA 61.4、ARC-Easy 43.2、
     WinoGrande 51.9；Pythia-410M 依次是 40.6、51.4、66.9、52.1、53.8。GPT-2 124M 在 FineWeb 上训练 100 亿 token 的复现，
     验证 loss 约 3.29，HellaSwag 约 30。
+  - **参考模型的实测**（`eval_lm.py --hf`，lm-evaluation-harness 0.4.13，A100，权重用 float32；指标按通常的报告方式：
+    HellaSwag 和 ARC-Challenge 用按长度归一的准确率，其余用准确率，单位 %；平均是六个准确率的平均）：
+
+    | 模型 | LAMBADA 困惑度 | LAMBADA | HellaSwag | PIQA | ARC-Easy | ARC-Challenge | WinoGrande | 平均 |
+    |---|---|---|---|---|---|---|---|---|
+    | GPT-2 124M | 40.1 | 32.6 | 31.1 | 62.9 | 43.8 | 22.7 | 51.6 | 40.8 |
+    | Pythia-160M | 37.3 | 35.4 | 30.3 | 62.3 | 43.6 | 23.6 | 51.3 | 41.1 |
+    | GPT-2 355M | 18.3 | 43.0 | 39.4 | 67.6 | 49.1 | 25.0 | 53.1 | 46.2 |
+    | Pythia-410M | 10.8 | 51.6 | 40.6 | 66.7 | 51.9 | 24.3 | 53.4 | 48.1 |
+
+    Pythia 两个模型和 Mamba 论文的数字相差都在 1 个百分点以内。第一次测时权重用的是 bf16，Pythia-160M 的 LAMBADA 只有 11.9%
+    （困惑度 104）：Pythia 是用 fp16 训练的，换成精度更低的 bf16 后结果明显失真；GPT-2 受的影响小得多。现在参考模型一律用 float32。
+    我们自己的网络仍在 bf16 自动混合精度下测，和训练时一致。
+    **第一条目标的具体含义**：平均在 41 左右（GPT-2 124M、Pythia-160M 的水平），各项不明显落后；更进一步是 46–48（355M–410M 的水平）。
   - **随算力提升的趋势**：每批都记录训练用的 token 数和计算量，把脉冲网络和 Transformer 的验证 loss 画在同一张"loss 对训练算力"的图上。
   - **第十三批**（`gpu13.sh`，**已提交**）：脉冲网络 212M（TinyStories 上 117M 的结构，词表变大）和 138M，
     Transformer 163M（GPT-2 small 的形状）和 77M，都读 25 亿 token（1024 个 token 的片段），暂不用老师。
