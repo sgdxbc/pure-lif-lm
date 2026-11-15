@@ -20,5 +20,9 @@ if [[ " $* " == *" --ema "* ]]; then
 fi
 python3 probe_recall.py --device cuda "m=$out/ckpt.pt" --out "$out/recall.json" > "$out/probe.log" 2>&1
 python3 probe_memory.py --device cuda "m=$out/ckpt.pt" --out "$out/probe_memory.json" >> "$out/probe.log" 2>&1
+if [[ " $* " == *" --ema "* ]]; then  # the averaged weights are the ones reported, so probe them too
+  python3 probe_recall.py --device cuda --ema "m=$out/ckpt.pt" --out "$out/recall_ema.json" >> "$out/probe.log" 2>&1
+  python3 probe_memory.py --device cuda --ema "m=$out/ckpt.pt" --out "$out/probe_memory_ema.json" >> "$out/probe.log" 2>&1
+fi
 grep -h -E "val_loss|loss" "$out/final_eval.json" | head -3
 echo "done $(date)"

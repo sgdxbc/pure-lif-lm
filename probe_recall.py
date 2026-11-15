@@ -78,6 +78,7 @@ def main():
     p.add_argument("--threads", type=int, default=2)
     p.add_argument("--out", default=None)
     p.add_argument("--device", default="cpu")
+    p.add_argument("--ema", action="store_true", help="use the moving-average weights (train.py --ema)")
     a = p.parse_args()
     global DEV
     DEV = torch.device(a.device)
@@ -93,7 +94,7 @@ def main():
     results = {}
     for spec in a.models:
         name, path = spec.split("=", 1)
-        model, _ = load(path, device=DEV)
+        model, _ = load(path, ema=a.ema, device=DEV)
         full = nll_full(model, X)[rows[:, 0], rows[:, 1]]
         short = np.full(len(rows), np.nan)
         short[need_short] = nll_short(model, X, sel)

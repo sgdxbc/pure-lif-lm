@@ -85,6 +85,7 @@ def main():
     p.add_argument("models", nargs="+", help="name=path/to/checkpoint")
     p.add_argument("--out", default=None)
     p.add_argument("--device", default="cpu")
+    p.add_argument("--ema", action="store_true", help="use the moving-average weights (train.py --ema)")
     a = p.parse_args()
     global DEV
     DEV = torch.device(a.device)
@@ -96,7 +97,7 @@ def main():
     print(f"{'model':16s}" + "".join(f"   k={k:<4d}" for k in KS) + "   gain 8->128")
     for spec in a.models:
         name, path = spec.split("=", 1)
-        model, _ = load(path, device=DEV)
+        model, _ = load(path, ema=a.ema, device=DEV)
         r = {"context_loss": context_ablation(model, arr, S)}
         c = r["context_loss"]
         print(f"{name:16s}" + "".join(f"   {c[k]:.3f} " for k in KS) + f"   {c[8] - c[128]:.3f}", flush=True)
