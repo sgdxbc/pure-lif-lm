@@ -1,0 +1,50 @@
+queued the next part of runs/g13_snn212: job 1147279
+xgpk0 NVIDIA H200 NVL | runs/g13_snn212 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 76300 --warmup 1000 --eval_every 5000 --eval_batches 40 --log_every 500 --ema 0.999 --neuron_lr_mult 10 --d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128 --lr 6e-4
+params 211.75M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 5000 val_loss 4.6630 (EMA weights 4.4715)
+== eval step 10000 val_loss 4.4716 (EMA weights 4.2649)
+== eval step 15000 val_loss 4.3649 (EMA weights 4.1598)
+== eval step 20000 val_loss 4.2892 (EMA weights 4.0867)
+== eval step 25000 val_loss 4.2240 (EMA weights 4.0315)
+== eval step 30000 val_loss 4.1672 (EMA weights 3.9859)
+== eval step 35000 val_loss 4.1178 (EMA weights 3.9510)
+== eval step 40000 val_loss 4.0650 (EMA weights 3.9137)
+== eval step 45000 val_loss 4.0160 (EMA weights 3.8868)
+== eval step 50000 val_loss 3.9745 (EMA weights 3.8634)
+== eval step 55000 val_loss 3.9375 (EMA weights 3.8435)
+== eval step 60000 val_loss 3.9035 (EMA weights 3.8283)
+== eval step 65000 val_loss 3.8773 (EMA weights 3.8171)
+== eval step 70000 val_loss 3.8608 (EMA weights 3.8091)
+== eval step 75000 val_loss 3.8478 (EMA weights 3.8024)
+== eval step 76300 val_loss 3.8458 (EMA weights 3.8005)
+hellaswag        acc 0.2722  acc_norm 0.2793
+lambada_openai   perplexity 25996.3642  acc 0.0118
+piqa             acc 0.5941  acc_norm 0.5930
+arc_easy         acc 0.4579  acc_norm 0.4196
+arc_challenge    acc 0.1843  acc_norm 0.2159
+winogrande       acc 0.5028
+hellaswag        acc 0.2702  acc_norm 0.2810
+lambada_openai   perplexity 24591.1488  acc 0.0101
+piqa             acc 0.5898  acc_norm 0.5936
+arc_easy         acc 0.4592  acc_norm 0.4154
+arc_challenge    acc 0.1877  acc_norm 0.2253
+winogrande       acc 0.5083
+ "val_loss": 3.858153447504234,
+g13_snn212               snn  211.7M  8-bit  211.7 MB  dense MACs  109.7M + sparse adds  3.15M  state  147.5 KB  MB/token 8-bit: 1 stream  112.9, 16 streams   8.4  (rate 0.063)
+model (bf16, fused kernel) 3.8649
+fp32                   3.8639  (+0.0000 vs fp32)
+W8                     3.8701  (+0.0063 vs fp32)
+W4                     6.8440  (+2.9802 vs fp32)
+W4g128                 4.6404  (+0.7765 vs fp32)
+A8                     3.8693  (+0.0054 vs fp32)
+V24                    3.8634  (-0.0005 vs fp32)
+V16                    3.9579  (+0.0941 vs fp32)
+B16                    3.8634  (-0.0005 vs fp32)
+B12                    3.8640  (+0.0001 vs fp32)
+W8 A8 V24 B16          3.8739  (+0.0101 vs fp32)
+W8 A8 V16 B12          3.9684  (+0.1046 vs fp32)
+W4g128 A8 V24 B16      4.6490  (+0.7851 vs fp32)
+W4g128 A8 V16 B12      4.6822  (+0.8184 vs fp32)
+V16p                   3.9173  (+0.0535 vs fp32)
+W8 A8 V16p B12         3.9308  (+0.0669 vs fp32)
+done Mon Nov 16 04:19:50 AM +08 2026

@@ -1,0 +1,1 @@
+g13_snn212               snn  211.7M  8-bit  211.7 MB  dense MACs  109.7M + sparse adds  3.15M  state  147.5 KB  MB/token 8-bit: 1 stream  112.9, 16 streams   8.4  (rate 0.063)
