@@ -38,6 +38,13 @@ Optional (steps_per_token = T > 1): every token is shown for T simulation steps 
            and the readout neurons integrate the bus over the T steps without leaking and are read and cleared at the
            end of the token: logits[t] = W_head mean_tau bus_L[t, tau]. Time constants are initialised T times longer
            in steps, i.e. the same in tokens. Costs T times the neuron steps per token; adds no parameters.
+Optional (spike_bus): spiking bus. Before each population, the bus passes through a population of relay LIF neurons,
+           two per bus channel: an ON neuron driven by +bus_l and an OFF neuron driven by -bus_l, with soft reset
+           (V -= theta at a spike, so over time the spike count follows the input) and their own learned leak and
+           threshold. The population then reads z_l = s_on - s_off (one of -1, 0, 1 per channel) instead of bus_l:
+               I_l[t] = W_in_l z_l[t] + b_l      (and the leak-modulating synapses read z_l too)
+           so every synapse into a population is driven by spikes, and on hardware only the channels that fired cost
+           anything. The bus itself is still the sum of weighted spikes; the readout still reads bus_L.
 """
 import math
 from dataclasses import dataclass, asdict
@@ -77,6 +84,10 @@ class Config:
     delay_k: int = 0          # >0: delayed synapses with delays 1..delay_k tokens (see module docstring)
     delay_rank: int = 64      # rank of each delay's synapse matrix
     steps_per_token: int = 1  # >1: simulation steps per token (see module docstring)
+    spike_bus: bool = False   # relay neurons turn the bus into spikes before each population (see module docstring)
+    bus_tau_min: float = 0.5  # relay time constants (tokens), initialised log-uniform in [bus_tau_min, bus_tau_max]
+    bus_tau_max: float = 4.0
+    bus_theta: float = 1.0    # relay threshold at initialisation (the bus starts with roughly unit scale)
 
 
 class LIFPopulation(nn.Module):
@@ -168,6 +179,26 @@ class LIFPopulation(nn.Module):
         return self.w_out(s), s, new_state
 
 
+class RelayPopulation(nn.Module):
+    """ON/OFF relay neurons for the spiking bus: neuron j is driven by +bus[j], neuron d + j by -bus[j]; soft reset."""
+
+    def __init__(self, cfg: Config):
+        super().__init__()
+        self.cfg = cfg
+        d, T = cfg.d_model, cfg.steps_per_token
+        log_tau = torch.empty(2 * d).uniform_(math.log(cfg.bus_tau_min * T), math.log(cfg.bus_tau_max * T))
+        self.beta_logit = nn.Parameter(torch.logit(torch.exp(-1.0 / log_tau.exp())))
+        self.log_theta = nn.Parameter(torch.full((2 * d,), math.log(cfg.bus_theta)))
+
+    def forward(self, bus, v0=None):
+        """Returns z = s_on - s_off (B, L, d), the spikes (B, L, 2d) and the final potentials (B, 2d)."""
+        c = self.cfg
+        s, v = lif(torch.cat([bus, -bus], -1), torch.sigmoid(self.beta_logit), self.log_theta.exp(), None, v0,
+                   hard_reset=False, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg)
+        d = bus.size(-1)
+        return s[..., :d] - s[..., d:], s, v.detach()
+
+
 class SpikingLM(nn.Module):
     def __init__(self, cfg: Config):
         super().__init__()
@@ -176,20 +207,30 @@ class SpikingLM(nn.Module):
         self.embed = nn.Embedding(cfg.vocab, cfg.d_model)
         nn.init.normal_(self.embed.weight, std=1.0)
         self.layers = nn.ModuleList([LIFPopulation(cfg) for _ in range(cfg.n_layers)])
+        if cfg.spike_bus:
+            self.relays = nn.ModuleList([RelayPopulation(cfg) for _ in range(cfg.n_layers)])
         self.head = nn.Linear(cfg.d_model, cfg.vocab, bias=False)
         nn.init.normal_(self.head.weight, std=cfg.head_init)
 
     def forward(self, idx, targets=None, state=None, return_spikes=False):
         """idx: (B, L) token ids. state: per-layer (membrane potentials, last spikes) or None (at rest).
         Returns logits, loss, new_state, and per-layer firing rates (or spike tensors, (B, L*T, H) with
-        T = steps_per_token)."""
+        T = steps_per_token, followed with spike_bus by the relay spikes, (B, L*T, 2 d_model) per layer)."""
         T = self.cfg.steps_per_token
         bus = self.embed(idx)
         if T > 1:   # each token is shown for T steps: its input neuron fires at every one of them
             bus = bus.repeat_interleave(T, dim=1)
-        new_state, rates, spikes = [], [], []
+        new_state, rates, spikes, relay_spikes = [], [], [], []
         for i, layer in enumerate(self.layers):
-            out, s, layer_state = layer(bus, None if state is None else state[i])
+            st = None if state is None else state[i]
+            if self.cfg.spike_bus:   # state[i] = (relay potentials,) + the population's state
+                z, sz, vz = self.relays[i](bus, None if st is None else st[0])
+                out, s, layer_state = layer(z, None if st is None else st[1:])
+                layer_state = (vz,) + layer_state
+                if return_spikes:
+                    relay_spikes.append(sz.detach())
+            else:
+                out, s, layer_state = layer(bus, st)
             bus = bus + out
             new_state.append(layer_state)
             rates.append(s.detach().mean())
@@ -201,7 +242,7 @@ class SpikingLM(nn.Module):
         loss = None
         if targets is not None:
             loss = F.cross_entropy(logits.float().view(-1, logits.size(-1)), targets.view(-1))
-        extra = spikes if return_spikes else torch.stack(rates)
+        extra = spikes + relay_spikes if return_spikes else torch.stack(rates)   # relay spikes (B, L*T, 2d) last
         return logits, loss, new_state, extra
 
     @torch.no_grad()

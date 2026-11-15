@@ -13,6 +13,9 @@ Spiking network, per generated token and per stream:
                With 16 streams generated together, dense weights are read once for all 16 and the W_out row of every
                neuron that fired in any stream once; divided by 16. Plus one embedding row per stream.
   state        membrane potentials, 24-bit, per stream (they stay on chip).
+  With the spiking bus (model.py, spike_bus), W_in and the first factor of the leak synapses read spikes too: they
+  move from dense MACs to additions over the active bus channels, and from "all weights" to "the columns of the
+  channels whose relay neuron fired"; the relay potentials add to the state.
 Transformer (analytic): MACs = weights + attention over c earlier tokens; bytes read = weights (shared by the streams)
   + each stream's key/value history of c tokens (8-bit); state = that history.
 Weights are counted at 8 and 4 bits. Firing comes from --windows validation windows of 256 tokens, each read from rest,
@@ -31,41 +34,56 @@ STREAMS = 16
 
 @torch.no_grad()
 def firing(model, windows, seq=256, dev="cpu"):
-    """Per layer: firing rate per step, share of neurons that fire at least once in a token (one stream), and share
-    that fire at least once in a token in any of STREAMS streams."""
+    """Per layer: firing rate per step ("rate"), share of neurons that fire at least once in a token in one stream
+    ("token") and in any of STREAMS streams ("token_any"). With the spiking bus also the same for the bus channels
+    (a channel is active when its ON or OFF relay neuron fires): "bus_rate", "bus_token", "bus_token_any"."""
     arr = np.memmap(os.path.join(HERE, "data", "valid.bin"), dtype=np.uint16, mode="r")
     starts = np.linspace(0, len(arr) - seq - 2, windows).astype(np.int64)
     T, L = model.cfg.steps_per_token, len(model.layers)
-    rate, u1, uS, n = np.zeros(L), np.zeros(L), np.zeros(L), 0
+    keys = ("rate", "token", "token_any") + (("bus_rate", "bus_token", "bus_token_any") if model.cfg.spike_bus else ())
+    f = {k: np.zeros(L) for k in keys}
+    n = 0
     for g in range(0, windows - STREAMS + 1, STREAMS):
         x = torch.from_numpy(np.stack([arr[i:i + seq] for i in starts[g:g + STREAMS]]).astype(np.int64)).to(dev)
         with torch.autocast(dev.type, dtype=torch.bfloat16):
             _, _, _, spikes = model(x, return_spikes=True)
-        for l, s in enumerate(spikes):
-            s = (s > 0.5).view(STREAMS, seq, T, -1)
+        for j, s in enumerate(spikes):
+            l, pre = (j, "") if j < L else (j - L, "bus_")
+            s = s > 0.5
+            if pre:                                          # relay spikes: channel active if ON or OFF fired
+                d = s.size(-1) // 2
+                s = s[..., :d] | s[..., d:]
+            s = s.view(STREAMS, seq, T, -1)
             tok = s.any(2)                                   # fired at any of the token's T steps
-            rate[l] += s.float().mean().item()
-            u1[l] += tok.float().mean().item()
-            uS[l] += tok.any(0).float().mean().item()       # ... in any of the streams
+            f[pre + "rate"][l] += s.float().mean().item()
+            f[pre + "token"][l] += tok.float().mean().item()
+            f[pre + "token_any"][l] += tok.any(0).float().mean().item()   # ... in any of the streams
         n += 1
-    return rate / n, u1 / n, uS / n
+    return {k: v / n for k, v in f.items()}
 
 
-def snn_cost(model, rate, u1, uS):
+def snn_cost(model, f):
     c = model.cfg
     V, d, H, L, r, T = c.vocab, c.d_model, c.d_hidden, c.n_layers, c.leak_rank, c.steps_per_token
     assert c.rec_rank == 0 and c.delay_k == 0, "cost model covers neither same-layer nor delayed synapses"
-    per_step = d * H + (d * r + r * H if r else 0)           # W_in and the leak synapses, used at every step
-    dense_w = L * (per_step + H) + d * V                     # + biases + readout
-    out = {"arch": "snn", "params": model.num_params(), "steps_per_token": T,
-           "dense_macs": T * L * per_step + d * V,
-           "sparse_adds": float(sum(rate[l] * H * T * d for l in range(L))),
-           "state_bytes": L * H * 3,
-           "firing": {"rate": rate.tolist(), "fired_in_token": u1.tolist(), f"fired_in_token_any_of_{STREAMS}": uS.tolist()}}
+    into = d * H + (d * r if r else 0)                       # W_in and the leak synapses' first factor: read the bus
+    leak2 = r * H if r else 0                                # second factor of the leak synapses: dense (rank-r input)
+    if c.spike_bus:   # the bus reaches W_in and the leak synapses as spikes: only active channels' columns are used
+        dense_step, dense_w = leak2, L * (leak2 + H) + d * V
+        bus_adds = float(sum(f["bus_rate"][l] * (H + r) * d * T for l in range(L)))
+        bus_rows = lambda k: sum(f[k][l] * (H + r) * d for l in range(L))
+    else:
+        dense_step, dense_w = into + leak2, L * (into + leak2 + H) + d * V
+        bus_adds, bus_rows = 0.0, lambda k: 0.0
+    out = {"arch": "snn", "params": model.num_params(), "steps_per_token": T, "spike_bus": c.spike_bus,
+           "dense_macs": T * L * dense_step + d * V,
+           "sparse_adds": float(sum(f["rate"][l] * H * T * d for l in range(L))) + bus_adds,
+           "state_bytes": L * H * 3 + (L * 2 * d * 3 if c.spike_bus else 0),
+           "firing": {k: v.tolist() for k, v in f.items()}}
     for bits in (8, 4):
         b = bits / 8
-        one = dense_w * b + sum(u1[l] * H * d * b for l in range(L)) + d * b
-        many = (dense_w * b + sum(uS[l] * H * d * b for l in range(L))) / STREAMS + d * b
+        one = (dense_w + sum(f["token"][l] * H * d for l in range(L)) + bus_rows("bus_token")) * b + d * b
+        many = (dense_w + sum(f["token_any"][l] * H * d for l in range(L)) + bus_rows("bus_token_any")) * b / STREAMS + d * b
         out[f"weights_bytes_{bits}bit"] = out["params"] * b
         out[f"bytes_per_token_{bits}bit"] = {"1 stream": one, "%d streams" % STREAMS: many}
     return out
@@ -117,7 +135,7 @@ def main():
         has_ema = bool(a.ema and args.get("ema", 0))
         model, _ = load(os.path.join(run, "ckpt.pt"), ema=has_ema, device=dev)
         if isinstance(model, SpikingLM):
-            o = snn_cost(model, *firing(model, a.windows, dev=dev))
+            o = snn_cost(model, firing(model, a.windows, dev=dev))
         else:
             o = tf_cost(model)
         o["ema"] = has_ema
