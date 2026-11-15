@@ -1,0 +1,39 @@
+g11_snn125_carry         snn  125.5M  8-bit  125.5 MB  dense MACs   66.6M + sparse adds  1.59M  state  147.5 KB  MB/token 8-bit: 1 stream   68.2, 16 streams   5.1  (rate 0.032)
+g11_snn125_rest          snn  125.5M  8-bit  125.5 MB  dense MACs   66.6M + sparse adds  1.91M  state  147.5 KB  MB/token 8-bit: 1 stream   68.5, 16 streams   5.3  (rate 0.038)
+g11_tf98                 tf    97.5M  8-bit   97.5 MB  at context 256/2048/8192: MACs 95.9/129.0/242.2M  state 4.7/37.7/151.0 MB  MB/token 8-bit: 1 stream 95.9/129.0/242.2, 16 streams 10.4/43.5/156.7
+g11_tf34                 tf    33.6M  8-bit   33.6 MB  at context 256/2048/8192: MACs 31.5/46.1/96.5M  state 2.1/16.8/67.1 MB  MB/token 8-bit: 1 stream 31.5/46.1/96.5, 16 streams 3.9/18.6/68.9
+hw_cost exit 0 Mon Nov 16 03:13:17 AM +08 2026
+runs/g11_snn125_carry: quant_sim exit 0 Mon Nov 16 03:14:22 AM +08 2026
+model (bf16, fused kernel) 3.8205
+fp32                   3.8215  (+0.0000 vs fp32)
+W8                     3.8237  (+0.0023 vs fp32)
+W4                     4.6313  (+0.8099 vs fp32)
+W4g128                 3.9390  (+0.1175 vs fp32)
+A8                     3.8223  (+0.0008 vs fp32)
+V24                    3.8217  (+0.0003 vs fp32)
+V16                    4.0338  (+0.2124 vs fp32)
+B16                    3.8212  (-0.0002 vs fp32)
+B12                    3.8210  (-0.0005 vs fp32)
+W8 A8 V24 B16          3.8257  (+0.0042 vs fp32)
+W8 A8 V16 B12          4.0357  (+0.2142 vs fp32)
+W4g128 A8 V24 B16      3.9418  (+0.1204 vs fp32)
+W4g128 A8 V16 B12      4.1222  (+0.3007 vs fp32)
+V16p                   3.9717  (+0.1502 vs fp32)
+W8 A8 V16p B12         3.9755  (+0.1540 vs fp32)
+runs/g11_snn125_rest: quant_sim exit 0 Mon Nov 16 03:15:28 AM +08 2026
+model (bf16, fused kernel) 3.5370
+fp32                   3.5365  (+0.0000 vs fp32)
+W8                     3.5396  (+0.0031 vs fp32)
+W4                     4.2409  (+0.7044 vs fp32)
+W4g128                 3.7612  (+0.2246 vs fp32)
+A8                     3.5372  (+0.0007 vs fp32)
+V24                    3.5501  (+0.0136 vs fp32)
+V16                    4.5019  (+0.9654 vs fp32)
+B16                    3.5363  (-0.0003 vs fp32)
+B12                    3.5360  (-0.0005 vs fp32)
+W8 A8 V24 B16          3.5546  (+0.0180 vs fp32)
+W8 A8 V16 B12          4.5047  (+0.9682 vs fp32)
+W4g128 A8 V24 B16      3.8125  (+0.2760 vs fp32)
+W4g128 A8 V16 B12      4.5973  (+1.0608 vs fp32)
+V16p                   4.1148  (+0.5783 vs fp32)
+W8 A8 V16p B12         4.1166  (+0.5801 vs fp32)
