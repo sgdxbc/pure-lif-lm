@@ -1,0 +1,33 @@
+{
+ "arch": "tf",
+ "params": 29893120,
+ "macs": {
+  "256": 29360128,
+  "2048": 44040192,
+  "8192": 94371840
+ },
+ "state_bytes": {
+  "256": 2097152,
+  "2048": 16777216,
+  "8192": 67108864
+ },
+ "weights_bytes_8bit": 29893120.0,
+ "bytes_per_token_8bit": {
+  "1 stream, context 256": 29361152.0,
+  "1 stream, context 2048": 44041216.0,
+  "1 stream, context 8192": 94372864.0,
+  "16 streams, context 256": 3802112.0,
+  "16 streams, context 2048": 18482176.0,
+  "16 streams, context 8192": 68813824.0
+ },
+ "weights_bytes_4bit": 14946560.0,
+ "bytes_per_token_4bit": {
+  "1 stream, context 256": 15729152.0,
+  "1 stream, context 2048": 30409216.0,
+  "1 stream, context 8192": 80740864.0,
+  "16 streams, context 256": 2949632.0,
+  "16 streams, context 2048": 17629696.0,
+  "16 streams, context 8192": 67961344.0
+ },
+ "ema": false
+}

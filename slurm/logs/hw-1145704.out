@@ -1,0 +1,70 @@
+g4_snn117_best           snn  117.1M  8-bit  117.1 MB  dense MACs   62.4M + sparse adds  2.07M  state  147.5 KB  MB/token 8-bit: 1 stream   64.5, 16 streams   5.3  (rate 0.041)
+g4_snn257_best           snn  257.1M  8-bit  257.1 MB  dense MACs  137.2M + sparse adds  3.36M  state  221.2 KB  MB/token 8-bit: 1 stream  140.7, 16 streams  11.0  (rate 0.030)
+g6_snn257_best_2ep       snn  257.1M  8-bit  257.1 MB  dense MACs  137.2M + sparse adds  3.71M  state  221.2 KB  MB/token 8-bit: 1 stream  141.0, 16 streams  11.2  (rate 0.033)
+g8_snn257_best_t2ep      snn  257.1M  8-bit  257.1 MB  dense MACs  137.2M + sparse adds  3.29M  state  221.2 KB  MB/token 8-bit: 1 stream  140.6, 16 streams  11.0  (rate 0.029)
+g2_tf12                  tf    12.4M  8-bit   12.4 MB  at context 256/2048/8192: MACs 11.4/18.3/41.9M  state 1.0/7.9/31.5 MB  MB/token 8-bit: 1 stream 11.4/18.3/41.9, 16 streams 1.6/8.5/32.1
+g2_tf30                  tf    29.9M  8-bit   29.9 MB  at context 256/2048/8192: MACs 29.4/44.0/94.4M  state 2.1/16.8/67.1 MB  MB/token 8-bit: 1 stream 29.4/44.0/94.4, 16 streams 3.8/18.5/68.8
+g2_tf55                  tf    55.1M  8-bit   55.1 MB  at context 256/2048/8192: MACs 55.1/78.0/156.6M  state 3.3/26.2/104.9 MB  MB/token 8-bit: 1 stream 55.1/78.0/156.6, 16 streams 6.5/29.5/108.1
+g2_tf105_lr6e-4          tf   104.6M  8-bit  104.6 MB  at context 256/2048/8192: MACs 104.6/136.7/246.8M  state 4.6/36.7/146.8 MB  MB/token 8-bit: 1 stream 104.6/136.7/246.8, 16 streams 10.8/43.0/153.1
+g6_tf105_2ep             tf   104.6M  8-bit  104.6 MB  at context 256/2048/8192: MACs 104.6/136.7/246.8M  state 4.6/36.7/146.8 MB  MB/token 8-bit: 1 stream 104.6/136.7/246.8, 16 streams 10.8/43.0/153.1
+hw_cost exit 0 Sun Nov 15 07:36:04 PM +08 2026
+runs/g4_snn117_best: quant_sim exit 0 Sun Nov 15 07:36:56 PM +08 2026
+model (bf16, fused kernel) 1.2768
+fp32                   1.2765  (+0.0000 vs fp32)
+W8                     1.2766  (+0.0001 vs fp32)
+W4                     1.3278  (+0.0513 vs fp32)
+W4g128                 1.2994  (+0.0230 vs fp32)
+A8                     1.2769  (+0.0004 vs fp32)
+V24                    1.2764  (-0.0001 vs fp32)
+V16                    1.3495  (+0.0731 vs fp32)
+B16                    1.2766  (+0.0001 vs fp32)
+B12                    1.2767  (+0.0003 vs fp32)
+W8 A8 V24 B16          1.2768  (+0.0003 vs fp32)
+W8 A8 V16 B12          1.3495  (+0.0730 vs fp32)
+W4g128 A8 V24 B16      1.2989  (+0.0224 vs fp32)
+W4g128 A8 V16 B12      1.3740  (+0.0976 vs fp32)
+runs/g4_snn257_best: quant_sim exit 0 Sun Nov 15 07:38:02 PM +08 2026
+model (bf16, fused kernel) 1.2401
+fp32                   1.2419  (+0.0000 vs fp32)
+W8                     1.2416  (-0.0002 vs fp32)
+W4                     1.2916  (+0.0498 vs fp32)
+W4g128                 1.2581  (+0.0163 vs fp32)
+A8                     1.2411  (-0.0008 vs fp32)
+V24                    1.2416  (-0.0003 vs fp32)
+V16                    1.3124  (+0.0705 vs fp32)
+B16                    1.2417  (-0.0002 vs fp32)
+B12                    1.2414  (-0.0005 vs fp32)
+W8 A8 V24 B16          1.2423  (+0.0005 vs fp32)
+W8 A8 V16 B12          1.3120  (+0.0701 vs fp32)
+W4g128 A8 V24 B16      1.2578  (+0.0159 vs fp32)
+W4g128 A8 V16 B12      1.3299  (+0.0880 vs fp32)
+runs/g6_snn257_best_2ep: quant_sim exit 0 Sun Nov 15 07:39:07 PM +08 2026
+model (bf16, fused kernel) 1.1985
+fp32                   1.1982  (+0.0000 vs fp32)
+W8                     1.1980  (-0.0002 vs fp32)
+W4                     1.2390  (+0.0408 vs fp32)
+W4g128                 1.2139  (+0.0158 vs fp32)
+A8                     1.1979  (-0.0003 vs fp32)
+V24                    1.1988  (+0.0006 vs fp32)
+V16                    3.3607  (+2.1625 vs fp32)
+B16                    1.1980  (-0.0001 vs fp32)
+B12                    1.1979  (-0.0003 vs fp32)
+W8 A8 V24 B16          1.1987  (+0.0006 vs fp32)
+W8 A8 V16 B12          3.3281  (+2.1300 vs fp32)
+W4g128 A8 V24 B16      1.2145  (+0.0163 vs fp32)
+W4g128 A8 V16 B12      3.3401  (+2.1419 vs fp32)
+runs/g8_snn257_best_t2ep: quant_sim exit 0 Sun Nov 15 07:40:13 PM +08 2026
+model (bf16, fused kernel) 1.2265
+fp32                   1.2270  (+0.0000 vs fp32)
+W8                     1.2276  (+0.0006 vs fp32)
+W4                     1.2876  (+0.0606 vs fp32)
+W4g128                 1.2441  (+0.0170 vs fp32)
+A8                     1.2276  (+0.0006 vs fp32)
+V24                    1.2267  (-0.0003 vs fp32)
+V16                    1.3324  (+0.1054 vs fp32)
+B16                    1.2274  (+0.0004 vs fp32)
+B12                    1.2273  (+0.0003 vs fp32)
+W8 A8 V24 B16          1.2284  (+0.0014 vs fp32)
+W8 A8 V16 B12          1.3316  (+0.1046 vs fp32)
+W4g128 A8 V24 B16      1.2445  (+0.0174 vs fp32)
+W4g128 A8 V16 B12      1.3543  (+0.1273 vs fp32)
