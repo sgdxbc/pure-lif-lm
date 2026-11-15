@@ -13,7 +13,7 @@ def gains(r, suffix):
         d = json.load(open(p))["m"]
         g0 = d["first occurrence"]["gain"]   # net = gain minus the first-occurrence (control) gain, README 5.1
         out += (f"recall d=65-128 {d['repeat d=65-128']['gain']:.3f}  d=129-256 {d['repeat d=129-256']['gain']:.3f}"
-                f"  net {d['repeat d=65-128']['gain'] - g0:.3f} / {d['repeat d=129-256']['gain'] - g0:.3f}")
+                f"  net d=65-128 {d['repeat d=65-128']['gain'] - g0:.3f} / d=129-256 {d['repeat d=129-256']['gain'] - g0:.3f}")
     p = os.path.join(r, f"probe_memory{suffix}.json")
     if os.path.exists(p):
         c = json.load(open(p))["m"]["context_loss"]
@@ -24,7 +24,7 @@ def gains(r, suffix):
         g0 = d["first occurrence"]["gain"]
         out += (f"  [512-token stories: d=65-128 {d['repeat d=65-128']['gain']:.3f}"
                 f"  d=129-256 {d['repeat d=129-256']['gain']:.3f}  d=257-512 {d['repeat d=257-512']['gain']:.3f}"
-                f"  net {d['repeat d=129-256']['gain'] - g0:.3f} / {d['repeat d=257-512']['gain'] - g0:.3f}]")
+                f"  net d=129-256 {d['repeat d=129-256']['gain'] - g0:.3f} / d=257-512 {d['repeat d=257-512']['gain'] - g0:.3f}]")
     return out
 
 
