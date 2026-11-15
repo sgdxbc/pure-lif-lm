@@ -1,9 +1,15 @@
 g2_tf105 numpy import failure on xgpj0 (job 1142981); resubmitted as 1142994 with --exclude=xgpj0
 2026-11-15: the cluster Claude session (claude remote-control) kept exiting on the login node: its worker grows to
 ~1 GB of virtual memory and the login node caps every user process at 1 GB (hard limit, /etc/security/limits.conf;
-there is also a 5-minute CPU-time cap). It now runs on a compute node instead, in tmux window "cn" on the login node:
-  srun -p long -c 2 --mem=8G -t 3-00:00:00 --pty bash   then   cd ~/pure-lif-lm && claude remote-control -c
-Compute nodes have no such limits, reach the internet and GitHub, and can run sbatch/squeue. Renew within 3 days.
+there is also a 5-minute CPU-time cap). Compute nodes have no such limits, reach the internet and GitHub, and can
+run sbatch/squeue. (Running it via `srun --pty` from tmux on the login node also failed: see the 1143176 entry below.)
+How the session runs now (since 2026-11-15 11:06 SGT, batch job 1143785 on xcnc9), with nothing on the login node:
+  start:  on the login node, from the repo root, only after any previous Claude session has been stopped:
+            sbatch slurm/claude_session.sbatch
+          (runs `claude remote-control` in tmux, server `-L claude`, session `cc`, on a compute node; partition long)
+  look:   srun --jobid=<id> --overlap tmux -L claude capture-pane -p -t cc
+          (read-only; Claude's last screen is also kept in slurm/logs/claude-session-<id>.out when it exits)
+  renew:  before the 3-day limit: stop the job (scancel <id>), then sbatch it again.
 
 2026-11-15: why the Claude session in interactive job 1143176 (xcnc9) exited at 22:05 UTC on 2026-11-14 (read-only check)
 Evidence:
