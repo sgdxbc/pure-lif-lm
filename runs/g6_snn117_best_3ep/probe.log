@@ -1,0 +1,30 @@
+400 stories of >= 257 tokens, 35039 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+m  (runs/g6_snn117_best_3ep/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     0.840
+  repeat d=5-16            2079     0.930
+  repeat d=17-32           2410     1.002     3.788   2.786
+  repeat d=33-64           2752     1.150     3.647   2.497
+  repeat d=65-128          2048     1.468     3.395   1.927
+  repeat d=129-256          923     1.607     3.135   1.527
+  first occurrence        24485     2.151     2.592   0.457
+mean loss on story positions 128-191 when reading starts k tokens before 128 (600 stories)
+model              k=0      k=8      k=32     k=64     k=128    gain 8->128
+m                  1.759    1.574    1.395    1.313    1.261    0.313
+m: share_slow=0.398, slow_rate=0.0467, slow_never_fire=0.554, slow_gap_median=1, slow_gap_p90=8, slow_gaps_le_10=0.924, gamma_quantiles_10_50_90=[0.024577978067100048, 0.25371159613132477, 0.6909528970718384], gamma_share_below_0.5=0.811
+400 stories of >= 257 tokens, 35039 content-word targets (the 150 most frequent tokens excluded); short context = last 16 tokens
+
+m  (runs/g6_snn117_best_3ep/ckpt.pt)
+  target                  count  full ctx   last 16    gain
+  repeat d=1-4              342     0.804
+  repeat d=5-16            2079     0.909
+  repeat d=17-32           2410     0.980     3.789   2.808
+  repeat d=33-64           2752     1.119     3.634   2.515
+  repeat d=65-128          2048     1.450     3.367   1.916
+  repeat d=129-256          923     1.573     3.111   1.538
+  first occurrence        24485     2.127     2.569   0.460
+mean loss on story positions 128-191 when reading starts k tokens before 128 (600 stories)
+model              k=0      k=8      k=32     k=64     k=128    gain 8->128
+m                  1.748    1.563    1.383    1.302    1.248    0.315
+m: share_slow=0.398, slow_rate=0.0462, slow_never_fire=0.557, slow_gap_median=1, slow_gap_p90=8, slow_gaps_le_10=0.924, gamma_quantiles_10_50_90=[0.024605997838079936, 0.25392721593379974, 0.6912122368812561], gamma_share_below_0.5=0.811

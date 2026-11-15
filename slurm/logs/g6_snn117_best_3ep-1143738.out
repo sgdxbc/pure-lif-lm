@@ -1,0 +1,2 @@
+xgpi11 NVIDIA H100 NVL | runs/g6_snn117_best_3ep | --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 256 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500 --steps 201000 --d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128 --lr 6e-4 --teacher runs/g2_tf105_lr6e-4/ckpt.pt --distill_weight 0.9 --distill_temp 1 --ema 0.999 --neuron_lr_mult 10
+[2026-11-15T13:43:15.989] error: *** JOB 1143738 ON xgpi11 CANCELLED AT 2026-11-15T13:43:15 DUE TO TIME LIMIT ***

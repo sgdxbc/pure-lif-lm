@@ -1,0 +1,23 @@
+xgpi11 NVIDIA H100 NVL | runs/g6_tf105_2ep | --arch tf --batch 32 --seq 256 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500 --steps 134000 --d_model 896 --n_layers 10 --n_heads 14 --lr 4e-4
+== eval step 40000 val_loss 1.2932
+== eval step 45000 val_loss 1.2777
+== eval step 50000 val_loss 1.2625
+== eval step 55000 val_loss 1.2532
+== eval step 60000 val_loss 1.2379
+== eval step 65000 val_loss 1.2266
+== eval step 70000 val_loss 1.2154
+== eval step 75000 val_loss 1.2015
+== eval step 80000 val_loss 1.1889
+== eval step 85000 val_loss 1.1758
+== eval step 90000 val_loss 1.1645
+== eval step 95000 val_loss 1.1525
+== eval step 100000 val_loss 1.1407
+== eval step 105000 val_loss 1.1312
+== eval step 110000 val_loss 1.1207
+== eval step 115000 val_loss 1.1111
+== eval step 120000 val_loss 1.1049
+== eval step 125000 val_loss 1.0986
+== eval step 130000 val_loss 1.0941
+== eval step 134000 val_loss 1.0922
+ "val_loss": 1.0909552273891248,
+done Sun Nov 15 12:42:06 PM +08 2026
