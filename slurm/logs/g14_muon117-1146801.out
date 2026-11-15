@@ -1,0 +1,21 @@
+queued the next part of runs/g14_muon117: job 1147661
+xgpg2 NVIDIA A100-PCIE-40GB | runs/g14_muon117 | --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500 --d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128 --teacher runs/g2_tf105_lr6e-4/ckpt.pt --distill_weight 0.9 --distill_temp 1 --ema 0.999 --neuron_lr_mult 10 --optim muon --lr 6e-4
+params 117.11M, LIF neurons 49,152, train tokens 552M, tokens/step 8,192
+teacher val_loss 1.1382
+== eval step 5000 val_loss 1.7728 (EMA weights 1.6547)
+== eval step 10000 val_loss 1.6519 (EMA weights 1.5383)
+== eval step 15000 val_loss 1.5856 (EMA weights 1.4842)
+== eval step 20000 val_loss 1.5368 (EMA weights 1.4447)
+== eval step 25000 val_loss 1.4958 (EMA weights 1.4144)
+== eval step 30000 val_loss 1.4579 (EMA weights 1.3892)
+== eval step 35000 val_loss 1.4239 (EMA weights 1.3678)
+== eval step 40000 val_loss 1.3922 (EMA weights 1.3496)
+== eval step 45000 val_loss 1.3650 (EMA weights 1.3330)
+== eval step 50000 val_loss 1.3416 (EMA weights 1.3179)
+== eval step 55000 val_loss 1.3232 (EMA weights 1.3075)
+params 117.11M, LIF neurons 49,152, train tokens 552M, tokens/step 8,192
+== eval step 60000 val_loss 1.3095 (EMA weights 1.2983)
+== eval step 65000 val_loss 1.3004 (EMA weights 1.2915)
+== eval step 67000 val_loss 1.2974 (EMA weights 1.2892)
+ "val_loss": 1.299156049971233,
+done Mon Nov 16 03:58:19 AM +08 2026

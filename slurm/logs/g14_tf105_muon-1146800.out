@@ -1,0 +1,19 @@
+queued the next part of runs/g14_tf105_muon: job 1146802
+xgpi15 NVIDIA H100 NVL | runs/g14_tf105_muon | --batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500 --arch tf --d_model 896 --n_layers 10 --n_heads 14 --optim muon --lr 6e-4
+params 104.61M, LIF neurons 0, train tokens 552M, tokens/step 8,192
+== eval step 5000 val_loss 1.5499
+== eval step 10000 val_loss 1.4432
+== eval step 15000 val_loss 1.3855
+== eval step 20000 val_loss 1.3440
+== eval step 25000 val_loss 1.3139
+== eval step 30000 val_loss 1.2837
+== eval step 35000 val_loss 1.2515
+== eval step 40000 val_loss 1.2240
+== eval step 45000 val_loss 1.1952
+== eval step 50000 val_loss 1.1675
+== eval step 55000 val_loss 1.1451
+== eval step 60000 val_loss 1.1279
+== eval step 65000 val_loss 1.1155
+== eval step 67000 val_loss 1.1135
+ "val_loss": 1.1135889636675809,
+done Mon Nov 16 01:33:21 AM +08 2026
