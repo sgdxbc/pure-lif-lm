@@ -63,6 +63,7 @@ slurm/.reported (not committed). Avoid node xgpj0 (train.sbatch and probes_ema.s
 
 2026-11-15: PG-19 was downloaded by slurm/pg19_download.sh from the Claude session's compute node (xcnc9), not the
 login node: this session cannot reach the login node, and compute nodes have internet. Log: slurm/logs/pg19_download.log.
-sbatch from inside this session's batch job inherits SLURM_JOB_PARTITION=long, which overrides a script's "#SBATCH -p"
-(pg19-prep ran in `long`, not `normal`; harmless here). GPU jobs were not affected: they all ran in `gpu`. If a job
-must go to a specific partition, give -p on the sbatch command line.
+CPU jobs submitted from inside this session's batch job land in partition `long` even when `normal` is asked for, in
+the script or with -p on the command line (pg19-prep 1146033, fineweb-prep 1146815); the cause is on the cluster's
+side, not the inherited SLURM_JOB_PARTITION as first thought. Harmless for these jobs (long allows 3 days). GPU jobs
+are not affected: with -p gpu they all ran in `gpu`.
