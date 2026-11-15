@@ -1,0 +1,50 @@
+{
+ "openai-community/gpt2": {
+  "val_loss": 3.2893999288220073,
+  "params": 124439808,
+  "tokens": 9999360,
+  "seq": 1024
+ },
+ "openai-community/gpt2-medium": {
+  "val_loss": 3.0107310578814546,
+  "params": 354823168,
+  "tokens": 9999360,
+  "seq": 1024
+ },
+ "openai-community/gpt2-large": {
+  "val_loss": 2.857687048416411,
+  "params": 774030080,
+  "tokens": 9999360,
+  "seq": 1024
+ },
+ "openai-community/gpt2-xl": {
+  "val_loss": 2.769407954218445,
+  "params": 1557611200,
+  "tokens": 9999360,
+  "seq": 1024
+ },
+ "EleutherAI/gpt-neo-125m": {
+  "val_loss": 3.253332357020849,
+  "params": 125198592,
+  "tokens": 9999360,
+  "seq": 1024
+ },
+ "EleutherAI/gpt-neo-1.3B": {
+  "val_loss": 2.708600135369601,
+  "params": 1315575808,
+  "tokens": 9999360,
+  "seq": 1024
+ },
+ "EleutherAI/gpt-neo-2.7B": {
+  "val_loss": 2.6021402258416413,
+  "params": 2651307520,
+  "tokens": 9999360,
+  "seq": 1024
+ },
+ "EleutherAI/gpt-j-6b": {
+  "val_loss": 2.413985934552936,
+  "params": 6050882784,
+  "tokens": 9999360,
+  "seq": 1024
+ }
+}

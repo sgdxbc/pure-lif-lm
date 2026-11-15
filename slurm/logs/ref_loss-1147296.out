@@ -1,0 +1,40 @@
+openai-community/gpt2                        124M  val_loss 3.2894  ppl   26.83  (49s)
+openai-community/gpt2-medium                 355M  val_loss 3.0107  ppl   20.30  (89s)
+openai-community/gpt2-large                  774M  val_loss 2.8577  ppl   17.42  (188s)
+openai-community/gpt2-xl                    1558M  val_loss 2.7694  ppl   15.95  (326s)
+[transformers] [1mGPTNeoForCausalLM LOAD REPORT[0m from: EleutherAI/gpt-neo-125m
+Key                                                   | Status     |  | 
+------------------------------------------------------+------------+--+-
+transformer.h.{0, 2, 4, 6, 8, 10}.attn.attention.bias | UNEXPECTED |  | 
+transformer.h.{0...11}.attn.attention.masked_bias     | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+EleutherAI/gpt-neo-125m                      125M  val_loss 3.2533  ppl   25.88  (140s)
+[transformers] [1mGPTNeoForCausalLM LOAD REPORT[0m from: EleutherAI/gpt-neo-1.3B
+Key                                               | Status     |  | 
+--------------------------------------------------+------------+--+-
+transformer.h.{0...22}.attn.attention.bias        | UNEXPECTED |  | 
+transformer.h.{0...23}.attn.attention.masked_bias | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+EleutherAI/gpt-neo-1.3B                     1316M  val_loss 2.7086  ppl   15.01  (421s)
+[transformers] [1mGPTNeoForCausalLM LOAD REPORT[0m from: EleutherAI/gpt-neo-2.7B
+Key                                               | Status     |  | 
+--------------------------------------------------+------------+--+-
+transformer.h.{0...30}.attn.attention.bias        | UNEXPECTED |  | 
+transformer.h.{0...31}.attn.attention.masked_bias | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+EleutherAI/gpt-neo-2.7B                     2651M  val_loss 2.6021  ppl   13.49  (724s)
+[transformers] [1mGPTJForCausalLM LOAD REPORT[0m from: EleutherAI/gpt-j-6b
+Key                                     | Status     |  | 
+----------------------------------------+------------+--+-
+transformer.h.{0...27}.attn.bias        | UNEXPECTED |  | 
+transformer.h.{0...27}.attn.masked_bias | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+EleutherAI/gpt-j-6b                         6051M  val_loss 2.4140  ppl   11.18  (1172s)
