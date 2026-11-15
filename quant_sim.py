@@ -101,6 +101,8 @@ def run(model, x, q, cal=None, rec=None):
         gam = layer.gamma().float()
         if Bb:
             beta, gam = qfrac(beta, Bb), qfrac(gam, Bb)
+        if c.leak_gate:   # current scaled by (1 - beta), from the same lookup table
+            I = I * (1 - beta)
         if Vb:
             intb = cal["v_int_p" if q.get("vp") else "v_int"][li]
             frac = Vb - 1 - intb

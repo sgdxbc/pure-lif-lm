@@ -26,6 +26,17 @@ Optional (leak_rank > 0): leak-modulating synapses. Besides the ordinary synapse
                beta_l[t] = sigmoid(beta_logit_l + U_l bus_l[t])     (per neuron and per step)
            so the network can make a neuron hold its potential for a long time, or clear it, depending on
            what it reads. U_l is low-rank and starts at zero, i.e. the model starts as the plain LIF network.
+Optional (leak_gate, with leak_rank > 0): the current is scaled by (1 - beta):
+               V[t] = beta[t] * V[t-1] + (1 - beta[t]) * I[t]
+           This is the exact one-step solution of the LIF equation tau dV/dt = -V + I with tau held within each step
+           (the input sets the potential the membrane relaxes towards). While tau is fixed, the plain V = beta V + I
+           differs from it only by a constant scale of each neuron's current; once the leak-modulating synapses change
+           tau from step to step, the two differ.
+           A neuron that the leak-modulating synapses make hold its potential (beta near 1) then also takes in little
+           new current, so what it holds is not overwritten; one that is made to leak fast takes in the new current
+           fully (as the forget and input gates are tied in some linear recurrent networks). The threshold starts
+           (1 - beta) times lower, so at initialisation (U_l = 0) the network computes exactly what it does without
+           the option; only the trained behaviour differs.
 Optional (delay_k > 0): delayed synapses. Spikes also reach the population through synapses whose
            signal arrives k = 1..delay_k steps (tokens) later, with their own weights:
                I_l[t] = W_in_l bus_l[t] + b_l + sum_k D_lk bus_l[t-k]
@@ -81,6 +92,7 @@ class Config:
     rec_rank: int = 0         # >0: low-rank same-layer synapses R = A @ B acting on the previous step's spikes
     rec_init: float = 1.0     # std of A is rec_init/sqrt(d_hidden); B starts at 0 so R = 0 at init
     leak_rank: int = 0        # >0: low-rank leak-modulating synapses (see module docstring)
+    leak_gate: bool = False   # with leak_rank > 0: current scaled by (1 - beta[t]) (see module docstring)
     delay_k: int = 0          # >0: delayed synapses with delays 1..delay_k tokens (see module docstring)
     delay_rank: int = 64      # rank of each delay's synapse matrix
     steps_per_token: int = 1  # >1: simulation steps per token (see module docstring)
@@ -104,6 +116,9 @@ class LIFPopulation(nn.Module):
         theta0 = torch.ones(H)
         if cfg.in_norm == "theta":
             theta0 = 1.0 / torch.sqrt(1 - beta ** 2)
+        if cfg.leak_gate:   # the current is scaled by (1 - beta): the same network at initialisation
+            assert cfg.leak_rank > 0, "leak_gate needs the leak-modulating synapses (leak_rank > 0)"
+            theta0 = theta0 * (1 - beta)
         self.log_theta = nn.Parameter(theta0.log(), requires_grad=cfg.learn_theta)
         with torch.no_grad():
             nn.init.normal_(self.w_in.weight, std=1.0 / math.sqrt(d))
@@ -172,6 +187,8 @@ class LIFPopulation(nn.Module):
         else:
             if c.leak_rank > 0:   # leak changes per step; beta = sigmoid(beta_logit + M) is formed in the kernel
                 M = self.leak_out(self.leak_in(bus))
+                if c.leak_gate:   # (1 - beta[t]) = sigmoid(-(beta_logit + M)), computed in float32
+                    I = (I.float() * torch.sigmoid(-(self.beta_logit + M.float()))).to(I.dtype)
                 s, v_last = lif_leak(I, self.beta_logit, M, self.theta(), self.gamma(), v0, **kw)
             else:
                 s, v_last = lif(I, self.beta(), self.theta(), self.gamma(), v0, **kw)
