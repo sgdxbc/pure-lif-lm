@@ -1,0 +1,21 @@
+xgpi18 NVIDIA H100 NVL | runs/g11_tf98 | --data data/pg19 --tokenizer tok8192.json --vocab 8192 --arch tf --rope --d_model 768 --n_layers 12 --n_heads 12 --batch 4 --seq 2048 --steps 122000 --warmup 500 --eval_every 5000 --eval_batches 40 --log_every 500 --lr 6e-4
+== eval step 30000 val_loss 3.4540
+== eval step 35000 val_loss 3.4217
+== eval step 40000 val_loss 3.3907
+== eval step 45000 val_loss 3.3667
+== eval step 50000 val_loss 3.3405
+== eval step 55000 val_loss 3.3110
+== eval step 60000 val_loss 3.2959
+== eval step 65000 val_loss 3.2668
+== eval step 70000 val_loss 3.2450
+== eval step 75000 val_loss 3.2158
+== eval step 80000 val_loss 3.1851
+== eval step 85000 val_loss 3.1602
+== eval step 90000 val_loss 3.1366
+== eval step 95000 val_loss 3.1142
+== eval step 100000 val_loss 3.0889
+== eval step 105000 val_loss 3.0698
+== eval step 110000 val_loss 3.0519
+== eval step 115000 val_loss 3.0368
+== eval step 120000 val_loss 3.0292
+== eval step 122000 val_loss 3.0298

@@ -1,0 +1,346 @@
+params 33.56M, LIF neurons 0, train tokens 3056M, tokens/step 8,192
+step      1 loss 9.1476 lr 3.00e-06 gn 11.74 5,098 tok/s mem 2.4GB rate 0.000 [0.00]
+step    500 loss 5.2430 lr 1.50e-03 gn 0.64 124,442 tok/s mem 2.7GB rate 0.000 [0.00]
+step   1000 loss 4.8631 lr 1.50e-03 gn 0.49 126,397 tok/s mem 2.7GB rate 0.000 [0.00]
+step   1500 loss 4.7464 lr 1.50e-03 gn 0.54 122,211 tok/s mem 2.7GB rate 0.000 [0.00]
+step   2000 loss 4.6477 lr 1.50e-03 gn 0.39 122,598 tok/s mem 2.7GB rate 0.000 [0.00]
+step   2500 loss 4.4760 lr 1.50e-03 gn 0.45 122,475 tok/s mem 2.7GB rate 0.000 [0.00]
+step   3000 loss 4.0155 lr 1.50e-03 gn 0.73 124,072 tok/s mem 2.7GB rate 0.000 [0.00]
+step   3500 loss 4.1971 lr 1.50e-03 gn 0.47 124,609 tok/s mem 2.7GB rate 0.000 [0.00]
+step   4000 loss 3.9191 lr 1.50e-03 gn 0.47 123,934 tok/s mem 2.7GB rate 0.000 [0.00]
+step   4500 loss 3.8349 lr 1.50e-03 gn 0.55 125,752 tok/s mem 2.7GB rate 0.000 [0.00]
+step   5000 loss 3.8708 lr 1.50e-03 gn 0.44 132,035 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 5000 val_loss 4.0871
+   >> Once upon a time| to think of that which the only occasion to describe. The word of the words of the truth, the meaning of the case as that which the words of the words of the reader can learn, and the meaning of all the truth, is that the meaning was not altogether the case of the general meaning of the letter, which is, as the idea is. It is not a translation from the words of the Power, but by the manner in which the word is, from a second point of the verse that the _Trot_ has been the last and that of the word _
+   >> Lily wanted to go to the park, but| in the second time, he saw the truth of nothing but the other person. /  / For a long time he had not gone home to her for a long time to discover her to this woman a hundred days before. She had gone to live, and the other day she had gone for ever; she had gone to her side; but she had gone before. /  / Ext day afternoon, when the map of the day she had gone to the woods, and she had gone and made up to her feet. /  / They were in the way the rest of the world was the
+   >> The little dog was sad because| he thought of this strange thing that he had never met. /  / "Let me see that you will be safe for ever, and this will be done." /  / "The next day you will come home from here, sir. There shall be a great deal of my life." /  / "That is a bad one, sir." /  / "It is not so, sir; but I can't go to make things easy." /  / "Perhaps that is a wrong?" /  / "No. But what is it?" /  / "Why not it go, sir. She is a
+step   5500 loss 3.8512 lr 1.49e-03 gn 0.52 124,348 tok/s mem 2.7GB rate 0.000 [0.00]
+step   6000 loss 3.9714 lr 1.49e-03 gn 0.50 123,727 tok/s mem 2.7GB rate 0.000 [0.00]
+step   6500 loss 3.2790 lr 1.49e-03 gn 0.78 124,212 tok/s mem 2.7GB rate 0.000 [0.00]
+step   7000 loss 3.8569 lr 1.49e-03 gn 0.48 124,408 tok/s mem 2.7GB rate 0.000 [0.00]
+step   7500 loss 4.0845 lr 1.49e-03 gn 0.40 128,547 tok/s mem 2.7GB rate 0.000 [0.00]
+step   8000 loss 3.9273 lr 1.49e-03 gn 0.58 129,465 tok/s mem 2.7GB rate 0.000 [0.00]
+step   8500 loss 4.1815 lr 1.49e-03 gn 0.53 129,009 tok/s mem 2.7GB rate 0.000 [0.00]
+step   9000 loss 3.9118 lr 1.48e-03 gn 0.51 128,467 tok/s mem 2.7GB rate 0.000 [0.00]
+step   9500 loss 3.7718 lr 1.48e-03 gn 0.43 126,430 tok/s mem 2.7GB rate 0.000 [0.00]
+step  10000 loss 3.7965 lr 1.48e-03 gn 0.50 127,184 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 10000 val_loss 3.8879
+   >> Once upon a time|, I am not going off for a week; I shall be sure if a week is going up, but I'll get out of it all round, and you don't want to tell some of my own business. I'm going to the village to-night, and I'll get a bit of room, and I'll get a better chance, and will be my best friend. So I'll take tea to the house, and we'll soon go home for a week, and if we can get nothing better. You'll have my breakfast to-morrow afternoon, and I'll try to
+   >> Lily wanted to go to the park, but| his eyes were rushing down the face with a gesture that had been said to be the most amiable. /  / Passing through the open air, it was not a word as a sign of "London." Indeed, her eyes were glancing and she was silent, and her eyes were bright. Her hand of her arm was not the same to her. She was not in the habit of speaking. She stood up on the table, her head was a pencil of a cloud, and her head looked so tusky that she could understand no more why, she opened
+   >> The little dog was sad because| he seemed not to be so hungry as to see the little dog's mother from the house on her knees. She was almost childish at sight of her little baby. Her eyes were wet and her hands were wet. She was so tired with life and fever that she was not afraid to say anything, her hands were too busy to be ready. She did not care for the baby, for the child had not been in love with her mother. She was glad to see her face in love with her child, who had been just awake to sit down. She had grown hard and anxious to hear
+step  10500 loss 3.6223 lr 1.48e-03 gn 0.55 127,085 tok/s mem 2.7GB rate 0.000 [0.00]
+step  11000 loss 3.7035 lr 1.48e-03 gn 0.44 125,627 tok/s mem 2.7GB rate 0.000 [0.00]
+step  11500 loss 3.7819 lr 1.47e-03 gn 0.51 130,041 tok/s mem 2.7GB rate 0.000 [0.00]
+step  12000 loss 4.0069 lr 1.47e-03 gn 0.43 131,542 tok/s mem 2.7GB rate 0.000 [0.00]
+step  12500 loss 3.7209 lr 1.47e-03 gn 0.55 135,788 tok/s mem 2.7GB rate 0.000 [0.00]
+step  13000 loss 3.4599 lr 1.47e-03 gn 0.54 135,794 tok/s mem 2.7GB rate 0.000 [0.00]
+step  13500 loss 3.8205 lr 1.46e-03 gn 0.52 138,183 tok/s mem 2.7GB rate 0.000 [0.00]
+step  14000 loss 3.7807 lr 1.46e-03 gn 0.50 139,786 tok/s mem 2.7GB rate 0.000 [0.00]
+step  14500 loss 3.7915 lr 1.46e-03 gn 0.42 142,307 tok/s mem 2.7GB rate 0.000 [0.00]
+step  15000 loss 3.8977 lr 1.45e-03 gn 0.48 142,623 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 15000 val_loss 3.7973
+   >> Once upon a time|. /  / I noticed that by her direction as before. It was the most extraordinary thing I had to say to her, for as I had already determined to get it, I gave her a great deal of attention. I thought her better than any one else, and I could not find it. She took her leave as I could, for it was the very moment I had to say. /  / I did not understand her; but I felt that she might come, thinking that I would do him wrong in that. He laughed. She did not know what I did, and she said that
+   >> Lily wanted to go to the park, but| no one could not think of it. He could not go to the window. He wanted to go at once on the stairs and to wait while he stood. He must have a chance to get up for his journey. He would have a time and then he got a chance to go to and bring her to the door, but he said he would try to go. The little man, who was in the hall, turned round. The fact that this was the way he did go to the house was to go to the crib, but he did not want to be there. He would not
+   >> The little dog was sad because| the child would not have saved him; that he was to have her own child for a while, as he thought of her. She had done to another child, and that she wished some to do so. /  / I was glad to see her, but she could not have a child. She kept her children, but she didn't like it. She did not care about her child. She said that she wanted to play it, but she wanted to have her sister's house. It was so. She was so tired, that she liked to hear it, that she wished to play.
+step  15500 loss 3.7023 lr 1.45e-03 gn 0.46 136,249 tok/s mem 2.7GB rate 0.000 [0.00]
+step  16000 loss 3.6828 lr 1.45e-03 gn 0.48 137,066 tok/s mem 2.7GB rate 0.000 [0.00]
+step  16500 loss 3.5595 lr 1.44e-03 gn 0.45 138,747 tok/s mem 2.7GB rate 0.000 [0.00]
+step  17000 loss 3.6998 lr 1.44e-03 gn 0.50 136,915 tok/s mem 2.7GB rate 0.000 [0.00]
+step  17500 loss 3.3131 lr 1.44e-03 gn 0.52 136,723 tok/s mem 2.7GB rate 0.000 [0.00]
+step  18000 loss 4.0724 lr 1.43e-03 gn 0.56 137,429 tok/s mem 2.7GB rate 0.000 [0.00]
+step  18500 loss 3.8486 lr 1.43e-03 gn 0.54 136,158 tok/s mem 2.7GB rate 0.000 [0.00]
+step  19000 loss 3.6681 lr 1.42e-03 gn 0.54 137,084 tok/s mem 2.7GB rate 0.000 [0.00]
+step  19500 loss 3.8166 lr 1.42e-03 gn 0.51 138,668 tok/s mem 2.7GB rate 0.000 [0.00]
+step  20000 loss 3.6092 lr 1.42e-03 gn 0.48 138,822 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 20000 val_loss 3.7601
+   >> Once upon a time| of very uneasiness. The maze of which they are composed of a certain kind of taterboy, was not a name for a moss and a name for a man. We have nothing to say in which he is used for a few moments, but it must be a great relief. As a rule, some of our men are sometimes quite certain of the first thing he deserved, and at last it is true, that in a few weeks the people will allow his return to this place of mind. /  / "Humanism is, therefore, a very
+   >> Lily wanted to go to the park, but|, the first thing he was to go to the front gate, he took a seat and started for the other side of the platform. /  / "You haven't asked if I did not come back," he answered to his chum and his mouth trembled. /  / "I've never been the servant of the dog," he exclaimed, "and I'm not to go to a school school now. I can't go to school at all. I have seen 'em about to-day. My house is so close that I can get home from the window. I can't go
+   >> The little dog was sad because| of one morning when the mother and she were to be so dear. /  / She was in love with a mother, a baby to love. /  / He made a good hearty kiss. /  / Then he looked up and walked to the door. /  / "My mother is so kind to me, father," she said. /  / She went to the door. /  / There was a ring on the door and someone came out and found. /  / I saw a little girl in the sitting-room. She would have been happy. /  / She came to the door and the
+step  20500 loss 3.5748 lr 1.41e-03 gn 0.65 139,160 tok/s mem 2.7GB rate 0.000 [0.00]
+step  21000 loss 3.4258 lr 1.41e-03 gn 0.67 138,900 tok/s mem 2.7GB rate 0.000 [0.00]
+step  21500 loss 3.5930 lr 1.40e-03 gn 0.51 139,118 tok/s mem 2.7GB rate 0.000 [0.00]
+step  22000 loss 3.6359 lr 1.40e-03 gn 0.60 140,080 tok/s mem 2.7GB rate 0.000 [0.00]
+step  22500 loss 3.9506 lr 1.39e-03 gn 0.53 140,745 tok/s mem 2.7GB rate 0.000 [0.00]
+step  23000 loss 3.5712 lr 1.39e-03 gn 0.51 140,051 tok/s mem 2.7GB rate 0.000 [0.00]
+step  23500 loss 3.7123 lr 1.38e-03 gn 0.51 141,110 tok/s mem 2.7GB rate 0.000 [0.00]
+step  24000 loss 3.5056 lr 1.38e-03 gn 0.46 140,988 tok/s mem 2.7GB rate 0.000 [0.00]
+step  24500 loss 3.7893 lr 1.37e-03 gn 0.50 141,975 tok/s mem 2.7GB rate 0.000 [0.00]
+step  25000 loss 3.1987 lr 1.37e-03 gn 0.47 141,970 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 25000 val_loss 3.7210
+   >> Once upon a time| when the time is come to be to be of great importance. But before these days, the long black hairs and feathers were given the best manner of going on to be read in the time of the day-honoured. When a man is not born, his voice is often heard from the window, and at the end of his life, he seems not to be either the least thoughtful person, or he has been a son of a man. /  / I was a man of great personal understanding; but for the time he has no power for a person who has not a
+   >> Lily wanted to go to the park, but| the end of the second morning was one of the most difficult and unaccountable and most difficult of all to make of the plan. /  / As soon as possible, the old man commenced saying, /  / "I should like to get a little more nape, and you may be able to get another nape, but I do not wish to go further and keep it; I should like to see that you are going to get the old man and that we will make a very rapid change." /  / "I should like to go back to the park, I
+   >> The little dog was sad because| the most young man, as I thought, was a most foolish little creature, and I knew the truth that I wished, seeing nothing but a single man's love, but I did not know that I was a little boy, and that I had a great many more of the little bundles of things which I never saw before. So, alas! the only man had thought I would not see him; but now, if he was a man, for he would be far from him, what would be his right? /  / And so, if I should go to her, the
+step  25500 loss 3.2460 lr 1.36e-03 gn 0.53 142,419 tok/s mem 2.7GB rate 0.000 [0.00]
+step  26000 loss 3.5234 lr 1.36e-03 gn 0.47 142,644 tok/s mem 2.7GB rate 0.000 [0.00]
+step  26500 loss 3.6666 lr 1.35e-03 gn 0.52 142,341 tok/s mem 2.7GB rate 0.000 [0.00]
+step  27000 loss 3.7368 lr 1.35e-03 gn 0.49 142,426 tok/s mem 2.7GB rate 0.000 [0.00]
+step  27500 loss 3.5462 lr 1.34e-03 gn 0.56 143,879 tok/s mem 2.7GB rate 0.000 [0.00]
+step  28000 loss 3.7335 lr 1.34e-03 gn 0.51 142,612 tok/s mem 2.7GB rate 0.000 [0.00]
+step  28500 loss 3.6944 lr 1.33e-03 gn 0.52 144,017 tok/s mem 2.7GB rate 0.000 [0.00]
+step  29000 loss 3.6200 lr 1.32e-03 gn 0.51 143,493 tok/s mem 2.7GB rate 0.000 [0.00]
+step  29500 loss 3.5016 lr 1.32e-03 gn 0.50 144,147 tok/s mem 2.7GB rate 0.000 [0.00]
+step  30000 loss 3.3435 lr 1.31e-03 gn 0.69 145,035 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 30000 val_loss 3.6990
+   >> Once upon a time|. All things, and everything, and everything, and every thing, and every thing, and every thing, and everything, and all things and all things, and all things, and all things, and all things, and all things, and everything; and every thing, every thing, every thing, and every thing, would not do; every thing except that every soul, every word, every word, every word, every word, every word, every word, every word, every word, every word, every letter, everything, every word, every word, every word, every word,
+   >> Lily wanted to go to the park, but| she did not believe her to be so pretty as she was to look about her. The doctor said she would rather be so tired and so happy, but she was quite confident that she would be glad to be kind with the doctor. Her husband's feelings were so much excited that she could not help thinking he must have been ashamed. "I think the doctor has been more fond of his friend than he ever has been." /  / "I should like to have been at the park at the park," said Dick. "He would have been shy of me. But he was always quite
+   >> The little dog was sad because| he was to take a walk, and it was a fine sight, but the little dog was still asleep in the back of the bed, and on the top of the wall the little dog, which was quite as large as it could be, gave a great deal of satisfaction to the dog. /  / "Oh, sir, I should like it to see you go!" she said. "You ought to be anxious to get on board and make her go to the hospital for a few days, and I would not find any good place for a man to say to me. I wouldn't care
+step  30500 loss 3.4436 lr 1.31e-03 gn 0.58 143,719 tok/s mem 2.7GB rate 0.000 [0.00]
+step  31000 loss 3.4574 lr 1.30e-03 gn 0.61 143,885 tok/s mem 2.7GB rate 0.000 [0.00]
+step  31500 loss 3.5825 lr 1.29e-03 gn 0.88 143,735 tok/s mem 2.7GB rate 0.000 [0.00]
+step  32000 loss 3.3862 lr 1.29e-03 gn 0.55 145,084 tok/s mem 2.7GB rate 0.000 [0.00]
+step  32500 loss 3.6483 lr 1.28e-03 gn 0.55 144,619 tok/s mem 2.7GB rate 0.000 [0.00]
+step  33000 loss 3.6081 lr 1.28e-03 gn 0.51 144,440 tok/s mem 2.7GB rate 0.000 [0.00]
+step  33500 loss 3.4158 lr 1.27e-03 gn 0.59 144,360 tok/s mem 2.7GB rate 0.000 [0.00]
+step  34000 loss 3.3762 lr 1.26e-03 gn 0.86 145,170 tok/s mem 2.7GB rate 0.000 [0.00]
+step  34500 loss 3.6096 lr 1.26e-03 gn 0.62 145,010 tok/s mem 2.7GB rate 0.000 [0.00]
+step  35000 loss 3.4145 lr 1.25e-03 gn 0.55 144,488 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 35000 val_loss 3.6687
+   >> Once upon a time| of this world. The other day, from the beginning of the sixteenth century, the newer Lacedonian hero, the real son of the Giust (_loc_), and the son of a race whose name is not known to have been adopted. /  / The story of the Macedonian race is in fact the narrative of the Giust, the hero, and the warlike warrior. It is also in the time of Giust in the present day, the story itself being as great as the hero, and the story of that which he
+   >> Lily wanted to go to the park, but| she didn't do it. /  / She was not quite well. /  / All was quiet, even in the rain, and when one had come to it she was quite unable to do anything for the journey. She was too busy to spend her time at any other place, but she knew nothing of how to do it. Even if she could do anything he could do she wouldn't let him take the money on his account. /  / But now the rest of the journey had not begun to think about it. /  / The sun was up, and the darkness had not begun to be so
+   >> The little dog was sad because| the pagan races could not be secured, but the little dog, after a while, had fallen into the dusk, and the long pagan races, as well as the long pagan rites that had fallen down, and from his first impulse, the dog began to grope, to give a new idea to the trunk and to the fishing. /  / He was now close upon a low chair, which had been arranged on a low table, with a cable-point through either his body, and a bundle of hemp
+step  35500 loss 3.5490 lr 1.24e-03 gn 0.77 144,546 tok/s mem 2.7GB rate 0.000 [0.00]
+step  36000 loss 3.4675 lr 1.24e-03 gn 0.60 146,573 tok/s mem 2.7GB rate 0.000 [0.00]
+step  36500 loss 3.4115 lr 1.23e-03 gn 1.25 147,755 tok/s mem 2.7GB rate 0.000 [0.00]
+step  37000 loss 3.6168 lr 1.22e-03 gn 0.53 147,386 tok/s mem 2.7GB rate 0.000 [0.00]
+step  37500 loss 3.6044 lr 1.21e-03 gn 0.54 148,786 tok/s mem 2.7GB rate 0.000 [0.00]
+step  38000 loss 3.6184 lr 1.21e-03 gn 0.76 148,701 tok/s mem 2.7GB rate 0.000 [0.00]
+step  38500 loss 3.4060 lr 1.20e-03 gn 0.60 148,963 tok/s mem 2.7GB rate 0.000 [0.00]
+step  39000 loss 3.5633 lr 1.19e-03 gn 0.58 148,074 tok/s mem 2.7GB rate 0.000 [0.00]
+step  39500 loss 3.7609 lr 1.18e-03 gn 0.55 147,909 tok/s mem 2.7GB rate 0.000 [0.00]
+step  40000 loss 3.3711 lr 1.18e-03 gn 0.59 148,108 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 40000 val_loss 3.6465
+   >> Once upon a time|, and to be sure that it was the same, though they would have been good times, so that it gave them little pleasure at first. Just after a great deal of the time they had all been going to see the land and the sea, they went to work together, and with a little money of money in hand, and in the most ample way, that they could afford to do all that night, and to make the best of it all the next time. And the money which they had received from the land began to be worth some money, and in the most amateur
+   >> Lily wanted to go to the park, but| this was the first time they was seen at the door. They all had had the tiptoe in them, and it was their duty to go and see the park, and try to get it there and watch in the sun. An old woman had a longishly dressed pony, whose face was rather a stony, and with the red-skin roulette, her legs and her black hippopotte, and her long hair, her long hair, her long hair, and her long hair, and her long hair long and hard, her white long
+   >> The little dog was sad because| of having lost his leg. But if he had gone to sleep on the ground, the old dog would not have gone to sleep to the rest. /  / "You are a little tired," said the old dog. "I've been a little tired and tired. If I had known anything, I couldn't help it. I'm going to sleep by the fire, and I'm trying to get tired." /  / "And so you can, old dog," said the old dog. "What do you want to do now and I'll help you out of the work. I don't
+step  40500 loss 3.5800 lr 1.17e-03 gn 0.56 147,769 tok/s mem 2.7GB rate 0.000 [0.00]
+step  41000 loss 3.4887 lr 1.16e-03 gn 0.63 148,715 tok/s mem 2.7GB rate 0.000 [0.00]
+step  41500 loss 3.4652 lr 1.15e-03 gn 0.57 150,742 tok/s mem 2.7GB rate 0.000 [0.00]
+step  42000 loss 3.2012 lr 1.15e-03 gn 1.31 149,800 tok/s mem 2.7GB rate 0.000 [0.00]
+step  42500 loss 3.4812 lr 1.14e-03 gn 0.58 148,579 tok/s mem 2.7GB rate 0.000 [0.00]
+step  43000 loss 3.6471 lr 1.13e-03 gn 0.88 148,344 tok/s mem 2.7GB rate 0.000 [0.00]
+step  43500 loss 3.5977 lr 1.12e-03 gn 0.59 151,961 tok/s mem 2.7GB rate 0.000 [0.00]
+step  44000 loss 3.5655 lr 1.12e-03 gn 1.25 151,217 tok/s mem 2.7GB rate 0.000 [0.00]
+step  44500 loss 3.4976 lr 1.11e-03 gn 0.55 151,888 tok/s mem 2.7GB rate 0.000 [0.00]
+step  45000 loss 3.3546 lr 1.10e-03 gn 0.54 153,885 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 45000 val_loss 3.6256
+   >> Once upon a time| and color of the face. /  / The scene is not so interesting to the popular, the world-moderate, the unique orchestral life, as the spiritual life of the world, and as the real life of the world. All this is one of the things that are to be said in the commonplace spirit of the universe. /  / The best, and most popular of all, is the existence of a certain reestablishment. That the world-moderate, the beginning, as it has been, will prove to be the truth of
+   >> Lily wanted to go to the park, but|--though she had kept her eyes a little farther on her--she did not know. /  / CHAPTER XX /  / THE LIGHT /  / IN EXTERSLE GITOR /  / Lieutenant Carcling and I were in the same place. One day, when he had had some money, I found ourselves face to face in the shade. /  / The last I met was at that moment. It was one of my friends. /  / It had been my first visit to Prague, and the man who had gone to New York had gone and met me
+   >> The little dog was sad because| he was as white as a child. /  / The dog was in the duny, but he was all right, and he was a good feeding-place, and he was so tired of the little dog! /  / When he was gone he was taken to the woods and duny, because he was so lonely that he would have him out to starry. /  / The dog had been so hard and strong that the two dogs in the wild forest are hardly able to bear its sorrows. Then he had the courage to go into the woods, and his face was like
+step  45500 loss 3.5300 lr 1.09e-03 gn 0.58 151,059 tok/s mem 2.7GB rate 0.000 [0.00]
+step  46000 loss 3.7628 lr 1.08e-03 gn 0.60 152,553 tok/s mem 2.7GB rate 0.000 [0.00]
+step  46500 loss 3.5586 lr 1.08e-03 gn 0.63 152,165 tok/s mem 2.7GB rate 0.000 [0.00]
+step  47000 loss 3.3250 lr 1.07e-03 gn 0.61 148,616 tok/s mem 2.7GB rate 0.000 [0.00]
+step  47500 loss 3.5477 lr 1.06e-03 gn 0.61 149,207 tok/s mem 2.7GB rate 0.000 [0.00]
+step  48000 loss 3.6380 lr 1.05e-03 gn 0.65 148,962 tok/s mem 2.7GB rate 0.000 [0.00]
+step  48500 loss 3.3232 lr 1.04e-03 gn 0.72 148,900 tok/s mem 2.7GB rate 0.000 [0.00]
+step  49000 loss 3.5882 lr 1.04e-03 gn 0.65 150,130 tok/s mem 2.7GB rate 0.000 [0.00]
+step  49500 loss 3.6607 lr 1.03e-03 gn 0.62 149,389 tok/s mem 2.7GB rate 0.000 [0.00]
+step  50000 loss 3.5781 lr 1.02e-03 gn 0.60 149,616 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 50000 val_loss 3.6005
+   >> Once upon a time| when the chief of the Dauphini were in the East, because the Indians had no cause to dread this company, and therefore none of these Indians were afraid of the Indians. To the surprise of the reader, I asked them what they should do, if they must take their trail. They were certain that the Indians were not afraid, for they were afraid of Indians. They were sure that there was nothing to be lost, and could not be got away. /  / All these things were going on in their talk. In his life they had never told him a word; every time
+   >> Lily wanted to go to the park, but| she could not get away. The man was in trouble. And I am sure he had not been in trouble twice, for he was so eager to have a place as he could, but I cannot say. He had done that in the end. He was going to take a boat which was waiting. You must remember the boat and see you. I don't think we should do anything of that sort. He would have liked to get away again." /  / "I don't think we ought to," said Margaret. "It makes me think that we ought to know what's up." / 
+   >> The little dog was sad because| he was old enough and the dog had always been on the point of going to the dogs and the dog to see him. And then he said, 'Go, see, you's just going to have a dog come downstairs. I'm going to do it, and the dog's got to be his dog. I can help him." /  / "Oh, very bad. He's so sorry for me," said the dog, soothingly. "He's very sorry for me and he doesn't want to go. You can be a better man than you would be a better
+step  50500 loss 3.6148 lr 1.01e-03 gn 0.63 149,877 tok/s mem 2.7GB rate 0.000 [0.00]
+step  51000 loss 3.2538 lr 1.00e-03 gn 0.66 149,292 tok/s mem 2.7GB rate 0.000 [0.00]
+step  51500 loss 3.3270 lr 9.93e-04 gn 0.61 150,179 tok/s mem 2.7GB rate 0.000 [0.00]
+step  52000 loss 3.3039 lr 9.85e-04 gn 0.72 149,726 tok/s mem 2.7GB rate 0.000 [0.00]
+step  52500 loss 3.5342 lr 9.76e-04 gn 0.59 149,604 tok/s mem 2.7GB rate 0.000 [0.00]
+step  53000 loss 3.3593 lr 9.68e-04 gn 0.64 150,334 tok/s mem 2.7GB rate 0.000 [0.00]
+step  53500 loss 3.4639 lr 9.59e-04 gn 0.71 150,331 tok/s mem 2.7GB rate 0.000 [0.00]
+step  54000 loss 3.4572 lr 9.51e-04 gn 0.66 151,906 tok/s mem 2.7GB rate 0.000 [0.00]
+step  54500 loss 3.4075 lr 9.42e-04 gn 0.66 153,517 tok/s mem 2.7GB rate 0.000 [0.00]
+step  55000 loss 3.6141 lr 9.34e-04 gn 0.65 152,670 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 55000 val_loss 3.5731
+   >> Once upon a time|, he said: "What is in the world I want, and what is in the world I want?" He said, turning upon his friends in a way that she might not know; he looked at her on the most pensive face with her eyes, and then said: "It isn't possible for me to imagine a day when she was so much concerned about the gaming-house, but of the very place where she was to take charge, and of the great cities and cities, and of the city and of the country." But she replied: "I don't know what a
+   >> Lily wanted to go to the park, but| he could not see her, and she went to the end of the last fortnight of the year. /  / When they reached their destination, however, they were not at all aware of what had passed--the light had come from the old homestead--and they were not sure that they could not be the last two or three weeks! /  / The sun had come up to the light, and they went to the spot where they had been waiting for the last. /  / It was a beautiful day they were going to take their farewell. /  / The evening was when they should
+   >> The little dog was sad because| it had been the more so as the two are now. /  / But now, I want to say more than once,--that he was not the one to commit,--but as a rule not that he did not know. All that was now necessary for him to say,--because of the first, he loved to say so. He had not forgotten the other, and not only had seen the first, but he had been too ill to make mention of his name and place as his companion. /  / She loved him when he saw her--that is, if she could not be seen
+step  55500 loss 3.5199 lr 9.25e-04 gn 0.67 149,603 tok/s mem 2.7GB rate 0.000 [0.00]
+step  56000 loss 3.1887 lr 9.16e-04 gn 1.16 150,018 tok/s mem 2.7GB rate 0.000 [0.00]
+step  56500 loss 3.5421 lr 9.08e-04 gn 0.68 150,815 tok/s mem 2.7GB rate 0.000 [0.00]
+step  57000 loss 3.4863 lr 8.99e-04 gn 0.72 150,206 tok/s mem 2.7GB rate 0.000 [0.00]
+step  57500 loss 3.4201 lr 8.90e-04 gn 0.63 152,075 tok/s mem 2.7GB rate 0.000 [0.00]
+step  58000 loss 3.4534 lr 8.82e-04 gn 1.18 156,127 tok/s mem 2.7GB rate 0.000 [0.00]
+step  58500 loss 3.3820 lr 8.73e-04 gn 0.64 153,906 tok/s mem 2.7GB rate 0.000 [0.00]
+step  59000 loss 3.6904 lr 8.64e-04 gn 0.71 150,476 tok/s mem 2.7GB rate 0.000 [0.00]
+step  59500 loss 3.5193 lr 8.56e-04 gn 0.67 153,135 tok/s mem 2.7GB rate 0.000 [0.00]
+step  60000 loss 3.4828 lr 8.47e-04 gn 0.73 155,527 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 60000 val_loss 3.5598
+   >> Once upon a time| ago, and this was a great fact, for the king had been in all his glory. I said to him: /  / “You have to say that you are right, to say that you are right, if you would be more right, I will, than that it will be, to say that you are right, to say that you are right. If I could come, I could not get hold of it.” /  / But at the same time that I was to have the power of saying anything to the king, I said: /  / “You have a gift to offer
+   >> Lily wanted to go to the park, but|, as she had no power of making it, she had been obliged to keep her promise as soon as she had come, and had a great deal of anxiety, she asked herself how she would be likely, and, of course, if it was that the park was over. There were but two or three small, neatly-pink leaves hanging over it, and the most elegant flowers on every side, and all the flowers in the garden. It had taken two years to give time for their arrival, and the park had been of a fine character, but it was to
+   >> The little dog was sad because| he kept his head on the mule team. He was, however, not quite sure of his mother. It is not a pleasant thing to be told. /  / The dog was one of the tiny ones that came to his aid with the other dog and in the open air was a great deal too much for the rest of the animal. No man could make out who was in the habit of crossing between a large two or three to one of a long, flat in the middle of the tiny one of his toes. He walked for a few minutes, which he said was
+step  60500 loss 3.4820 lr 8.38e-04 gn 0.62 155,423 tok/s mem 2.7GB rate 0.000 [0.00]
+step  61000 loss 3.2662 lr 8.29e-04 gn 0.67 152,989 tok/s mem 2.7GB rate 0.000 [0.00]
+step  61500 loss 3.3891 lr 8.21e-04 gn 0.96 153,025 tok/s mem 2.7GB rate 0.000 [0.00]
+step  62000 loss 3.4541 lr 8.12e-04 gn 0.68 153,420 tok/s mem 2.7GB rate 0.000 [0.00]
+step  62500 loss 3.6023 lr 8.03e-04 gn 0.67 153,521 tok/s mem 2.7GB rate 0.000 [0.00]
+step  63000 loss 3.3330 lr 7.94e-04 gn 0.72 155,043 tok/s mem 2.7GB rate 0.000 [0.00]
+step  63500 loss 2.9462 lr 7.86e-04 gn 2.70 154,672 tok/s mem 2.7GB rate 0.000 [0.00]
+step  64000 loss 3.1176 lr 7.77e-04 gn 0.74 156,173 tok/s mem 2.7GB rate 0.000 [0.00]
+step  64500 loss 3.2310 lr 7.68e-04 gn 0.74 156,522 tok/s mem 2.7GB rate 0.000 [0.00]
+step  65000 loss 3.4728 lr 7.60e-04 gn 0.75 150,603 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 65000 val_loss 3.5315
+   >> Once upon a time|. /  / "You needn't be afraid of this, for I have no desire to be a friend, at all times. It seems to me to be a secret, and not a secret," said my husband. "I wish I could know how to make the best possible for this. But I think I would find the best way to keep you here." /  / "I do believe I would," replied my child, "as I have been an open enemy. It would do to make you happy. You cannot be kind enough to make me happy. You cannot, perhaps, be
+   >> Lily wanted to go to the park, but| she did not seem anxious. She said nothing; her eyes were so pale and hard that she would find her there and then take leave, and I suppose Mrs. Kingsford made a great deal of movement. /  / "I never saw Miss Hartwell here," she said. "I really don't remember her. It wasn't her fault. She must have been there at first." /  / She went to the park and stopped at the other end of the town looking around the little house. /  / "I'm sure she's not here," she said. "She might
+   >> The little dog was sad because| he had done so. He was only a poor dog, and he thought it better to speak to him than to speak to him. And now, he did not know that the dog knew that he had been there. He had gone off from town in a day or two, and had heard of the cat's latch, and had been there for a day or two. But the dog learned that he was going to town, and that he remembered. There was much of it, and he knew that an old dog had had to go with him, and he would walk to town to town
+step  65500 loss 3.4165 lr 7.51e-04 gn 0.80 151,698 tok/s mem 2.7GB rate 0.000 [0.00]
+step  66000 loss 3.3986 lr 7.42e-04 gn 0.74 151,577 tok/s mem 2.7GB rate 0.000 [0.00]
+step  66500 loss 3.4855 lr 7.34e-04 gn 0.80 151,512 tok/s mem 2.7GB rate 0.000 [0.00]
+step  67000 loss 3.3506 lr 7.25e-04 gn 0.74 153,864 tok/s mem 2.7GB rate 0.000 [0.00]
+step  67500 loss 3.7043 lr 7.16e-04 gn 1.18 155,599 tok/s mem 2.7GB rate 0.000 [0.00]
+step  68000 loss 3.6115 lr 7.08e-04 gn 0.74 152,910 tok/s mem 2.7GB rate 0.000 [0.00]
+step  68500 loss 3.2114 lr 6.99e-04 gn 1.26 151,026 tok/s mem 2.7GB rate 0.000 [0.00]
+step  69000 loss 3.2606 lr 6.91e-04 gn 0.75 150,881 tok/s mem 2.7GB rate 0.000 [0.00]
+step  69500 loss 3.4291 lr 6.82e-04 gn 0.79 150,906 tok/s mem 2.7GB rate 0.000 [0.00]
+step  70000 loss 3.4671 lr 6.74e-04 gn 0.75 151,343 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 70000 val_loss 3.5055
+   >> Once upon a time|, if we might be able to speak of that, we would not speak of that, and will not let the truth be doubted. I, who are at present, would not think, to think of it, so much as to think of this as a fairy tale, and think that, in the first case, we shall leave it to your own mind to tell of an engagement. I have not the slightest doubt that you and I are going to fight that, but rather to turn the battle that we do, to our country. /  / _November 4_th
+   >> Lily wanted to go to the park, but| they didn't know. /  / At midnight they were all still. After some time the party were all at home. They all went away, but it was only a passing day and they were going to the park. The train was just about to be built here. They were waiting for the train, they were expecting the train. No passenger could go, she went to and fro, but they were coming in by the train to see if the train was in the park. The train was to go, but the train was to go to the patch and stop. There
+   >> The little dog was sad because| she was in love with her. She seemed to be an easy prey to me. I knew that the one was always a girl of your blood-creating and gentle disposition would be as hard to go off as she had been in her past life. The very same kind of affection she had for her. But the little dog had been like two of the others. I never saw any such thing before, for she had been the one who first got into trouble. /  / I knew, my dear, that it will always be a trifle like our little dog. But, poor little
+step  70500 loss 3.3376 lr 6.65e-04 gn 0.79 156,453 tok/s mem 2.7GB rate 0.000 [0.00]
+step  71000 loss 3.7161 lr 6.57e-04 gn 0.80 157,997 tok/s mem 2.7GB rate 0.000 [0.00]
+step  71500 loss 3.4930 lr 6.48e-04 gn 0.81 157,307 tok/s mem 2.7GB rate 0.000 [0.00]
+step  72000 loss 3.4881 lr 6.40e-04 gn 0.95 154,268 tok/s mem 2.7GB rate 0.000 [0.00]
+step  72500 loss 3.3146 lr 6.31e-04 gn 0.84 151,224 tok/s mem 2.7GB rate 0.000 [0.00]
+step  73000 loss 3.3108 lr 6.23e-04 gn 0.89 150,965 tok/s mem 2.7GB rate 0.000 [0.00]
+step  73500 loss 3.3506 lr 6.15e-04 gn 0.77 151,100 tok/s mem 2.7GB rate 0.000 [0.00]
+step  74000 loss 3.4792 lr 6.06e-04 gn 0.92 152,855 tok/s mem 2.7GB rate 0.000 [0.00]
+step  74500 loss 3.3179 lr 5.98e-04 gn 0.97 153,872 tok/s mem 2.7GB rate 0.000 [0.00]
+step  75000 loss 3.3012 lr 5.90e-04 gn 0.79 153,760 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 75000 val_loss 3.4766
+   >> Once upon a time| she had seen so many of the crowd. Here was a certain and a certain pleasure and a certain grace, which, a little while ago, she had often made. She was an intimate friend of the people who had come to see her, and might even make her acquaintance, for she was one of the worst of men, and one who should know how to be in love with her. /  / The young woman, who was as well as the young woman whom she had seen, was a very kind-hearted and attentive girl, and she was a good deal of a very
+   >> Lily wanted to go to the park, but| the little house in the centre was more or less dirty, and I was almost equally sure it was full of sand. I am sure it is better to have the park so many times the day than to have the park so close to the park, so that the park will not be over seven miles and an half a hour higher. /  / But I do not know that the park is a great deal more or less important that such a man should live in there. I thought it was easy to find a very small place of rest and comfort when a large house was
+   >> The little dog was sad because| he was so afraid. His head was a little hard, and he could not stand the hum of the old lady's voice, and she was the only one who was afraid to go to the gate. He could see both her and a child, and he might not be sure of the truth, and if he had not come, and asked her what he was doing, it was as usual. /  / She was just as angry as a child, and as fierce as a pilot. He was afraid to go about the court; and he had a look at the little dog, and
+step  75500 loss 3.3824 lr 5.82e-04 gn 0.84 153,375 tok/s mem 2.7GB rate 0.000 [0.00]
+step  76000 loss 3.2615 lr 5.74e-04 gn 0.95 153,259 tok/s mem 2.7GB rate 0.000 [0.00]
+step  76500 loss 3.2527 lr 5.66e-04 gn 0.87 153,345 tok/s mem 2.7GB rate 0.000 [0.00]
+step  77000 loss 3.2349 lr 5.58e-04 gn 0.93 153,647 tok/s mem 2.7GB rate 0.000 [0.00]
+step  77500 loss 3.7909 lr 5.50e-04 gn 0.89 153,249 tok/s mem 2.7GB rate 0.000 [0.00]
+step  78000 loss 3.2082 lr 5.42e-04 gn 0.98 153,704 tok/s mem 2.7GB rate 0.000 [0.00]
+step  78500 loss 3.3669 lr 5.34e-04 gn 0.86 153,855 tok/s mem 2.7GB rate 0.000 [0.00]
+step  79000 loss 3.4116 lr 5.26e-04 gn 0.84 152,159 tok/s mem 2.7GB rate 0.000 [0.00]
+step  79500 loss 3.2220 lr 5.18e-04 gn 0.88 151,301 tok/s mem 2.7GB rate 0.000 [0.00]
+step  80000 loss 3.1736 lr 5.10e-04 gn 1.01 157,518 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 80000 val_loss 3.4457
+   >> Once upon a time|, the sun had now risen and the moon shone. /  / Then he began her searching journey. The wildest thought, the most wildest, the most brilliant of all in the world, was in him; he had no desire to see the world. He took a book in his hand. It was the book of his, the book of the world, and he read it. He read it before the book, and he read it now, with his eyes on the book, and his arms on his breast. His eyes were shining, with their bright red teeth. His eyes
+   >> Lily wanted to go to the park, but| the trains were in the woods, and the countryside was the same--the way that they arrived. And the trees grew softer, and the grass grew thicker by the water, that the water was almost black. It was only when the people had gone out over the water, and they were very tired, that the sun was almost ready to drop in, that the sun was quite high, and the air was softer. The trees had been very low, and in the summer the trees had been more hard for the morning. As they grew more thick, and grew more and
+   >> The little dog was sad because| it was on his side. /  / "They will do that, too," said Lilly. "It is impossible to keep you from being as quiet as you are now." /  / "Do you know, my dear child, I am tired of your little boy, and it is very difficult to bear the sad burden, the burden of your boy's lot. So there is the most ungrateful, the most miserable thing that can be told about. I am not surprised to see this poor boy's eyes look out over the world; and the very last words I have said are
+step  80500 loss 3.2707 lr 5.03e-04 gn 0.90 159,894 tok/s mem 2.7GB rate 0.000 [0.00]
+step  81000 loss 3.3081 lr 4.95e-04 gn 0.97 156,985 tok/s mem 2.7GB rate 0.000 [0.00]
+step  81500 loss 3.4342 lr 4.88e-04 gn 0.98 158,473 tok/s mem 2.7GB rate 0.000 [0.00]
+step  82000 loss 3.4000 lr 4.80e-04 gn 0.94 159,826 tok/s mem 2.7GB rate 0.000 [0.00]
+step  82500 loss 3.1446 lr 4.73e-04 gn 1.20 157,123 tok/s mem 2.7GB rate 0.000 [0.00]
+step  83000 loss 2.5486 lr 4.65e-04 gn 1.06 157,559 tok/s mem 2.7GB rate 0.000 [0.00]
+step  83500 loss 3.2735 lr 4.58e-04 gn 0.96 158,003 tok/s mem 2.7GB rate 0.000 [0.00]
+step  84000 loss 3.0143 lr 4.50e-04 gn 1.08 159,677 tok/s mem 2.7GB rate 0.000 [0.00]
+step  84500 loss 3.4620 lr 4.43e-04 gn 0.97 160,676 tok/s mem 2.7GB rate 0.000 [0.00]
+step  85000 loss 3.1598 lr 4.36e-04 gn 1.03 154,911 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 85000 val_loss 3.4197
+   >> Once upon a time|; I know of her who gave her this letter, and how the time passed and the time brought her here. She had a sister; and the next day I came home, and was just about when I was coming out of the parish, when I came in, and I saw the place again, and I looked at the poor little fellow, and saw the poor fellow's face, and the fear of his wife's being dead. Oh, I knew she was dying, and the sight of her, and the sight of her, and the fear of her being buried, and the fear
+   >> Lily wanted to go to the park, but| one day he went home, and that was so much harder than he had expected. He had been to the barnyard for a while, and had gone away to the barnyard with the money, and he came back. It was a long time before he had time to stay near him; but the rest of that summer a little later he used to go with him, and the rest of the year he had used to go home. He came back to his cousin's house, and it was only when he had left home he could find no one else. He had come into
+   >> The little dog was sad because| his head was so bad, and he went away. /  / "Don't you try to get on with your dog," said I, "I'll pull you in." /  / "Yes, but I'll try to get over if you want to." /  / "Yes, sir;" and Mr. Belton shook his head. /  / "Well, you'll help me," said I. "I'll give you a great deal of money, for you've got to take one as a whole on a dog. I'll take it right away, and you can't do anything
+step  85500 loss 3.2100 lr 4.29e-04 gn 0.94 161,168 tok/s mem 2.7GB rate 0.000 [0.00]
+step  86000 loss 3.0881 lr 4.22e-04 gn 0.93 154,189 tok/s mem 2.7GB rate 0.000 [0.00]
+step  86500 loss 3.2549 lr 4.15e-04 gn 0.94 151,775 tok/s mem 2.7GB rate 0.000 [0.00]
+step  87000 loss 3.4073 lr 4.08e-04 gn 0.99 152,120 tok/s mem 2.7GB rate 0.000 [0.00]
+step  87500 loss 3.5623 lr 4.01e-04 gn 1.06 151,966 tok/s mem 2.7GB rate 0.000 [0.00]
+step  88000 loss 2.9865 lr 3.94e-04 gn 0.97 151,989 tok/s mem 2.7GB rate 0.000 [0.00]
+step  88500 loss 3.3138 lr 3.88e-04 gn 1.01 152,298 tok/s mem 2.7GB rate 0.000 [0.00]
+step  89000 loss 3.0803 lr 3.81e-04 gn 0.96 159,162 tok/s mem 2.7GB rate 0.000 [0.00]
+step  89500 loss 3.3655 lr 3.75e-04 gn 1.00 158,609 tok/s mem 2.7GB rate 0.000 [0.00]
+step  90000 loss 3.4757 lr 3.68e-04 gn 0.97 159,518 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 90000 val_loss 3.3883
+   >> Once upon a time|, but for no pains, for the sake of others, and of the world, she will have to end her days in one of her _favourite_ days. /  / Life was the same as that of the first man in the world, and she would have been a child. She had a heart so full of love, and she had some, but did not give him an opportunity to learn it. /  / "The world's a _waiter's_ story," said she, as soon as she had obtained a little house, "and not a _w
+   >> Lily wanted to go to the park, but| it was too late. The wind was falling, and, as she was beginning to get used to it, she was not so happy as she had been before. It was a kind of lullet of voices, and she had been so glad to come under water, and she had to tell of it to Mrs. Carrall. The push seemed like that at a time when a great deal of trouble should come to hand. /  / "What ails you, my dear? Look at those cakes--him? What have you got?" /  / "Oh, Mr
+   >> The little dog was sad because| of her weakness. /  / "Are you sure you are not a little child?" he said. "Do you know that I am not a child of yours?" /  / "No," said Mr. Woolman. "I will not tell you any more. I am not so happy as I was when I was a child. I have my mother and my grandfather. I am not so happy as I am. I have nothing to do with you." /  / "You are not the same people," said Mrs. Woolman. "What does it matter to you?" / 
+step  90500 loss 3.1547 lr 3.62e-04 gn 1.02 162,012 tok/s mem 2.7GB rate 0.000 [0.00]
+step  91000 loss 3.1857 lr 3.55e-04 gn 1.08 159,315 tok/s mem 2.7GB rate 0.000 [0.00]
+step  91500 loss 3.2481 lr 3.49e-04 gn 1.05 158,239 tok/s mem 2.7GB rate 0.000 [0.00]
+step  92000 loss 3.2486 lr 3.43e-04 gn 1.08 153,203 tok/s mem 2.7GB rate 0.000 [0.00]
+step  92500 loss 3.3965 lr 3.37e-04 gn 1.14 151,181 tok/s mem 2.7GB rate 0.000 [0.00]
+step  93000 loss 3.1338 lr 3.31e-04 gn 1.05 151,446 tok/s mem 2.7GB rate 0.000 [0.00]
+step  93500 loss 3.0732 lr 3.25e-04 gn 1.03 151,434 tok/s mem 2.7GB rate 0.000 [0.00]
+step  94000 loss 3.2471 lr 3.19e-04 gn 1.14 151,376 tok/s mem 2.7GB rate 0.000 [0.00]
+step  94500 loss 3.3865 lr 3.14e-04 gn 1.17 151,246 tok/s mem 2.7GB rate 0.000 [0.00]
+step  95000 loss 3.2106 lr 3.08e-04 gn 1.56 151,097 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 95000 val_loss 3.3644
+   >> Once upon a time| of drought. The time of drainage, which had been but a short half of the year, had now been, and was now growing hotter. The country was still a very dense place, and as the morning wore on, the first light of dawn and the early dawn, it seemed a day of terrible desolation. The dawn had long been blighted, but still there was a new moon and a new moon. A faint light as it was faded up to his eyes, as from the very top of his head, and he had never seen the sunr
+   >> Lily wanted to go to the park, but| the time was not yet drawing so near. The fiction of the thing was a matter of surprise to her. /  / "Well, I must be here at twelve, for I suppose, I suppose? Well, what's that?" /  / "Mamma, it's a fine fiction, but I don't think I understand it," laughed the girl, who, indeed, had the right to believe that she had known that a man of the world could be so much easier to the mind of a young man than she did herself. /  / "It's a good thing
+   >> The little dog was sad because| he did not like it, and he was so sorry, it was so long since he had known his father. He was so sick and trembling that he looked very pale and tired, but a great many people were so frightened. Poor little Egbert saw these people, and all the more he said to himself, "I have often been trying to make a good boy's health." He was so cross and patient and kind that he had a little sense that he had never been better. He told his father that he had never been too much out of his life. He was so young
+step  95500 loss 3.1794 lr 3.02e-04 gn 1.20 151,602 tok/s mem 2.7GB rate 0.000 [0.00]
+step  96000 loss 3.6136 lr 2.97e-04 gn 1.11 151,493 tok/s mem 2.7GB rate 0.000 [0.00]
+step  96500 loss 3.3460 lr 2.91e-04 gn 1.07 151,674 tok/s mem 2.7GB rate 0.000 [0.00]
+step  97000 loss 3.1739 lr 2.86e-04 gn 1.08 151,422 tok/s mem 2.7GB rate 0.000 [0.00]
+step  97500 loss 3.1637 lr 2.81e-04 gn 1.06 151,328 tok/s mem 2.7GB rate 0.000 [0.00]
+step  98000 loss 3.3718 lr 2.76e-04 gn 1.11 151,266 tok/s mem 2.7GB rate 0.000 [0.00]
+step  98500 loss 3.3002 lr 2.71e-04 gn 1.07 151,555 tok/s mem 2.7GB rate 0.000 [0.00]
+step  99000 loss 3.1023 lr 2.66e-04 gn 1.71 151,400 tok/s mem 2.7GB rate 0.000 [0.00]
+step  99500 loss 3.4712 lr 2.61e-04 gn 1.13 151,376 tok/s mem 2.7GB rate 0.000 [0.00]
+step 100000 loss 3.4728 lr 2.56e-04 gn 1.14 151,424 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 100000 val_loss 3.3319
+   >> Once upon a time|, and had, with a short confession of "supportune" to the Lords. A "scene" sent to Lord Baker's for the same purpose as "a great gentleman," but was, doubtless, quite enough. /  / The Lady Anne's first thought was to get by the side of the barony. Lady Anne, in the midst of the "scene," called her "Crowday," which was afterwards called "Sharpfield," and was now in the parlance of the "Hammond-Cook" at Balli
+   >> Lily wanted to go to the park, but| it would be no use. /  / "So long, dear," said the old man, "did I not take the park, and see that I went away? I thought I'd get out of it all right. I wonder I didn't go to the park, too, though I wasn't going to take the park. I didn't say anything about it. I had to go home, and I thought I'd never go home again." /  / "I'm sure you don't mean it," said Maria. /  / "We ought to have gone home
+   >> The little dog was sad because| she looked so pale and the little dog was a sight more beautiful than that of the little dog. It stood beside the little dog, and she smiled at him and said, "Ah! this is a pretty child!" with a little little little sigh; then she said, "Guardian Ruby will take me to the Cathedral. Ah! it is so sad!" And as he spoke, and made all the little knocks in the little room, the little dog came up from his room, and said, "Oh, I am so glad to see it!
+step 100500 loss 3.0802 lr 2.52e-04 gn 1.05 151,477 tok/s mem 2.7GB rate 0.000 [0.00]
+step 101000 loss 3.3655 lr 2.47e-04 gn 1.22 151,546 tok/s mem 2.7GB rate 0.000 [0.00]
+step 101500 loss 3.3073 lr 2.43e-04 gn 1.13 151,776 tok/s mem 2.7GB rate 0.000 [0.00]
+step 102000 loss 3.5041 lr 2.38e-04 gn 1.20 151,364 tok/s mem 2.7GB rate 0.000 [0.00]
+step 102500 loss 3.1664 lr 2.34e-04 gn 1.16 151,270 tok/s mem 2.7GB rate 0.000 [0.00]
+step 103000 loss 3.2171 lr 2.30e-04 gn 1.16 151,535 tok/s mem 2.7GB rate 0.000 [0.00]
+step 103500 loss 3.0760 lr 2.26e-04 gn 1.16 151,634 tok/s mem 2.7GB rate 0.000 [0.00]
+step 104000 loss 3.3634 lr 2.22e-04 gn 1.28 158,311 tok/s mem 2.7GB rate 0.000 [0.00]
+step 104500 loss 3.1788 lr 2.18e-04 gn 1.23 158,016 tok/s mem 2.7GB rate 0.000 [0.00]
+step 105000 loss 3.1716 lr 2.14e-04 gn 1.22 160,660 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 105000 val_loss 3.3126
+   >> Once upon a time| when the old lady was about to marry her, and her mother had never been near her with any sense of the beauties to be met with in the life of her to whom she had been so long attached, the youngest son had only just landed upon the spot. There was then to be seen the grandmother, who, with her high-priestly, handsome hair, with a face which showed its rich, golden, blue eyes, and a curling, white nose, and a fair complexion that spoke, not of the world, but only of the world. /  / 
+   >> Lily wanted to go to the park, but| her only reply was to ask him: /  / "What, my dear?" /  / "It's not easy; I have always been a little afraid of you, but you are an angel." /  / The two brothers sat very erect in the shade, and the one on the right was the most lovely girl in the world. Her brow was dark and hard, and her eyes were full of tears. /  / "She is my brother," she said, eagerly. "He has told me that they are all well, and that I am the youngest and best friend on that great
+   >> The little dog was sad because| it was only a long time ago, and I knew that the little dog was really a long time in the woods and was waiting for news of him, and was waiting till he was out of sight. /  / Then I heard them talking. /  / I remembered that I was standing on the bank in front of the house, talking to the pretty little dog, and I knew I had come to stay while I was making the little dog drink and play. /  / They all talked to each other. /  / I went and sat on my knee and stared at them so long that I knew they
+step 105500 loss 3.1936 lr 2.11e-04 gn 1.23 165,476 tok/s mem 2.7GB rate 0.000 [0.00]
+step 106000 loss 3.1675 lr 2.07e-04 gn 1.44 152,628 tok/s mem 2.7GB rate 0.000 [0.00]
+step 106500 loss 3.1567 lr 2.03e-04 gn 1.28 152,082 tok/s mem 2.7GB rate 0.000 [0.00]
+step 107000 loss 3.0835 lr 2.00e-04 gn 1.19 160,308 tok/s mem 2.7GB rate 0.000 [0.00]
+step 107500 loss 3.2180 lr 1.97e-04 gn 1.22 155,192 tok/s mem 2.7GB rate 0.000 [0.00]
+step 108000 loss 3.2615 lr 1.94e-04 gn 1.25 152,021 tok/s mem 2.7GB rate 0.000 [0.00]
+step 108500 loss 3.2080 lr 1.91e-04 gn 1.17 152,116 tok/s mem 2.7GB rate 0.000 [0.00]
+step 109000 loss 3.0722 lr 1.88e-04 gn 1.63 152,238 tok/s mem 2.7GB rate 0.000 [0.00]
+step 109500 loss 3.3052 lr 1.85e-04 gn 1.24 152,041 tok/s mem 2.7GB rate 0.000 [0.00]
+step 110000 loss 2.9836 lr 1.82e-04 gn 1.32 152,215 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 110000 val_loss 3.2885
+   >> Once upon a time|. “Tell us now what you are to do.” /  / “Tell us how to get out of this trouble.” /  / “Well,” said Olga and Randolph, “I can’t go on very fast yet. I wouldn’t like to let you. Come on and tell us what you mean by asking me to come and say that I haven’t forgotten the one I lost.” /  / “Yes, I guess I will. You can see the reason why I didn’t make such a mistake.” /  / “
+   >> Lily wanted to go to the park, but| a fine walk she was, for she was well-dressed, and had a good many beautiful things. She had three children--she was very quiet and pretty, and had a pretty face, and a nice little face that stood there so still so long. She had a big, dark eyes, and a great, big, heavy, heavy forehead. /  / 'I thought I had had a little time of it, but I was so tired, so tired that I was almost afraid--but I wanted to sit up for a little while. She was so pretty and pretty, and she
+   >> The little dog was sad because| he was in trouble. At the first sight he was pale and worn-out--and his eyes were wet. /  / "My dear, you are going to say a little, and you will say something about that," said he once more, half to himself. "As I tell you, it is easier for us to stay longer than we are. I have promised to come, and I will be so much more careful. We must not talk thus. The little dog is dead--and you have lost his life because it was just what you had to take. But if you do
+step 110500 loss 3.1981 lr 1.80e-04 gn 1.25 161,066 tok/s mem 2.7GB rate 0.000 [0.00]
+step 111000 loss 3.1923 lr 1.77e-04 gn 1.33 162,055 tok/s mem 2.7GB rate 0.000 [0.00]
+step 111500 loss 2.4897 lr 1.75e-04 gn 1.24 159,611 tok/s mem 2.7GB rate 0.000 [0.00]
+step 112000 loss 3.3449 lr 1.72e-04 gn 1.28 152,845 tok/s mem 2.7GB rate 0.000 [0.00]
+step 112500 loss 2.9077 lr 1.70e-04 gn 2.05 158,336 tok/s mem 2.7GB rate 0.000 [0.00]
+step 113000 loss 3.1586 lr 1.68e-04 gn 1.31 152,755 tok/s mem 2.7GB rate 0.000 [0.00]
+step 113500 loss 3.2093 lr 1.66e-04 gn 1.40 152,772 tok/s mem 2.7GB rate 0.000 [0.00]
+step 114000 loss 3.0301 lr 1.64e-04 gn 1.30 152,720 tok/s mem 2.7GB rate 0.000 [0.00]
+step 114500 loss 3.1753 lr 1.63e-04 gn 1.22 152,635 tok/s mem 2.7GB rate 0.000 [0.00]
+step 115000 loss 3.5318 lr 1.61e-04 gn 1.30 153,769 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 115000 val_loss 3.2685
+   >> Once upon a time| the little child, who had long been his favorite, would not have let himself into her arms, but for the love of that poor creature whom he loved. /  / Then was the sweet home-like girl to him who had never seen him as a child. This was the young man who had found in his heart the happiness of having given her his love. /  / However, when she heard the little girl coming down from the church, and her face lightening with the joy of being there, she began to cry for joy. /  / When the child had taken his love for this
+   >> Lily wanted to go to the park, but| on that, the next morning, when there was no carriage, she went out to the park, and had just arrived at the station. /  / The air, that was like a dream to her, was a little one to her, as if it might never be realized, but it grew and grew so and grew so and so. It was easy to see her and to see what she was doing, and to see how she was looking, and how she was looking, and how she was looking. If she was looking, she would be glad to see what she did. The next
+   >> The little dog was sad because| he knew it was there, so, to his great regret, he sent him back to the house and told the children to go. /  / "Go down to the house and put some things in the kitchen," he said, and they went down on the piano. When the little dog was going out to the house he told the boys to go, for he had no mind to go to the house, because he would be there to find the children and to get a good outfit the little dog had taken to the house and put some things in the kitchen, and the dogs
+step 115500 loss 2.8205 lr 1.60e-04 gn 1.31 153,681 tok/s mem 2.7GB rate 0.000 [0.00]
+step 116000 loss 3.0055 lr 1.58e-04 gn 1.31 153,428 tok/s mem 2.7GB rate 0.000 [0.00]
+step 116500 loss 3.2073 lr 1.57e-04 gn 1.25 156,629 tok/s mem 2.7GB rate 0.000 [0.00]
+step 117000 loss 3.0397 lr 1.56e-04 gn 1.51 154,548 tok/s mem 2.7GB rate 0.000 [0.00]
+step 117500 loss 3.3359 lr 1.55e-04 gn 1.32 156,670 tok/s mem 2.7GB rate 0.000 [0.00]
+step 118000 loss 3.3109 lr 1.54e-04 gn 1.35 161,304 tok/s mem 2.7GB rate 0.000 [0.00]
+step 118500 loss 3.0415 lr 1.53e-04 gn 1.31 162,168 tok/s mem 2.7GB rate 0.000 [0.00]
+step 119000 loss 3.0245 lr 1.52e-04 gn 1.37 160,934 tok/s mem 2.7GB rate 0.000 [0.00]
+step 119500 loss 3.1690 lr 1.51e-04 gn 1.34 160,588 tok/s mem 2.7GB rate 0.000 [0.00]
+step 120000 loss 3.1864 lr 1.51e-04 gn 1.46 165,663 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 120000 val_loss 3.2633
+   >> Once upon a time|! /  / "And the lassie, poor dear, too awfully tired and lonely, and so tired and hungry, and all the things in the room, and all the things and all the things in the room. Oh, how thankful! How _live_ to have been brought up so early! I was so long asleep! Oh, how glad I was to have had my little room! I feel as though I had been taken away by the thought of the awful old city. Oh, how glad I was to have you there! And I never have _not_
+   >> Lily wanted to go to the park, but| now she was not there. /  / "No, dear, I don't want you to go," she said. /  / "Oh, no, dear, dear!" said Polly, with a burst of tears. /  / "Why, dear," she said, "what a sweet little thing she was when she came from the other side to-day! And I'm going to say that I want you to go to my house to-morrow, and come to-morrow." /  / "Oh, dear," said Polly, "I want you to go to-morrow:
+   >> The little dog was sad because| her mother called him names, and knew how to write his letters. The little dog was in the parish churchyard, and saw the man in his own mind. The little dog had no other thought than to make his little dog grow. /  / Poor little dog! The little dog had no heart to take him away. He had no wish for life, and yet, even in this dull place, he had no need of his heart. His mother's love was cold, but she knew that she had been wronged, and only knew that she had been wronged, and that
+step 120500 loss 2.7485 lr 1.51e-04 gn 1.47 163,662 tok/s mem 2.7GB rate 0.000 [0.00]
+step 121000 loss 3.2167 lr 1.50e-04 gn 1.41 165,028 tok/s mem 2.7GB rate 0.000 [0.00]
+step 121500 loss 3.2533 lr 1.50e-04 gn 1.47 164,145 tok/s mem 2.7GB rate 0.000 [0.00]
+step 122000 loss 3.0536 lr 1.50e-04 gn 1.30 152,577 tok/s mem 2.7GB rate 0.000 [0.00]
+== eval step 122000 val_loss 3.2628
+   >> Once upon a time|, a man named Rubens. /  / JOHN CRESSING. /  / I never saw or heard of another; I never saw or heard of one. /  / JOHN CRESSING. /  / I never saw or heard of one. /  / JOHN CRESSING. /  / I had no time to study anything and I never had any time. I kept on reading. /  / JOHN CRESSING. /  / I never knew one who was not good enough to know another. I never heard, or heard, or heard him. I
+   >> Lily wanted to go to the park, but| when she had gone to the window she felt inclined. She looked round the house and asked if she might get into the carriage if it was there. /  / "No, it was not there, but it was there," answered my sister; "and, as I was quite alone, you will be able to get into the carriage." /  / "I can manage everything," I replied, "if I want to get into the carriage." /  / The Pole looked at the boy. "How can I take you?" he asked, "if you want to carry me? Oh, sir
+   >> The little dog was sad because| he had never been in the world. It was a strange and strange story. /  / "But if I didn't have to go back to a place where I could stay and make a long fight for the world, I should have been at the expense of a lot of poor people. I should have been with them now, and if I'd been with them I should have been with them now, and be here to work all day." /  / And he would have been with them if he had not been at the table with the two friends. It was not a little mysterious and weird
