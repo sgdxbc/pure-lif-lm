@@ -53,8 +53,9 @@ def slow_neuron_stats(model, arr, S):
     with torch.autocast(DEV.type, dtype=torch.bfloat16):
         _, _, _, spikes = model(x, return_spikes=True)
     gaps, never, rates, frac_slow = [], [], [], []
+    T = model.cfg.steps_per_token   # spikes come per simulation step; time constants and gaps are reported in tokens
     for layer, s in zip(model.layers, spikes):
-        tau = -1.0 / torch.log(layer.beta().detach().clamp(1e-6, 1 - 1e-6))
+        tau = -1.0 / torch.log(layer.beta().detach().clamp(1e-6, 1 - 1e-6)) / T
         slow = tau > 50
         frac_slow.append(slow.float().mean().item())
         ss = s[:, :, slow].float()
@@ -63,7 +64,7 @@ def slow_neuron_stats(model, arr, S):
         for row in ss.permute(0, 2, 1).reshape(-1, ss.size(1)).cpu().numpy():
             t = np.flatnonzero(row)
             if len(t) > 1:
-                gaps.append(np.diff(t))
+                gaps.append(np.diff(t) / T)
     g = np.concatenate(gaps) if gaps else np.array([np.nan])
     res = {"share_slow": float(np.mean(frac_slow)), "slow_rate": float(np.mean(rates)),
            "slow_never_fire": float(np.mean(never)), "slow_gap_median": float(np.median(g)),

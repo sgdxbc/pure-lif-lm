@@ -33,6 +33,11 @@ Optional (delay_k > 0): delayed synapses. Spikes also reach the population throu
            through what is left of the earlier input in its own decaying potential. D_lk = Q_l P_lk is
            low-rank (P_lk: delay_rank x d_model per delay, Q_l shared), Q_l starts at zero.
            For streaming, the last delay_k values of P_lk bus_l are carried along with the potentials.
+Optional (steps_per_token = T > 1): every token is shown for T simulation steps instead of one. Its input neuron
+           fires at each of the T steps, the populations run T steps (so a neuron can fire up to T times per token),
+           and the readout neurons integrate the bus over the T steps without leaking and are read and cleared at the
+           end of the token: logits[t] = W_head mean_tau bus_L[t, tau]. Time constants are initialised T times longer
+           in steps, i.e. the same in tokens. Costs T times the neuron steps per token; adds no parameters.
 """
 import math
 from dataclasses import dataclass, asdict
@@ -71,6 +76,7 @@ class Config:
     leak_rank: int = 0        # >0: low-rank leak-modulating synapses (see module docstring)
     delay_k: int = 0          # >0: delayed synapses with delays 1..delay_k tokens (see module docstring)
     delay_rank: int = 64      # rank of each delay's synapse matrix
+    steps_per_token: int = 1  # >1: simulation steps per token (see module docstring)
 
 
 class LIFPopulation(nn.Module):
@@ -80,7 +86,8 @@ class LIFPopulation(nn.Module):
         H, d = cfg.d_hidden, cfg.d_model
         self.w_in = nn.Linear(d, H, bias=True)
         self.w_out = nn.Linear(H, d, bias=False)
-        log_tau = torch.empty(H).uniform_(math.log(cfg.tau_min), math.log(cfg.tau_max))
+        T = cfg.steps_per_token   # tau_min / tau_max are in tokens; beta is per simulation step
+        log_tau = torch.empty(H).uniform_(math.log(cfg.tau_min * T), math.log(cfg.tau_max * T))
         beta = torch.exp(-1.0 / log_tau.exp())
         self.beta_logit = nn.Parameter(torch.logit(beta), requires_grad=cfg.learn_beta)
         theta0 = torch.ones(H)
@@ -165,6 +172,7 @@ class SpikingLM(nn.Module):
     def __init__(self, cfg: Config):
         super().__init__()
         self.cfg = cfg
+        assert cfg.steps_per_token == 1 or cfg.delay_k == 0, "delays are counted in tokens; not combined with T > 1"
         self.embed = nn.Embedding(cfg.vocab, cfg.d_model)
         nn.init.normal_(self.embed.weight, std=1.0)
         self.layers = nn.ModuleList([LIFPopulation(cfg) for _ in range(cfg.n_layers)])
@@ -173,8 +181,12 @@ class SpikingLM(nn.Module):
 
     def forward(self, idx, targets=None, state=None, return_spikes=False):
         """idx: (B, L) token ids. state: per-layer (membrane potentials, last spikes) or None (at rest).
-        Returns logits, loss, new_state, and per-layer firing rates (or spike tensors)."""
+        Returns logits, loss, new_state, and per-layer firing rates (or spike tensors, (B, L*T, H) with
+        T = steps_per_token)."""
+        T = self.cfg.steps_per_token
         bus = self.embed(idx)
+        if T > 1:   # each token is shown for T steps: its input neuron fires at every one of them
+            bus = bus.repeat_interleave(T, dim=1)
         new_state, rates, spikes = [], [], []
         for i, layer in enumerate(self.layers):
             out, s, layer_state = layer(bus, None if state is None else state[i])
@@ -183,6 +195,8 @@ class SpikingLM(nn.Module):
             rates.append(s.detach().mean())
             if return_spikes:
                 spikes.append(s.detach())
+        if T > 1:   # readout neurons integrate over the token's T steps, then are read and cleared
+            bus = bus.view(bus.size(0), -1, T, bus.size(-1)).mean(2)
         logits = self.head(bus)
         loss = None
         if targets is not None:
