@@ -1,0 +1,18 @@
+xgph15 NVIDIA A100 80GB PCIe | runs/g5_wide2x_lr8e-4 | --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 256 --steps 67000 --warmup 300 --eval_every 5000 --eval_batches 40 --log_every 500 --d_model 512 --d_hidden 8192 --n_layers 12 --leak_rank 128 --lr 8e-4
+params 118.62M, LIF neurons 98,304, train tokens 552M, tokens/step 8,192
+== eval step 5000 val_loss 2.0317
+== eval step 10000 val_loss 1.9076
+== eval step 15000 val_loss 1.8312
+== eval step 20000 val_loss 1.7710
+== eval step 25000 val_loss 1.7131
+== eval step 30000 val_loss 1.6617
+== eval step 35000 val_loss 1.6119
+== eval step 40000 val_loss 1.5646
+== eval step 45000 val_loss 1.5256
+== eval step 50000 val_loss 1.4853
+== eval step 55000 val_loss 1.4560
+== eval step 60000 val_loss 1.4320
+== eval step 65000 val_loss 1.4194
+== eval step 67000 val_loss 1.4161
+ "val_loss": 1.4161064733118667,
+done Sun Nov 15 12:58:17 PM +08 2026
