@@ -59,3 +59,8 @@
   running instead of relying on them.
 - The cluster session runs on a compute node inside an interactive SLURM job (partition `long`, 3-day limit,
   started 2026-11-14), because the login node kept killing it; how to restart it is in slurm/notes.txt.
+  On 2026-11-14 22:06 UTC its Claude process died anyway (the interactive job on xcnc9 kept running, empty), and
+  nothing was committed for 4.5 h. `claude remote-control -c` then said no recent session was found; plain
+  `claude remote-control` (on xcnc28) reattached the old session with its context and queued messages, and also
+  opened an empty new one, which is not used. If the cluster goes quiet for much longer than a wave should take,
+  check the session with get_session (connection_status) and ask the owner to restart it.
