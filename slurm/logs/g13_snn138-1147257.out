@@ -1,0 +1,3 @@
+queued the next part of runs/g13_snn138: job 1147261
+xgpi11 NVIDIA H100 NVL | runs/g13_snn138 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 76300 --warmup 1000 --eval_every 5000 --eval_batches 40 --log_every 500 --ema 0.999 --neuron_lr_mult 10 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --lr 6e-4
+[2026-11-16T04:45:19.988] error: *** JOB 1147257 ON xgpi11 CANCELLED AT 2026-11-16T04:45:19 DUE TO TIME LIMIT ***
