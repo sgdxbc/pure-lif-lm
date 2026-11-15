@@ -1,0 +1,11 @@
+/var/lib/slurm/slurmd/job1145261/slurm_script: 4: source: not found
+xgpi11
+NVIDIA H100 NVL
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/train.py", line 18, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/train.py", line 18, in <module>
+    import torch
+ModuleNotFoundError: No module named 'torch'
