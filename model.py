@@ -180,23 +180,40 @@ def plastic_scan(q, k, v, log_lam, S0=None, chunk=128):
     per step; S0: (B, h, m, dv) synapses before the first position, or None (all zero). Returns
         r[t] = sum_{s<=t} lam^(t-s) (q[t] . k[s]) v[s] + lam^(t+1) S0^T q[t]        (B, h, L, dv)
     and the synapses after the last position, S[L-1] (B, h, m, dv; float32). Chunks of `chunk` positions: within a
-    chunk all pairs at once, between chunks through S (the same result as stepping S[t] = lam S[t-1] + k[t] v[t]^T)."""
+    chunk all pairs at once, between chunks through S (the same result as stepping S[t] = lam S[t-1] + k[t] v[t]^T).
+    All chunks are computed together (one batched product each for the pairs within chunks, the chunks' writes and the
+    reads of the earlier chunks); only the synapses at the chunk boundaries are stepped one chunk at a time. On an H100
+    this is 2.75x faster than looping over the chunks, with the same result (experiments/bench_scan.py, 5.32)."""
     B, h, L, m = q.shape
-    S = q.new_zeros(B, h, m, v.size(-1), dtype=torch.float32) if S0 is None else S0.float()
-    ll = log_lam.float().view(1, h, 1, 1)
-    out = []
-    for a in range(0, L, chunk):
-        qc, kc, vc = q[:, :, a:a + chunk], k[:, :, a:a + chunk], v[:, :, a:a + chunk]
-        n = qc.size(2)
-        i = torch.arange(n, device=q.device, dtype=torch.float32)
-        diff = i[:, None] - i[None, :]
-        D = torch.exp(ll * diff.clamp(min=0)) * (diff >= 0)                       # (1, h, n, n): lam^(t-s), s <= t
-        A = (qc @ kc.transpose(-1, -2)) * D.to(qc.dtype)
-        inter = (qc * torch.exp(ll * (i + 1).view(1, 1, n, 1)).to(qc.dtype)) @ S.to(qc.dtype)
-        out.append(A @ vc + inter)
-        w = torch.exp(ll * (n - 1 - i).view(1, 1, n, 1)).to(kc.dtype)           # decay of each write to the chunk end
-        S = torch.exp(ll * n) * S + ((kc * w).transpose(-1, -2) @ vc).float()
-    return torch.cat(out, 2), S
+    dv = v.size(-1)
+    C = min(chunk, L)
+    nc = -(-L // C)
+    pad = nc * C - L                     # the last chunk is padded with silent positions (q = k = 0, v = 0)
+    if pad:
+        q, k, v = (F.pad(x, (0, 0, 0, pad)) for x in (q, k, v))
+    qc, kc, vc = q.reshape(B, h, nc, C, m), k.reshape(B, h, nc, C, m), v.reshape(B, h, nc, C, dv)
+    dt = qc.dtype
+    ll = log_lam.float().view(1, h, 1, 1, 1)
+    i = torch.arange(C, device=q.device, dtype=torch.float32)
+    diff = i[:, None] - i[None, :]
+    D = torch.exp(ll * diff.clamp(min=0)) * (diff >= 0)                          # (1, h, 1, C, C): lam^(t-s), s <= t
+    out = ((qc @ kc.transpose(-1, -2)) * D.to(dt)) @ vc                         # pairs within each chunk
+    w = torch.exp(ll * (C - 1 - i).view(1, 1, 1, C, 1))                        # decay of each write to its chunk end
+    dS = ((kc * w.to(dt)).transpose(-1, -2) @ vc).float()                       # (B, h, nc, m, dv): each chunk's writes
+    S = q.new_zeros(B, h, m, dv, dtype=torch.float32) if S0 is None else S0.float()
+    lamC = torch.exp(ll[:, :, 0] * C)
+    before = []
+    for c in range(nc):                                                          # synapses before each chunk
+        before.append(S)
+        S = lamC * S + dS[:, :, c]
+    Sb = torch.stack(before, 2)
+    g = torch.exp(ll * (i + 1).view(1, 1, 1, C, 1))                             # decay from the chunk start
+    out = out + (qc * g.to(dt)) @ Sb.to(dt)                                     # reads of the earlier chunks
+    if pad:   # the synapses after the last real position: the last chunk's writes decayed only to that position
+        n = C - pad
+        wl = torch.exp(ll[:, :, 0] * (n - 1 - i).clamp(min=0).view(1, 1, C, 1)) * (i < n).view(1, 1, C, 1)
+        S = torch.exp(ll[:, :, 0] * n) * before[-1] + ((kc[:, :, -1] * wl.to(dt)).transpose(-1, -2) @ vc[:, :, -1]).float()
+    return out.reshape(B, h, nc * C, dv)[:, :, :L], S
 
 
 class PlasticSynapses(nn.Module):
