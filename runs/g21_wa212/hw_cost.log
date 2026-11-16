@@ -1,0 +1,1 @@
+g21_wa212                snn  237.0M  8-bit  237.0 MB  dense MACs  135.3M + sparse adds  2.50M  state 1364.0 KB  MB/token 8-bit: 1 stream  137.4, 16 streams   9.8  (rate 0.048)
