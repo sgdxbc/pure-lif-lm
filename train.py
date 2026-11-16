@@ -58,6 +58,15 @@ def get_args():
     p.add_argument("--steps", type=int, default=2000)
     p.add_argument("--lr", type=float, default=2e-3)
     p.add_argument("--min_lr_frac", type=float, default=0.1)
+    p.add_argument("--schedule", default="cosine", choices=["cosine", "wsd"],
+                   help="cosine: from lr down to min_lr_frac * lr over all steps after the warm-up. wsd (warm-up, "
+                        "stable, decay): lr until the last --decay_steps steps, then down to min_lr_frac * lr as "
+                        "1 - sqrt(progress); a run with more --steps is the same run until its decay starts")
+    p.add_argument("--decay_steps", type=int, default=0, help="wsd: the length of the final decay")
+    p.add_argument("--keep_ckpt", default="", help="comma-separated steps (multiples of --eval_every) at which to "
+                   "keep a copy of the checkpoint, ckpt_step<N>.pt (to branch decays off a wsd run)")
+    p.add_argument("--init_ckpt", default="", help="start from this checkpoint (weights, optimizer, step, EMA) when "
+                   "the run directory has none yet: a decay branch of a wsd run")
     p.add_argument("--warmup", type=int, default=200)
     p.add_argument("--wd", type=float, default=0.1)
     p.add_argument("--neuron_lr_mult", type=float, default=1.0,
@@ -223,6 +232,12 @@ class Optimizers:
 def lr_at(step, a):
     if step < a.warmup:
         return a.lr * (step + 1) / a.warmup
+    if a.schedule == "wsd":
+        start = a.steps - a.decay_steps
+        if step < start:
+            return a.lr
+        prog = min(1.0, (step - start) / max(1, a.decay_steps))
+        return a.lr * (a.min_lr_frac + (1 - a.min_lr_frac) * (1 - math.sqrt(prog)))
     prog = min(1.0, (step - a.warmup) / max(1, a.steps - a.warmup))
     return a.lr * (a.min_lr_frac + (1 - a.min_lr_frac) * 0.5 * (1 + math.cos(math.pi * prog)))
 
@@ -331,16 +346,20 @@ def main():
         print(f"Muon for {len(muon)} matrices ({sum(p.numel() for p in muon) / 1e6:.1f}M weights), AdamW for the rest")
     step = 0
     ckpt_path = os.path.join(a.out, "ckpt.pt")
-    if a.resume and os.path.exists(ckpt_path):
-        ck = torch.load(ckpt_path, map_location="cpu")
+    keep_steps = {int(x) for x in a.keep_ckpt.split(",") if x}
+    assert all(k % a.eval_every == 0 for k in keep_steps), "--keep_ckpt steps must be multiples of --eval_every"
+    assert a.schedule != "wsd" or 0 < a.decay_steps <= a.steps - a.warmup, "wsd needs 0 < --decay_steps <= steps - warmup"
+    init_path = ckpt_path if a.resume and os.path.exists(ckpt_path) else a.init_ckpt
+    if init_path:
+        ck = torch.load(init_path, map_location="cpu")
         model.load_state_dict(ck["model"]); opt.load_state_dict(ck["opt"]); step = ck["step"]
         if hint is not None:
             hint.load_state_dict(ck["hint"])
-        print(f"resumed from step {step}")
+        print(f"resumed from step {step}" + (f" of {init_path}" if init_path != ckpt_path else ""))
     ema = None
     if a.ema > 0:
         ema = EMA(model, a.ema)
-        if a.resume and os.path.exists(ckpt_path) and "ema" in ck:
+        if init_path and "ema" in ck:
             ema.shadow = {k: v.to(dev) for k, v in ck["ema"].items()}
     from tokenizers import Tokenizer
     tok = Tokenizer.from_file(os.path.join(HERE, a.data, a.tokenizer))
@@ -480,6 +499,8 @@ def main():
             if hint is not None:
                 ck["hint"] = hint.state_dict()
             torch.save(ck, ckpt_path)
+            if step in keep_steps:
+                torch.save(ck, os.path.join(a.out, f"ckpt_step{step}.pt"))
             tl = time.time()
 
 
