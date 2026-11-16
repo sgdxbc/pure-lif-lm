@@ -1,0 +1,1 @@
+g17_lr3_138              snn  138.5M  8-bit  138.5 MB  dense MACs   71.4M + sparse adds  3.15M  state  110.6 KB  MB/token 8-bit: 1 stream   74.6, 16 streams   5.7  (rate 0.111)

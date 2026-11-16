@@ -1,0 +1,45 @@
+queued the next part of runs/g17_kd138: job 1148190
+xgpi1 NVIDIA H100 NVL | runs/g17_kd138 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --lr 6e-4
+params 138.46M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.7781 (EMA weights 4.6829)
+== eval step 5000 val_loss 4.4920 (EMA weights 4.3842)
+== eval step 7500 val_loss 4.3556 (EMA weights 4.2552)
+== eval step 10000 val_loss 4.2600 (EMA weights 4.1768)
+== eval step 12500 val_loss 4.1872 (EMA weights 4.1241)
+== eval step 15000 val_loss 4.1315 (EMA weights 4.0899)
+== eval step 17500 val_loss 4.0951 (EMA weights 4.0726)
+== eval step 20000 val_loss 4.0803 (EMA weights 4.0628)
+hellaswag        acc 0.2637  acc_norm 0.2620
+lambada_openai   perplexity 52386.9863  acc 0.0056
+piqa             acc 0.5653  acc_norm 0.5539
+arc_easy         acc 0.4268  acc_norm 0.3813
+arc_challenge    acc 0.1758  acc_norm 0.2227
+winogrande       acc 0.5051
+hellaswag        acc 0.2617  acc_norm 0.2643
+lambada_openai   perplexity 49251.5132  acc 0.0050
+piqa             acc 0.5615  acc_norm 0.5577
+arc_easy         acc 0.4364  acc_norm 0.3847
+arc_challenge    acc 0.1664  acc_norm 0.2261
+winogrande       acc 0.5036
+ "val_loss": 4.0904698328915705,
+   " the 1606. The French began to drive out, with the French starting from the middle of the 16th century.\nThe French army during the French Civil War began when the French army invaded the French; the French occupied France. After French conquest, the French lost their lives.\nThe French were French at the time of the war. The French were a few, though there were also other battles. The French were not the only ones for the French.\nFounded in 1776, French troops, with the French, were in the French and 1690.\nThey were also more involved in the French Revolution than in the British forces, but they were also more decisive.\nFerrin' army consisted of cavalry, the French, and the French, during the Battle of the Rhineland; in the following months, the French suffered from French defeat at the Battle of Frederic France in 1784.\nIn November 1790, a French victory at the French Revolution, which was marked by a loss of military strength before, led by France, was finally halted.\nFrom 1661 to 1793, the French invaded Louis, fought in Paris. The French forces took up the French, and French was the main French",
+   " need to get a good night\u2019s sleep. If you need to lose weight, make an effort to get to the recommended daily amount or avoid eating too many calories from your meals.\nWhat is High-Carotid Foods?\nVietnamese Dietitians and Dietitians are usually fast food for their daily consumption, so they can use a lot of calories as an energy source.\nHere are a few ways of eating healthier:\nEating your food is more likely to eat more calories than you should in order, and it\u2019s especially important to eat a balanced diet. Eating a little less fat is more important because your body is better able to absorb it than being overweight.\nAs you can\u2019t get too much from a diet high in fat, it can be difficult to keep weight in moderation. It is considered unhealthy.\nWhile low-fat diets can cause weight loss, they are also possible, because they feel full in their bodies.\nIf you\u2019re overweight, your body produces calories. Instead of eating more than you might imagine, you will have more body mass and energy production.\nIf you\u2019re taking a quick look at the calories of a balanced diet, you",
+g17_kd138                snn  138.5M  8-bit  138.5 MB  dense MACs   71.4M + sparse adds  1.95M  state  110.6 KB  MB/token 8-bit: 1 stream   73.4, 16 streams   5.4  (rate 0.069)
+model (bf16, fused kernel) 4.1204
+fp32                   4.1203  (+0.0000 vs fp32)
+W8                     4.1211  (+0.0008 vs fp32)
+W4                     4.5409  (+0.4206 vs fp32)
+W4g128                 4.2892  (+0.1689 vs fp32)
+A8                     4.1212  (+0.0009 vs fp32)
+V24                    4.1221  (+0.0018 vs fp32)
+V16                    4.1352  (+0.0149 vs fp32)
+B16                    4.1210  (+0.0007 vs fp32)
+B12                    4.1224  (+0.0021 vs fp32)
+W8 A8 V24 B16          4.1238  (+0.0035 vs fp32)
+W8 A8 V16 B12          4.1388  (+0.0185 vs fp32)
+W4g128 A8 V24 B16      4.2895  (+0.1692 vs fp32)
+W4g128 A8 V16 B12      4.3117  (+0.1914 vs fp32)
+V16p                   4.1283  (+0.0080 vs fp32)
+W8 A8 V16p B12         4.1316  (+0.0113 vs fp32)
+done Mon Nov 16 08:55:25 AM +08 2026

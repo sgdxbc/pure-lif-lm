@@ -1,0 +1,3 @@
+queued the next part of runs/g17_tf163m: job 1148137
+xgph12 NVIDIA A100 80GB PCIe | runs/g17_tf163m | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --d_model 768 --n_layers 12 --n_heads 12 --optim muon --lr 6e-4
+[2026-11-16T10:10:27.000] error: *** JOB 1148134 ON xgph12 CANCELLED AT 2026-11-16T10:10:26 DUE TO TIME LIMIT ***

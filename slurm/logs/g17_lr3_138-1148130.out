@@ -1,0 +1,42 @@
+queued the next part of runs/g17_lr3_138: job 1148172
+xgph2 NVIDIA A100 80GB PCIe | runs/g17_lr3_138 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 3e-4
+params 138.46M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 2500 val_loss 5.1725 (EMA weights 5.0900)
+== eval step 5000 val_loss 4.8374 (EMA weights 4.7228)
+== eval step 7500 val_loss 4.6759 (EMA weights 4.5632)
+== eval step 10000 val_loss 4.5589 (EMA weights 4.4717)
+== eval step 12500 val_loss 4.4760 (EMA weights 4.4082)
+== eval step 15000 val_loss 4.4164 (EMA weights 4.3674)
+== eval step 17500 val_loss 4.3729 (EMA weights 4.3455)
+== eval step 20000 val_loss 4.3565 (EMA weights 4.3350)
+hellaswag        acc 0.2597  acc_norm 0.2590
+lambada_openai   perplexity 100345.5349  acc 0.0016
+piqa             acc 0.5680  acc_norm 0.5424
+arc_easy         acc 0.3893  acc_norm 0.3582
+arc_challenge    acc 0.1706  acc_norm 0.2193
+winogrande       acc 0.5083
+hellaswag        acc 0.2605  acc_norm 0.2565
+lambada_openai   perplexity 93802.2145  acc 0.0008
+piqa             acc 0.5669  acc_norm 0.5517
+arc_easy         acc 0.3973  acc_norm 0.3615
+arc_challenge    acc 0.1783  acc_norm 0.2261
+winogrande       acc 0.5099
+ "val_loss": 4.366512387554522,
+g17_lr3_138              snn  138.5M  8-bit  138.5 MB  dense MACs   71.4M + sparse adds  3.15M  state  110.6 KB  MB/token 8-bit: 1 stream   74.6, 16 streams   5.7  (rate 0.111)
+model (bf16, fused kernel) 4.3821
+fp32                   4.3824  (+0.0000 vs fp32)
+W8                     4.3848  (+0.0025 vs fp32)
+W4                     5.5394  (+1.1570 vs fp32)
+W4g128                 4.8397  (+0.4573 vs fp32)
+A8                     4.3860  (+0.0036 vs fp32)
+V24                    4.3839  (+0.0016 vs fp32)
+V16                    4.3888  (+0.0065 vs fp32)
+B16                    4.3824  (+0.0000 vs fp32)
+B12                    4.3824  (+0.0001 vs fp32)
+W8 A8 V24 B16          4.3849  (+0.0025 vs fp32)
+W8 A8 V16 B12          4.3935  (+0.0112 vs fp32)
+W4g128 A8 V24 B16      4.8464  (+0.4641 vs fp32)
+W4g128 A8 V16 B12      4.8816  (+0.4992 vs fp32)
+V16p                   4.3850  (+0.0027 vs fp32)
+W8 A8 V16p B12         4.3904  (+0.0080 vs fp32)
+done Mon Nov 16 08:53:07 AM +08 2026

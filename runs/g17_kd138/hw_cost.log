@@ -1,0 +1,1 @@
+g17_kd138                snn  138.5M  8-bit  138.5 MB  dense MACs   71.4M + sparse adds  1.95M  state  110.6 KB  MB/token 8-bit: 1 stream   73.4, 16 streams   5.4  (rate 0.069)
