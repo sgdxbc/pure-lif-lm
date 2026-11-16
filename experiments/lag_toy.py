@@ -4,7 +4,8 @@ the token at t - LAG (chance: ln NV; a Transformer does this easily through its 
 precise access to the last few tokens, where much of the spiking network's gap to the Transformer lies (5.30, 5.32).
 Same small spiking network as recall_toy.py (2 layers, bus 64, 256 neurons per layer). From the repository root:
   python3 experiments/lag_toy.py LAG STEPS [NV] [key=value ...]     e.g.  python3 experiments/lag_toy.py 4 2000 32 mem_heads=2
-key=value pairs override the model's Config (numbers are parsed as int or float, true/false as booleans).
+key=value pairs override the model's Config (numbers are parsed as int or float, true/false as booleans). The clock
+groups of 5.33 (mem_clock=1) need commit c0868f9.
 """
 import os, sys, time
 import torch

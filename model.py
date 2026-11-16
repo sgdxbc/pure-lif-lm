@@ -55,7 +55,8 @@ Optional (mem_heads > 0): plastic synapses (a fast Hebbian memory) in front of t
 Removed options (tried, did not help, deleted to keep the code small; the code is in git history):
            same-layer synapses rec_rank (docs/experiments.md 5.2), delayed synapses delay_k (5.9), the spiking bus
            spike_bus (5.23), the current scaled by (1 - beta) leak_gate (5.26), all last in commit 490e9e6;
-           error-correcting writes to the plastic synapses mem_rule = "delta" (5.32), in commit c138343.
+           error-correcting writes to the plastic synapses mem_rule = "delta" (5.32), in commit c138343; groups of
+           plastic synapses written by position instead of content, mem_clock (5.33), in commit c0868f9.
            Checkpoints that saved them switched off still load (Config.from_dict); ones that used them need that commit.
 """
 import math
@@ -69,7 +70,7 @@ from lif import lif, lif_leak
 
 # Options removed from the code, with the value that meant "off" (see the end of the module docstring).
 REMOVED = {"rec_rank": 0, "rec_init": None, "delay_k": 0, "delay_rank": None, "leak_gate": False, "spike_bus": False,
-           "bus_tau_min": None, "bus_tau_max": None, "bus_theta": None, "mem_rule": "hebb"}
+           "bus_tau_min": None, "bus_tau_max": None, "bus_theta": None, "mem_rule": "hebb", "mem_clock": 0}
 
 
 @dataclass
@@ -105,13 +106,13 @@ class Config:
     mem_theta: float = 1.5    # key and query neurons' threshold at initialisation
     mem_chunk: int = 128      # training: positions per chunk of plastic_scan
     mem_eps: float = 1.0      # read-out scaling r / sqrt(mean(r^2) + mem_eps) (see module docstring)
-    mem_clock: int = 0        # >0: the first mem_clock groups are written by position, not content (EXPERIMENTAL)
 
     @classmethod
     def from_dict(cls, d):
         """Config from a saved dict (checkpoint "cfg"); drops removed options that were off, refuses ones that were on."""
         on = [k for k, off in REMOVED.items() if off is not None and k in d and d[k] != off]
-        assert not on, f"this checkpoint uses {on}, removed from the code: check out commit 490e9e6 (c138343 for mem_rule)"
+        assert not on, (f"this checkpoint uses {on}, removed from the code: check out commit 490e9e6 "
+                        "(c138343 for mem_rule, c0868f9 for mem_clock)")
         names = {f.name for f in fields(cls)}
         return cls(**{k: v for k, v in d.items() if k in names})
 
@@ -238,11 +239,6 @@ class PlasticSynapses(nn.Module):
             nn.init.zeros_(self.kq_in.bias)
             nn.init.normal_(self.v_in.weight, std=1.0 / math.sqrt(d))
             nn.init.zeros_(self.w_out.weight)
-        if cfg.mem_clock:   # clock groups: a ring of m clock neurons, neuron (t mod m) fires at position t and acts as
-            G = cfg.mem_clock  # the key (row t mod m is written); clock_q[g, j, i]: synapse clock neuron i -> query j
-            self.clock_q = nn.Parameter(torch.zeros(G, m, m))
-            with torch.no_grad():   # a row is rewritten every m positions: what was there should have faded by then
-                self.decay_beta_logit[:G] = torch.logit(torch.tensor(math.exp(-3.0 / m)))
 
     def forward(self, bus, state=None):
         """state: (synapses S (B, h, m, dv), key and query potentials (B, 2hm)) or None. Returns the current into the
@@ -250,28 +246,16 @@ class PlasticSynapses(nn.Module):
         c = self.cfg
         B, L, _ = bus.shape
         h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
-        S0, v0 = (None, None) if state is None else state[:2]
-        I = self.kq_in(bus)
-        G = c.mem_clock
-        if G:
-            p0 = 0 if state is None else state[2]
-            pos = (p0 + torch.arange(L, device=bus.device)) % m
-            clk = F.one_hot(pos, m).to(I.dtype)                                     # (L, m): the clock's spikes
-            extra = self.clock_q[:, :, pos].permute(2, 0, 1).reshape(L, G * m)       # into the clock groups' queries
-            I = I + F.pad(extra.to(I.dtype), (h * m, h * m - G * m))
-        s, v_last = lif(I, torch.sigmoid(self.kq_beta_logit), self.kq_log_theta.exp(), None, v0,
+        S0, v0 = (None, None) if state is None else state
+        s, v_last = lif(self.kq_in(bus), torch.sigmoid(self.kq_beta_logit), self.kq_log_theta.exp(), None, v0,
                         hard_reset=False, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg)
         k = s[..., :h * m].reshape(B, L, h, m).transpose(1, 2)
-        if G:
-            k = torch.cat([clk.to(k.dtype).expand(B, G, L, m), k[:, G:]], 1)
         q = s[..., h * m:].reshape(B, L, h, m).transpose(1, 2)
         val = self.v_in(bus).view(B, L, h, dv).transpose(1, 2)
         r, S = plastic_scan(q.to(val.dtype), k.to(val.dtype), val, F.logsigmoid(self.decay_beta_logit), S0, c.mem_chunk)
         r = r.float()
         r = (r * torch.rsqrt(r.pow(2).mean(-1, keepdim=True) + c.mem_eps)).to(val.dtype)
         r = r.transpose(1, 2).reshape(B, L, h * dv) * self.gain.to(val.dtype)
-        if G:
-            return self.w_out(r), s, (S.detach(), v_last.detach(), (p0 + L) % m)
         return self.w_out(r), s, (S.detach(), v_last.detach())
 
 
