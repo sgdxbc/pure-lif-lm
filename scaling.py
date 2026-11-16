@@ -44,10 +44,7 @@ def macs_per_token(a):
         h, m, dv = a["mem_heads"], a.get("mem_keys", 64), a.get("mem_dv", 64)   # training chunk (q.k and A v)
         C = min(a.get("mem_chunk", 128), a["seq"])
         n = sum(1 for i in range(L) if (i + 1) % a.get("mem_every", 1) == 0)
-        if a.get("mem_rule", "hebb") == "delta":   # + k.k, the triangular solve, its use of S, the write strengths
-            mem = n * (d * (2 * h * m + 2 * h * dv + h) + h * (C * (3 * m + 2 * dv) // 2 + 3 * m * dv))
-        else:
-            mem = n * (d * (2 * h * m + 2 * h * dv) + h * (C * (m + dv) // 2 + 2 * m * dv))
+        mem = n * (d * (2 * h * m + 2 * h * dv) + h * (C * (m + dv) // 2 + 2 * m * dv))
     return L * T * per + d * V + mem
 
 

@@ -54,7 +54,9 @@
 - Python modules stay at the repo root (the slurm job scripts call them by path).
 - Keep the code small: an option that was tried and did not help is deleted rather than kept (its results stay in
   docs/experiments.md; the code stays in git history). Removed so far (2026-11-15): rec_rank, delay_k, spike_bus,
-  leak_gate (last in commit 490e9e6); model.Config.from_dict still loads checkpoints that saved them switched off.
+  leak_gate (last in commit 490e9e6); 2026-11-16: mem_rule "delta" (commit 903ed11). model.Config.from_dict still
+  loads checkpoints that saved them switched off. Check a new memory mechanism on the CPU first with
+  experiments/recall_toy.py (synthetic key-value recall).
   Old diagnostics (neuron_drift.py, leak_stats.py, leak_ablate.py, analyze.py) are not maintained.
 - main is kept equal to the working branch: after pushing exp/reset-recurrence-scale, also `git push origin HEAD:main`
   (a fast-forward; nobody commits to main directly).
