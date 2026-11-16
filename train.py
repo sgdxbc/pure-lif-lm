@@ -63,6 +63,9 @@ def get_args():
     p.add_argument("--neuron_lr_mult", type=float, default=1.0,
                    help="learning-rate multiplier for the per-neuron dynamics parameters (beta, theta, gamma)")
     p.add_argument("--clip", type=float, default=1.0)
+    p.add_argument("--spike_log", type=float, default=5.0,
+                   help="log the largest parameter gradients (and the batch offsets) of any step whose gradient norm "
+                        "is above this many times the median of the last 200 steps; 0 = off. Only logs.")
     p.add_argument("--eval_every", type=int, default=250)
     p.add_argument("--eval_batches", type=int, default=20)
     p.add_argument("--log_every", type=int, default=25)
@@ -102,6 +105,7 @@ class Data:
     def batch(self, B, rng=None):
         rng = rng or self.rng
         ix = rng.integers(0, len(self.arr) - self.seq - 1, size=B)
+        self.last_ix = ix   # for train.py's --spike_log records
         x = np.stack([self.arr[i:i + self.seq + 1] for i in ix]).astype(np.int64)
         x = torch.from_numpy(x)
         return x[:, :-1].contiguous(), x[:, 1:].contiguous()
@@ -352,6 +356,7 @@ def main():
         prompts = ["The history of the city", "In mathematics, a prime number is", "Plants need sunlight because"]
 
     t0 = time.time(); tl = time.time(); tokens_seen = step * a.batch * a.seq
+    gn_hist = []   # gradient norms of the last 200 steps (--spike_log)
     amp = lambda: torch.autocast(dev.type, dtype=torch.bfloat16)
     state = None   # carried membrane potentials (--carry_state)
     if teacher is not None and step == 0:   # the teacher's own loss on the validation batches, for reference
@@ -415,6 +420,20 @@ def main():
         kd = None if kd is None else torch.stack([v[1] for v in logged]).mean()
         rates = torch.stack([v[3] for v in logged]).mean(0)
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), a.clip).item()
+        if a.spike_log > 0 and len(gn_hist) >= 50 and gn > a.spike_log * float(np.median(gn_hist)):
+            # a gradient spike (docs/experiments.md 5.34): which parameters, which batch. The gradients are already
+            # clipped, so scale back to their size before clipping. Changes nothing in training.
+            named_g = [(n, q.grad) for n, q in model.named_parameters() if q.grad is not None]
+            norms = (torch.stack([g_.float().norm() for _, g_ in named_g]) * max(1.0, gn / a.clip)).tolist()
+            top = sorted(zip([n for n, _ in named_g], norms), key=lambda t: -t[1])[:8]
+            ix = getattr(train, "last_ix", None)
+            srec = {"step": step + 1, "spike_gn": gn, "median_gn": float(np.median(gn_hist)), "spike_loss": ce.item(),
+                    "top": [[n, round(v, 4)] for n, v in top],
+                    "ix": None if (ix is None or a.carry_state) else [int(i) for i in ix]}
+            print(f"gradient spike at step {step + 1}: gn {gn:.2f} (median {srec['median_gn']:.2f}), loss {ce.item():.4f}; "
+                  + ", ".join(f"{n} {v:.2f}" for n, v in top[:4]), flush=True)
+            logf.write(json.dumps(srec) + "\n"); logf.flush()
+        gn_hist = (gn_hist + [gn])[-200:]
         opt.step()
         if ema is not None:
             ema.update(model, step)

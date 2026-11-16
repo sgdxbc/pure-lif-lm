@@ -15,6 +15,8 @@ def read_log(path):
     tr, va = [], []
     for line in open(path):
         r = json.loads(line)
+        if "spike_gn" in r:   # train.py --spike_log records
+            continue
         (va if "val_loss" in r else tr).append(r)
     return tr, va
 
