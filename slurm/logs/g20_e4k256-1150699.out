@@ -1,0 +1,26 @@
+queued the next part of runs/g20_e4k256: job 1151066
+xgpi11 NVIDIA H100 NVL | runs/g20_e4k256 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --mem_heads 8 --mem_keys 256 --mem_every 4 --accum 2
+params 150.30M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 2500 val_loss 4.8362 (EMA weights 4.6898)
+== eval step 5000 val_loss 4.5242 (EMA weights 4.3668)
+== eval step 7500 val_loss 4.3702 (EMA weights 4.2231)
+== eval step 10000 val_loss 4.2548 (EMA weights 4.1314)
+== eval step 12500 val_loss 4.1550 (EMA weights 4.0673)
+== eval step 15000 val_loss 4.0781 (EMA weights 4.0134)
+== eval step 17500 val_loss 4.0239 (EMA weights 3.9853)
+== eval step 20000 val_loss 3.9994 (EMA weights 3.9704)
+hellaswag        acc 0.2681  acc_norm 0.2697
+lambada_openai   perplexity 10324.5153  acc 0.0441
+piqa             acc 0.5773  acc_norm 0.5577
+arc_easy         acc 0.4188  acc_norm 0.3843
+arc_challenge    acc 0.1749  acc_norm 0.2295
+winogrande       acc 0.5154
+hellaswag        acc 0.2667  acc_norm 0.2701
+lambada_openai   perplexity 9648.0318  acc 0.0470
+piqa             acc 0.5691  acc_norm 0.5626
+arc_easy         acc 0.4263  acc_norm 0.3801
+arc_challenge    acc 0.1783  acc_norm 0.2261
+winogrande       acc 0.5004
+ "val_loss": 4.0086791100040555,
+g20_e4k256               snn  150.3M  8-bit  150.3 MB  dense MACs   83.6M + sparse adds  1.59M  state 1327.1 KB  MB/token 8-bit: 1 stream   84.7, 16 streams   6.0  (rate 0.053)
+done Mon Nov 16 09:23:16 PM +08 2026

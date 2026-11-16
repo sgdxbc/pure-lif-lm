@@ -1,0 +1,1 @@
+g20_e2k256               snn  162.1M  8-bit  162.1 MB  dense MACs   95.8M + sparse adds  1.70M  state 2543.6 KB  MB/token 8-bit: 1 stream   96.5, 16 streams   6.8  (rate 0.054)

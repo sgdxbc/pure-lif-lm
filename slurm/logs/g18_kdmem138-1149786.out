@@ -1,0 +1,38 @@
+queued the next part of runs/g18_kdmem138: job 1151219
+xgpi1 NVIDIA H100 NVL | runs/g18_kdmem138 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 76300 --warmup 1000 --eval_every 5000 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --lr 6e-4
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 5000 val_loss 4.4237 (EMA weights 4.3355)
+== eval step 10000 val_loss 4.2082 (EMA weights 4.0566)
+== eval step 15000 val_loss 4.0242 (EMA weights 3.9088)
+== eval step 20000 val_loss 3.9372 (EMA weights 3.8241)
+== eval step 25000 val_loss 3.8826 (EMA weights 3.7762)
+== eval step 30000 val_loss 3.8426 (EMA weights 3.7461)
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 35000 val_loss 3.7985 (EMA weights 3.7148)
+== eval step 40000 val_loss 3.7665 (EMA weights 3.6911)
+== eval step 45000 val_loss 3.7389 (EMA weights 3.6698)
+== eval step 50000 val_loss 3.7068 (EMA weights 3.6546)
+== eval step 55000 val_loss 3.6857 (EMA weights 3.6406)
+== eval step 60000 val_loss 3.6621 (EMA weights 3.6293)
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 65000 val_loss 3.6464 (EMA weights 3.6212)
+== eval step 70000 val_loss 3.6346 (EMA weights 3.6154)
+== eval step 75000 val_loss 3.6284 (EMA weights 3.6110)
+== eval step 76300 val_loss 3.6290 (EMA weights 3.6100)
+hellaswag        acc 0.2712  acc_norm 0.2774
+lambada_openai   perplexity 1896.9935  acc 0.0914
+piqa             acc 0.5936  acc_norm 0.5898
+arc_easy         acc 0.4743  acc_norm 0.4179
+arc_challenge    acc 0.1877  acc_norm 0.2363
+winogrande       acc 0.4996
+hellaswag        acc 0.2691  acc_norm 0.2753
+lambada_openai   perplexity 1809.8753  acc 0.0910
+piqa             acc 0.5816  acc_norm 0.5800
+arc_easy         acc 0.4747  acc_norm 0.4129
+arc_challenge    acc 0.1809  acc_norm 0.2312
+winogrande       acc 0.4925
+ "val_loss": 3.6402724108083153,
+   " they need sunlight for their growth and development, and because they need nitrogen every two years. You need to maintain and maintain a healthy and balanced diet.\n2. Fungal Disease\nFungal disease is transmitted by air. It is transmitted through contact with food, water, and through skin contact, and through contact with an area of the body where it is most vulnerable. The fungi are found in warm, moist air, and in soil that is at high altitude. It affects about one to two percent of the body population.\n3. Fungal Infection\nFungal disease is characterized by symptoms such as:\n- redness and the skin\n- severe pain, fatigue, and swelling\n- loss of appetite\n- changes in the mucous membranes\n- changes in the skin\n- loss of appetite\n- loss of appetite\n- decreased appetite\n- loss of appetite\n- loss of energy\n- loss of appetite\n- loss of appetite\n- loss of appetite\n- loss of appetite\n- loss of appetite\n- loss of appetite\n- loss of appetite\n- loss of appetite\n- loss of appetite\n- loss of appetite\n- loss of appetite\n- loss of appetite\n- loss"
+g18_kdmem138             snn  157.4M  8-bit  157.4 MB  dense MACs   90.7M + sparse adds  1.79M  state 1327.1 KB  MB/token 8-bit: 1 stream   92.0, 16 streams   6.5  (rate 0.059)
+done Mon Nov 16 08:30:55 PM +08 2026

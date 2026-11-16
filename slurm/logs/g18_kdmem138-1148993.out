@@ -1,0 +1,3 @@
+queued the next part of runs/g18_kdmem138: job 1149786
+xgpi10 NVIDIA H100 NVL | runs/g18_kdmem138 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 76300 --warmup 1000 --eval_every 5000 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --lr 6e-4
+[2026-11-16T18:12:10.988] error: *** JOB 1148993 ON xgpi10 CANCELLED AT 2026-11-16T18:12:10 DUE TO TIME LIMIT ***

@@ -1,0 +1,1 @@
+g19_kdk256               snn  185.8M  8-bit  185.8 MB  dense MACs  120.1M + sparse adds  2.06M  state 4976.6 KB  MB/token 8-bit: 1 stream  120.3, 16 streams   8.4  (rate 0.061)

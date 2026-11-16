@@ -1,0 +1,1 @@
+g19_h4k512               snn  181.1M  8-bit  181.1 MB  dense MACs  115.4M + sparse adds  1.81M  state 4976.6 KB  MB/token 8-bit: 1 stream  115.4, 16 streams   8.0  (rate 0.052)

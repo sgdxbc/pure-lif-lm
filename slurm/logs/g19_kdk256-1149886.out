@@ -1,0 +1,3 @@
+queued the next part of runs/g19_kdk256: job 1150009
+xgph0 NVIDIA A100 80GB PCIe | runs/g19_kdk256 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_keys 256 --accum 2
+[2026-11-16T18:56:14.007] error: *** JOB 1149886 ON xgph0 CANCELLED AT 2026-11-16T18:56:14 DUE TO TIME LIMIT ***
