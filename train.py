@@ -79,6 +79,9 @@ def get_args():
     p.add_argument("--spike_log", type=float, default=5.0,
                    help="log the largest parameter gradients (and the batch offsets) of any step whose gradient norm "
                         "is above this many times the median of the last 200 steps; 0 = off. Only logs.")
+    p.add_argument("--spike_skip", type=float, default=0.0,
+                   help="skip the update (optimizer and EMA) of any step whose gradient norm is above this many times "
+                        "the median of the last 200 steps (after 50 steps); 0 = off")
     p.add_argument("--eval_every", type=int, default=250)
     p.add_argument("--eval_batches", type=int, default=20)
     p.add_argument("--log_every", type=int, default=25)
@@ -449,7 +452,10 @@ def main():
         kd = None if kd is None else torch.stack([v[1] for v in logged]).mean()
         rates = torch.stack([v[3] for v in logged]).mean(0)
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), a.clip).item()
-        if a.spike_log > 0 and len(gn_hist) >= 50 and gn > a.spike_log * float(np.median(gn_hist)):
+        med = float(np.median(gn_hist)) if len(gn_hist) >= 50 else None
+        spike = med is not None and a.spike_log > 0 and gn > a.spike_log * med
+        skip_step = med is not None and a.spike_skip > 0 and gn > a.spike_skip * med   # --spike_skip
+        if spike:
             # a gradient spike (docs/experiments.md 5.34): which parameters, which batch. The gradients are already
             # clipped, so scale back to their size before clipping. Changes nothing in training.
             named_g = [(n, q.grad) for n, q in model.named_parameters() if q.grad is not None]
@@ -458,14 +464,18 @@ def main():
             ix = getattr(train, "last_ix", None)
             srec = {"step": step + 1, "spike_gn": gn, "median_gn": float(np.median(gn_hist)), "spike_loss": ce.item(),
                     "top": [[n, round(v, 4)] for n, v in top],
-                    "ix": None if (ix is None or a.carry_state) else [int(i) for i in ix]}
+                    "ix": None if (ix is None or a.carry_state) else [int(i) for i in ix], "skipped": skip_step}
             print(f"gradient spike at step {step + 1}: gn {gn:.2f} (median {srec['median_gn']:.2f}), loss {ce.item():.4f}; "
-                  + ", ".join(f"{n} {v:.2f}" for n, v in top[:4]), flush=True)
+                  + ", ".join(f"{n} {v:.2f}" for n, v in top[:4]) + (" -- update skipped" if skip_step else ""), flush=True)
             logf.write(json.dumps(srec) + "\n"); logf.flush()
         gn_hist = (gn_hist + [gn])[-200:]
-        opt.step()
-        if ema is not None:
-            ema.update(model, step)
+        if skip_step:   # --spike_skip: no update at all from this batch (the step still counts for the schedule and data)
+            if not spike:
+                print(f"update skipped at step {step + 1}: gn {gn:.2f} (median {med:.2f})", flush=True)
+        else:
+            opt.step()
+            if ema is not None:
+                ema.update(model, step)
         step += 1
         tokens_seen += a.batch * a.seq
         if step % a.log_every == 0 or step == 1:
