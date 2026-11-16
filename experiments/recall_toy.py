@@ -4,7 +4,8 @@ key again in random order; the loss counts only the value after each repeated ke
 network (2 layers, bus 64) with plastic synapses (2 groups of MK key neurons) learns it; without them it stays near
 chance. From the repository root:
   python3 experiments/recall_toy.py RULE STEPS [NK NP MK]     e.g.  python3 experiments/recall_toy.py hebb 3000 128 64 16
-RULE: none (no plastic synapses), hebb (or another value of --mem_rule, when the model has one).
+RULE: none (no plastic synapses), hebb (the plastic synapses as they are), avg (written with (1 - lambda) v,
+--mem_write_avg, 5.34), count (each row read divided by its write count, --mem_count_norm, 5.34).
 """
 import os, sys, time
 import torch
@@ -33,7 +34,7 @@ torch.manual_seed(0)
 cfg = Config(vocab=V, d_model=64, d_hidden=256, n_layers=2, leak_rank=8, hard_reset=True, reset_learn=True,
              gamma_init_min=0.05, gamma_init=0.999, sg="fast_sigmoid", detach_reset=False,
              mem_heads=0 if rule == "none" else 2, mem_keys=MK, mem_dv=32, mem_tau_min=64, mem_tau_max=1024,
-             mem_chunk=64, **({} if rule in ("none", "hebb") else {"mem_rule": rule}))
+             mem_chunk=64, **{"avg": {"mem_write_avg": True}, "count": {"mem_count_norm": True}}.get(rule, {}))
 model = SpikingLM(cfg)
 opt = torch.optim.AdamW(model.parameters(), 2e-3, weight_decay=0.0)
 gen = torch.Generator().manual_seed(1)

@@ -51,6 +51,10 @@ Optional (mem_heads > 0): plastic synapses (a fast Hebbian memory) in front of t
            than a sum (a row written at every token grows to about tau times a value without it, and the gradient of
            a query neuron is its row of S). lambda is fixed after training, so this is folded into W_v: the same
            network, only trained in a different parametrisation.
+           mem_count_norm (5.34): each key neuron j also keeps a decayed count of its spikes, n_j[t] = lambda n_j[t-1]
+           + k_j[t] (a trace with the group's time constant), and a fired query neuron reads its row of S divided by
+           max(1, n_j): a row written once keeps its full size, a row written at many tokens becomes the average of what
+           was written (like synaptic scaling). Costs a counter per key neuron and a multiplication per row read.
            A word that made some key neurons fire can thus be brought back later, by a word that makes the matching
            query neurons fire, as long ago as the decay allows. With binary k and q, writing and reading are additions;
            S is a fixed-size state per stream, like the membrane potentials (no history that grows with the text).
@@ -111,6 +115,7 @@ class Config:
     mem_chunk: int = 128      # training: positions per chunk of plastic_scan
     mem_eps: float = 1.0      # read-out scaling r / sqrt(mean(r^2) + mem_eps) (see module docstring)
     mem_write_avg: bool = False   # write (1 - lambda) v: S is a running average, not a sum (module docstring)
+    mem_count_norm: bool = False  # read each row of S divided by its decayed write count, when above 1 (docstring)
 
     @classmethod
     def from_dict(cls, d):
@@ -246,12 +251,13 @@ class PlasticSynapses(nn.Module):
             nn.init.zeros_(self.w_out.weight)
 
     def forward(self, bus, state=None):
-        """state: (synapses S (B, h, m, dv), key and query potentials (B, 2hm)) or None. Returns the current into the
-        bus, the key and query spikes (B, L, 2hm) and the new state."""
+        """state: (synapses S (B, h, m, dv), key and query potentials (B, 2hm)[, write counts (B, h, 1, m) with
+        mem_count_norm]) or None. Returns the current into the bus, the key and query spikes (B, L, 2hm) and the new
+        state."""
         c = self.cfg
         B, L, _ = bus.shape
         h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
-        S0, v0 = (None, None) if state is None else state
+        S0, v0, n0 = (None, None, None) if state is None else (tuple(state) + (None,))[:3]
         s, v_last = lif(self.kq_in(bus), torch.sigmoid(self.kq_beta_logit), self.kq_log_theta.exp(), None, v0,
                         hard_reset=False, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg)
         k = s[..., :h * m].reshape(B, L, h, m).transpose(1, 2)
@@ -259,11 +265,18 @@ class PlasticSynapses(nn.Module):
         val = self.v_in(bus).view(B, L, h, dv).transpose(1, 2)
         if c.mem_write_avg:   # (1 - lambda) = sigmoid(-decay_beta_logit), per group
             val = val * torch.sigmoid(-self.decay_beta_logit).to(val.dtype).view(1, h, 1, 1)
-        r, S = plastic_scan(q.to(val.dtype), k.to(val.dtype), val, F.logsigmoid(self.decay_beta_logit), S0, c.mem_chunk)
+        log_lam = F.logsigmoid(self.decay_beta_logit)
+        q = q.to(val.dtype)
+        if c.mem_count_norm:   # n_j[t] = sum_s lam^(t-s) k_j[s]: plastic_scan with one key and query (always 1)
+            one = q.new_ones(B, h, L, 1)
+            n, n_last = plastic_scan(one, one, k.float(), log_lam, n0, c.mem_chunk)
+            q = (q.float() / n.clamp(min=1.0)).to(val.dtype)
+        r, S = plastic_scan(q, k.to(val.dtype), val, log_lam, S0, c.mem_chunk)
         r = r.float()
         r = (r * torch.rsqrt(r.pow(2).mean(-1, keepdim=True) + c.mem_eps)).to(val.dtype)
         r = r.transpose(1, 2).reshape(B, L, h * dv) * self.gain.to(val.dtype)
-        return self.w_out(r), s, (S.detach(), v_last.detach())
+        new = (S.detach(), v_last.detach()) + ((n_last.detach(),) if c.mem_count_norm else ())
+        return self.w_out(r), s, new
 
 
 class SpikingLM(nn.Module):
