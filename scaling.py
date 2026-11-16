@@ -71,6 +71,7 @@ def load_run(path):
             continue
         v = r.get("val_loss_ema") or r["val_loss"]
         tokens = r.get("tokens", r["step"] * tok_per_step)
+        pts = [q for q in pts if q["step"] != r["step"]]   # a relay part that repeated an evaluation: keep the last
         pts.append({"step": r["step"], "tokens": tokens, "flops": 6 * m * tokens, "val_loss": v})
     final = None
     for f in ("final_eval_ema.json", "final_eval.json"):
@@ -85,7 +86,10 @@ def load_run(path):
         p = os.path.join(path, f)
         if os.path.exists(p):
             params = json.load(open(p)).get("params")
-    return {"run": os.path.basename(path.rstrip("/")), "arch": a.get("arch", "snn"), "params": params,
+    kind = a.get("arch", "snn")
+    if kind == "snn" and a.get("mem_heads", 0):   # the newer recipe: plastic synapses (and distillation)
+        kind = "snn_mem_kd" if mt else "snn_mem"
+    return {"run": os.path.basename(path.rstrip("/")), "arch": a.get("arch", "snn"), "kind": kind, "params": params,
             "macs_per_token": m, "teacher_macs_per_token": mt, "points": pts, "final": final,
             "teacher_flops": 2 * mt * (final or pts[-1])["tokens"] if pts else 0}
 
@@ -108,9 +112,11 @@ def main():
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    # reference palette (dataviz skill): slot 1 blue for spiking networks, slot 2 orange for Transformers
-    color = {"snn": "#2a78d6", "tf": "#eb6834"}
-    name = {"snn": "spiking", "tf": "Transformer"}
+    # reference palette (dataviz skill), slots in fixed order: 1 blue spiking networks, 2 orange Transformers,
+    # 3 aqua spiking networks with plastic synapses (4 yellow: the same without distillation)
+    color = {"snn": "#2a78d6", "tf": "#eb6834", "snn_mem_kd": "#1baf7a", "snn_mem": "#eda100"}
+    name = {"snn": "spiking", "tf": "Transformer", "snn_mem_kd": "spiking + plastic synapses + distillation",
+            "snn_mem": "spiking + plastic synapses"}
     fig, ax = plt.subplots(figsize=(7.5, 4.8), dpi=150)
     fig.patch.set_facecolor("#fcfcfb"); ax.set_facecolor("#fcfcfb")
     seen = set()
@@ -120,9 +126,9 @@ def main():
         pts = [q for q in r["points"] if q["tokens"] >= a.min_tokens]
         if not pts:
             continue
-        c = color[r["arch"]]
-        label = name[r["arch"]] if r["arch"] not in seen else None
-        seen.add(r["arch"])
+        c = color[r["kind"]]
+        label = name[r["kind"]] if r["kind"] not in seen else None
+        seen.add(r["kind"])
         ax.plot([q["flops"] for q in pts], [q["val_loss"] for q in pts], color=c, lw=2, label=label)
         end = r["final"] or pts[-1]
         ax.plot([end["flops"]], [end["val_loss"]], "o", ms=8, color=c, mec="#fcfcfb", mew=2)
