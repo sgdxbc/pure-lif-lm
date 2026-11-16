@@ -1,0 +1,79 @@
+runs/g18_kdmem212: step 76300, batch 32 x 1024, distillation weight 0.9
+random batch 0 gn    0.368  ce 3.568  kd 0.368  | head 0.345 mem.kq_in.weight 0.065 mem.v_in.weight 0.062 pop.w_out.weight 0.057 mem.w_out.weight 0.043 (1s)
+random batch 50 gn    0.406  ce 3.648  kd 0.378  | head 0.341 mem.kq_in.weight 0.140 pop.w_out.weight 0.089 pop.w_in.weight 0.072 pop.w_in.bias 0.068 (15s)
+random batch 100 gn    0.503  ce 3.473  kd 0.372  | head 0.442 pop.w_in.bias 0.140 mem.gain 0.105 mem.kq_in.weight 0.089 mem.v_in.weight 0.075 (30s)
+random batch 150 gn    0.377  ce 3.558  kd 0.385  | head 0.345 pop.w_in.weight 0.082 mem.kq_in.weight 0.064 mem.v_in.weight 0.063 pop.w_out.weight 0.062 (44s)
+random batch 200 gn    0.619  ce 3.607  kd 0.363  | head 0.350 pop.w_in.bias 0.338 mem.gain 0.292 pop.w_in.weight 0.169 mem.w_out.weight 0.110 (58s)
+random batch 250 gn    0.382  ce 3.571  kd 0.375  | head 0.360 mem.kq_in.weight 0.066 mem.v_in.weight 0.061 pop.w_out.weight 0.056 mem.w_out.weight 0.042 (72s)
+
+300 random batches: gradient norm median 0.392, 90% 0.465, 99% 0.689, max 1.441; above 5x median: 0, above 20x: 0
+median by kind: head 0.360 mem.kq_in.weight 0.066 mem.v_in.weight 0.064 pop.w_out.weight 0.059 mem.w_out.weight 0.045 pop.w_in.bias 0.035 pop.w_in.weight 0.042 mem.gain 0.031 embed 0.013 pop.leak_out.weight 0.008
+replay of step 6000 (part from 0): gn    0.390  ce 3.672  kd 0.381  | head 0.350 pop.w_in.bias 0.084 mem.gain 0.082 mem.v_in.weight 0.063 pop.w_out.weight 0.057
+replay of step 10000 (part from 0): gn    0.439  ce 3.537  kd 0.348  | head 0.419 mem.v_in.weight 0.061 mem.kq_in.weight 0.059 pop.w_out.weight 0.055 pop.w_in.bias 0.051
+replay of step 16500 (part from 0): gn    0.421  ce 3.551  kd 0.391  | head 0.379 pop.w_in.bias 0.099 mem.kq_in.weight 0.069 mem.v_in.weight 0.067 mem.gain 0.064
+replay of step 49000 (part from 30000): gn    0.389  ce 3.525  kd 0.355  | head 0.344 pop.w_in.weight 0.118 mem.kq_in.weight 0.073 pop.w_out.weight 0.065 mem.v_in.weight 0.061
+replay of step 51000 (part from 30000): gn    0.379  ce 3.466  kd 0.349  | head 0.357 mem.kq_in.weight 0.065 mem.v_in.weight 0.061 pop.w_out.weight 0.057 mem.w_out.weight 0.042
+replay of step 53000 (part from 30000): gn    0.399  ce 3.713  kd 0.383  | head 0.368 mem.kq_in.weight 0.087 mem.v_in.weight 0.063 pop.w_out.weight 0.058 pop.w_in.bias 0.048
+replay of step 72500 (part from 65000): gn    0.360  ce 3.611  kd 0.377  | head 0.339 mem.kq_in.weight 0.061 mem.v_in.weight 0.059 pop.w_out.weight 0.053 mem.w_out.weight 0.041
+
+batch with gn 1.441; largest parameters: mems.0.gain 0.786, layers.0.w_in.bias 0.719, mems.2.kq_in.weight 0.707, layers.0.w_in.weight 0.363, head.weight 0.347, mems.0.w_out.weight 0.257
+  row 21 gn   44.833  ce 3.937  kd 0.365  | mem.gain 25.111 mem.kq_in.weight 23.341 pop.w_in.bias 22.766 pop.w_in.weight 11.949 mem.w_out.weight 8.197  (row median gn 1.821)
+     repetition 0.16, largest S row 55733.5, query silent 0.00, largest raw read-out 84542.8
+     top: mems.0.gain 25.109, mems.2.kq_in.weight 23.239, layers.0.w_in.bias 22.766, layers.0.w_in.weight 11.556
+     text: " Deciding on a good seating arrangement isn't easy, and you might discover the great ideas you thought you had are a total mess. There are also so many factors that come into play with your decision.\nFor example, I once worked with a principal that dictated classroom set-up, right down to the seatin"
+  row 23 gn    3.504  ce 2.785  kd 0.455  | head 3.320 pop.w_in.weight 0.600 mem.v_in.weight 0.528 pop.w_out.weight 0.449 mem.w_out.weight 0.415  (row median gn 1.821)
+     repetition 0.28, largest S row 55513.9, query silent 0.00, largest raw read-out 81273.1
+     top: head.weight 3.320, layers.5.w_in.weight 0.542, mems.11.v_in.weight 0.403, layers.0.w_in.bias 0.328
+     text: ' number of significant figures in a number, read the number from left to right and count all the\ndigits, starting with the first digit that is not zero. If the last digit of a number does not contain a decimal point,\nthen the number of significant figures is equal to the number of non-zero digits in'
+  row  1 gn    2.965  ce 2.714  kd 0.405  | head 2.834 mem.v_in.weight 0.454 pop.w_out.weight 0.416 mem.kq_in.weight 0.378 mem.w_out.weight 0.333  (row median gn 1.821)
+     repetition 0.34, largest S row 60686.3, query silent 0.00, largest raw read-out 83385.9
+     top: head.weight 2.834, mems.11.v_in.weight 0.367, mems.11.kq_in.weight 0.249, mems.11.w_out.weight 0.244
+     text: ' transfusions who do not use drugs (CDC, 1995a). As noted above, the only factor that predicts whether a child will develop AIDS is whether he or she is infected with HIV, not maternal drug use.\nCentral to the "risk-AIDS" hypothesis is the notion that chronic injection drug use causes AIDS (Duesberg'
+  typical row 28: gn    1.839  ce 4.178  kd 0.454  | head 1.752 mem.v_in.weight 0.286 pop.w_out.weight 0.285 mem.kq_in.weight 0.253 mem.w_out.weight 0.204, repetition 0.15, largest S row 54566.6
+
+batch with gn 0.796; largest parameters: mems.2.kq_in.weight 0.519, head.weight 0.424, mems.0.gain 0.230, layers.0.w_in.bias 0.209, layers.0.w_in.weight 0.135, layers.0.w_out.weight 0.122
+  row 10 gn   21.590  ce 3.082  kd 0.307  | mem.kq_in.weight 16.697 mem.gain 8.219 pop.w_in.bias 6.857 pop.w_in.weight 4.856 pop.w_out.weight 4.267  (row median gn 1.861)
+     repetition 0.11, largest S row 55420.9, query silent 0.00, largest raw read-out 94957.5
+     top: mems.2.kq_in.weight 16.618, mems.0.gain 8.214, layers.0.w_in.bias 6.857, layers.0.w_in.weight 4.331
+     text: ' much older than the Indian Ocean which has formed only in the last 165 million years.\nThe research team believe that this micro-continent, which they have named Mauritia, was split off from Madagascar and India between 61 and 83 million years ago as one single land mass rifted apart to form the con'
+  row 30 gn    6.199  ce 3.627  kd 0.698  | head 5.987 mem.kq_in.weight 0.971 mem.v_in.weight 0.782 pop.w_out.weight 0.685 mem.w_out.weight 0.595  (row median gn 1.861)
+     repetition 0.39, largest S row 53059.8, query silent 0.00, largest raw read-out 82175.4
+     top: head.weight 5.987, mems.9.kq_in.weight 0.618, mems.11.v_in.weight 0.588, mems.11.kq_in.weight 0.483
+     text: ", then.\n00:58:37.800 --> 00:58:39.240\nRebecca Erbelding: we're Nazis yeah.\n00:58:39.330 --> 00:58:43.050\nBlanche Wiesen Cook: and thankfully i've never seen a figure that suggested doing more.\n00:58:43.320 --> 00:58:47.130\nBlanche Wiesen Cook: Protests then in the garden i've never seen that.\n00:58:"
+  row  7 gn    4.694  ce 3.838  kd 0.541  | head 4.442 mem.v_in.weight 0.987 pop.w_out.weight 0.648 mem.kq_in.weight 0.566 mem.w_out.weight 0.552  (row median gn 1.861)
+     repetition 0.26, largest S row 60232.1, query silent 0.00, largest raw read-out 82576.5
+     top: head.weight 4.442, mems.11.v_in.weight 0.795, mems.10.v_in.weight 0.396, mems.2.kq_in.weight 0.350
+     text: '\nRawlings, Dr. James F. 1868-1903\nHazel, Rawlings 1890-1939 dau of Dr. James Rawlings\nMahoney, Catherine Rawlings 1871-1958\nCollins, James P. 1877-1956, wife Nell H. 1881-1959\nFIELDS FAMILY CEMETERY located in Gold Hill Township, Section 14, T9S R9E. About 100\nft. W of the Shawnee road across from o'
+  typical row 0: gn    1.868  ce 3.448  kd 0.409  | head 1.779 mem.v_in.weight 0.286 pop.w_out.weight 0.280 mem.kq_in.weight 0.239 mem.w_out.weight 0.225, repetition 0.16, largest S row 53826.8
+
+batch with gn 0.774; largest parameters: mems.11.kq_in.weight 0.585, head.weight 0.352, mems.10.v_in.weight 0.122, mems.9.v_in.weight 0.109, mems.10.kq_in.weight 0.101, layers.0.w_out.weight 0.096
+  row  7 gn   21.387  ce 4.167  kd 0.450  | mem.kq_in.weight 18.703 pop.w_out.weight 6.155 mem.v_in.weight 5.712 mem.w_out.weight 3.930 pop.w_in.weight 3.349  (row median gn 1.733)
+     repetition 0.16, largest S row 53781.3, query silent 0.00, largest raw read-out 97791.6
+     top: mems.11.kq_in.weight 18.342, mems.10.v_in.weight 3.763, mems.9.v_in.weight 3.332, mems.10.kq_in.weight 3.140
+     text: ' The early governors did not know that ’s thinly populated interior impeded the spread of epidemic diseases from Australia Asia, and had left the southern Aboriginal populations with perhaps no more immunity than dwellers on remote islands. To their credit, they set up a quarantine station at North '
+  row 12 gn    3.747  ce 3.304  kd 0.611  | head 3.391 mem.kq_in.weight 1.116 mem.v_in.weight 0.649 pop.w_out.weight 0.538 mem.w_out.weight 0.449  (row median gn 1.733)
+     repetition 0.29, largest S row 60167.5, query silent 0.00, largest raw read-out 93658.7
+     top: head.weight 3.391, mems.2.kq_in.weight 1.055, mems.11.v_in.weight 0.500, layers.0.w_out.weight 0.340
+     text: ' as the stopping condition for the recursion. Without a base case, the function would call itself indefinitely, leading to a stack overflow.\n- Recursive Case: The recursive case is the part of the function that calls itself to solve smaller instances of the problem. It breaks the problem down into s'
+  row 23 gn    3.019  ce 3.568  kd 0.536  | head 2.861 mem.kq_in.weight 0.501 mem.v_in.weight 0.485 pop.w_out.weight 0.419 mem.w_out.weight 0.323  (row median gn 1.733)
+     repetition 0.28, largest S row 58629.8, query silent 0.00, largest raw read-out 82428.9
+     top: head.weight 2.861, mems.2.kq_in.weight 0.423, mems.11.v_in.weight 0.384, layers.0.w_out.weight 0.217
+     text: ' needs to be secure.\n- Price includes upgrade of hosting to have a unique ip and installation/set-up of the Certificate\n- 256 bit industry standard SSL Certificate\n- Trusted by all popular browsers\n- Fully validated\n- 99.3% browser ubiquity\niSeek.ie can help and advise you if you require an SSL cert'
+  typical row 13: gn    1.750  ce 3.763  kd 0.359  | head 1.699 mem.v_in.weight 0.231 pop.w_out.weight 0.225 mem.w_out.weight 0.174 mem.kq_in.weight 0.131, repetition 0.11, largest S row 56350.2
+
+batch with gn 0.688; largest parameters: mems.0.kq_in.weight 0.470, head.weight 0.376, mems.0.kq_in.bias 0.174, embed.weight 0.163, layers.0.w_in.bias 0.152, mems.0.gain 0.086
+  row 20 gn   16.940  ce 3.605  kd 0.362  | mem.kq_in.weight 15.036 mem.kq_in.bias 5.563 embed 5.122 head 1.867 mem.v_in.weight 0.286  (row median gn 1.924)
+     repetition 0.13, largest S row 53631.3, query silent 0.00, largest raw read-out 100126.2
+     top: mems.0.kq_in.weight 15.034, mems.0.kq_in.bias 5.562, embed.weight 5.122, head.weight 1.867
+     text: ' trips, tours and travels on the Adventures website have a lot of information about place names – their naming and features – toponymy.\nAccurate toponymy can a tell a story of a place’s discovery, its naming and why it was so named. If you like to find out about where you have been, where you are, a'
+  row 27 gn    7.200  ce 3.175  kd 0.321  | pop.w_in.bias 5.290 mem.gain 3.282 pop.w_in.weight 2.250 head 1.706 mem.w_out.weight 1.585  (row median gn 1.924)
+     repetition 0.15, largest S row 55642.3, query silent 0.00, largest raw read-out 79887.9
+     top: layers.0.w_in.bias 5.290, mems.0.gain 3.282, layers.0.w_in.weight 2.245, head.weight 1.706
+     text: ' summary scheduled in October.\nThe data from the census includes information from 25 regions around the world including the Antarctic. The results were reported through a series of articles in the open access journal PLoS ONE, which is published by the Public Library of Science. [See related press r'
+  row 24 gn    4.343  ce 3.553  kd 0.341  | pop.w_in.bias 2.989 mem.gain 1.816 head 1.462 pop.w_in.weight 1.456 mem.w_out.weight 0.936  (row median gn 1.924)
+     repetition 0.15, largest S row 55865.4, query silent 0.00, largest raw read-out 79630.8
+     top: layers.0.w_in.bias 2.989, mems.0.gain 1.816, head.weight 1.462, layers.0.w_in.weight 1.444
+     text: ' more of these purposes (in no particular order):\nWhich of these considerations were thought of as most important and ultimately found expression in the Second Amendment is disputed. Some of these purposes were explicitly mentioned in early state constitutions; for example, the Pennsylvania Constitu'
+  typical row 0: gn    1.955  ce 3.585  kd 0.376  | head 1.864 mem.v_in.weight 0.297 pop.w_out.weight 0.256 mem.kq_in.weight 0.216 mem.w_out.weight 0.211, repetition 0.13, largest S row 53809.9
+
+wrote runs/g18_kdmem212/grad_spikes.json (96s)
