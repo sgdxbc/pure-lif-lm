@@ -1,0 +1,27 @@
+W1116 11:31:48.831000 2454662 torch/utils/cpp_extension.py:140] No CUDA runtime is found, using CUDA_HOME='/usr'
+== runs/g17_mem138 (step 20000; 8 groups x 64 keys, every 1 layer(s); initial tau 8-1024 tokens)
+layer  0  tau     0.6     0.8    82.7    54.1   102.9   207.8   216.2   214.1 | theta key 0.84 query 0.84 | |W_o g| / |W_out| 0.192 | per group 4.97 4.10 2.75 2.74 3.24 2.55 2.38 2.32
+layer  1  tau     1.0     1.2    14.9    76.2   196.2    89.7  1228.9  3846.6 | theta key 1.06 query 1.08 | |W_o g| / |W_out| 0.172 | per group 3.86 3.98 4.10 1.51 1.79 1.87 1.20 1.29
+layer  2  tau     0.9     0.9     2.7     9.9     6.9  1022.3   790.2  1771.7 | theta key 0.96 query 1.12 | |W_o g| / |W_out| 0.142 | per group 3.81 2.96 2.66 2.12 1.71 0.80 1.03 0.78
+layer  3  tau     0.8    14.4    11.5    13.4     8.9   175.3    27.1  1269.2 | theta key 0.72 query 0.88 | |W_o g| / |W_out| 0.173 | per group 4.52 3.30 2.89 4.65 2.01 0.52 1.41 0.29
+layer  4  tau     5.2     4.6    23.4   126.1    46.0    58.5    43.5   841.1 | theta key 0.82 query 0.80 | |W_o g| / |W_out| 0.198 | per group 4.85 3.99 3.11 3.83 4.18 1.70 4.77 1.83
+layer  5  tau     1.3     5.9    35.4    93.3    42.8   111.4   141.7   320.5 | theta key 0.88 query 0.98 | |W_o g| / |W_out| 0.251 | per group 5.02 5.45 3.89 3.87 5.81 4.26 4.22 5.12
+layer  6  tau     2.1     2.0    17.6   153.7   343.8    26.6   323.3   139.4 | theta key 1.25 query 1.01 | |W_o g| / |W_out| 0.318 | per group 7.57 3.82 4.77 10.22 5.90 6.06 4.87 3.84
+layer  7  tau     2.2     6.4    16.5   189.4    55.7    69.8   147.7    80.3 | theta key 1.16 query 1.18 | |W_o g| / |W_out| 0.321 | per group 10.28 5.41 7.47 7.80 5.10 4.95 3.95 5.61
+layer  8  tau     3.2     8.5    15.8   187.8    94.0   107.9   250.5   355.2 | theta key 0.91 query 1.08 | |W_o g| / |W_out| 0.337 | per group 5.79 9.05 6.09 8.29 7.57 6.08 5.45 6.05
+layer  9  tau     2.3    38.7    58.9   330.3   400.9   239.5   303.2   243.3 | theta key 1.09 query 1.22 | |W_o g| / |W_out| 0.482 | per group 10.28 8.32 8.49 12.66 6.62 6.15 17.59 4.44
+layer 10  tau     1.1     5.5   183.5   102.9   206.1   286.4    78.1   246.9 | theta key 1.24 query 1.52 | |W_o g| / |W_out| 0.600 | per group 8.59 8.30 20.86 8.07 23.85 6.29 5.24 5.15
+layer 11  tau     0.9    34.3    91.5   189.5    60.5   110.3   200.1   120.0 | theta key 0.95 query 1.50 | |W_o g| / |W_out| 0.468 | per group 10.84 10.34 17.54 6.11 5.80 5.24 6.04 5.72
+== runs/g17_kdmem138 (step 20000; 8 groups x 64 keys, every 1 layer(s); initial tau 8-1024 tokens)
+layer  0  tau     0.5     0.5    78.6   127.0   175.4   363.2   271.9   236.8 | theta key 0.85 query 0.92 | |W_o g| / |W_out| 0.183 | per group 4.94 4.06 3.01 2.00 2.16 1.82 1.96 2.09
+layer  1  tau     0.6     0.6     2.3    24.6    18.2   638.2   342.8   628.4 | theta key 0.59 query 0.93 | |W_o g| / |W_out| 0.186 | per group 3.44 3.60 2.79 3.90 3.75 1.33 0.97 0.99
+layer  2  tau     0.7     0.2     1.1     6.4     8.2     2.9    50.3    12.3 | theta key 0.58 query 0.90 | |W_o g| / |W_out| 0.164 | per group 4.15 3.14 2.84 2.34 2.14 2.02 1.53 2.76
+layer  3  tau     0.8    17.9    65.3    17.6     3.2    33.7   259.9   904.7 | theta key 0.65 query 0.90 | |W_o g| / |W_out| 0.211 | per group 5.00 4.96 3.27 4.53 3.29 2.72 1.17 0.95
+layer  4  tau     4.3     1.8    21.7   175.7    33.5   164.8   109.5 24385.0 | theta key 0.70 query 0.80 | |W_o g| / |W_out| 0.215 | per group 5.39 4.61 3.02 4.09 3.98 4.44 3.49 1.33
+layer  5  tau     1.2     5.5    15.0    69.1    53.6    63.6    75.0   427.1 | theta key 0.88 query 0.94 | |W_o g| / |W_out| 0.295 | per group 4.43 3.25 4.45 3.86 10.82 4.69 4.13 4.76
+layer  6  tau     2.2     7.5    49.1   296.3   305.4    34.2   439.5   274.5 | theta key 1.15 query 0.92 | |W_o g| / |W_out| 0.365 | per group 7.62 8.04 4.95 8.92 7.47 6.68 5.17 4.90
+layer  7  tau     3.7     4.7    94.6   240.4    31.9    41.9    82.4    23.9 | theta key 1.05 query 1.09 | |W_o g| / |W_out| 0.351 | per group 9.44 6.56 6.82 9.74 7.49 5.15 5.46 5.25
+layer  8  tau     3.7    14.3    39.2   199.9    95.0   138.9   194.3   175.9 | theta key 0.93 query 1.05 | |W_o g| / |W_out| 0.361 | per group 7.46 9.47 7.71 6.96 8.17 6.37 6.17 6.38
+layer  9  tau     2.2    13.7   143.1   351.3   471.6    74.8   333.4   124.0 | theta key 1.09 query 1.29 | |W_o g| / |W_out| 0.593 | per group 10.67 8.67 15.56 22.41 7.57 6.47 17.42 6.23
+layer 10  tau     1.5     6.1   223.6   225.4   200.8   232.2    67.7   425.6 | theta key 1.13 query 1.59 | |W_o g| / |W_out| 0.618 | per group 9.57 11.34 15.85 14.16 32.64 6.97 6.45 6.34
+layer 11  tau     1.1    76.4    93.5   233.9    36.7   124.3   190.5    71.3 | theta key 0.90 query 1.50 | |W_o g| / |W_out| 0.433 | per group 9.99 14.96 19.59 8.68 6.00 5.64 6.80 6.89
