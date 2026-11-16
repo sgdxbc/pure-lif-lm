@@ -1,15 +1,17 @@
 {
  "openai-community/gpt2": {
-  "val_loss": 3.2893999288220073,
+  "val_loss": 3.276785064634762,
   "params": 124439808,
   "tokens": 9999360,
-  "seq": 1024
+  "seq": 1024,
+  "dtype": "float32"
  },
  "openai-community/gpt2-medium": {
-  "val_loss": 3.0107310578814546,
+  "val_loss": 2.999815497762169,
   "params": 354823168,
   "tokens": 9999360,
-  "seq": 1024
+  "seq": 1024,
+  "dtype": "float32"
  },
  "openai-community/gpt2-large": {
   "val_loss": 2.857687048416411,
@@ -24,10 +26,11 @@
   "seq": 1024
  },
  "EleutherAI/gpt-neo-125m": {
-  "val_loss": 3.253332357020849,
+  "val_loss": 3.250570406427886,
   "params": 125198592,
   "tokens": 9999360,
-  "seq": 1024
+  "seq": 1024,
+  "dtype": "float32"
  },
  "EleutherAI/gpt-neo-1.3B": {
   "val_loss": 2.708600135369601,

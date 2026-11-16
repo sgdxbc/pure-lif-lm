@@ -1,0 +1,11 @@
+openai-community/gpt2                        124M  val_loss 3.2768  ppl   26.49  (76s)
+openai-community/gpt2-medium                 355M  val_loss 2.9998  ppl   20.08  (179s)
+[transformers] [1mGPTNeoForCausalLM LOAD REPORT[0m from: EleutherAI/gpt-neo-125m
+Key                                                   | Status     |  | 
+------------------------------------------------------+------------+--+-
+transformer.h.{0, 2, 4, 6, 8, 10}.attn.attention.bias | UNEXPECTED |  | 
+transformer.h.{0...11}.attn.attention.masked_bias     | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+EleutherAI/gpt-neo-125m                      125M  val_loss 3.2506  ppl   25.81  (103s)
