@@ -1,0 +1,26 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+5153 passages, 81.5% of the last words appear earlier in the passage; 84 tokens per passage on average
+g17_base138 (EMA)        acc 0.002 ppl   80339.8 | word earlier in passage (82%): acc 0.002 loss 11.75 (short 12.24, gain +0.49) | not: acc 0.001 loss 9.27 (gain +0.50) | net gain -0.01 | passage loss 4.615 | check {'passages': 20, 'max_diff_single_fp32': 1.0995721817016602, 'max_diff_stepwise_fp32': 1.0995588302612305}
+g17_lr3_138 (EMA)        acc 0.001 ppl   93799.1 | word earlier in passage (82%): acc 0.001 loss 11.87 (short 12.26, gain +0.39) | not: acc 0.000 loss 9.58 (gain +0.41) | net gain -0.02 | passage loss 4.766 | check {'passages': 20, 'max_diff_single_fp32': 0.9264135360717773, 'max_diff_stepwise_fp32': 0.9264097213745117}
+g17_mem138 (EMA)         acc 0.038 ppl   10363.3 | word earlier in passage (82%): acc 0.046 loss 9.32 (short 12.07, gain +2.76) | not: acc 0.003 loss 8.93 (gain +0.74) | net gain +2.02 | passage loss 4.602 | check {'passages': 20, 'max_diff_single_fp32': 0.6133284568786621, 'max_diff_stepwise_fp32': 0.8283843994140625}
+g17_kd138 (EMA)          acc 0.005 ppl   49251.5 | word earlier in passage (82%): acc 0.005 loss 11.22 (short 11.90, gain +0.68) | not: acc 0.003 loss 8.96 (gain +0.61) | net gain +0.07 | passage loss 4.486 | check {'passages': 20, 'max_diff_single_fp32': 1.2744693756103516, 'max_diff_stepwise_fp32': 1.2744731903076172}
+g17_kdmem138 (EMA)       acc 0.045 ppl    6427.7 | word earlier in passage (82%): acc 0.054 loss 8.82 (short 11.77, gain +2.95) | not: acc 0.009 loss 8.56 (gain +0.88) | net gain +2.08 | passage loss 4.422 | check {'passages': 20, 'max_diff_single_fp32': 0.5280823707580566, 'max_diff_stepwise_fp32': 0.5280828475952148}
+g17_tf163m               acc 0.157 ppl     785.0 | word earlier in passage (82%): acc 0.186 loss 6.39 (short 11.34, gain +4.94) | not: acc 0.026 loss 7.88 (gain +1.20) | net gain +3.74 | passage loss 4.376 | check {'passages': 20, 'max_diff_single_fp32': 0.09879875183105469}
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 1692.54it/s]
+gpt2                     acc 0.321 ppl      34.2 | word earlier in passage (82%): acc 0.380 loss 2.99 (short 9.60, gain +6.61) | not: acc 0.062 loss 5.91 (gain +2.00) | net gain +4.61 | passage loss 3.653 | check {'passages': 20, 'max_diff_single_fp32': 0.5781717300415039}
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  55%|█████▌    | 161/292 [00:00<00:00, 1541.63it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 1569.23it/s]
+gpt2-medium              acc 0.419 ppl      16.8 | word earlier in passage (82%): acc 0.485 loss 2.36 (short 9.19, gain +6.83) | not: acc 0.128 loss 4.85 (gain +2.50) | net gain +4.33 | passage loss 3.450 | check {'passages': 20, 'max_diff_single_fp32': 0.3340024948120117}
+probe_lambada: exit 0 Mon Nov 16 11:18:57 AM +08 2026
+g17_base138: 2528 books of >= 1024 tokens, mean 4.1535  0-64 4.320  64-128 4.090  128-256 4.080  256-512 4.115  512-1024 4.178
+runs/g17_base138 eval_long: exit 0 Mon Nov 16 11:19:18 AM +08 2026
+g17_lr3_138: 2528 books of >= 1024 tokens, mean 4.3048  0-64 4.476  64-128 4.247  128-256 4.234  256-512 4.267  512-1024 4.327
+runs/g17_lr3_138 eval_long: exit 0 Mon Nov 16 11:19:38 AM +08 2026
+g17_mem138: 2528 books of >= 1024 tokens, mean 3.9778  0-64 4.273  64-128 3.952  128-256 3.911  256-512 3.929  512-1024 3.985
+runs/g17_mem138 eval_long: exit 0 Mon Nov 16 11:20:04 AM +08 2026
+g17_kd138: 2528 books of >= 1024 tokens, mean 4.0301  0-64 4.204  64-128 3.963  128-256 3.956  256-512 3.991  512-1024 4.055
+runs/g17_kd138 eval_long: exit 0 Mon Nov 16 11:20:24 AM +08 2026
+g17_kdmem138: 2528 books of >= 1024 tokens, mean 3.8408  0-64 4.125  64-128 3.813  128-256 3.777  256-512 3.794  512-1024 3.848
+runs/g17_kdmem138 eval_long: exit 0 Mon Nov 16 11:20:51 AM +08 2026
+g17_tf163m: 2528 books of >= 1024 tokens, mean 3.3846  0-64 3.731  64-128 3.396  128-256 3.345  256-512 3.346  512-1024 3.369
+runs/g17_tf163m eval_long: exit 0 Mon Nov 16 11:21:11 AM +08 2026
