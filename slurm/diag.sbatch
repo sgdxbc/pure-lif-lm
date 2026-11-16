@@ -15,7 +15,7 @@ if [ "${PROBE:-1}" != "0" ]; then
   echo "probe_lambada: exit $? $(date)"
 fi
 for r in "$@"; do
-  if ! ls "$r"/long_valid.json "$r"/long_valid_ema.json > /dev/null 2>&1; then
+  if [ ! -e "$r/long_valid.json" ] && [ ! -e "$r/long_valid_ema.json" ]; then
     python3 eval_long.py --device cuda --ema --length 1024 --batch 16 "$r"
     echo "$r eval_long: exit $? $(date)"
   fi
