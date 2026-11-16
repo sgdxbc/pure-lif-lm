@@ -65,6 +65,10 @@ def get_args():
     p.add_argument("--decay_steps", type=int, default=0, help="wsd: the length of the final decay")
     p.add_argument("--keep_ckpt", default="", help="comma-separated steps (multiples of --eval_every) at which to "
                    "keep a copy of the checkpoint, ckpt_step<N>.pt (to branch decays off a wsd run)")
+    p.add_argument("--class_file", default="", help="with --out_classes: .npy of the class of every word "
+                   "(experiments/word_classes.py); default: by word number")
+    p.add_argument("--in_class_file", default="", help="with --in_groups 2: .npy of a class for every word; a word "
+                   "then fires its class's neuron and the neuron of its position in the class")
     p.add_argument("--init_ckpt", default="", help="start from this checkpoint (weights, optimizer, step, EMA) when "
                    "the run directory has none yet: a decay branch of a wsd run")
     p.add_argument("--warmup", type=int, default=200)
@@ -290,6 +294,12 @@ def main():
     else:
         cfg = Config(**{f.name: getattr(a, f.name) for f in fields(Config)})
         model = SpikingLM(cfg)
+        if a.class_file:   # (a checkpoint loaded below brings back its own classes)
+            assert cfg.out_classes > 0, "--class_file needs --out_classes"
+            model.head.set_classes(torch.from_numpy(np.load(a.class_file)).long())
+        if a.in_class_file:
+            assert cfg.in_groups == 2, "--in_class_file needs --in_groups 2"
+            model.embed.set_classes(torch.from_numpy(np.load(a.in_class_file)).long())
     model.to(dev)
     teacher = None
     if a.teacher and a.distill_weight > 0:

@@ -99,6 +99,12 @@ python3 train.py --device cuda --out runs/my_snn \
 - `--leak_rank r`：调节漏电的突触（秩 r）。同一批脉冲除了注入电流，还通过另一组突触改变神经元漏电的快慢，
   `β[t] = sigmoid(β_logit + U·总线[t])`，网络可以按读到的内容决定一个神经元"保持"还是"清空"。现在的标准设置都用它（5.8 节起）。
 - `--steps_per_token T`：每个 token 模拟 T 个时间步（5.21 节）。
+- `--out_classes C [--class_file f.npy]`：两级读出（5.36 节）：C 个类读出神经元，每类最多 ⌈词表 / C⌉ 个词读出神经元；
+  P(词) = P(类) × P(词 | 类)，训练和评测照常（模型输出的是 log P(词)），生成时每个词只算 C 加一类的词读出神经元。
+  `--class_file` 是每个词所属的类（`experiments/word_classes.py` 生成：按词频，或对训练好的网络的读出行做均衡 k-means）；默认按编号分类。
+- `--in_groups k [--in_class_file f.npy]`：组合输入（5.36 节）：k 群各 n = ⌈词表^(1/k)⌉ 个输入神经元，每个词在每群里各让一个发放，
+  注入它们的突触之和。默认按编号的 k 位数字；k = 2 时 `--in_class_file` 按类分配（第一群是类，第二群是类里的序号；用
+  `word_classes.py --rows embed` 对训练好的网络的输入行聚类）。
 - `--mem_heads h [--mem_keys m --mem_dv dv --mem_every k]`：**可塑突触**（5.28 节）。每隔 k 层（默认每层），在神经元群之前加 h 组
   键神经元和查询神经元（每组各 m 个，时间常数短，减法复位）和一个 m × dv 的突触矩阵 S：
   `S[t] = λ·S[t-1] + k[t]·v[t]ᵀ`（k 是键神经元的脉冲，v = W_v·总线，λ 每组一个、可学习，初始时间常数在

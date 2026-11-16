@@ -22,7 +22,7 @@ Transformer (analytic): MACs = weights + attention over c earlier tokens; bytes 
 Weights are counted at 8 and 4 bits. Firing comes from --windows validation windows of 256 tokens, each read from rest,
 taken in groups of 16 as the 16 streams.
 """
-import argparse, json, os
+import argparse, json, math, os
 import numpy as np
 import torch
 from model import SpikingLM
@@ -69,7 +69,13 @@ def snn_cost(model, f):
     V, d, H, L, r, T = c.vocab, c.d_model, c.d_hidden, c.n_layers, c.leak_rank, c.steps_per_token
     into = d * H + (d * r if r else 0)                       # W_in and the leak synapses' first factor: read the bus
     leak2 = r * H if r else 0                                # second factor of the leak synapses: dense (rank-r input)
-    dense_step, dense_w = into + leak2, L * (into + leak2 + H) + d * V
+    # readout: all vocab neurons, or with out_classes the C class neurons (shared by all streams) and the m word
+    # neurons of the class each stream draws (its own); input: one synapse row per word, or in_groups rows
+    C = getattr(c, "out_classes", 0)
+    m = math.ceil(V / C) if C else 0
+    head_shared, head_own = (d * C, d * m) if C else (d * V, 0)
+    own = head_own + d * max(1, getattr(c, "in_groups", 0))   # weights each stream reads for itself per token
+    dense_step, dense_w = into + leak2, L * (into + leak2 + H) + head_shared
     M = len(getattr(model, "mem_layers", []))
     mem_w = mem_macs = mem_adds = mem_state = 0
     if M:
@@ -80,15 +86,15 @@ def snn_cost(model, f):
         mem_state = M * (h * m * dv + 2 * h * m) * 3
         dense_w += mem_w
     out = {"arch": "snn", "params": model.num_params(), "steps_per_token": T,
-           "dense_macs": T * L * dense_step + d * V + mem_macs,
+           "dense_macs": T * L * dense_step + head_shared + head_own + mem_macs,
            "sparse_adds": float(sum(f["rate"][l] * H * T * d for l in range(L))) + mem_adds,
            "state_bytes": L * H * 3 + mem_state,
-           "dense_weights": dense_w, "plastic_layers": M,
+           "dense_weights": dense_w, "per_stream_weights": own, "plastic_layers": M,
            "firing": {k: v.tolist() for k, v in f.items()}}
     for bits in (8, 4):
         b = bits / 8
-        one = (dense_w + sum(f["token"][l] * H * d for l in range(L))) * b + d * b
-        many = (dense_w + sum(f["token_any"][l] * H * d for l in range(L))) * b / STREAMS + d * b
+        one = (dense_w + sum(f["token"][l] * H * d for l in range(L))) * b + own * b
+        many = (dense_w + sum(f["token_any"][l] * H * d for l in range(L))) * b / STREAMS + own * b
         out[f"weights_bytes_{bits}bit"] = out["params"] * b
         out[f"bytes_per_token_{bits}bit"] = {"1 stream": one, "%d streams" % STREAMS: many}
     return out

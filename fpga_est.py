@@ -48,7 +48,7 @@ def estimate(hw, args, bits, dev):
                     return f["token"][l]
                 q = 1 - (1 - f["token_any"][l]) ** (1 / 16)
                 return 1 - (1 - q) ** B
-            read = (dense_w + sum(share(l) * H * d for l in range(L))) * b + B * d * b
+            read = (dense_w + sum(share(l) * H * d for l in range(L))) * b + B * hw.get("per_stream_weights", d) * b
             where = "weights in HBM"
             if state > budget:
                 read += 2 * state

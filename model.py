@@ -28,6 +28,18 @@ Optional (leak_rank > 0): leak-modulating synapses. Besides the ordinary synapse
                beta_l[t] = sigmoid(beta_logit_l + U_l bus_l[t])     (per neuron and per step)
            so the network can make a neuron hold its potential for a long time, or clear it, depending on
            what it reads. U_l is low-rank and starts at zero, i.e. the model starts as the plain LIF network.
+Optional (in_groups = k > 1): a word is coded by k spikes instead of one. There are k groups of n = ceil(vocab^(1/k))
+           input neurons; word x makes neuron (x // n^j) % n of group j fire, for j = 0..k-1 (the k base-n digits of
+           its number, so every word has its own combination; or, k = 2 with train.py --in_class_file, its class and
+           its position in the class), and the injected current is the sum of their k synapse rows. k * n rows instead of vocab (k = 2: 2 * 225 = 450 for 50,304 words): the input synapses
+           almost vanish from the storage, at the price of words that share a digit sharing part of their current.
+Optional (out_classes = C > 0): two-level readout. The words are split into C classes of at most m = ceil(vocab / C)
+           (word_cls, set by train.py --class_file, or by number). C class readout neurons give the probability
+           of each class, P(c) = softmax(W_c bus); each class has m word readout neurons giving the probability of
+           each of its words, P(w | c) = softmax over the class of (W_w bus). P(w) = P(c(w)) P(w | c(w)) is a full
+           distribution over the vocabulary (training and evaluation are unchanged; forward returns log P(w) in
+           place of the logits). Generation needs only the C class neurons and the m word neurons of the class drawn,
+           (C + m) * d_model readout weights per token instead of vocab * d_model.
 Optional (steps_per_token = T > 1): every token is shown for T simulation steps instead of one. Its input neuron
            fires at each of the T steps, the populations run T steps (so a neuron can fire up to T times per token),
            and the readout neurons integrate the bus over the T steps without leaking and are read and cleared at the
@@ -96,6 +108,8 @@ class Config:
                               # by sqrt(1-beta^2) instead (same function, worse for Adam); "none".
     out_init: float = 0.02
     head_init: float = 0.02
+    in_groups: int = 0        # >1: each word is coded by this many input spikes (module docstring)
+    out_classes: int = 0      # >0: two-level readout over this many word classes (module docstring)
     learn_beta: bool = True
     learn_theta: bool = True
     reset_learn: bool = False # multiplicative reset V <- V*(1 - gamma*s) with a learned gamma per neuron
@@ -268,18 +282,96 @@ class PlasticSynapses(nn.Module):
         return self.w_out(r), s, (S.detach(), v_last.detach())
 
 
+class CodedInput(nn.Module):
+    """in_groups: word x makes one input neuron fire in each of k groups of n; the current is the sum of their
+    synapse rows. weight is the (k * n, d) table of all of them. code[x] (k,) is the neuron of each group: by default
+    the base-n digits of x; with set_classes (k = 2), its class and its position in the class."""
+
+    def __init__(self, vocab, d, k):
+        super().__init__()
+        self.k, self.vocab, self.n = k, vocab, math.ceil(vocab ** (1 / k) - 1e-9)
+        while self.n ** k < vocab:
+            self.n += 1
+        self.weight = nn.Parameter(torch.randn(k * self.n, d) / math.sqrt(k))   # the sum has unit variance
+        digits = (torch.arange(vocab).unsqueeze(-1) // self.n ** torch.arange(k)) % self.n
+        self.register_buffer("code", digits)   # saved with the weights
+        self.register_buffer("offset", self.n * torch.arange(k), persistent=False)
+
+    @torch.no_grad()
+    def set_classes(self, word_cls):
+        """k = 2: word x fires neuron cls(x) of the first group and its position within the class in the second."""
+        word_cls = torch.as_tensor(word_cls, dtype=torch.long, device=self.code.device)
+        assert self.k == 2 and word_cls.shape == (self.vocab,)
+        counts = torch.bincount(word_cls)
+        assert len(counts) <= self.n and int(counts.max()) <= self.n, "classes must fit the n neurons of each group"
+        order = torch.argsort(word_cls, stable=True)
+        start = torch.cumsum(counts, 0) - counts
+        pos = torch.empty_like(word_cls)
+        pos[order] = torch.arange(self.vocab, device=word_cls.device) - start[word_cls[order]]
+        self.code.copy_(torch.stack([word_cls, pos], -1))
+
+    def rows(self, idx):   # (..., k): the input neurons that fire for each word
+        return self.code[idx] + self.offset
+
+    def forward(self, idx):
+        return F.embedding(self.rows(idx), self.weight).sum(-2)
+
+
+class ClassReadout(nn.Module):
+    """out_classes: P(w) = P(class of w) P(w | its class). word_cls (vocab,) is the class of every word (by default by
+    number: word w in class w // m); forward returns log P(w) for every word, (..., vocab)."""
+
+    def __init__(self, vocab, d, C, init):
+        super().__init__()
+        self.C, self.m, self.vocab = C, math.ceil(vocab / C), vocab
+        self.w_cls = nn.Parameter(torch.randn(C, d) * init)            # class readout neurons
+        self.w_word = nn.Parameter(torch.randn(C * self.m, d) * init)  # word readout neurons, class by class
+        # saved with the weights, so a checkpoint keeps its classes
+        self.register_buffer("word_cls", torch.arange(vocab) // self.m)
+        self.register_buffer("slot", torch.zeros(vocab, dtype=torch.long))
+        self.register_buffer("used", torch.zeros(C * self.m, dtype=torch.bool))
+        self.set_classes(self.word_cls.clone())
+
+    @torch.no_grad()
+    def set_classes(self, word_cls):
+        """word_cls (vocab,): class of every word, each class holding at most m words."""
+        word_cls = torch.as_tensor(word_cls, dtype=torch.long, device=self.word_cls.device)
+        assert word_cls.shape == (self.vocab,) and int(word_cls.min()) >= 0 and int(word_cls.max()) < self.C
+        counts = torch.bincount(word_cls, minlength=self.C)
+        assert int(counts.max()) <= self.m, f"a class has {int(counts.max())} words, more than m = {self.m}"
+        order = torch.argsort(word_cls, stable=True)                       # words grouped by class
+        start = torch.cumsum(counts, 0) - counts
+        pos = torch.empty_like(word_cls)
+        pos[order] = torch.arange(self.vocab, device=word_cls.device) - start[word_cls[order]]
+        self.word_cls.copy_(word_cls)
+        self.slot.copy_(word_cls * self.m + pos)                           # row of w in w_word
+        self.used.zero_(); self.used[self.slot] = True
+
+    def forward(self, x):
+        lc = F.log_softmax(F.linear(x, self.w_cls).float(), -1)                                   # (..., C)
+        lw = F.linear(x, self.w_word).float().masked_fill(~self.used, float("-inf"))              # (..., C*m)
+        lw = F.log_softmax(lw.view(*lw.shape[:-1], self.C, self.m), -1).flatten(-2)
+        return lc[..., self.word_cls] + lw[..., self.slot]
+
+
 class SpikingLM(nn.Module):
     def __init__(self, cfg: Config):
         super().__init__()
         self.cfg = cfg
-        self.embed = nn.Embedding(cfg.vocab, cfg.d_model)
-        nn.init.normal_(self.embed.weight, std=1.0)
+        if cfg.in_groups > 1:
+            self.embed = CodedInput(cfg.vocab, cfg.d_model, cfg.in_groups)
+        else:
+            self.embed = nn.Embedding(cfg.vocab, cfg.d_model)
+            nn.init.normal_(self.embed.weight, std=1.0)
         self.layers = nn.ModuleList([LIFPopulation(cfg) for _ in range(cfg.n_layers)])
         self.mem_layers = [i for i in range(cfg.n_layers) if cfg.mem_heads and (i + 1) % cfg.mem_every == 0]
         if self.mem_layers:   # plastic synapses in front of these populations
             self.mems = nn.ModuleDict({str(i): PlasticSynapses(cfg) for i in self.mem_layers})
-        self.head = nn.Linear(cfg.d_model, cfg.vocab, bias=False)
-        nn.init.normal_(self.head.weight, std=cfg.head_init)
+        if cfg.out_classes > 0:
+            self.head = ClassReadout(cfg.vocab, cfg.d_model, cfg.out_classes, cfg.head_init)
+        else:
+            self.head = nn.Linear(cfg.d_model, cfg.vocab, bias=False)
+            nn.init.normal_(self.head.weight, std=cfg.head_init)
         self.keep_bus = False   # training only (train.py --hint_weight): keep the bus after each layer in last_bus
         self.last_bus = None
 
