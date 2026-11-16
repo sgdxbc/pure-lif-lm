@@ -1,0 +1,1 @@
+g24_kdk256t1wsd          snn  185.8M  8-bit  185.8 MB  dense MACs  120.1M + sparse adds  1.54M  state 4976.6 KB  MB/token 8-bit: 1 stream  119.8, 16 streams   8.1  (rate 0.041)
