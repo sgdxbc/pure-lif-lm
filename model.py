@@ -55,7 +55,7 @@ Optional (mem_heads > 0): plastic synapses (a fast Hebbian memory) in front of t
 Removed options (tried, did not help, deleted to keep the code small; the code is in git history):
            same-layer synapses rec_rank (docs/experiments.md 5.2), delayed synapses delay_k (5.9), the spiking bus
            spike_bus (5.23), the current scaled by (1 - beta) leak_gate (5.26), all last in commit 490e9e6;
-           error-correcting writes to the plastic synapses mem_rule = "delta" (5.32), in commit 903ed11.
+           error-correcting writes to the plastic synapses mem_rule = "delta" (5.32), in commit c138343.
            Checkpoints that saved them switched off still load (Config.from_dict); ones that used them need that commit.
 """
 import math
@@ -110,7 +110,7 @@ class Config:
     def from_dict(cls, d):
         """Config from a saved dict (checkpoint "cfg"); drops removed options that were off, refuses ones that were on."""
         on = [k for k, off in REMOVED.items() if off is not None and k in d and d[k] != off]
-        assert not on, f"this checkpoint uses {on}, removed from the code: check out commit 490e9e6 (903ed11 for mem_rule)"
+        assert not on, f"this checkpoint uses {on}, removed from the code: check out commit 490e9e6 (c138343 for mem_rule)"
         names = {f.name for f in fields(cls)}
         return cls(**{k: v for k, v in d.items() if k in names})
 
