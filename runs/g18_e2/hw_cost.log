@@ -1,0 +1,1 @@
+g18_e2                   snn  147.9M  8-bit  147.9 MB  dense MACs   81.0M + sparse adds  1.61M  state  718.8 KB  MB/token 8-bit: 1 stream   82.4, 16 streams   5.9  (rate 0.055)
