@@ -350,8 +350,9 @@ class ClassReadout(nn.Module):
     def forward(self, x):
         lc = F.log_softmax(F.linear(x, self.w_cls).float(), -1)                                   # (..., C)
         lw = F.linear(x, self.w_word).float().masked_fill(~self.used, float("-inf"))              # (..., C*m)
-        lw = F.log_softmax(lw.view(*lw.shape[:-1], self.C, self.m), -1).flatten(-2)
-        return lc[..., self.word_cls] + lw[..., self.slot]
+        lw = F.log_softmax(lw.view(*lw.shape[:-1], self.C, self.m), -1) + lc.unsqueeze(-1)       # log P per slot
+        # to word order; index_select (no repeated index) rather than advanced indexing, whose backward is slow on GPUs
+        return lw.flatten(-2).index_select(-1, self.slot)
 
 
 class SpikingLM(nn.Module):
