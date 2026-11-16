@@ -1,0 +1,16 @@
+g13_tf163: 2528 books of >= 1024 tokens, mean 3.2486  0-64 3.581  64-128 3.255  128-256 3.211  256-512 3.213  512-1024 3.233
+runs/g13_tf163 eval_long: exit 0 Mon Nov 16 08:36:53 AM +08 2026
+g13_tf163: 2528 books of >= 1024 tokens, mean 3.9857  0-64 3.924  64-128 3.871  128-256 3.901  256-512 3.965  512-1024 4.039
+runs/g13_tf163 eval_long window 16: exit 0 Mon Nov 16 08:38:47 AM +08 2026
+g13_tf163: 2528 books of >= 1024 tokens, mean 3.5177  0-64 3.581  64-128 3.403  128-256 3.431  256-512 3.488  512-1024 3.560
+runs/g13_tf163 eval_long window 64: exit 0 Mon Nov 16 08:39:56 AM +08 2026
+g13_tf163: 2528 books of >= 1024 tokens, mean 3.3177  0-64 3.581  64-128 3.255  128-256 3.211  256-512 3.276  512-1024 3.340
+runs/g13_tf163 eval_long window 256: exit 0 Mon Nov 16 08:41:44 AM +08 2026
+g13_tf77: 2528 books of >= 1024 tokens, mean 3.4749  0-64 3.817  64-128 3.485  128-256 3.441  256-512 3.437  512-1024 3.458
+runs/g13_tf77 eval_long: exit 0 Mon Nov 16 08:42:17 AM +08 2026
+g13_tf77: 2528 books of >= 1024 tokens, mean 4.1645  0-64 4.127  64-128 4.054  128-256 4.084  256-512 4.143  512-1024 4.214
+runs/g13_tf77 eval_long window 16: exit 0 Mon Nov 16 08:43:45 AM +08 2026
+g13_tf77: 2528 books of >= 1024 tokens, mean 3.7312  0-64 3.817  64-128 3.624  128-256 3.649  256-512 3.700  512-1024 3.770
+runs/g13_tf77 eval_long window 64: exit 0 Mon Nov 16 08:44:40 AM +08 2026
+g13_tf77: 2528 books of >= 1024 tokens, mean 3.5416  0-64 3.817  64-128 3.485  128-256 3.441  256-512 3.499  512-1024 3.561
+runs/g13_tf77 eval_long window 256: exit 0 Mon Nov 16 08:46:18 AM +08 2026
