@@ -1,0 +1,1 @@
+g19_k512                 snn  223.7M  8-bit  223.7 MB  dense MACs  159.5M + sparse adds  2.12M  state 9842.7 KB  MB/token 8-bit: 1 stream  157.8, 16 streams  10.6  (rate 0.050)

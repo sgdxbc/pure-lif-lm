@@ -1,0 +1,13 @@
+queued the next part of runs/g19_k512: job 1151945
+xgpi11 NVIDIA H100 NVL | runs/g19_k512 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --mem_heads 8 --mem_keys 512 --accum 4
+params 223.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 2500 val_loss 4.8293 (EMA weights 4.6795)
+== eval step 5000 val_loss 4.5208 (EMA weights 4.3542)
+== eval step 7500 val_loss 4.3656 (EMA weights 4.2121)
+== eval step 10000 val_loss 4.2367 (EMA weights 4.1140)
+== eval step 12500 val_loss 4.1313 (EMA weights 4.0410)
+params 223.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 15000 val_loss 4.0483 (EMA weights 3.9877)
+== eval step 17500 val_loss 3.9921 (EMA weights 3.9546)
+== eval step 20000 val_loss 3.9628 (EMA weights 3.9349)
+[2026-11-16T23:54:21.988] error: *** JOB 1149891 ON xgpi11 CANCELLED AT 2026-11-16T23:54:21 DUE TO TIME LIMIT ***

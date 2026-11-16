@@ -1,0 +1,1 @@
+g19_tau1                 snn  185.8M  8-bit  185.8 MB  dense MACs  120.1M + sparse adds  1.71M  state 4976.6 KB  MB/token 8-bit: 1 stream  119.9, 16 streams   8.2  (rate 0.047)
