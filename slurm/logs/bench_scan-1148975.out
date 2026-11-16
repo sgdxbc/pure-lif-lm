@@ -1,0 +1,11 @@
+xgpi19
+NVIDIA H100 NVL
+NVIDIA H100 NVL MIG 3g.47gb batch 16
+same result: r 0.0 S 0.0
+plastic_scan loop     forward+backward     5.5 ms
+plastic_scan batched  forward+backward     2.0 ms
+training step, loop    :   203.2 ms,   80.6k tok/s, peak 21.1 GB
+training step, batched :   176.5 ms,   92.8k tok/s, peak 21.1 GB
+training step, loop    :   203.2 ms,   80.6k tok/s, peak 21.1 GB
+training step, batched :   177.4 ms,   92.4k tok/s, peak 21.1 GB
+training step, no plastic synapses:    96.2 ms,  170.3k tok/s, peak 16.2 GB
