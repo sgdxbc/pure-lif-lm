@@ -1,0 +1,3 @@
+queued the next part of runs/g18_kd355mem: job 1150690
+xgph11 NVIDIA A100 80GB PCIe | runs/g18_kd355mem | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --teacher hf:openai-community/gpt2-medium --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --accum 8 --lr 6e-4
+[2026-11-16T20:26:13.007] error: *** JOB 1149547 ON xgph11 CANCELLED AT 2026-11-16T20:26:13 DUE TO TIME LIMIT ***

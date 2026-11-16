@@ -1,0 +1,355 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:   3%|▎         | 10/292 [00:00<00:03, 90.03it/s]Loading weights:   8%|▊         | 22/292 [00:00<00:02, 93.15it/s]Loading weights:  12%|█▏        | 36/292 [00:00<00:02, 106.46it/s]Loading weights:  20%|█▉        | 58/292 [00:00<00:01, 120.97it/s]Loading weights:  25%|██▍       | 72/292 [00:00<00:01, 115.17it/s]Loading weights:  32%|███▏      | 94/292 [00:00<00:01, 132.96it/s]Loading weights:  37%|███▋      | 108/292 [00:00<00:01, 130.09it/s]Loading weights:  42%|████▏     | 122/292 [00:00<00:01, 132.68it/s]Loading weights:  47%|████▋     | 136/292 [00:01<00:01, 133.68it/s]Loading weights:  53%|█████▎    | 154/292 [00:01<00:01, 127.27it/s]Loading weights:  58%|█████▊    | 168/292 [00:01<00:01, 123.09it/s]Loading weights:  62%|██████▏   | 181/292 [00:01<00:00, 118.91it/s]Loading weights:  69%|██████▉   | 202/292 [00:01<00:00, 118.06it/s]Loading weights:  74%|███████▍  | 216/292 [00:01<00:00, 112.18it/s]Loading weights:  82%|████████▏ | 238/292 [00:01<00:00, 120.61it/s]Loading weights:  86%|████████▌ | 251/292 [00:02<00:00, 79.96it/s] Loading weights:  90%|█████████ | 264/292 [00:02<00:00, 64.42it/s]Loading weights:  98%|█████████▊| 286/292 [00:02<00:00, 80.95it/s]Loading weights: 100%|██████████| 292/292 [00:03<00:00, 92.18it/s]
+distilling from hf:openai-community/gpt2-medium (weight 0.9, temperature 1.0)
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.0104
+step      1 loss 11.1697 kl 7.8419 lr 6.00e-07 gn 3.57 870 tok/s mem 17.2GB rate 0.117 [0.07 0.08 0.08 0.10 0.11 0.11 0.13 0.13 0.14 0.15 0.15 0.16]
+step    500 loss 5.9785 kl 3.0129 lr 3.00e-04 gn 1.12 13,332 tok/s mem 17.2GB rate 0.129 [0.06 0.07 0.08 0.10 0.11 0.11 0.13 0.15 0.16 0.17 0.19 0.21]
+step   1000 loss 5.3277 kl 2.3264 lr 6.00e-04 gn 0.85 13,292 tok/s mem 17.2GB rate 0.084 [0.05 0.06 0.07 0.07 0.07 0.06 0.08 0.09 0.09 0.10 0.12 0.14]
+step   1500 loss 4.9760 kl 1.9891 lr 5.99e-04 gn 1.06 13,257 tok/s mem 17.2GB rate 0.065 [0.05 0.05 0.05 0.05 0.05 0.05 0.06 0.07 0.07 0.08 0.10 0.11]
+step   2000 loss 4.9432 kl 1.8860 lr 5.96e-04 gn 0.97 13,259 tok/s mem 17.2GB rate 0.053 [0.05 0.05 0.04 0.05 0.04 0.04 0.04 0.05 0.05 0.06 0.08 0.09]
+step   2500 loss 4.7468 kl 1.7670 lr 5.92e-04 gn 2.22 13,262 tok/s mem 17.2GB rate 0.050 [0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.07 0.09]
+== eval step 2500 val_loss 4.8025 (EMA weights 4.6602)
+   >> The history of the city|, however, is what is the first country in the country? In the first country, as was the largest country in the United States, in the country, a capital city in the region, including the capital of the country, the metropolitan east of Mexico, and the nation's capital. In the southern states that there is considerable considerable pressure and economic pressure, the city of the continent's capital, as an increasing part of Africa, Spain, and the region of Africa. As the population of the Philippines, the country is dominated with the United States, where there is an uneven growth between the continent
+   >> In mathematics, a prime number is| also considered to be a subject with his own personal. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / Andri Lanka, who is not interested in the matter of the universe /  /  /  /  /  /  /  /  /  /  /  /  /  /  / But you are not a believer. /  /  /  /  /  / The way to make sure your children know the age of their own and those who do not know what they need to know about it, if they aren't they? /  /  /  /  /  /  /  / 
+   >> Plants need sunlight because| they create a set of new foods. /  /  /  /  /  /  /  /  / - Take a look at the following foods and drinks on these fruits: /  /  /  /  /  /  / - Create a plan: /  /  /  / - Drink vegetables / - Eat breakfast /  / - Remove fruit /  / The best of the following are not just plain or 'fresh vegetables' /  /  / - Get regular with a lot of junk food from your favourite. / - Eat a little amount of food at a time of a meal. / - Make sure to get the whole grain of a fruit / -
+step   3000 loss 4.7299 kl 1.7692 lr 5.85e-04 gn 0.59 13,287 tok/s mem 25.2GB rate 0.046 [0.04 0.04 0.03 0.03 0.04 0.04 0.04 0.04 0.05 0.05 0.07 0.08]
+step   3500 loss 4.4786 kl 1.6115 lr 5.77e-04 gn 0.46 13,281 tok/s mem 25.2GB rate 0.044 [0.03 0.03 0.02 0.03 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.09]
+step   4000 loss 4.4594 kl 1.5158 lr 5.67e-04 gn 0.56 13,283 tok/s mem 25.2GB rate 0.042 [0.03 0.03 0.02 0.03 0.03 0.03 0.04 0.04 0.05 0.05 0.06 0.09]
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:   3%|▎         | 10/292 [00:00<00:07, 35.77it/s]Loading weights:   8%|▊         | 22/292 [00:00<00:07, 37.72it/s]Loading weights:   9%|▉         | 26/292 [00:00<00:06, 38.10it/s]Loading weights:  12%|█▏        | 34/292 [00:00<00:06, 42.71it/s]Loading weights:  16%|█▌        | 46/292 [00:00<00:04, 57.80it/s]Loading weights:  18%|█▊        | 53/292 [00:01<00:04, 51.12it/s]Loading weights:  21%|██        | 60/292 [00:01<00:04, 54.30it/s]Loading weights:  24%|██▍       | 70/292 [00:01<00:03, 55.80it/s]Loading weights:  28%|██▊       | 82/292 [00:01<00:03, 59.51it/s]Loading weights:  32%|███▏      | 94/292 [00:01<00:03, 57.45it/s]Loading weights:  36%|███▋      | 106/292 [00:02<00:03, 60.57it/s]Loading weights:  40%|████      | 118/292 [00:02<00:02, 60.61it/s]Loading weights:  45%|████▍     | 130/292 [00:02<00:02, 57.62it/s]Loading weights:  49%|████▊     | 142/292 [00:02<00:02, 54.55it/s]Loading weights:  53%|█████▎    | 154/292 [00:02<00:02, 60.33it/s]Loading weights:  57%|█████▋    | 166/292 [00:03<00:02, 57.69it/s]Loading weights:  61%|██████    | 178/292 [00:03<00:01, 59.95it/s]Loading weights:  65%|██████▌   | 190/292 [00:03<00:01, 62.54it/s]Loading weights:  67%|██████▋   | 197/292 [00:03<00:01, 61.73it/s]Loading weights:  70%|██████▉   | 204/292 [00:03<00:01, 55.34it/s]Loading weights:  73%|███████▎  | 214/292 [00:03<00:01, 58.44it/s]Loading weights:  77%|███████▋  | 226/292 [00:04<00:01, 58.13it/s]Loading weights:  82%|████████▏ | 238/292 [00:04<00:00, 61.66it/s]Loading weights:  86%|████████▌ | 250/292 [00:04<00:00, 58.29it/s]Loading weights:  90%|████████▉ | 262/292 [00:04<00:00, 53.88it/s]Loading weights:  95%|█████████▍| 276/292 [00:04<00:00, 56.57it/s]Loading weights:  99%|█████████▊| 288/292 [00:05<00:00, 63.42it/s]Loading weights: 100%|██████████| 292/292 [00:06<00:00, 48.35it/s]
+distilling from hf:openai-community/gpt2-medium (weight 0.9, temperature 1.0)
+resumed from step 2500
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step   3000 loss 4.6405 kl 1.7451 lr 5.85e-04 gn 1.06 12,314 tok/s mem 12.6GB rate 0.048 [0.04 0.04 0.03 0.04 0.04 0.04 0.04 0.05 0.05 0.05 0.07 0.09]
+step   3500 loss 4.4989 kl 1.5983 lr 5.77e-04 gn 0.52 12,642 tok/s mem 12.6GB rate 0.059 [0.04 0.04 0.10 0.08 0.06 0.04 0.04 0.04 0.05 0.05 0.06 0.09]
+step   4000 loss 4.6105 kl 1.6245 lr 5.67e-04 gn 0.59 12,925 tok/s mem 12.6GB rate 0.055 [0.04 0.04 0.09 0.09 0.05 0.04 0.04 0.04 0.05 0.05 0.06 0.08]
+step   4500 loss 4.4957 kl 1.5901 lr 5.56e-04 gn 0.58 13,010 tok/s mem 12.6GB rate 0.053 [0.04 0.03 0.07 0.08 0.05 0.04 0.04 0.04 0.05 0.05 0.06 0.09]
+step   5000 loss 4.3506 kl 1.4379 lr 5.43e-04 gn 0.50 12,957 tok/s mem 12.6GB rate 0.048 [0.04 0.03 0.05 0.05 0.04 0.04 0.04 0.04 0.05 0.05 0.07 0.09]
+== eval step 5000 val_loss 4.4119 (EMA weights 4.3230)
+   >> The history of the city| is often referred to as the city of Medina. This city of Paris is known to have been preserved in the city before the world had been built. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / - The British people of the Great Lakes /  /  /  /  /  /  / Naniers in the World /  /  /  /  / - In some places /  / - Nails /  /  / That's another example of what the National Highway Administration (OSHA) is by the British.
+   >> In mathematics, a prime number is| a property of their properties, not a good. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / In the last few years, however, a few years have been in the late Middle Ages that are among the most famous of the state's history. This is known in an excerpt from the late 1960s. /  /  /  / The first and last major part of this chapter in our history is the history of the history of the country of the world. It is also the most complete history of the nation's history in the region's history, and its history is
+   >> Plants need sunlight because| they are so heavy and hard they can be very thin. Although they can be used as a very dense, they are often a bit more harmful than they are. /  /  /  /  /  /  /  /  /  /  /  /  / The first thing that we can say is that I have gotten a lot of trouble with the problem is that this problem was usually in the first place. This is because this problem might make it harder to think of as problems with an event happening. It is really important to keep in mind when you have a problem that causes the problem for an event like the accident/h
+step   5500 loss 4.3302 kl 1.3701 lr 5.29e-04 gn 0.43 12,942 tok/s mem 22.1GB rate 0.045 [0.04 0.03 0.04 0.04 0.03 0.03 0.04 0.04 0.05 0.05 0.06 0.09]
+step   6000 loss 4.3430 kl 1.4130 lr 5.13e-04 gn 0.50 12,980 tok/s mem 22.1GB rate 0.045 [0.04 0.03 0.04 0.04 0.03 0.03 0.04 0.04 0.05 0.05 0.07 0.09]
+step   6500 loss 4.3715 kl 1.3966 lr 4.96e-04 gn 0.71 12,937 tok/s mem 22.1GB rate 0.046 [0.04 0.04 0.03 0.03 0.04 0.03 0.04 0.04 0.05 0.05 0.07 0.09]
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  82%|████████▏ | 240/292 [00:00<00:00, 2314.69it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 1978.24it/s]
+distilling from hf:openai-community/gpt2-medium (weight 0.9, temperature 1.0)
+resumed from step 5000
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step   5500 loss 4.2780 kl 1.3820 lr 5.29e-04 gn 0.50 15,092 tok/s mem 12.5GB rate 0.045 [0.04 0.03 0.04 0.03 0.03 0.04 0.04 0.04 0.05 0.05 0.06 0.09]
+step   6000 loss 4.4538 kl 1.5693 lr 5.13e-04 gn 23.05 15,117 tok/s mem 12.5GB rate 0.050 [0.04 0.04 0.05 0.05 0.04 0.04 0.04 0.04 0.05 0.05 0.07 0.08]
+step   6500 loss 4.3418 kl 1.4011 lr 4.96e-04 gn 1.04 15,110 tok/s mem 12.5GB rate 0.050 [0.04 0.05 0.05 0.05 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.09]
+step   7000 loss 4.3001 kl 1.3676 lr 4.78e-04 gn 0.46 15,133 tok/s mem 12.5GB rate 0.044 [0.04 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.05 0.07 0.09]
+step   7500 loss 4.2631 kl 1.3022 lr 4.59e-04 gn 0.52 15,140 tok/s mem 12.5GB rate 0.043 [0.04 0.03 0.02 0.02 0.03 0.04 0.04 0.04 0.05 0.05 0.07 0.09]
+== eval step 7500 val_loss 4.2530 (EMA weights 4.1662)
+   >> The history of the city| is shrouded in a period when the city was destroyed. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / 1. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / A. / In the photo /  /  / The "T
+   >> In mathematics, a prime number is| given as high as zero when it becomes prime. As this number increases, an additional factor that can be considered a problem that is not known about the number of prime numbers, and a number of prime numbers. Also, it contains several variables known as prime numbers. The number of such numbers is then known as the number assigned in the year to the number of prime numbers. The number of digits per month corresponds to one number per year when the number is used to divide its number. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / 
+   >> Plants need sunlight because|, when the skin becomes brittle, they do not need to be washed. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / These are also important skills that it needs to work /  /  /  /  /  /  / The good of your skin as you like /  /  /  /  / Apply to give a solid coating on your skin that is not exposed to air / . Then the skin is cracked and the skin has /  /  /  /  /  /  /  / How to treat skin /  /  / Clean a
+step   8000 loss 4.1954 kl 1.3104 lr 4.38e-04 gn 0.47 15,138 tok/s mem 22.1GB rate 0.043 [0.04 0.03 0.02 0.02 0.03 0.03 0.04 0.04 0.05 0.06 0.07 0.09]
+step   8500 loss 4.2505 kl 1.2353 lr 4.18e-04 gn 0.47 15,148 tok/s mem 22.1GB rate 0.044 [0.04 0.03 0.02 0.02 0.03 0.03 0.04 0.04 0.05 0.06 0.07 0.09]
+step   9000 loss 4.3196 kl 1.3665 lr 3.96e-04 gn 1.01 15,141 tok/s mem 22.1GB rate 0.053 [0.05 0.07 0.06 0.03 0.04 0.04 0.04 0.04 0.05 0.05 0.07 0.09]
+step   9500 loss 4.0214 kl 1.2033 lr 3.74e-04 gn 0.49 15,143 tok/s mem 22.1GB rate 0.047 [0.04 0.04 0.03 0.03 0.03 0.04 0.04 0.05 0.05 0.06 0.07 0.09]
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  77%|███████▋  | 226/292 [00:00<00:00, 2179.24it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 1974.99it/s]
+distilling from hf:openai-community/gpt2-medium (weight 0.9, temperature 1.0)
+resumed from step 7500
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step   8000 loss 4.1438 kl 1.2485 lr 4.38e-04 gn 0.45 15,125 tok/s mem 12.5GB rate 0.044 [0.04 0.03 0.02 0.02 0.03 0.03 0.04 0.04 0.05 0.05 0.07 0.09]
+gradient spike at step 8093: gn 36.37 (median 0.47), loss 4.2849; mems.0.v_in.weight 26.13, mems.0.w_out.weight 14.19, layers.0.w_in.weight 10.10, mems.0.kq_in.weight 9.90
+gradient spike at step 8104: gn 3.83 (median 0.47), loss 4.1554; mems.2.kq_in.weight 1.71, mems.0.w_out.weight 1.68, layers.1.w_in.weight 1.66, layers.0.w_out.weight 1.31
+gradient spike at step 8105: gn 8.87 (median 0.47), loss 4.2293; mems.0.v_in.weight 4.98, mems.1.kq_in.weight 3.75, mems.0.w_out.weight 3.18, mems.0.kq_in.weight 3.06
+gradient spike at step 8218: gn 7.69 (median 0.53), loss 4.1312; mems.0.v_in.weight 3.95, mems.0.w_out.weight 3.07, mems.0.kq_in.weight 2.68, layers.0.w_in.weight 2.54
+gradient spike at step 8219: gn 3.52 (median 0.53), loss 4.1776; mems.0.v_in.weight 2.06, mems.0.kq_in.weight 1.24, layers.0.w_out.weight 1.02, mems.0.w_out.weight 0.99
+gradient spike at step 8220: gn 2.88 (median 0.53), loss 4.0947; mems.0.v_in.weight 1.24, mems.3.kq_in.weight 1.08, mems.0.kq_in.weight 0.89, layers.0.w_out.weight 0.83
+gradient spike at step 8221: gn 14.02 (median 0.53), loss 4.2276; mems.0.kq_in.weight 7.02, mems.0.v_in.weight 6.06, mems.0.w_out.weight 5.31, layers.0.w_out.weight 3.95
+gradient spike at step 8222: gn 18.85 (median 0.53), loss 4.3454; mems.0.v_in.weight 12.48, mems.0.kq_in.weight 7.05, mems.0.w_out.weight 6.31, layers.0.w_out.weight 4.77
+gradient spike at step 8223: gn 180.81 (median 0.54), loss 4.3233; mems.0.v_in.weight 105.60, mems.0.kq_in.weight 75.53, mems.0.w_out.weight 67.24, layers.0.w_in.weight 51.23
+gradient spike at step 8224: gn 48.70 (median 0.54), loss 4.2211; mems.0.kq_in.weight 23.29, mems.0.v_in.weight 22.32, layers.0.w_out.weight 15.94, layers.1.w_in.weight 15.12
+gradient spike at step 8225: gn 45.62 (median 0.54), loss 4.2599; mems.0.v_in.weight 31.65, mems.0.w_out.weight 16.09, layers.0.w_in.weight 12.54, layers.0.w_out.weight 11.53
+gradient spike at step 8226: gn 14.97 (median 0.54), loss 4.3029; mems.0.kq_in.weight 9.52, mems.0.v_in.weight 7.66, mems.0.w_out.weight 4.10, layers.0.w_out.weight 3.59
+gradient spike at step 8227: gn 20.98 (median 0.54), loss 4.2132; mems.0.v_in.weight 12.20, mems.0.w_out.weight 8.18, mems.0.kq_in.weight 7.56, layers.0.w_in.weight 6.43
+gradient spike at step 8228: gn 12.66 (median 0.54), loss 4.3575; mems.0.v_in.weight 7.80, mems.0.w_out.weight 4.85, layers.0.w_out.weight 3.80, layers.0.w_in.weight 3.40
+gradient spike at step 8229: gn 154.42 (median 0.54), loss 4.3616; mems.0.kq_in.weight 91.18, mems.0.v_in.weight 68.76, mems.0.w_out.weight 62.28, layers.0.w_in.weight 46.39
+gradient spike at step 8230: gn 13.47 (median 0.55), loss 4.2196; mems.0.v_in.weight 9.97, mems.0.kq_in.weight 4.22, layers.0.w_in.weight 3.89, mems.0.w_out.weight 3.85
+gradient spike at step 8231: gn 49.46 (median 0.55), loss 4.3035; mems.2.kq_in.weight 23.36, mems.0.v_in.weight 22.39, mems.0.kq_in.weight 17.34, mems.0.w_out.weight 16.68
+gradient spike at step 8232: gn 26.77 (median 0.55), loss 4.2561; mems.0.v_in.weight 14.24, mems.0.kq_in.weight 10.42, mems.0.w_out.weight 8.99, layers.0.w_out.weight 8.13
+gradient spike at step 8233: gn 7.77 (median 0.55), loss 4.4909; mems.0.kq_in.weight 3.71, mems.0.v_in.weight 3.56, mems.2.kq_in.weight 2.95, mems.0.w_out.weight 2.30
+gradient spike at step 8234: gn 58.68 (median 0.55), loss 4.3635; mems.0.v_in.weight 36.18, mems.0.kq_in.weight 22.79, mems.0.w_out.weight 19.13, mems.2.kq_in.weight 18.49
+gradient spike at step 8235: gn 148.72 (median 0.56), loss 4.4543; mems.0.v_in.weight 90.11, mems.2.kq_in.weight 64.76, mems.0.w_out.weight 53.47, layers.1.w_in.weight 40.60
+gradient spike at step 8236: gn 6.84 (median 0.56), loss 4.4113; mems.0.v_in.weight 4.04, mems.0.w_out.weight 2.24, mems.0.kq_in.weight 2.06, layers.0.w_out.weight 1.95
+gradient spike at step 8237: gn 31.69 (median 0.56), loss 4.2692; mems.0.v_in.weight 21.40, mems.0.w_out.weight 11.24, layers.0.w_out.weight 8.88, layers.1.w_in.weight 8.76
+gradient spike at step 8238: gn 149.95 (median 0.56), loss 4.2960; mems.0.kq_in.weight 103.56, mems.0.v_in.weight 61.55, mems.0.w_out.weight 44.78, mems.2.kq_in.weight 42.86
+gradient spike at step 8239: gn 89.16 (median 0.56), loss 4.3782; mems.0.v_in.weight 46.59, mems.0.w_out.weight 35.06, layers.1.w_in.weight 33.25, mems.2.kq_in.weight 33.18
+gradient spike at step 8240: gn 21.93 (median 0.57), loss 4.3459; mems.0.w_out.weight 9.69, mems.0.v_in.weight 9.36, mems.2.kq_in.weight 7.99, layers.0.w_in.weight 7.30
+gradient spike at step 8241: gn 1637.29 (median 0.57), loss 4.3749; mems.0.v_in.weight 1234.74, mems.0.w_out.weight 580.23, layers.0.w_in.weight 438.97, mems.2.kq_in.weight 401.10
+gradient spike at step 8242: gn 43.29 (median 0.57), loss 4.4068; mems.0.v_in.weight 24.89, mems.0.w_out.weight 17.55, mems.2.kq_in.weight 14.40, layers.0.w_out.weight 12.73
+gradient spike at step 8243: gn 80.74 (median 0.58), loss 4.4028; mems.0.v_in.weight 51.22, mems.0.kq_in.weight 44.00, mems.0.w_out.weight 22.87, layers.0.w_in.weight 19.24
+gradient spike at step 8244: gn 158.44 (median 0.58), loss 4.4377; mems.0.kq_in.weight 145.44, mems.0.v_in.weight 42.63, mems.0.w_out.weight 24.90, layers.0.w_in.weight 19.89
+gradient spike at step 8245: gn 51.90 (median 0.58), loss 4.2737; mems.0.v_in.weight 26.31, mems.0.w_out.weight 26.17, layers.0.w_in.weight 25.37, mems.2.kq_in.weight 12.27
+gradient spike at step 8246: gn 3.51 (median 0.59), loss 4.3922; mems.0.v_in.weight 1.73, mems.0.kq_in.weight 1.24, mems.0.w_out.weight 1.19, mems.3.kq_in.weight 1.02
+gradient spike at step 8247: gn 94.49 (median 0.59), loss 4.2952; mems.0.v_in.weight 58.20, mems.0.kq_in.weight 41.23, mems.0.w_out.weight 38.36, layers.0.w_in.weight 28.71
+gradient spike at step 8248: gn 18.08 (median 0.59), loss 4.3643; mems.0.v_in.weight 10.49, mems.0.kq_in.weight 9.05, mems.0.w_out.weight 5.25, layers.0.w_in.weight 4.91
+gradient spike at step 8249: gn 6.96 (median 0.60), loss 4.2365; mems.0.kq_in.weight 4.85, mems.0.v_in.weight 2.69, mems.0.w_out.weight 2.02, layers.0.w_in.weight 1.60
+gradient spike at step 8250: gn 106.94 (median 0.60), loss 4.3202; mems.0.v_in.weight 77.07, mems.0.w_out.weight 36.36, mems.2.kq_in.weight 31.08, layers.0.w_in.weight 30.67
+gradient spike at step 8251: gn 19.72 (median 0.60), loss 4.2622; mems.0.v_in.weight 14.76, mems.0.w_out.weight 6.65, mems.0.kq_in.weight 5.87, layers.0.w_in.weight 4.87
+gradient spike at step 8252: gn 15.66 (median 0.61), loss 4.2584; mems.0.kq_in.weight 9.58, mems.0.v_in.weight 6.67, mems.0.w_out.weight 4.91, mems.2.kq_in.weight 4.46
+gradient spike at step 8253: gn 4.99 (median 0.61), loss 4.2859; mems.0.v_in.weight 2.58, mems.0.kq_in.weight 1.79, mems.0.w_out.weight 1.61, layers.0.w_out.weight 1.32
+gradient spike at step 8254: gn 5.64 (median 0.61), loss 4.2171; mems.0.v_in.weight 2.14, mems.0.w_out.weight 1.98, mems.3.kq_in.weight 1.96, layers.2.w_in.weight 1.80
+gradient spike at step 8256: gn 6.64 (median 0.62), loss 4.1994; mems.0.v_in.weight 4.04, mems.0.kq_in.weight 3.57, mems.0.w_out.weight 2.11, layers.0.w_in.weight 1.53
+step   8500 loss 4.2175 kl 1.2223 lr 4.18e-04 gn 0.54 15,130 tok/s mem 13.1GB rate 0.044 [0.04 0.03 0.02 0.02 0.03 0.04 0.04 0.04 0.05 0.05 0.07 0.09]
+gradient spike at step 8730: gn 6.90 (median 0.46), loss 4.1935; mems.0.v_in.weight 4.01, mems.0.w_out.weight 2.76, layers.0.w_out.weight 2.35, mems.2.kq_in.weight 2.27
+step   9000 loss 4.0979 kl 1.2250 lr 3.96e-04 gn 0.41 15,137 tok/s mem 13.1GB rate 0.044 [0.04 0.03 0.02 0.02 0.03 0.04 0.04 0.04 0.05 0.05 0.07 0.09]
+step   9500 loss 4.1803 kl 1.2978 lr 3.74e-04 gn 0.60 15,140 tok/s mem 13.1GB rate 0.046 [0.04 0.05 0.02 0.02 0.03 0.04 0.04 0.04 0.05 0.05 0.07 0.09]
+step  10000 loss 4.0494 kl 1.1351 lr 3.52e-04 gn 0.69 15,155 tok/s mem 13.1GB rate 0.045 [0.04 0.03 0.02 0.02 0.03 0.03 0.04 0.04 0.05 0.06 0.07 0.10]
+== eval step 10000 val_loss 4.1193 (EMA weights 4.0442)
+   >> The history of the city| is a part of the same research, and the city is full of resources, but it's a city.
+   >> In mathematics, a prime number is| called a prime number. In math the length of our circle equals five or twelve degrees. It takes about three-quarters of the total number of measurements: the maximum diameter of the sun (about 40 degrees Fahrenheit), a number of times the circumference of Earth. This is the radius of the sun's orbit. The distance between the sun and the sun is between about 100 degrees, and the length of the circle is about 9,854 nm. For the measurement of the moon, the measurement of the distance is about 14%. An estimated distance of 812/km2 may be about 0.
+   >> Plants need sunlight because| of their need to be hydrated. So for the moment you're eating the food yourself, keep your food from a diet high in magnesium. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / Paintaining a healthy weight. /  /  /  /  /  /  /  / 
+gradient spike at step 10106: gn 2.54 (median 0.48), loss 4.0871; mems.0.v_in.weight 1.92, mems.0.w_out.weight 0.87, layers.0.w_in.weight 0.67, layers.0.w_out.weight 0.63
+step  10500 loss 4.0232 kl 1.0940 lr 3.30e-04 gn 0.45 15,133 tok/s mem 22.7GB rate 0.045 [0.03 0.03 0.02 0.02 0.03 0.04 0.04 0.05 0.05 0.06 0.07 0.10]
+gradient spike at step 10536: gn 4.11 (median 0.48), loss 4.0984; mems.0.kq_in.weight 4.04, head.weight 0.37, mems.0.v_in.weight 0.32, embed.weight 0.31
+gradient spike at step 10599: gn 4.92 (median 0.52), loss 4.1227; mems.0.v_in.weight 2.15, layers.0.w_in.weight 1.95, mems.0.w_out.weight 1.84, layers.0.w_out.weight 1.81
+gradient spike at step 10624: gn 2.98 (median 0.53), loss 3.9993; mems.3.kq_in.weight 1.54, layers.2.w_in.weight 1.30, layers.0.w_out.weight 0.99, layers.1.w_out.weight 0.82
+gradient spike at step 10627: gn 8.28 (median 0.54), loss 4.1690; mems.0.v_in.weight 5.12, mems.0.w_out.weight 3.35, layers.0.w_in.weight 2.51, layers.0.w_out.weight 2.33
+gradient spike at step 10628: gn 3.36 (median 0.54), loss 4.3140; mems.0.v_in.weight 1.89, mems.0.w_out.weight 1.04, layers.0.w_out.weight 1.02, mems.2.kq_in.weight 0.98
+gradient spike at step 10629: gn 5.59 (median 0.54), loss 4.1305; mems.0.v_in.weight 2.38, mems.0.kq_in.weight 2.30, mems.3.kq_in.weight 2.04, layers.0.w_out.weight 1.61
+gradient spike at step 10631: gn 34.48 (median 0.54), loss 4.0706; mems.0.v_in.weight 16.94, mems.0.w_out.weight 14.73, mems.2.kq_in.weight 12.64, layers.1.w_in.weight 10.93
+gradient spike at step 10632: gn 195.42 (median 0.54), loss 4.0227; mems.0.v_in.weight 109.10, mems.0.kq_in.weight 80.52, mems.0.w_out.weight 67.70, layers.0.w_in.weight 67.32
+gradient spike at step 10633: gn 4.52 (median 0.54), loss 4.2533; mems.0.v_in.weight 2.56, mems.0.w_out.weight 1.56, layers.0.w_out.weight 1.52, layers.0.w_in.weight 1.46
+gradient spike at step 10634: gn 16.50 (median 0.54), loss 3.9791; mems.0.v_in.weight 7.97, layers.0.w_in.weight 6.84, layers.0.w_out.weight 6.51, layers.1.w_in.weight 5.39
+gradient spike at step 10635: gn 108.11 (median 0.54), loss 4.1800; mems.0.v_in.weight 59.04, layers.0.w_in.weight 38.21, mems.0.kq_in.weight 37.80, layers.1.w_in.weight 37.06
+gradient spike at step 10636: gn 52.39 (median 0.54), loss 4.0264; mems.0.kq_in.weight 29.86, mems.0.v_in.weight 24.72, layers.0.w_out.weight 15.77, layers.0.w_in.weight 14.72
+gradient spike at step 10637: gn 29.78 (median 0.55), loss 4.0518; mems.0.v_in.weight 18.37, mems.0.kq_in.weight 12.71, layers.0.w_out.weight 8.57, layers.0.w_in.weight 8.49
+gradient spike at step 10638: gn 45.20 (median 0.55), loss 4.1830; mems.0.v_in.weight 27.12, mems.0.w_out.weight 16.37, layers.0.w_in.weight 15.53, mems.0.kq_in.weight 14.20
+gradient spike at step 10639: gn 43.48 (median 0.55), loss 4.0986; mems.2.kq_in.weight 22.17, layers.0.w_out.weight 18.27, layers.1.w_in.weight 14.34, mems.0.w_out.weight 13.72
+gradient spike at step 10640: gn 201.51 (median 0.55), loss 4.3119; layers.0.w_in.weight 98.13, mems.0.w_out.weight 76.76, layers.0.w_out.weight 75.18, mems.2.kq_in.weight 60.10
+gradient spike at step 10641: gn 76.40 (median 0.55), loss 4.1071; mems.0.v_in.weight 35.85, mems.0.w_out.weight 32.69, layers.0.w_out.weight 26.24, mems.0.kq_in.weight 25.78
+gradient spike at step 10642: gn 233.08 (median 0.55), loss 4.1679; mems.0.v_in.weight 160.79, mems.0.w_out.weight 79.06, layers.0.w_in.weight 74.09, mems.0.kq_in.weight 67.51
+gradient spike at step 10643: gn 50.54 (median 0.56), loss 4.0261; layers.0.w_out.weight 21.21, layers.0.w_in.weight 19.82, mems.0.w_out.weight 18.11, layers.1.w_in.weight 16.45
+gradient spike at step 10644: gn 249.58 (median 0.56), loss 4.1197; mems.0.kq_in.weight 118.17, mems.0.v_in.weight 89.98, mems.0.w_out.weight 87.02, layers.0.w_out.weight 86.10
+gradient spike at step 10645: gn 442.04 (median 0.56), loss 4.1821; mems.0.v_in.weight 227.42, mems.0.w_out.weight 177.89, layers.0.w_in.weight 167.60, layers.0.w_out.weight 149.93
+gradient spike at step 10646: gn 181.95 (median 0.57), loss 4.0157; mems.0.v_in.weight 113.44, layers.0.w_in.weight 59.71, mems.0.kq_in.weight 59.38, layers.0.w_out.weight 58.36
+gradient spike at step 10647: gn 231.49 (median 0.57), loss 3.9753; mems.0.v_in.weight 103.05, layers.0.w_out.weight 89.60, mems.0.w_out.weight 86.36, layers.0.w_in.weight 80.29
+gradient spike at step 10648: gn 54.38 (median 0.57), loss 4.1838; mems.0.v_in.weight 27.83, mems.0.w_out.weight 20.95, layers.0.w_out.weight 17.84, layers.1.w_in.weight 16.17
+gradient spike at step 10649: gn 85.18 (median 0.57), loss 4.1177; layers.0.w_out.weight 35.09, layers.1.w_in.weight 34.51, mems.0.v_in.weight 31.58, mems.0.w_out.weight 30.43
+gradient spike at step 10650: gn 125.62 (median 0.58), loss 4.1679; mems.2.kq_in.weight 55.49, mems.0.v_in.weight 52.08, mems.0.w_out.weight 43.99, layers.0.w_out.weight 40.47
+gradient spike at step 10651: gn 38.03 (median 0.58), loss 4.1874; mems.0.kq_in.weight 19.01, mems.0.v_in.weight 18.13, layers.0.w_in.weight 13.00, layers.0.w_out.weight 12.78
+gradient spike at step 10652: gn 71.07 (median 0.59), loss 4.0939; mems.0.kq_in.weight 37.32, mems.0.v_in.weight 36.87, layers.0.w_in.weight 25.37, layers.0.w_out.weight 20.84
+gradient spike at step 10653: gn 331.78 (median 0.59), loss 4.2210; mems.0.v_in.weight 235.05, mems.0.w_out.weight 120.27, layers.0.w_in.weight 108.79, layers.0.w_out.weight 87.19
+gradient spike at step 10654: gn 264.39 (median 0.59), loss 4.1459; mems.0.v_in.weight 173.91, layers.0.w_in.weight 101.73, mems.0.w_out.weight 85.28, mems.0.kq_in.weight 83.72
+gradient spike at step 10655: gn 388.70 (median 0.59), loss 4.1259; mems.0.v_in.weight 210.73, mems.0.w_out.weight 162.14, layers.0.w_in.weight 131.90, layers.0.w_out.weight 123.45
+gradient spike at step 10656: gn 103.44 (median 0.59), loss 4.1102; mems.0.v_in.weight 55.41, layers.0.w_in.weight 40.55, layers.0.w_out.weight 35.39, mems.0.kq_in.weight 35.38
+gradient spike at step 10657: gn 1323.50 (median 0.60), loss 4.1791; mems.0.kq_in.weight 812.48, mems.0.v_in.weight 568.49, mems.1.kq_in.weight 472.08, layers.0.w_out.weight 378.59
+gradient spike at step 10658: gn 359.70 (median 0.60), loss 4.2109; mems.0.v_in.weight 205.08, layers.0.w_in.weight 131.22, mems.0.kq_in.weight 125.73, mems.0.w_out.weight 122.01
+gradient spike at step 10659: gn 291.11 (median 0.60), loss 4.0763; mems.0.v_in.weight 175.65, mems.0.kq_in.weight 98.21, layers.0.w_in.weight 91.04, mems.0.w_out.weight 88.71
+gradient spike at step 10660: gn 94.64 (median 0.60), loss 4.0536; mems.0.v_in.weight 64.10, mems.0.w_out.weight 36.49, layers.0.w_in.weight 28.86, layers.0.w_out.weight 27.55
+gradient spike at step 10661: gn 398.20 (median 0.60), loss 4.2235; mems.0.v_in.weight 277.42, mems.0.w_out.weight 147.07, layers.0.w_in.weight 119.19, layers.0.w_out.weight 105.80
+gradient spike at step 10662: gn 793.66 (median 0.61), loss 4.2332; mems.0.kq_in.weight 546.96, mems.0.v_in.weight 403.58, mems.0.w_out.weight 196.26, layers.0.w_in.weight 194.83
+gradient spike at step 10663: gn 172.96 (median 0.61), loss 4.0573; mems.0.v_in.weight 113.19, layers.0.w_in.weight 63.80, mems.0.w_out.weight 53.99, layers.0.w_out.weight 52.49
+gradient spike at step 10664: gn 98.57 (median 0.61), loss 4.1625; mems.0.kq_in.weight 55.16, mems.0.v_in.weight 48.23, mems.0.w_out.weight 34.80, layers.0.w_in.weight 31.16
+gradient spike at step 10665: gn 88.58 (median 0.62), loss 4.2553; mems.0.v_in.weight 65.08, layers.0.w_in.weight 28.29, mems.0.w_out.weight 27.52, layers.0.w_out.weight 24.42
+gradient spike at step 10666: gn 255.70 (median 0.62), loss 4.1775; mems.0.v_in.weight 178.65, mems.0.w_out.weight 93.59, layers.0.w_in.weight 91.55, layers.0.w_out.weight 74.51
+gradient spike at step 10667: gn 891.79 (median 0.62), loss 4.0447; mems.0.v_in.weight 573.71, mems.0.w_out.weight 327.66, mems.2.kq_in.weight 288.89, layers.0.w_out.weight 266.25
+gradient spike at step 10668: gn 137.64 (median 0.62), loss 4.1975; mems.0.v_in.weight 97.24, mems.0.w_out.weight 46.87, layers.0.w_in.weight 41.53, layers.0.w_out.weight 40.99
+gradient spike at step 10669: gn 66.84 (median 0.62), loss 4.0921; mems.0.v_in.weight 36.59, mems.0.kq_in.weight 28.47, mems.0.w_out.weight 25.57, layers.0.w_in.weight 23.31
+gradient spike at step 10670: gn 80.81 (median 0.62), loss 4.1617; mems.0.v_in.weight 45.28, layers.0.w_in.weight 36.06, layers.0.w_out.weight 27.75, mems.0.kq_in.weight 25.86
+gradient spike at step 10671: gn 249.97 (median 0.62), loss 4.0125; mems.0.v_in.weight 159.60, layers.0.w_in.weight 85.92, mems.0.w_out.weight 85.43, layers.0.w_out.weight 77.83
+gradient spike at step 10672: gn 39.10 (median 0.63), loss 4.2625; mems.0.v_in.weight 20.44, mems.0.kq_in.weight 16.08, mems.2.kq_in.weight 13.74, mems.0.w_out.weight 13.12
+gradient spike at step 10673: gn 353.12 (median 0.63), loss 4.2046; mems.0.v_in.weight 235.84, mems.0.w_out.weight 148.45, layers.0.w_in.weight 113.95, layers.0.w_out.weight 98.97
+gradient spike at step 10674: gn 521.80 (median 0.63), loss 4.1460; layers.0.w_in.weight 262.37, layers.0.w_out.weight 219.27, mems.0.w_out.weight 203.23, layers.1.w_in.weight 160.95
+gradient spike at step 10675: gn 373.22 (median 0.63), loss 4.2265; mems.0.v_in.weight 229.22, layers.1.w_in.weight 136.26, mems.0.w_out.weight 129.76, layers.0.w_out.weight 126.50
+gradient spike at step 10676: gn 28.46 (median 0.64), loss 4.1942; mems.0.v_in.weight 18.95, mems.0.kq_in.weight 10.05, layers.0.w_out.weight 8.72, layers.0.w_in.weight 8.56
+gradient spike at step 10677: gn 139.49 (median 0.65), loss 4.1569; mems.1.kq_in.weight 104.97, layers.0.w_out.weight 61.97, mems.0.w_out.weight 44.14, mems.0.v_in.weight 33.91
+gradient spike at step 10678: gn 372.14 (median 0.65), loss 4.1323; mems.0.v_in.weight 271.71, mems.0.w_out.weight 137.61, mems.0.kq_in.weight 100.90, layers.0.w_in.weight 96.24
+gradient spike at step 10679: gn 529.02 (median 0.66), loss 4.0973; mems.0.kq_in.weight 322.71, mems.0.v_in.weight 267.80, layers.0.w_in.weight 169.52, mems.0.w_out.weight 159.50
+gradient spike at step 10680: gn 63.26 (median 0.67), loss 4.1263; mems.0.v_in.weight 36.27, layers.0.w_in.weight 25.47, mems.0.kq_in.weight 22.73, layers.0.w_out.weight 19.91
+gradient spike at step 10681: gn 58.17 (median 0.67), loss 4.1265; mems.0.v_in.weight 43.89, mems.0.w_out.weight 20.76, layers.0.w_in.weight 16.47, layers.0.w_out.weight 15.04
+gradient spike at step 10682: gn 19.67 (median 0.67), loss 4.1075; mems.0.v_in.weight 12.27, layers.0.w_out.weight 6.43, mems.0.w_out.weight 5.93, layers.0.w_in.weight 5.89
+gradient spike at step 10683: gn 15.14 (median 0.68), loss 4.2049; mems.0.v_in.weight 10.18, mems.0.w_out.weight 5.15, layers.0.w_in.weight 4.83, layers.0.w_out.weight 4.49
+gradient spike at step 10684: gn 8.12 (median 0.68), loss 4.1237; mems.0.v_in.weight 3.71, mems.0.kq_in.weight 3.48, mems.0.w_out.weight 3.05, layers.0.w_in.weight 2.82
+gradient spike at step 10685: gn 19.78 (median 0.69), loss 4.1105; mems.2.kq_in.weight 8.21, layers.0.w_out.weight 7.98, layers.1.w_in.weight 7.45, mems.0.w_out.weight 7.13
+gradient spike at step 10686: gn 4.27 (median 0.69), loss 4.0995; mems.0.v_in.weight 2.18, layers.2.w_in.weight 1.51, mems.3.kq_in.weight 1.43, layers.0.w_out.weight 1.38
+gradient spike at step 10687: gn 4.51 (median 0.69), loss 4.1499; mems.0.v_in.weight 1.64, mems.3.kq_in.weight 1.63, layers.2.w_in.weight 1.55, mems.1.kq_in.weight 1.53
+gradient spike at step 10688: gn 6.95 (median 0.69), loss 4.1020; mems.0.v_in.weight 4.77, mems.0.w_out.weight 2.39, layers.0.w_out.weight 1.70, layers.0.w_in.weight 1.66
+gradient spike at step 10689: gn 5.82 (median 0.69), loss 4.0269; mems.0.v_in.weight 2.73, mems.3.kq_in.weight 2.42, mems.0.w_out.weight 1.74, layers.0.w_in.weight 1.65
+gradient spike at step 10690: gn 7.06 (median 0.70), loss 4.1270; mems.0.kq_in.weight 4.70, mems.0.v_in.weight 3.49, mems.0.w_out.weight 1.97, layers.0.w_in.weight 1.61
+gradient spike at step 10692: gn 53.18 (median 0.70), loss 4.1031; mems.0.v_in.weight 32.62, mems.0.w_out.weight 18.21, layers.1.w_in.weight 16.11, layers.0.w_out.weight 15.47
+gradient spike at step 10693: gn 4.62 (median 0.70), loss 4.1402; mems.1.kq_in.weight 2.60, layers.2.w_in.weight 1.99, layers.0.w_out.weight 1.65, mems.3.kq_in.weight 1.45
+gradient spike at step 10697: gn 16.04 (median 0.71), loss 4.1246; mems.0.v_in.weight 12.51, mems.0.w_out.weight 5.55, layers.0.w_in.weight 4.00, mems.0.kq_in.weight 3.87
+step  11000 loss 3.9934 kl 1.1086 lr 3.08e-04 gn 0.45 15,129 tok/s mem 22.7GB rate 0.047 [0.03 0.03 0.02 0.02 0.03 0.04 0.04 0.05 0.06 0.06 0.08 0.10]
+step  11500 loss 4.0579 kl 1.1435 lr 2.86e-04 gn 1.22 15,134 tok/s mem 22.7GB rate 0.047 [0.04 0.04 0.02 0.02 0.03 0.04 0.04 0.05 0.06 0.06 0.08 0.10]
+gradient spike at step 11960: gn 3.32 (median 0.58), loss 4.0965; mems.0.kq_in.weight 3.21, mems.0.v_in.weight 0.43, head.weight 0.40, embed.weight 0.38
+step  12000 loss 4.0282 kl 1.0946 lr 2.64e-04 gn 0.81 15,152 tok/s mem 22.7GB rate 0.049 [0.04 0.04 0.02 0.02 0.03 0.04 0.04 0.05 0.06 0.06 0.08 0.10]
+gradient spike at step 12004: gn 3.89 (median 0.61), loss 4.2021; mems.0.v_in.weight 2.51, mems.0.kq_in.weight 1.46, mems.0.w_out.weight 1.18, layers.0.w_in.weight 1.07
+gradient spike at step 12005: gn 4.56 (median 0.61), loss 4.0709; mems.0.v_in.weight 2.93, mems.0.w_out.weight 1.54, layers.0.w_out.weight 1.33, layers.1.w_in.weight 1.31
+gradient spike at step 12011: gn 3.41 (median 0.62), loss 4.0285; mems.0.v_in.weight 1.89, mems.0.w_out.weight 1.10, mems.3.kq_in.weight 1.00, layers.0.w_out.weight 0.97
+gradient spike at step 12013: gn 4.08 (median 0.62), loss 4.1379; mems.0.v_in.weight 1.90, mems.3.kq_in.weight 1.51, layers.2.w_in.weight 1.41, layers.0.w_out.weight 1.21
+gradient spike at step 12015: gn 3.21 (median 0.62), loss 4.1070; mems.0.v_in.weight 1.59, mems.3.kq_in.weight 1.25, layers.2.w_in.weight 1.00, layers.0.w_out.weight 0.89
+gradient spike at step 12016: gn 114.70 (median 0.62), loss 4.1305; mems.0.v_in.weight 75.95, mems.0.kq_in.weight 42.64, mems.0.w_out.weight 39.18, layers.0.w_in.weight 35.06
+gradient spike at step 12017: gn 21.42 (median 0.62), loss 4.0904; mems.0.v_in.weight 12.34, mems.0.kq_in.weight 10.81, mems.0.w_out.weight 7.08, layers.0.w_in.weight 5.91
+gradient spike at step 12018: gn 44.03 (median 0.62), loss 4.0979; mems.0.v_in.weight 37.25, mems.0.w_out.weight 13.73, layers.0.w_in.weight 10.42, layers.0.w_out.weight 8.67
+gradient spike at step 12019: gn 5.02 (median 0.62), loss 4.1354; mems.0.v_in.weight 2.36, mems.3.kq_in.weight 1.71, mems.0.kq_in.weight 1.53, layers.0.w_out.weight 1.45
+gradient spike at step 12020: gn 27.94 (median 0.62), loss 4.0582; mems.0.v_in.weight 22.31, mems.0.kq_in.weight 9.92, mems.0.w_out.weight 7.70, layers.0.w_in.weight 6.09
+gradient spike at step 12021: gn 1176.27 (median 0.63), loss 4.1640; mems.0.v_in.weight 903.33, mems.0.w_out.weight 389.22, layers.0.w_in.weight 327.01, layers.0.w_out.weight 302.07
+gradient spike at step 12022: gn 25.45 (median 0.63), loss 4.1403; mems.0.v_in.weight 18.67, mems.0.w_out.weight 9.35, layers.0.w_in.weight 6.89, mems.0.kq_in.weight 6.56
+gradient spike at step 12023: gn 54.42 (median 0.63), loss 4.1576; mems.0.v_in.weight 40.92, mems.0.w_out.weight 16.84, layers.0.w_in.weight 16.21, layers.0.w_out.weight 14.37
+gradient spike at step 12024: gn 66.28 (median 0.63), loss 4.2497; mems.0.v_in.weight 50.99, mems.0.w_out.weight 21.83, layers.0.w_in.weight 20.70, layers.0.w_out.weight 13.93
+gradient spike at step 12025: gn 7516.72 (median 0.63), loss 4.1789; mems.0.kq_in.weight 5343.95, mems.0.v_in.weight 3554.02, layers.0.w_in.weight 2126.51, mems.0.w_out.weight 1934.45
+gradient spike at step 12026: gn 7.20 (median 0.63), loss 4.1774; mems.0.v_in.weight 5.05, mems.0.w_out.weight 2.49, layers.0.w_in.weight 2.03, layers.0.w_out.weight 1.70
+gradient spike at step 12027: gn 18.15 (median 0.63), loss 4.1425; mems.0.v_in.weight 12.41, mems.2.kq_in.weight 6.86, mems.0.w_out.weight 5.98, layers.0.w_in.weight 4.58
+gradient spike at step 12028: gn 46.65 (median 0.63), loss 4.1733; mems.0.v_in.weight 37.66, mems.0.w_out.weight 16.03, layers.0.w_in.weight 12.96, layers.0.w_out.weight 8.86
+gradient spike at step 12029: gn 24.91 (median 0.63), loss 4.2229; mems.0.v_in.weight 15.65, mems.0.kq_in.weight 13.55, mems.0.w_out.weight 6.93, layers.0.w_in.weight 6.60
+gradient spike at step 12030: gn 11.57 (median 0.63), loss 4.1758; mems.0.v_in.weight 6.79, mems.3.kq_in.weight 3.91, layers.2.w_in.weight 3.26, mems.0.w_out.weight 3.26
+gradient spike at step 12031: gn 7.25 (median 0.64), loss 4.1251; layers.0.w_in.weight 3.21, layers.0.w_out.weight 2.85, mems.0.v_in.weight 2.58, mems.0.w_out.weight 2.16
+gradient spike at step 12032: gn 1709.29 (median 0.64), loss 4.1531; mems.0.v_in.weight 1151.63, mems.0.w_out.weight 581.70, layers.0.w_in.weight 522.23, layers.0.w_out.weight 500.02
+gradient spike at step 12033: gn 12036.14 (median 0.64), loss 4.1999; mems.0.v_in.weight 9805.80, mems.0.w_out.weight 3971.75, layers.0.w_in.weight 3205.94, layers.0.w_out.weight 2611.17
+gradient spike at step 12034: gn 21.30 (median 0.64), loss 4.1215; mems.0.v_in.weight 15.59, mems.0.w_out.weight 8.37, layers.0.w_in.weight 6.62, layers.0.w_out.weight 5.14
+gradient spike at step 12035: gn 5.65 (median 0.64), loss 4.1756; mems.0.v_in.weight 3.89, mems.0.w_out.weight 1.95, layers.0.w_in.weight 1.63, mems.0.kq_in.weight 1.44
+gradient spike at step 12036: gn 5.89 (median 0.64), loss 4.2896; mems.0.v_in.weight 3.56, mems.0.w_out.weight 1.98, layers.0.w_out.weight 1.78, layers.0.w_in.weight 1.73
+gradient spike at step 12038: gn 22.23 (median 0.64), loss 4.2276; mems.0.v_in.weight 17.05, mems.0.w_out.weight 7.25, layers.0.w_out.weight 5.59, layers.0.w_in.weight 5.23
+gradient spike at step 12039: gn 5.24 (median 0.64), loss 4.2292; mems.0.v_in.weight 3.54, mems.0.w_out.weight 1.67, layers.1.w_in.weight 1.64, layers.0.w_out.weight 1.45
+gradient spike at step 12040: gn 20.94 (median 0.64), loss 4.2884; mems.0.v_in.weight 13.16, mems.0.w_out.weight 7.74, mems.0.kq_in.weight 6.92, layers.0.w_in.weight 6.28
+gradient spike at step 12044: gn 7.64 (median 0.65), loss 4.2106; mems.0.v_in.weight 4.83, mems.0.w_out.weight 2.60, layers.0.w_out.weight 2.43, layers.1.w_in.weight 2.33
+gradient spike at step 12045: gn 52.31 (median 0.66), loss 4.3044; mems.0.v_in.weight 35.49, mems.0.w_out.weight 18.35, layers.0.w_out.weight 15.27, mems.2.kq_in.weight 14.54
+gradient spike at step 12047: gn 4.88 (median 0.66), loss 4.1494; mems.0.v_in.weight 2.77, mems.2.kq_in.weight 1.75, mems.0.w_out.weight 1.66, layers.0.w_out.weight 1.40
+gradient spike at step 12048: gn 14.00 (median 0.66), loss 4.2070; mems.0.v_in.weight 8.80, mems.0.w_out.weight 5.05, layers.0.w_out.weight 4.36, mems.2.kq_in.weight 3.97
+gradient spike at step 12049: gn 4.25 (median 0.66), loss 4.2481; mems.0.v_in.weight 2.38, mems.0.w_out.weight 1.54, layers.0.w_in.weight 1.47, layers.0.w_out.weight 1.18
+gradient spike at step 12050: gn 74.97 (median 0.67), loss 4.1402; mems.0.v_in.weight 42.45, mems.0.w_out.weight 27.53, layers.0.w_out.weight 25.50, mems.1.kq_in.weight 23.94
+gradient spike at step 12059: gn 79.84 (median 0.73), loss 4.1333; mems.0.v_in.weight 56.77, mems.0.w_out.weight 29.74, layers.0.w_out.weight 22.53, layers.0.w_in.weight 20.63
+gradient spike at step 12073: gn 6.74 (median 0.74), loss 4.1617; mems.0.v_in.weight 4.20, mems.0.kq_in.weight 2.51, mems.0.w_out.weight 2.30, layers.0.w_out.weight 2.03
+gradient spike at step 12074: gn 8.57 (median 0.74), loss 4.1529; mems.0.v_in.weight 5.79, mems.0.w_out.weight 3.18, layers.0.w_in.weight 2.47, mems.0.kq_in.weight 2.40
+gradient spike at step 12080: gn 7.32 (median 0.75), loss 4.0482; mems.0.v_in.weight 5.56, mems.0.w_out.weight 2.59, layers.0.w_out.weight 1.76, layers.0.w_in.weight 1.72
+gradient spike at step 12081: gn 8.03 (median 0.75), loss 4.1686; mems.0.v_in.weight 5.20, layers.1.w_in.weight 2.79, layers.0.w_out.weight 2.65, mems.0.w_out.weight 2.33
+gradient spike at step 12084: gn 6.65 (median 0.77), loss 3.9862; mems.0.v_in.weight 5.17, mems.0.w_out.weight 2.16, layers.0.w_out.weight 1.51, layers.0.w_in.weight 1.48
+gradient spike at step 12085: gn 6.38 (median 0.78), loss 4.0490; mems.0.v_in.weight 4.92, mems.0.w_out.weight 1.78, layers.0.w_in.weight 1.61, layers.0.w_out.weight 1.54
+gradient spike at step 12086: gn 12.55 (median 0.79), loss 4.0707; mems.0.v_in.weight 9.44, mems.0.w_out.weight 3.87, mems.0.kq_in.weight 3.26, layers.1.w_in.weight 3.14
+gradient spike at step 12089: gn 26.06 (median 0.80), loss 4.1382; mems.0.kq_in.weight 17.12, layers.0.w_out.weight 8.16, layers.0.w_in.weight 7.95, mems.0.w_out.weight 7.15
+gradient spike at step 12091: gn 2041.14 (median 0.81), loss 4.1341; mems.0.v_in.weight 1349.50, mems.0.kq_in.weight 1089.76, mems.0.w_out.weight 635.43, layers.0.w_in.weight 480.00
+gradient spike at step 12092: gn 4.41 (median 0.82), loss 4.0646; mems.0.v_in.weight 2.99, mems.0.w_out.weight 1.55, mems.2.kq_in.weight 1.38, layers.0.w_out.weight 1.22
+gradient spike at step 12093: gn 13.17 (median 0.83), loss 4.0625; mems.0.v_in.weight 9.69, mems.0.w_out.weight 4.72, layers.0.w_in.weight 3.70, layers.0.w_out.weight 3.19
+gradient spike at step 12094: gn 10.19 (median 0.84), loss 4.1224; mems.0.v_in.weight 6.45, mems.0.kq_in.weight 5.85, mems.0.w_out.weight 2.49, layers.0.w_in.weight 2.22
+gradient spike at step 12095: gn 19.54 (median 0.84), loss 4.2157; mems.0.v_in.weight 15.83, mems.0.w_out.weight 6.53, layers.0.w_in.weight 4.89, layers.0.w_out.weight 4.19
+gradient spike at step 12096: gn 10.02 (median 0.85), loss 4.0116; mems.0.v_in.weight 7.96, mems.0.w_out.weight 3.02, mems.0.kq_in.weight 2.76, layers.0.w_out.weight 2.06
+gradient spike at step 12099: gn 7.00 (median 0.88), loss 4.1407; mems.0.v_in.weight 5.78, mems.0.w_out.weight 2.08, layers.0.w_in.weight 1.64, layers.0.w_out.weight 1.39
+gradient spike at step 12101: gn 5.74 (median 0.89), loss 4.1269; mems.2.kq_in.weight 4.09, mems.0.v_in.weight 2.08, layers.0.w_out.weight 1.66, mems.0.w_out.weight 1.36
+gradient spike at step 12102: gn 4.60 (median 0.90), loss 4.0923; mems.0.v_in.weight 3.51, mems.0.w_out.weight 1.24, layers.1.w_in.weight 1.20, layers.0.w_in.weight 1.18
+gradient spike at step 12105: gn 5.47 (median 0.94), loss 4.0191; mems.0.kq_in.weight 3.41, mems.0.v_in.weight 2.97, mems.0.w_out.weight 1.53, layers.0.w_in.weight 1.17
+gradient spike at step 12106: gn 52.21 (median 0.95), loss 4.0817; mems.0.v_in.weight 42.26, mems.0.w_out.weight 15.36, mems.0.kq_in.weight 12.55, layers.0.w_in.weight 12.05
+gradient spike at step 12107: gn 119.69 (median 0.97), loss 4.1197; mems.0.kq_in.weight 87.44, mems.0.v_in.weight 55.78, mems.0.w_out.weight 27.39, layers.0.w_out.weight 26.07
+gradient spike at step 12109: gn 7.46 (median 1.00), loss 4.1332; mems.0.v_in.weight 5.25, mems.0.kq_in.weight 2.75, mems.0.w_out.weight 2.24, layers.0.w_in.weight 1.93
+gradient spike at step 12110: gn 5.27 (median 1.01), loss 4.1119; mems.0.v_in.weight 3.68, mems.0.w_out.weight 1.92, layers.0.w_in.weight 1.41, layers.0.w_out.weight 1.31
+gradient spike at step 12111: gn 80.83 (median 1.02), loss 4.1271; mems.0.v_in.weight 49.76, mems.0.kq_in.weight 39.96, mems.0.w_out.weight 26.62, layers.0.w_in.weight 23.66
+gradient spike at step 12112: gn 36.73 (median 1.03), loss 4.0444; mems.0.v_in.weight 31.38, mems.0.w_out.weight 9.92, layers.0.w_in.weight 9.05, layers.0.w_out.weight 6.69
+gradient spike at step 12113: gn 19.07 (median 1.06), loss 4.1423; mems.0.v_in.weight 8.99, layers.0.w_in.weight 7.55, mems.0.w_out.weight 7.25, layers.0.w_out.weight 6.67
+gradient spike at step 12114: gn 15.83 (median 1.08), loss 4.1094; mems.0.kq_in.weight 12.71, mems.0.v_in.weight 6.62, mems.0.w_out.weight 3.37, layers.0.w_in.weight 2.96
+gradient spike at step 12115: gn 249.88 (median 1.10), loss 4.0262; mems.0.v_in.weight 211.93, mems.0.w_out.weight 75.60, layers.0.w_in.weight 58.28, mems.0.kq_in.weight 48.41
+gradient spike at step 12116: gn 47.93 (median 1.11), loss 4.0830; mems.0.v_in.weight 39.94, mems.0.w_out.weight 15.04, layers.0.w_in.weight 10.68, layers.0.w_out.weight 9.44
+gradient spike at step 12117: gn 14.63 (median 1.13), loss 4.1937; mems.0.v_in.weight 8.63, mems.0.w_out.weight 5.51, mems.2.kq_in.weight 5.37, layers.0.w_out.weight 4.64
+gradient spike at step 12118: gn 5.99 (median 1.14), loss 4.0206; mems.0.v_in.weight 4.76, mems.0.w_out.weight 1.77, layers.0.w_in.weight 1.51, layers.0.w_out.weight 1.22
+gradient spike at step 12119: gn 8.37 (median 1.16), loss 4.1337; mems.0.v_in.weight 5.74, mems.0.kq_in.weight 3.04, mems.0.w_out.weight 2.82, layers.0.w_in.weight 1.97
+gradient spike at step 12120: gn 10.43 (median 1.19), loss 4.0472; mems.0.v_in.weight 7.95, mems.0.w_out.weight 3.65, layers.0.w_in.weight 2.67, layers.0.w_out.weight 2.46
+gradient spike at step 12123: gn 54.67 (median 1.26), loss 4.0394; mems.0.w_out.weight 22.00, mems.0.kq_in.weight 21.14, layers.0.w_out.weight 19.20, layers.0.w_in.weight 19.09
+gradient spike at step 12124: gn 126.93 (median 1.29), loss 4.0604; layers.2.w_in.weight 54.95, mems.0.v_in.weight 53.72, mems.0.w_out.weight 47.84, mems.2.kq_in.weight 41.43
+gradient spike at step 12125: gn 14.20 (median 1.33), loss 4.1194; mems.0.kq_in.weight 10.87, mems.0.v_in.weight 3.97, layers.0.w_in.weight 3.83, layers.0.w_out.weight 3.52
+gradient spike at step 12126: gn 8.99 (median 1.35), loss 4.1256; mems.0.v_in.weight 5.43, mems.0.kq_in.weight 3.78, mems.0.w_out.weight 3.04, layers.0.w_in.weight 2.71
+gradient spike at step 12127: gn 10.26 (median 1.38), loss 4.0807; mems.0.v_in.weight 4.89, layers.0.w_out.weight 3.81, mems.0.w_out.weight 3.77, mems.2.kq_in.weight 3.71
+gradient spike at step 12128: gn 19.81 (median 1.42), loss 4.0504; mems.0.v_in.weight 8.44, mems.2.kq_in.weight 8.16, mems.0.w_out.weight 7.75, layers.0.w_out.weight 7.19
+gradient spike at step 12130: gn 13.19 (median 1.56), loss 4.2245; mems.0.v_in.weight 9.27, mems.0.w_out.weight 3.90, layers.0.w_in.weight 3.75, layers.0.w_out.weight 3.60
+gradient spike at step 12131: gn 32.87 (median 1.60), loss 4.0613; mems.0.v_in.weight 19.46, mems.0.w_out.weight 12.08, mems.2.kq_in.weight 10.79, layers.0.w_out.weight 10.74
+gradient spike at step 12132: gn 15.45 (median 1.65), loss 4.0443; mems.0.kq_in.weight 9.59, mems.0.v_in.weight 8.73, layers.0.w_in.weight 3.88, layers.0.w_out.weight 3.37
+gradient spike at step 12133: gn 8.53 (median 1.69), loss 4.0964; mems.0.v_in.weight 5.44, mems.0.w_out.weight 2.78, layers.0.w_in.weight 2.48, mems.0.kq_in.weight 2.44
+gradient spike at step 12134: gn 8.77 (median 1.72), loss 4.1503; mems.0.kq_in.weight 4.86, mems.0.v_in.weight 3.34, mems.2.kq_in.weight 3.01, layers.2.w_in.weight 2.84
+gradient spike at step 12135: gn 21.83 (median 1.75), loss 4.0697; mems.0.v_in.weight 14.09, layers.0.w_out.weight 6.67, layers.1.w_in.weight 6.61, layers.0.w_in.weight 6.18
+gradient spike at step 12137: gn 9.09 (median 1.79), loss 4.0449; mems.0.v_in.weight 4.51, layers.0.w_in.weight 3.46, layers.0.w_out.weight 3.33, mems.0.kq_in.weight 3.31
+gradient spike at step 12140: gn 15.89 (median 2.18), loss 4.0951; mems.0.v_in.weight 13.35, mems.0.w_out.weight 4.78, layers.0.w_in.weight 3.67, layers.0.w_out.weight 2.89
+gradient spike at step 12145: gn 16.39 (median 2.32), loss 4.0405; mems.0.v_in.weight 10.24, mems.1.kq_in.weight 7.60, mems.0.kq_in.weight 4.92, layers.0.w_out.weight 4.89
+gradient spike at step 12147: gn 65.62 (median 2.44), loss 4.1617; mems.0.v_in.weight 51.47, mems.0.w_out.weight 21.44, layers.0.w_in.weight 17.31, layers.0.w_out.weight 14.85
+gradient spike at step 12149: gn 30.54 (median 2.66), loss 4.0896; mems.0.v_in.weight 17.10, mems.0.kq_in.weight 10.64, layers.0.w_in.weight 9.90, layers.0.w_out.weight 9.24
+gradient spike at step 12150: gn 17.67 (median 2.84), loss 4.1411; mems.0.v_in.weight 13.90, mems.0.w_out.weight 5.90, layers.0.w_in.weight 4.64, layers.0.w_out.weight 3.52
+gradient spike at step 12151: gn 120.88 (median 3.01), loss 4.0551; mems.0.v_in.weight 94.62, mems.0.kq_in.weight 35.63, mems.0.w_out.weight 35.44, layers.0.w_out.weight 27.84
+gradient spike at step 12156: gn 28.43 (median 3.37), loss 4.1276; mems.0.v_in.weight 16.85, mems.0.w_out.weight 10.43, layers.0.w_in.weight 9.99, layers.0.w_out.weight 9.27
+gradient spike at step 12157: gn 21.19 (median 3.45), loss 4.0596; mems.0.v_in.weight 16.13, mems.0.w_out.weight 5.92, layers.0.w_in.weight 4.78, mems.3.kq_in.weight 4.70
+gradient spike at step 12160: gn 55.98 (median 3.95), loss 4.1252; mems.0.v_in.weight 36.36, mems.0.kq_in.weight 29.77, layers.0.w_in.weight 16.12, mems.0.w_out.weight 15.59
+gradient spike at step 12162: gn 101.11 (median 4.16), loss 4.0995; mems.0.kq_in.weight 73.56, mems.0.v_in.weight 51.82, mems.0.w_out.weight 27.40, layers.1.w_in.weight 21.06
+gradient spike at step 12163: gn 29.05 (median 4.33), loss 4.1509; mems.0.v_in.weight 22.94, mems.0.kq_in.weight 11.28, layers.0.w_in.weight 6.86, mems.0.w_out.weight 6.83
+gradient spike at step 12168: gn 268.87 (median 4.95), loss 4.1316; mems.0.kq_in.weight 223.77, mems.0.v_in.weight 112.03, mems.0.w_out.weight 50.62, layers.0.w_in.weight 47.64
+gradient spike at step 12179: gn 79.82 (median 5.82), loss 4.0859; mems.0.v_in.weight 68.80, mems.0.w_out.weight 21.22, layers.0.w_in.weight 18.89, layers.0.w_out.weight 15.18
+gradient spike at step 12185: gn 34.21 (median 6.27), loss 3.9847; mems.0.v_in.weight 25.87, mems.0.w_out.weight 11.67, mems.0.kq_in.weight 10.50, layers.0.w_in.weight 9.15
+gradient spike at step 12327: gn 4.75 (median 0.76), loss 4.0601; mems.0.kq_in.weight 4.67, mems.0.v_in.weight 0.46, head.weight 0.44, embed.weight 0.37
+gradient spike at step 12381: gn 6.20 (median 0.69), loss 4.0726; mems.0.v_in.weight 3.15, mems.2.kq_in.weight 2.49, layers.1.w_in.weight 2.13, layers.1.w_out.weight 1.81
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  53%|█████▎    | 156/292 [00:00<00:00, 1510.08it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 1321.69it/s]
+distilling from hf:openai-community/gpt2-medium (weight 0.9, temperature 1.0)
+resumed from step 10000
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step  10500 loss 4.2062 kl 1.1933 lr 3.30e-04 gn 0.66 15,139 tok/s mem 12.5GB rate 0.045 [0.04 0.03 0.02 0.02 0.03 0.04 0.04 0.04 0.05 0.06 0.08 0.10]
+gradient spike at step 10603: gn 3.03 (median 0.48), loss 4.0172; layers.3.w_in.weight 1.86, mems.3.w_out.weight 1.06, mems.0.w_out.weight 0.90, mems.2.w_out.weight 0.79
+gradient spike at step 10988: gn 2.69 (median 0.49), loss 4.0154; layers.1.w_in.weight 2.07, mems.1.w_out.weight 1.13, mems.0.w_out.weight 0.72, layers.0.w_out.weight 0.69
+step  11000 loss 4.1355 kl 1.1347 lr 3.08e-04 gn 0.84 15,152 tok/s mem 13.1GB rate 0.047 [0.04 0.03 0.02 0.02 0.03 0.04 0.04 0.05 0.06 0.06 0.08 0.10]
+gradient spike at step 11078: gn 7.20 (median 0.52), loss 4.0489; mems.0.kq_in.weight 7.14, embed.weight 0.53, mems.0.kq_in.bias 0.52, head.weight 0.41
+gradient spike at step 11128: gn 3.42 (median 0.51), loss 4.0069; mems.4.kq_in.weight 2.25, layers.0.w_out.weight 0.99, mems.0.w_out.weight 0.95, mems.0.v_in.weight 0.88
+step  11500 loss 4.0134 kl 1.1415 lr 2.86e-04 gn 0.48 15,148 tok/s mem 13.1GB rate 0.046 [0.04 0.03 0.02 0.02 0.03 0.04 0.04 0.05 0.05 0.06 0.08 0.10]
+gradient spike at step 11535: gn 9.13 (median 0.49), loss 4.0121; layers.5.w_in.weight 5.41, mems.0.w_out.weight 2.86, mems.3.w_out.weight 2.55, layers.0.w_out.weight 2.23
+gradient spike at step 11537: gn 3.98 (median 0.49), loss 4.1095; mems.0.v_in.weight 2.46, mems.1.kq_in.weight 1.87, layers.0.w_out.weight 1.28, mems.0.w_out.weight 1.26
+gradient spike at step 11574: gn 4.62 (median 0.50), loss 4.0450; mems.0.v_in.weight 3.34, mems.0.w_out.weight 1.46, layers.0.w_in.weight 1.37, layers.1.w_in.weight 1.28
+gradient spike at step 11711: gn 3.08 (median 0.51), loss 4.0305; mems.0.kq_in.weight 3.00, head.weight 0.40, embed.weight 0.23, layers.0.w_in.weight 0.22
+gradient spike at step 11908: gn 3.38 (median 0.49), loss 3.9721; layers.0.w_in.weight 2.19, mems.0.w_out.weight 1.75, mems.0.v_in.weight 1.25, head.weight 0.85
+step  12000 loss 3.9916 kl 1.0877 lr 2.64e-04 gn 0.45 15,152 tok/s mem 13.1GB rate 0.047 [0.04 0.03 0.02 0.02 0.03 0.04 0.04 0.05 0.06 0.06 0.08 0.10]
+gradient spike at step 12016: gn 227.44 (median 0.46), loss 4.0183; layers.4.w_in.weight 135.36, mems.3.w_out.weight 75.55, mems.4.w_out.weight 70.75, mems.0.w_out.weight 63.95
+gradient spike at step 12151: gn 2.99 (median 0.49), loss 4.0389; mems.0.v_in.weight 2.44, mems.0.w_out.weight 0.93, layers.0.w_in.weight 0.77, layers.0.w_out.weight 0.63
+step  12500 loss 3.9516 kl 1.0658 lr 2.42e-04 gn 0.48 15,161 tok/s mem 13.1GB rate 0.047 [0.04 0.03 0.02 0.02 0.03 0.04 0.04 0.05 0.06 0.06 0.08 0.10]
+== eval step 12500 val_loss 4.0235 (EMA weights 3.9654)
+   >> The history of the city|, of the four principal cities, was probably the result of the destruction of the city, and that of the city that had destroyed its ancient city, to the north of the city. Thus it was the city of the city. As it was called, the city was the capital of the city. The first city, to the north is the city of the city, and the second city was the town. It is the tenth city of the city, city. It has the most power to influence the way that the city's civilization is built. That which had been built by the ancient city is
+   >> In mathematics, a prime number is| defined as the number of a small number of the same number of occurrences. When this number of events is not counted, the number of possible events is increased and the number of events is the same. In other words, the number of occurrences is proportional to a number and the number of events varies not only because each event is one of the greatest events in history. In other words, when the number of events is the same, the probability of the event is different because the event is different, and the total number of events is equal to their number of event number. The same can be used in
+   >> Plants need sunlight because| this amount of oxygen is needed to grow tomatoes. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / 
+step  13000 loss 3.9008 kl 1.0550 lr 2.22e-04 gn 0.47 15,163 tok/s mem 22.7GB rate 0.049 [0.04 0.03 0.02 0.02 0.03 0.04 0.05 0.05 0.06 0.06 0.08 0.11]
+step  13500 loss 3.9644 kl 1.0314 lr 2.02e-04 gn 0.51 15,150 tok/s mem 22.7GB rate 0.049 [0.04 0.02 0.02 0.02 0.03 0.04 0.05 0.05 0.06 0.06 0.08 0.11]
+step  14000 loss 4.0554 kl 1.1501 lr 1.82e-04 gn 0.59 15,126 tok/s mem 22.7GB rate 0.050 [0.04 0.03 0.02 0.02 0.04 0.04 0.05 0.05 0.06 0.06 0.09 0.12]
+step  14500 loss 3.9708 kl 1.0711 lr 1.64e-04 gn 0.52 15,108 tok/s mem 22.7GB rate 0.050 [0.04 0.02 0.02 0.02 0.03 0.04 0.05 0.05 0.06 0.06 0.09 0.12]
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  65%|██████▌   | 190/292 [00:00<00:00, 1858.73it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 1656.16it/s]
+distilling from hf:openai-community/gpt2-medium (weight 0.9, temperature 1.0)
+resumed from step 12500
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step  13000 loss 3.9846 kl 1.1332 lr 2.22e-04 gn 0.51 15,183 tok/s mem 12.5GB rate 0.048 [0.04 0.02 0.02 0.02 0.03 0.04 0.05 0.05 0.06 0.06 0.08 0.11]
+step  13500 loss 3.8937 kl 0.9938 lr 2.02e-04 gn 0.47 15,176 tok/s mem 12.5GB rate 0.049 [0.04 0.02 0.02 0.02 0.03 0.04 0.05 0.05 0.06 0.06 0.08 0.11]
+step  14000 loss 3.9534 kl 1.0644 lr 1.82e-04 gn 0.46 15,213 tok/s mem 12.5GB rate 0.049 [0.04 0.02 0.02 0.02 0.03 0.04 0.05 0.05 0.06 0.06 0.08 0.11]
+gradient spike at step 14278: gn 2.53 (median 0.48), loss 3.9033; mems.6.kq_in.weight 1.83, layers.5.w_out.weight 0.58, mems.3.w_out.weight 0.50, layers.4.w_out.weight 0.49
+step  14500 loss 3.9624 kl 1.0218 lr 1.64e-04 gn 0.46 15,210 tok/s mem 13.1GB rate 0.050 [0.04 0.02 0.02 0.02 0.03 0.04 0.05 0.05 0.06 0.07 0.09 0.12]
+step  15000 loss 3.9681 kl 1.0201 lr 1.47e-04 gn 0.48 15,193 tok/s mem 13.1GB rate 0.050 [0.04 0.02 0.02 0.02 0.04 0.04 0.05 0.05 0.06 0.06 0.09 0.12]
+== eval step 15000 val_loss 3.9418 (EMA weights 3.9063)
+   >> The history of the city|'s history is not new. There is something we cannot think of before the "mixture" of the City of Los Angeles: it was the center of the city. The city also had its city. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / 
+   >> In mathematics, a prime number is| a prime number. This indicates that the number of times can be represented as a number, such as when the number is smaller, but with a number larger than the number. To solve a complex number are a fraction of the time, and if you add that number into the square of the number it is, you might multiply by the number of times that you can produce for the remainder of the day. So, if a number is not a fraction, then if you have a number, add a number by the number of times you can say that you have a number. /  /  /  /  / 
+   >> Plants need sunlight because| it helps to keep the soil moist. /  /  /  /  /  /  /  /  /  /  /   /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / 
+step  15500 loss 3.8439 kl 0.9707 lr 1.31e-04 gn 0.51 15,194 tok/s mem 22.7GB rate 0.052 [0.04 0.02 0.02 0.02 0.04 0.04 0.05 0.05 0.06 0.07 0.09 0.12]
+gradient spike at step 15850: gn 4.11 (median 0.51), loss 3.7987; mems.5.kq_in.weight 1.96, layers.1.w_in.weight 1.90, layers.0.w_out.weight 1.35, layers.2.w_in.weight 1.33
+gradient spike at step 15909: gn 3.11 (median 0.52), loss 3.8309; layers.0.w_in.weight 1.69, head.weight 1.48, mems.0.w_out.weight 0.98, mems.0.v_in.weight 0.91
+step  16000 loss 3.9231 kl 1.0725 lr 1.17e-04 gn 0.72 15,207 tok/s mem 22.7GB rate 0.052 [0.04 0.02 0.02 0.02 0.04 0.04 0.05 0.05 0.06 0.07 0.09 0.12]
+step  16500 loss 3.9145 kl 1.0096 lr 1.04e-04 gn 0.50 15,206 tok/s mem 22.7GB rate 0.053 [0.04 0.02 0.02 0.02 0.04 0.04 0.05 0.05 0.06 0.07 0.09 0.12]
+step  17000 loss 3.9364 kl 0.9734 lr 9.26e-05 gn 0.92 15,227 tok/s mem 22.7GB rate 0.054 [0.04 0.02 0.02 0.02 0.04 0.04 0.05 0.05 0.07 0.07 0.09 0.12]
+gradient spike at step 17092: gn 8.75 (median 0.54), loss 3.8627; mems.11.kq_in.weight 6.96, mems.10.v_in.weight 2.18, mems.9.v_in.weight 1.51, mems.10.w_out.weight 1.23
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:   8%|▊         | 24/292 [00:00<00:01, 217.05it/s]Loading weights:  16%|█▋        | 48/292 [00:00<00:01, 229.86it/s]Loading weights:  25%|██▍       | 72/292 [00:00<00:00, 233.44it/s]Loading weights:  33%|███▎      | 96/292 [00:00<00:00, 232.00it/s]Loading weights:  41%|████      | 120/292 [00:00<00:00, 224.34it/s]Loading weights:  49%|████▉     | 143/292 [00:00<00:01, 136.52it/s]Loading weights:  55%|█████▌    | 161/292 [00:01<00:01, 102.65it/s]Loading weights:  62%|██████▏   | 182/292 [00:01<00:00, 119.46it/s]Loading weights:  69%|██████▉   | 202/292 [00:01<00:00, 99.48it/s] Loading weights:  77%|███████▋  | 226/292 [00:01<00:00, 119.69it/s]Loading weights:  86%|████████▌ | 250/292 [00:01<00:00, 141.80it/s]Loading weights:  95%|█████████▍| 276/292 [00:01<00:00, 164.53it/s]Loading weights: 100%|██████████| 292/292 [00:02<00:00, 139.13it/s]
+distilling from hf:openai-community/gpt2-medium (weight 0.9, temperature 1.0)
+resumed from step 15000
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step  15500 loss 3.8986 kl 0.9760 lr 1.31e-04 gn 0.48 23,426 tok/s mem 12.5GB rate 0.051 [0.04 0.02 0.02 0.02 0.04 0.04 0.05 0.05 0.06 0.06 0.09 0.12]
+step  16000 loss 3.9562 kl 1.0018 lr 1.17e-04 gn 0.49 23,738 tok/s mem 12.5GB rate 0.053 [0.04 0.02 0.02 0.02 0.04 0.04 0.05 0.05 0.06 0.07 0.09 0.12]
+step  16500 loss 3.7729 kl 0.9577 lr 1.04e-04 gn 0.49 23,803 tok/s mem 12.5GB rate 0.054 [0.04 0.02 0.02 0.02 0.04 0.04 0.05 0.06 0.07 0.07 0.09 0.12]
+step  17000 loss 3.9183 kl 0.9820 lr 9.26e-05 gn 0.53 23,782 tok/s mem 12.5GB rate 0.053 [0.04 0.02 0.02 0.02 0.04 0.04 0.05 0.05 0.06 0.07 0.09 0.13]
+step  17500 loss 3.6919 kl 0.9110 lr 8.28e-05 gn 0.54 23,851 tok/s mem 12.5GB rate 0.055 [0.04 0.02 0.02 0.02 0.04 0.05 0.05 0.06 0.07 0.07 0.09 0.13]
+== eval step 17500 val_loss 3.8967 (EMA weights 3.8731)
+   >> The history of the city| in the United States had been a very long and arduous period. But the history of the city itself could be traced back to the time period when the city was formed, and the events which led to it may have affected it. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / 
+   >> In mathematics, a prime number is| the number that needs to be in order to calculate its value. In this case, we need to calculate the value of a function to an integral of a function. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / 
+   >> Plants need sunlight because| they absorb the sun's rays, but have no sunlight. Plants may need light to survive; they need to survive in sunlight. It isn't recommended to start with lighted in the evenings; the next time it is to use a light-colored cover. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / L
+step  18000 loss 3.8347 kl 0.9580 lr 7.46e-05 gn 0.59 23,851 tok/s mem 22.1GB rate 0.055 [0.04 0.02 0.02 0.02 0.04 0.04 0.05 0.06 0.07 0.07 0.10 0.13]
+step  18500 loss 3.8860 kl 0.9225 lr 6.83e-05 gn 0.56 23,916 tok/s mem 22.1GB rate 0.055 [0.04 0.03 0.02 0.02 0.04 0.04 0.05 0.06 0.07 0.07 0.10 0.13]
+step  19000 loss 3.8787 kl 0.9926 lr 6.37e-05 gn 0.59 23,857 tok/s mem 22.1GB rate 0.056 [0.04 0.03 0.02 0.02 0.04 0.04 0.05 0.06 0.07 0.07 0.10 0.13]
+step  19500 loss 3.9139 kl 0.9405 lr 6.09e-05 gn 0.58 23,728 tok/s mem 22.1GB rate 0.057 [0.04 0.03 0.02 0.02 0.04 0.05 0.05 0.06 0.07 0.07 0.10 0.13]
+step  20000 loss 3.8819 kl 0.9255 lr 6.00e-05 gn 0.57 23,887 tok/s mem 22.1GB rate 0.057 [0.04 0.03 0.02 0.02 0.04 0.05 0.05 0.06 0.07 0.07 0.10 0.13]
+== eval step 20000 val_loss 3.8720 (EMA weights 3.8562)
+   >> The history of the city|'s history is incomplete, and the history of the city is incomplete. The city of Albany was founded in 1776, when it was destroyed by the Spanish Succession in 1798, and that of a city, which was made up of the city of Albany, was destroyed in 1768. While the great works of history (including the history of the city) were not properly completed, the city, had been destroyed in the great fire of the 16th century by that time. It is mentioned that in 1776 the most important buildings preserved were destroyed by fire, but that they were destroyed before
+   >> In mathematics, a prime number is| set on the basis of a mathematical equation. The equation for the principal function (such as an algebraic function, for example) is derived from an algebraic number 2, which has an output on the numbers. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / 
+   >> Plants need sunlight because| they are able to produce enough shade to thrive. The light needs to be filtered out once they are harvested, and the plant will continue to grow. For example, using the sun's natural light-weighted plant, they will provide a source of light for these plants. So, if you find that your plants need to be watered to provide shade that is not suitable, you'll need to be sure the best source of sunlight is available. /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  /  / 

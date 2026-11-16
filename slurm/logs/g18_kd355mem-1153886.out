@@ -1,0 +1,33 @@
+queued the next part of runs/g18_kd355mem: job 1154456
+xgpg7 NVIDIA A100-PCIE-40GB | runs/g18_kd355mem | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --teacher hf:openai-community/gpt2-medium --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --accum 8 --lr 6e-4
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.0104
+== eval step 2500 val_loss 4.8025 (EMA weights 4.6602)
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 5000 val_loss 4.4119 (EMA weights 4.3230)
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 7500 val_loss 4.2530 (EMA weights 4.1662)
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 10000 val_loss 4.1193 (EMA weights 4.0442)
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 4.0235 (EMA weights 3.9654)
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 15000 val_loss 3.9418 (EMA weights 3.9063)
+params 157.38M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 17500 val_loss 3.8967 (EMA weights 3.8731)
+== eval step 20000 val_loss 3.8720 (EMA weights 3.8562)
+hellaswag        acc 0.2700  acc_norm 0.2700
+lambada_openai   perplexity 3128.2873  acc 0.0483
+piqa             acc 0.5734  acc_norm 0.5626
+arc_easy         acc 0.4360  acc_norm 0.3889
+arc_challenge    acc 0.1766  acc_norm 0.2338
+winogrande       acc 0.5162
+hellaswag        acc 0.2679  acc_norm 0.2679
+lambada_openai   perplexity 3197.3732  acc 0.0483
+piqa             acc 0.5773  acc_norm 0.5686
+arc_easy         acc 0.4318  acc_norm 0.3805
+arc_challenge    acc 0.1724  acc_norm 0.2338
+winogrande       acc 0.5028
+ "val_loss": 3.880475660549697,
+g18_kd355mem             snn  157.4M  8-bit  157.4 MB  dense MACs   90.7M + sparse adds  1.72M  state 1327.1 KB  MB/token 8-bit: 1 stream   91.9, 16 streams   6.5  (rate 0.056)
+done Tue Nov 17 07:34:44 AM +08 2026

@@ -1,0 +1,1 @@
+g18_kd355mem             snn  157.4M  8-bit  157.4 MB  dense MACs   90.7M + sparse adds  1.72M  state 1327.1 KB  MB/token 8-bit: 1 stream   91.9, 16 streams   6.5  (rate 0.056)
