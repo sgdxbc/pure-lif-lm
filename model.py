@@ -47,6 +47,10 @@ Optional (mem_heads > 0): plastic synapses (a fast Hebbian memory) in front of t
            (mem_eps = 1, the size of one value read once at initialisation: at many positions no query neuron meets
            a written key and r = 0, and a tiny eps there multiplies the gradients by 1/sqrt(eps); 1e-6 made training
            diverge.)
+           mem_write_avg (5.34): write (1 - lambda) v instead of v, so that S is a running average of k v^T rather
+           than a sum (a row written at every token grows to about tau times a value without it, and the gradient of
+           a query neuron is its row of S). lambda is fixed after training, so this is folded into W_v: the same
+           network, only trained in a different parametrisation.
            A word that made some key neurons fire can thus be brought back later, by a word that makes the matching
            query neurons fire, as long ago as the decay allows. With binary k and q, writing and reading are additions;
            S is a fixed-size state per stream, like the membrane potentials (no history that grows with the text).
@@ -106,6 +110,7 @@ class Config:
     mem_theta: float = 1.5    # key and query neurons' threshold at initialisation
     mem_chunk: int = 128      # training: positions per chunk of plastic_scan
     mem_eps: float = 1.0      # read-out scaling r / sqrt(mean(r^2) + mem_eps) (see module docstring)
+    mem_write_avg: bool = False   # write (1 - lambda) v: S is a running average, not a sum (module docstring)
 
     @classmethod
     def from_dict(cls, d):
@@ -252,6 +257,8 @@ class PlasticSynapses(nn.Module):
         k = s[..., :h * m].reshape(B, L, h, m).transpose(1, 2)
         q = s[..., h * m:].reshape(B, L, h, m).transpose(1, 2)
         val = self.v_in(bus).view(B, L, h, dv).transpose(1, 2)
+        if c.mem_write_avg:   # (1 - lambda) = sigmoid(-decay_beta_logit), per group
+            val = val * torch.sigmoid(-self.decay_beta_logit).to(val.dtype).view(1, h, 1, 1)
         r, S = plastic_scan(q.to(val.dtype), k.to(val.dtype), val, F.logsigmoid(self.decay_beta_logit), S0, c.mem_chunk)
         r = r.float()
         r = (r * torch.rsqrt(r.pow(2).mean(-1, keepdim=True) + c.mem_eps)).to(val.dtype)
