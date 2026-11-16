@@ -52,6 +52,8 @@ def get_args():
     p.add_argument("--n_heads", type=int, default=6)
     p.add_argument("--out", default="runs/default")
     p.add_argument("--batch", type=int, default=64)
+    p.add_argument("--accum", type=int, default=1, help="split each batch into this many micro-batches (less memory, "
+                   "same result)")
     p.add_argument("--seq", type=int, default=256)
     p.add_argument("--steps", type=int, default=2000)
     p.add_argument("--lr", type=float, default=2e-3)
@@ -253,6 +255,7 @@ def sample(model, tok, prompts, n=120, seed=0, device="cpu"):
 
 def main():
     a = get_args()
+    assert a.batch % a.accum == 0 and (a.accum == 1 or not a.carry_state), "--accum must divide --batch; not with --carry_state"
     dev = torch.device(a.device)
     if dev.type == "cpu":
         torch.set_num_threads(a.threads)
@@ -372,38 +375,45 @@ def main():
         else:
             x, y = train.batch(a.batch)
             x, y = x.to(dev), y.to(dev)
-        model.keep_bus = hint is not None
-        with amp():
-            logits, ce, new_state, rates = model(x, y, state=state)
-        model.keep_bus = False
-        if a.carry_state:
-            state = new_state
-        loss, kd, hl = ce, None, None
-        if teacher is not None:
-            with torch.no_grad(), amp():
-                t_out = teacher(x, hidden=True) if hint is not None else teacher(x)
-                t_logits = t_out[0]
-            T = a.distill_temp
-            V = logits.size(-1)
-            if t_logits.size(-1) < V:   # e.g. GPT-2's 50257 against the padded 50304: the rest get no probability
-                t_logits = F.pad(t_logits.float(), (0, V - t_logits.size(-1)), value=-1e4)
-            kd = F.kl_div(F.log_softmax(logits.float().view(-1, V) / T, -1),
-                          F.log_softmax(t_logits.float().view(-1, V) / T, -1),
-                          log_target=True, reduction="batchmean") * T * T
-            loss = (1 - a.distill_weight) * ce + a.distill_weight * kd
-        if hint is not None:   # hidden-state distillation (see the top of this file)
-            hl = 0.0
-            for (si, ti), proj in zip(hint_pairs, hint):
-                h = t_out[2][ti].float()
-                z = (h - h.mean((0, 1))) / (h.std((0, 1)) + 1e-4)
-                b = model.last_bus[si].float()
-                b = b * torch.rsqrt(b.pow(2).mean(-1, keepdim=True) + 1e-6)
-                hl = hl + F.mse_loss(proj(b), z)
-            hl = hl / len(hint_pairs)
-            model.last_bus = None
-            loss = loss + a.hint_weight * hl
         opt.zero_grad(set_to_none=True)
-        loss.backward()
+        logged = []
+        for xm, ym in zip(x.chunk(a.accum), y.chunk(a.accum)):   # --accum: micro-batches, gradients summed
+            model.keep_bus = hint is not None
+            with amp():
+                logits, ce, new_state, rates = model(xm, ym, state=state)
+            model.keep_bus = False
+            if a.carry_state:
+                state = new_state
+            loss, kd, hl = ce, None, None
+            if teacher is not None:
+                with torch.no_grad(), amp():
+                    t_out = teacher(xm, hidden=True) if hint is not None else teacher(xm)
+                    t_logits = t_out[0]
+                T = a.distill_temp
+                V = logits.size(-1)
+                if t_logits.size(-1) < V:   # e.g. GPT-2's 50257 against the padded 50304: the rest get no probability
+                    t_logits = F.pad(t_logits.float(), (0, V - t_logits.size(-1)), value=-1e4)
+                kd = F.kl_div(F.log_softmax(logits.float().view(-1, V) / T, -1),
+                              F.log_softmax(t_logits.float().view(-1, V) / T, -1),
+                              log_target=True, reduction="batchmean") * T * T
+                loss = (1 - a.distill_weight) * ce + a.distill_weight * kd
+            if hint is not None:   # hidden-state distillation (see the top of this file)
+                hl = 0.0
+                for (si, ti), proj in zip(hint_pairs, hint):
+                    h = t_out[2][ti].float()
+                    z = (h - h.mean((0, 1))) / (h.std((0, 1)) + 1e-4)
+                    b = model.last_bus[si].float()
+                    b = b * torch.rsqrt(b.pow(2).mean(-1, keepdim=True) + 1e-6)
+                    hl = hl + F.mse_loss(proj(b), z)
+                hl = hl / len(hint_pairs)
+                model.last_bus = None
+                loss = loss + a.hint_weight * hl
+            (loss / a.accum).backward()
+            logged.append((ce.detach(), None if kd is None else kd.detach(), hl, rates))
+            logits = loss = t_out = t_logits = None   # free this micro-batch's outputs before the next one
+        ce = torch.stack([v[0] for v in logged]).mean()
+        kd = None if kd is None else torch.stack([v[1] for v in logged]).mean()
+        rates = torch.stack([v[3] for v in logged]).mean(0)
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), a.clip).item()
         opt.step()
         if ema is not None:

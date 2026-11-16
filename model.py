@@ -52,6 +52,14 @@ Optional (mem_heads > 0): plastic synapses (a fast Hebbian memory) in front of t
            S is a fixed-size state per stream, like the membrane potentials (no history that grows with the text).
            W_o starts at zero, so the model starts as the network without them. Training computes all positions at
            once, in chunks of mem_chunk (plastic_scan).
+           mem_rule = "delta": error-correcting writes (the delta rule, as in DeltaNet). Many words written under
+           overlapping keys pile up in the same rows of S, and a read returns their mixture. Here a write first reads
+           what the firing key neurons already hold and stores only the difference from the new value:
+               u[t] = b[t] (v[t] - P[t]^T k^[t]),   S[t] = P[t] + k^[t] u[t]^T,   P[t] = lambda S[t-1]
+           with k^ = k / sqrt(number of key spikes) (likewise q^ for reading) and a learned write strength
+           b[t] = sigmoid(w_b . bus + c) per group (modulatory synapses, like the leak-modulating ones). A write is
+           still additions of rows of S for the firing key neurons (read, then add u/sqrt(n)), plus dv
+           multiplications by b. Training: delta_scan.
 Removed options (tried, did not help, deleted to keep the code small; the last version with them is commit 490e9e6):
            same-layer synapses rec_rank (docs/experiments.md 5.2), delayed synapses delay_k (5.9), the spiking bus
            spike_bus (5.23), the current scaled by (1 - beta) leak_gate (5.26). Checkpoints that saved them switched
@@ -104,6 +112,7 @@ class Config:
     mem_theta: float = 1.5    # key and query neurons' threshold at initialisation
     mem_chunk: int = 128      # training: positions per chunk of plastic_scan
     mem_eps: float = 1.0      # read-out scaling r / sqrt(mean(r^2) + mem_eps) (see module docstring)
+    mem_rule: str = "hebb"    # "hebb": S = lam S + k v^T;  "delta": error-correcting writes (see module docstring)
 
     @classmethod
     def from_dict(cls, d):
@@ -198,6 +207,34 @@ def plastic_scan(q, k, v, log_lam, S0=None, chunk=128):
     return torch.cat(out, 2), S
 
 
+def delta_scan(q, k, v, log_lam, b, S0=None, chunk=64):
+    """Plastic synapses with error-correcting writes (mem_rule = "delta"). q, k: (B, h, L, m), already divided by
+    sqrt(number of spikes); v: (B, h, L, dv); log_lam: (h,); b: (B, h, L) write strengths in (0, 1); S0 as in
+    plastic_scan. Steps
+        P[t] = lam S[t-1],  u[t] = b[t] (v[t] - P[t]^T k[t]),  S[t] = P[t] + k[t] u[t]^T,  r[t] = S[t]^T q[t]
+    and returns r (B, h, L, dv) and S after the last position (float32). Within a chunk the u[t] depend on each other
+    through a unit lower-triangular system, solved at once (as in the chunked DeltaNet); between chunks through S."""
+    B, h, L, m = q.shape
+    S = q.new_zeros(B, h, m, v.size(-1), dtype=torch.float32) if S0 is None else S0.float()
+    ll = log_lam.float().view(1, h, 1, 1)
+    out = []
+    for a in range(0, L, chunk):
+        qc, kc, vc, bc = (x[:, :, a:a + chunk].float() for x in (q, k, v, b))
+        n = qc.size(2)
+        i = torch.arange(n, device=q.device, dtype=torch.float32)
+        diff = i[:, None] - i[None, :]
+        D = torch.exp(ll * diff.clamp(min=0)) * (diff >= 0)                   # lam^(t-s) for s <= t
+        g = torch.exp(ll * (i + 1).view(1, 1, n, 1))                           # lam^(t+1): decay of S0 to position t
+        Mx = torch.eye(n, device=q.device) + bc.unsqueeze(-1) * (kc @ kc.transpose(-1, -2)) * D * (diff > 0)
+        rhs = bc.unsqueeze(-1) * torch.cat([vc, g * kc], -1)
+        X = torch.linalg.solve_triangular(Mx, rhs, upper=False, unitriangular=True)
+        u = X[..., :vc.size(-1)] - X[..., vc.size(-1):] @ S                   # (B, h, n, dv)
+        out.append((qc @ kc.transpose(-1, -2) * D) @ u + (g * qc) @ S)
+        w = torch.exp(ll * (n - 1 - i).view(1, 1, n, 1))
+        S = torch.exp(ll * n) * S + (kc * w).transpose(-1, -2) @ u
+    return torch.cat(out, 2).to(v.dtype), S
+
+
 class PlasticSynapses(nn.Module):
     """Key and query neurons and the plastic synapses between them and the value channels (module docstring)."""
 
@@ -214,6 +251,11 @@ class PlasticSynapses(nn.Module):
         kq_tau = torch.exp(torch.empty(2 * h * m).uniform_(math.log(0.5), math.log(2.0)))   # short: mostly this token
         self.kq_beta_logit = nn.Parameter(torch.logit(torch.exp(-1.0 / kq_tau)))
         self.kq_log_theta = nn.Parameter(torch.full((2 * h * m,), math.log(cfg.mem_theta)))
+        assert cfg.mem_rule in ("hebb", "delta"), cfg.mem_rule
+        if cfg.mem_rule == "delta":
+            self.b_in = nn.Linear(d, h, bias=True)        # modulatory synapses setting the write strength
+            nn.init.normal_(self.b_in.weight, std=1.0 / math.sqrt(d))
+            nn.init.zeros_(self.b_in.bias)
         with torch.no_grad():
             nn.init.normal_(self.kq_in.weight, std=1.0 / math.sqrt(d))
             nn.init.zeros_(self.kq_in.bias)
@@ -232,7 +274,14 @@ class PlasticSynapses(nn.Module):
         k = s[..., :h * m].reshape(B, L, h, m).transpose(1, 2)
         q = s[..., h * m:].reshape(B, L, h, m).transpose(1, 2)
         val = self.v_in(bus).view(B, L, h, dv).transpose(1, 2)
-        r, S = plastic_scan(q.to(val.dtype), k.to(val.dtype), val, F.logsigmoid(self.decay_beta_logit), S0, c.mem_chunk)
+        if c.mem_rule == "delta":
+            k = k * torch.rsqrt(k.sum(-1, keepdim=True).clamp(min=1))
+            q = q * torch.rsqrt(q.sum(-1, keepdim=True).clamp(min=1))
+            b = torch.sigmoid(self.b_in(bus).float()).transpose(1, 2)
+            r, S = delta_scan(q, k, val, F.logsigmoid(self.decay_beta_logit), b, S0, c.mem_chunk)
+        else:
+            r, S = plastic_scan(q.to(val.dtype), k.to(val.dtype), val, F.logsigmoid(self.decay_beta_logit), S0,
+                                c.mem_chunk)
         r = r.float()
         r = (r * torch.rsqrt(r.pow(2).mean(-1, keepdim=True) + c.mem_eps)).to(val.dtype)
         r = r.transpose(1, 2).reshape(B, L, h * dv) * self.gain.to(val.dtype)

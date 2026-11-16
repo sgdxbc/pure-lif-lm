@@ -16,7 +16,9 @@ Spiking network, per generated token and per stream:
   Plastic synapses (model.py, mem_heads): the key, query and value synapses and W_o are dense MACs, like W_in; each
   key neuron that fires adds the value (mem_dv additions) to its row of S, each query neuron that fires adds its row
   to the readout (sparse adds); the decay of S is one multiplication per synapse and step; S (24-bit) and the key and
-  query potentials add to the state.
+  query potentials add to the state. With mem_rule = "delta" each firing key neuron's row is also read before the
+  write (another mem_dv additions), the write strength is d MACs per group, and u = b (v - read) is mem_dv
+  multiplications per group.
 Transformer (analytic): MACs = weights + attention over c earlier tokens; bytes read = weights (shared by the streams)
   + each stream's key/value history of c tokens (8-bit); state = that history.
 Weights are counted at 8 and 4 bits. Firing comes from --windows validation windows of 256 tokens, each read from rest,
@@ -76,7 +78,11 @@ def snn_cost(model, f):
         h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
         mem_w = M * d * (2 * h * m + 2 * h * dv)                       # key/query, value synapses and W_o: dense
         mem_macs = mem_w + M * (h * m * dv + 3 * h * dv)                # + decay of S, RMS scaling and gain
-        mem_adds = float(sum((f["mem_key_rate"][l] + f["mem_query_rate"][l]) * h * m * dv for l in range(M)))
+        kw = 2 if c.mem_rule == "delta" else 1                         # delta: read the key's row, then write it
+        mem_adds = float(sum((kw * f["mem_key_rate"][l] + f["mem_query_rate"][l]) * h * m * dv for l in range(M)))
+        if c.mem_rule == "delta":
+            mem_w += M * d * h                                          # write-strength synapses
+            mem_macs += M * (d * h + 2 * h * dv)                        # them, and b (v - read), 1/sqrt(n) scaling
         mem_state = M * (h * m * dv + 2 * h * m) * 3
         dense_w += mem_w
     out = {"arch": "snn", "params": model.num_params(), "steps_per_token": T,
