@@ -4,6 +4,7 @@ data/*.bin
 data/*.tmp
 # full checkpoints with optimizer state (>100MB, over GitHub's file limit); runs/main/model.pt has the weights
 runs/**/ckpt.pt
+runs/**/ckpt_step*.pt
 # build / cache
 __pycache__/
 build/
