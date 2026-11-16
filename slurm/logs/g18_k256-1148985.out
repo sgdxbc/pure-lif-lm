@@ -1,0 +1,28 @@
+queued the next part of runs/g18_k256: job 1149588
+xgph8 NVIDIA A100 80GB PCIe | runs/g18_k256 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --mem_heads 8 --mem_keys 256 --lr 6e-4
+params 185.80M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 2500 val_loss 4.8479 (EMA weights 4.6933)
+== eval step 5000 val_loss 4.5263 (EMA weights 4.3626)
+== eval step 7500 val_loss 4.3608 (EMA weights 4.2089)
+== eval step 10000 val_loss 4.2326 (EMA weights 4.1049)
+== eval step 12500 val_loss 4.1295 (EMA weights 4.0316)
+== eval step 15000 val_loss 4.0489 (EMA weights 3.9827)
+== eval step 17500 val_loss 3.9919 (EMA weights 3.9536)
+params 185.80M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 20000 val_loss 3.9649 (EMA weights 3.9362)
+hellaswag        acc 0.2688  acc_norm 0.2631
+lambada_openai   perplexity 9409.3458  acc 0.0400
+piqa             acc 0.5675  acc_norm 0.5473
+arc_easy         acc 0.4369  acc_norm 0.3885
+arc_challenge    acc 0.1843  acc_norm 0.2235
+winogrande       acc 0.5193
+hellaswag        acc 0.2686  acc_norm 0.2665
+lambada_openai   perplexity 8481.3881  acc 0.0452
+piqa             acc 0.5686  acc_norm 0.5544
+arc_easy         acc 0.4356  acc_norm 0.3851
+arc_challenge    acc 0.1834  acc_norm 0.2159
+winogrande       acc 0.4830
+ "val_loss": 3.976071725524027,
+   " they need to be fertilized.\nCorticultural: This is a very high sugar content that can be found in a variety of other foods.\nCorticosteroids: These can be used to treat skin conditions, skin ailments, and inflammation.\nExercise: These can help to help prevent skin damage.\nCorticosteroids: These can be used in various ways.\nCorticosteroids: These include the following:\nCorticosteroids: These are a group of compounds that can be used in any type of food.\nCorticosteroids: These include the skin rashes, hair follicles and the skin.\nCorticosteroids: These include these in the skin, hair follicles, or skin cells.\nCorticosteroids: These include the oil of the skin, hair and the skin.\nCorticosteroids: These include a type of oil that may be used to treat wrinkles, hair loss, and other skin problems.\nCorticosteroids: These include the use of the oil in the skin.\nCorticosteroids: These are the oil, which provides skin-wearing and a skin oil.\nC"
+g18_k256                 snn  185.8M  8-bit  185.8 MB  dense MACs  120.1M + sparse adds  1.85M  state 4976.6 KB  MB/token 8-bit: 1 stream  120.1, 16 streams   8.2  (rate 0.052)
+done Mon Nov 16 03:06:19 PM +08 2026

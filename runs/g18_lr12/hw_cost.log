@@ -1,0 +1,1 @@
+g18_lr12                 snn  157.4M  8-bit  157.4 MB  dense MACs   90.7M + sparse adds  0.75M  state 1327.1 KB  MB/token 8-bit: 1 stream   90.9, 16 streams   6.0  (rate 0.022)

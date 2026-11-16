@@ -1,0 +1,28 @@
+queued the next part of runs/g18_h16: job 1149549
+xgpi20 NVIDIA H100 NVL | runs/g18_h16 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --mem_heads 16 --accum 2 --lr 6e-4
+params 176.30M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 2500 val_loss 5.2433 (EMA weights 5.1586)
+== eval step 5000 val_loss 4.8104 (EMA weights 4.7259)
+== eval step 7500 val_loss 4.6588 (EMA weights 4.7989)
+== eval step 10000 val_loss 4.5173 (EMA weights 4.3977)
+== eval step 12500 val_loss 4.3415 (EMA weights 4.2812)
+== eval step 15000 val_loss 4.3836 (EMA weights 4.2557)
+== eval step 17500 val_loss 4.2200 (EMA weights 4.1969)
+== eval step 20000 val_loss 4.1859 (EMA weights 4.1618)
+params 176.30M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+hellaswag        acc 0.2653  acc_norm 0.2677
+lambada_openai   perplexity 22334.5240  acc 0.0212
+piqa             acc 0.5664  acc_norm 0.5506
+arc_easy         acc 0.3960  acc_norm 0.3704
+arc_challenge    acc 0.1809  acc_norm 0.2193
+winogrande       acc 0.5036
+hellaswag        acc 0.2639  acc_norm 0.2683
+lambada_openai   perplexity 20937.6215  acc 0.0219
+piqa             acc 0.5756  acc_norm 0.5642
+arc_easy         acc 0.4036  acc_norm 0.3687
+arc_challenge    acc 0.1886  acc_norm 0.2133
+winogrande       acc 0.4972
+ "val_loss": 4.194839142898505,
+   " the pH 7.5 pH 7 is low. Water with phosphorus in soil can be an important cause of water quality in agriculture. Therefore, it is important to have a good soil pH 8.4 pH 7.5 to 10.5. Water in soil is suitable for many reasons.\n|Fibertration is an essential part of daily life. You should not water the soil and water it is necessary to provide clean water for your soil and roots. The pH 9 to 10-30 drops of water can cause your irrigation water in the form of a wetting or an apple, which may be a good source for your watering to prevent water loss.\nRibertration is an effective disinfectant that helps water your plant in a balanced water. Proper watering is essential for the water pool and keeps your water soft.\nRibertration is a good source of water treatment. It is important to regularly drink water until your plant is in a potty or to make use of a watering system. If watering, it is important to water in the plants.\nRabbits can be beneficial in providing moisture and water for plant growth. In addition, the plants need to be watered in the soil if not properly before watering after"
+g18_h16                  snn  176.3M  8-bit  176.3 MB  dense MACs  109.9M + sparse adds  1.99M  state 2543.6 KB  MB/token 8-bit: 1 stream  110.8, 16 streams   7.4  (rate 0.059)
+done Mon Nov 16 02:33:34 PM +08 2026
