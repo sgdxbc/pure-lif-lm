@@ -52,9 +52,11 @@ def main():
     p.add_argument("--samples_per_prompt", type=int, default=3)
     p.add_argument("--ema", action="store_true", help="evaluate the moving-average weights (train.py --ema)")
     p.add_argument("--device", default="cpu")
+    p.add_argument("--wbits", type=int, default=-1, help="round the weight matrices to this many bits (model.py "
+                   "quantize_weight; 0 = full precision); default: as the network was trained (train.py --wbits)")
     a = p.parse_args()
     torch.set_num_threads(4)
-    model, step = load(a.ckpt, ema=a.ema, device=a.device)
+    model, step = load(a.ckpt, ema=a.ema, device=a.device, wbits=None if a.wbits < 0 else a.wbits)
     dev = torch.device(a.device)
     args_path = os.path.join(os.path.dirname(a.ckpt), "args.json")
     args = json.load(open(args_path)) if os.path.exists(args_path) else {}
@@ -74,7 +76,8 @@ def main():
 
     t = time.time()
     vl, cnt = full_val_loss(model, seq, max(1, 8192 // seq), data)
-    res = {"step": step, "data": data, "seq": seq, "val_loss": vl, "val_ppl": math.exp(vl), "bits_per_char": vl / math.log(2) / cpt,
+    wb = getattr(getattr(model, "cfg", None), "wbits", 0) if a.wbits < 0 else a.wbits
+    res = {"step": step, "wbits": wb, "data": data, "seq": seq, "val_loss": vl, "val_ppl": math.exp(vl), "bits_per_char": vl / math.log(2) / cpt,
            "chars_per_token": cpt, "eval_tokens": cnt, "eval_seconds": time.time() - t}
     print(json.dumps(res, indent=1), flush=True)
     json.dump(res, open(a.out, "w"), indent=1)   # saved now as well, in case generation below is interrupted

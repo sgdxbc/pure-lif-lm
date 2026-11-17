@@ -63,7 +63,8 @@ def estimate(hw, args, bits, dev):
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("run")
-    p.add_argument("--bits", type=int, default=8, help="weight bits (8 is lossless, docs/experiments.md 5.20; 4 needs training for it)")
+    p.add_argument("--bits", type=int, default=0, help="weight bits; default: the network's own (train.py --wbits), else 8 "
+                   "(8 is lossless, docs/experiments.md 5.20; 4 needs training for it, 5.38)")
     p.add_argument("--bw_gbs", type=float, default=820.0)
     p.add_argument("--onchip_mb", type=float, default=84.0)
     p.add_argument("--dsp", type=int, default=10848)
@@ -74,6 +75,7 @@ def main():
     a = p.parse_args()
     hw = json.load(open(os.path.join(a.run, "hw_cost.json")))
     args = json.load(open(os.path.join(a.run, "args.json")))
+    a.bits = a.bits or args.get("wbits", 0) or 8
     assert hw["arch"] == "snn" and not hw.get("spike_bus"), "for spiking networks without the spiking bus"
     dev = {k: getattr(a, k) for k in ("bw_gbs", "onchip_mb", "dsp", "clock_mhz", "eff", "watts")}
     rows = estimate(hw, args, a.bits, dev)

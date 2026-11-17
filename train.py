@@ -36,7 +36,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
-from model import Config, SpikingLM
+from model import Config, SpikingLM, round_weights_, restore_weights_
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -71,6 +71,8 @@ def get_args():
                    "then fires its class's neuron and the neuron of its position in the class")
     p.add_argument("--init_ckpt", default="", help="start from this checkpoint (weights, optimizer, step, EMA) when "
                    "the run directory has none yet: a decay branch of a wsd run")
+    p.add_argument("--wbits_from", type=int, default=0, help="with --wbits: train with the weight matrices rounded "
+                   "from this step on (full precision before it); evaluations always use the rounded network")
     p.add_argument("--warmup", type=int, default=200)
     p.add_argument("--wd", type=float, default=0.1)
     p.add_argument("--neuron_lr_mult", type=float, default=1.0,
@@ -250,7 +252,10 @@ def lr_at(step, a):
 
 
 @torch.no_grad()
-def evaluate(model, val, a):
+def evaluate(model, val, a, rounded=True):
+    """Validation loss and firing rates; with --wbits, of the network with its weight matrices rounded unless
+    rounded=False."""
+    saved = round_weights_(model, a.wbits, a.wgroup) if a.wbits and rounded else None
     model.eval()
     rng = np.random.default_rng(1234)   # same eval batches every time
     tot, rates = 0.0, 0.0
@@ -262,6 +267,8 @@ def evaluate(model, val, a):
         tot += loss.item()
         rates = rates + r.float()
     model.train()
+    if saved is not None:
+        restore_weights_(model, saved)
     return tot / a.eval_batches, (rates / a.eval_batches).tolist()
 
 
@@ -282,6 +289,7 @@ def sample(model, tok, prompts, n=120, seed=0, device="cpu"):
 def main():
     a = get_args()
     assert a.batch % a.accum == 0 and (a.accum == 1 or not a.carry_state), "--accum must divide --batch; not with --carry_state"
+    assert not a.wbits or a.arch == "snn", "--wbits is for the spiking network"
     dev = torch.device(a.device)
     if dev.type == "cpu":
         torch.set_num_threads(a.threads)
@@ -414,6 +422,8 @@ def main():
             x, y = x.to(dev), y.to(dev)
         opt.zero_grad(set_to_none=True)
         logged = []
+        # --wbits: forward and backward with the weight matrices rounded; the update goes to the full-precision values
+        saved = round_weights_(model, a.wbits, a.wgroup) if a.wbits and step >= a.wbits_from else None
         for xm, ym in zip(x.chunk(a.accum), y.chunk(a.accum)):   # --accum: micro-batches, gradients summed
             model.keep_bus = hint is not None
             with amp():
@@ -448,6 +458,8 @@ def main():
             (loss / a.accum).backward()
             logged.append((ce.detach(), None if kd is None else kd.detach(), hl, rates))
             logits = loss = t_out = t_logits = None   # free this micro-batch's outputs before the next one
+        if saved is not None:
+            restore_weights_(model, saved); saved = None
         ce = torch.stack([v[0] for v in logged]).mean()
         kd = None if kd is None else torch.stack([v[1] for v in logged]).mean()
         rates = torch.stack([v[3] for v in logged]).mean(0)
@@ -504,8 +516,13 @@ def main():
                    "elapsed_min": (time.time() - t0) / 60}
             msg = f"== eval step {step} val_loss {vl:.4f}"
             if ema is not None:
-                ema.swap(model); rec["val_loss_ema"] = evaluate(model, val, a)[0]; ema.swap(model)
+                ema.swap(model); rec["val_loss_ema"] = evaluate(model, val, a)[0]
+                if a.wbits:   # the same weights unrounded, to see what the rounding costs
+                    rec["val_loss_ema_full"] = evaluate(model, val, a, rounded=False)[0]
+                ema.swap(model)
                 msg += f" (EMA weights {rec['val_loss_ema']:.4f})"
+                if a.wbits:
+                    msg += f" [{a.wbits}-bit weights; unrounded EMA {rec['val_loss_ema_full']:.4f}]"
             print(msg, flush=True)
             if a.sample_every == 0 or step % a.sample_every == 0 or step == a.steps:
                 rec["samples"] = sample(model, tok, prompts, seed=step, device=a.device)

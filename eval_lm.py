@@ -112,6 +112,9 @@ def main():
     p.add_argument("--hf", default="", help="instead of a run: a Hugging Face model id, scored by the harness itself")
     p.add_argument("--device", default="cpu")
     p.add_argument("--ema", action="store_true", help="moving-average weights where the checkpoint has them")
+    p.add_argument("--wbits", type=int, default=-1, help="round the weight matrices to this many bits (0 = full "
+                   "precision); default: as the network was trained (train.py --wbits). Other than the default, the "
+                   "results file gets _w<bits> in its name")
     p.add_argument("--tasks", default=TASKS)
     p.add_argument("--limit", type=int, default=0, help="only the first N examples of each task (a quick check)")
     p.add_argument("--batch_tokens", type=int, default=16384, help="tokens per forward pass")
@@ -132,11 +135,11 @@ def main():
         args = json.load(open(os.path.join(a.run, "args.json")))
         has_ema = bool(a.ema and args.get("ema", 0))
         dev = torch.device(a.device)
-        model, _ = load(os.path.join(a.run, "ckpt.pt"), ema=has_ema, device=dev)
+        model, _ = load(os.path.join(a.run, "ckpt.pt"), ema=has_ema, device=dev, wbits=None if a.wbits < 0 else a.wbits)
         tok = Tokenizer.from_file(os.path.join(HERE, args.get("data", "data"), args.get("tokenizer", "tok4096.json")))
         lm = make_lm(model, tok, dev, a.max_len or args.get("seq", 256), a.batch_tokens)
         res = lm_eval.simple_evaluate(model=lm, **kw)
-        out_dir, name = a.run, "zeroshot" + ("_ema" if has_ema else "")
+        out_dir, name = a.run, "zeroshot" + ("_ema" if has_ema else "") + (f"_w{a.wbits}" if a.wbits >= 0 else "")
     os.makedirs(out_dir, exist_ok=True)
     summary = {"limit": a.limit, "tasks": summarise(res),
                "versions": {k: str(v) for k, v in res.get("versions", {}).items()}}

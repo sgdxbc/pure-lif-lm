@@ -13,7 +13,8 @@
 #   runs with --data (general text): full-validation evaluation and the zero-shot benchmarks (eval_lm.py,
 #   ZEROSHOT=0 skips them; needs lm_eval in the venv, see slurm/zeroshot.sbatch);
 #   PROBES=0 skips all of it. Each is done with the moving-average weights too when the run has --ema.
-#   HW=1 adds the hardware cost and, where it applies, the low-precision simulation (as slurm/hw.sbatch does).
+#   HW=1 adds the hardware cost, the validation loss with the weights rounded to 8 and 4 bits (evaluate.py --wbits) and,
+#   where it applies, the low-precision simulation (as slurm/hw.sbatch does).
 source slurm/env.sh
 out=$1; shift
 mkdir -p "$out"
@@ -55,6 +56,15 @@ if [ "${PROBES:-1}" != "0" ]; then
 fi
 if [ "${HW:-0}" = "1" ]; then
   python3 hw_cost.py --device cuda --ema "$out" > "$out/hw_cost.log" 2>&1; tail -3 "$out/hw_cost.log"
+  # weights rounded after training to 8 and 4 bits (spiking networks trained at full precision; docs/experiments.md 5.38)
+  if python3 -c "import json, sys; a = json.load(open('$out/args.json')); sys.exit(0 if a.get('arch', 'snn') == 'snn' and not a.get('wbits') else 1)"; then
+    e=""; [ $ema = 1 ] && e="--ema"
+    for b in 8 4; do
+      python3 evaluate.py --device cuda $e --wbits $b --samples_per_prompt 1 --ckpt "$out/ckpt.pt" \
+        --out "$out/final_eval${e:+_ema}_w$b.json" >> "$out/eval.log" 2>&1
+      grep -h '"val_loss"' "$out/final_eval${e:+_ema}_w$b.json" | sed "s/^/  weights rounded to $b bits:/"
+    done
+  fi
   if python3 -c "import json, sys; a = json.load(open('$out/args.json')); sys.exit(0 if a.get('arch', 'snn') == 'snn' and not (a.get('spike_bus') or a.get('rec_rank') or a.get('delay_k') or a.get('mem_heads')) else 1)"; then
     python3 quant_sim.py --device cuda --ema "$out" > "$out/quant.log" 2>&1; cat "$out/quant.log"
   fi

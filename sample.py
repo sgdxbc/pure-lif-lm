@@ -6,13 +6,15 @@
 import argparse, os, time
 import torch
 from tokenizers import Tokenizer
-from model import Config, SpikingLM
+from model import Config, SpikingLM, round_weights_
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def load(ckpt_path, ema=False, device="cpu"):
-    """ema=True: use the moving-average weights saved by train.py --ema (if the checkpoint has them)."""
+def load(ckpt_path, ema=False, device="cpu", wbits=None):
+    """ema=True: use the moving-average weights saved by train.py --ema (if the checkpoint has them).
+    wbits: round the weight matrices to this many bits (model.py quantize_weight); None = the network's own wbits
+    (set by train.py --wbits; 0 for a network trained at full precision), 0 = do not round."""
     ck = torch.load(ckpt_path, map_location="cpu")
     if ck.get("arch") == "tf":
         from model_tf import GPT, TFConfig
@@ -24,6 +26,10 @@ def load(ckpt_path, ema=False, device="cpu"):
         assert "ema" in ck, f"{ckpt_path} has no EMA weights"
         sd = {k: (ck["ema"][k].to(v.dtype) if k in ck["ema"] else v) for k, v in sd.items()}
     model.load_state_dict(sd)
+    if ck.get("arch") != "tf":
+        bits = model.cfg.wbits if wbits is None else wbits
+        if bits:
+            round_weights_(model, bits, model.cfg.wgroup)
     model.to(device).eval()
     return model, ck.get("step")
 

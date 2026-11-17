@@ -75,7 +75,7 @@ python3 train.py --device cuda --out runs/my_snn \
 | 脚本 | 做什么 |
 |---|---|
 | `hw_cost.py [--ema] runs/X` | 每个 token 的稠密乘加、可以跳过零的加法、要读的数据量、每路状态大小（按实测发放率；docs/experiments.md 5.20） |
-| `quant_sim.py [--ema] runs/X` | 低精度模拟：权重、总线、膜电位按硬件的整数位宽取整后的验证 loss |
+| `quant_sim.py [--ema] runs/X` | 低精度模拟：权重、总线、膜电位按硬件的整数位宽取整后的验证 loss（不支持可塑突触；只看权重时用 `evaluate.py --wbits 4`） |
 | `fpga_est.py runs/X` | 脉冲网络在 FPGA（AMD Alveo V80 的参数）上的延迟、吞吐量和能耗估算（5.25） |
 | `bench_gpu.py --model 名字` | Transformer 在 GPU 上用 vLLM 实测：吞吐量、每 token 延迟、每 token 能耗（5.25） |
 
@@ -153,6 +153,12 @@ python3 train.py --device cuda --out runs/my_snn \
   从那一步的权重、优化器状态和平均权重接着训练（目录里已经有 `ckpt.pt` 时，`--resume` 优先用它，所以分段接力也没问题）。
 - `--spike_log x`（默认 5）：梯度范数超过最近 200 步中位数 x 倍的每一步，把最大的几个参数梯度和这批数据的位置写进 stdout 和 log.jsonl（`spike_gn` 记录；5.34 节）。只记录，不改变训练；0 表示关掉。
 - `--spike_skip x`（默认 0，关）：梯度范数超过最近 200 步中位数 x 倍的一步，整步不更新（优化器和平均权重都不动，这一步仍计入学习率表和数据）。梯度裁剪只是把更新缩小，方向仍被出尖峰的那几处参数主导；跳过则这一批完全不起作用。
+- `--wbits b [--wgroup g --wbits_from s]`：**按低精度权重训练**（5.38 节）。所有权重矩阵（输入行、W_in、W_out、调节漏电的突触、
+  可塑突触的输入和输出、读出）在每一步的前向和反向计算前取整为 b 位对称整数，每 g 个输入（默认 128）共用一个缩放系数
+  （和 `quant_sim.py` 的 `W4g128` 相同）；更新加在全精度的权重上（直通估计），所以检查点里存的仍是全精度权重。
+  `--wbits_from s`：从第 s 步起才取整训练，之前照常训练。评估一律用取整后的网络；有平均权重时另外报告它不取整时的验证 loss。
+  b 记在网络的配置里，`sample.load`（因此 `evaluate.py`、`eval_lm.py`、`hw_cost.py`）载入时自动取整；
+  `evaluate.py --wbits 4` 和 `eval_lm.py --wbits 4` 可以把任何检查点按 4 位取整后评估（`--wbits 0` 不取整）。
 - `--accum n`：把每个批次分成 n 份依次计算、梯度相加（显存约降为 1/n，结果和不分时相同，只是慢一些）。不能和 `--carry_state` 同用。
 
 **数据**：`--data 目录 --tokenizer 文件`（见上面的表）。Transformer 另有 `--rope`（旋转位置编码），最长长度取 1024 和 `--seq` 中较大的一个。

@@ -72,6 +72,12 @@ Optional (mem_heads > 0): plastic synapses (a fast Hebbian memory) in front of t
            S is a fixed-size state per stream, like the membrane potentials (no history that grows with the text).
            W_o starts at zero, so the model starts as the network without them. Training computes all positions at
            once, in chunks of mem_chunk (plastic_scan).
+Low-precision weights (wbits, docs/experiments.md 5.38): every weight matrix (the 2-D parameters: input rows, W_in, W_out,
+           leak synapses, plastic-synapse inputs and outputs, readout) is meant to be stored as symmetric wbits-bit
+           integers with one scale per group of wgroup inputs (quantize_weight). The forward pass does not round:
+           train.py --wbits trains with the matrices rounded (quantization-aware training: forward and backward see
+           the rounded values, the update goes to the full-precision ones, a straight-through estimate), and
+           sample.load rounds them when it loads such a checkpoint, so every evaluation sees the rounded network.
 Removed options (tried, did not help, deleted to keep the code small; the code is in git history):
            same-layer synapses rec_rank (docs/experiments.md 5.2), delayed synapses delay_k (5.9), the spiking bus
            spike_bus (5.23), the current scaled by (1 - beta) leak_gate (5.26), all last in commit 490e9e6;
@@ -133,6 +139,8 @@ class Config:
     mem_chunk: int = 128      # training: positions per chunk of plastic_scan
     mem_eps: float = 1.0      # read-out scaling r / sqrt(mean(r^2) + mem_eps) (see module docstring)
     mem_write_avg: bool = False   # write (1 - lambda) v: S is a running average, not a sum (module docstring)
+    wbits: int = 0            # >0: the weight matrices are used rounded to this many bits (module docstring)
+    wgroup: int = 128         # one scale per this many inputs of a weight matrix (per row if it does not divide)
 
     @classmethod
     def from_dict(cls, d):
@@ -142,6 +150,42 @@ class Config:
                         "(c138343 for mem_rule, c0868f9 for mem_clock, bf7fed7 for mem_count_norm)")
         names = {f.name for f in fields(cls)}
         return cls(**{k: v for k, v in d.items() if k in names})
+
+
+def quantize_weight(w, bits, group=0):
+    """Symmetric `bits`-bit integers times a scale: one scale per group of `group` inputs (columns), or per output
+    row when `group` is 0 or does not divide the input width. The scale makes the largest |w| of its group the
+    largest integer. bits = 0: w unchanged."""
+    if not bits:
+        return w
+    qmax = 2 ** (bits - 1) - 1
+    o, i = w.shape
+    if group and i % group == 0:
+        wg = w.reshape(o, i // group, group)
+        s = wg.abs().amax(-1, keepdim=True).clamp(min=1e-12) / qmax
+        return (torch.round(wg / s).clamp(-qmax, qmax) * s).reshape(o, i)
+    s = w.abs().amax(1, keepdim=True).clamp(min=1e-12) / qmax
+    return torch.round(w / s).clamp(-qmax, qmax) * s
+
+
+@torch.no_grad()
+def round_weights_(model, bits, group=128):
+    """Round the model's weight matrices (its 2-D parameters) in place; returns their previous values, which
+    restore_weights_ puts back."""
+    saved = []
+    for p in model.parameters():
+        if p.dim() == 2 and p.is_floating_point():
+            saved.append(p.detach().clone())
+            p.copy_(quantize_weight(p.float(), bits, group).to(p.dtype))
+    return saved
+
+
+@torch.no_grad()
+def restore_weights_(model, saved):
+    it = iter(saved)
+    for p in model.parameters():
+        if p.dim() == 2 and p.is_floating_point():
+            p.copy_(next(it))
 
 
 class LIFPopulation(nn.Module):
