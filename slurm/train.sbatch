@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -p gpu -c 8 --mem=64G -t 03:00:00 -o slurm/logs/%x-%j.out
-#SBATCH --exclude=xgpj0  # numpy C extensions fail to import on this node (g2_tf105, g3_d10)
+#SBATCH --exclude=xgpj0,xgpi17  # numpy C extensions fail to import on this node (g2_tf105, g3_d10)
 # One training run on one GPU, then the evaluation, all written into the run directory. Submit from the repo root:
 #   sbatch -J NAME --gres=gpu:a100-40:1 slurm/train.sbatch runs/NAME [train.py flags...]
 # A run stopped by the time limit continues from its last checkpoint when the same command is submitted again.
