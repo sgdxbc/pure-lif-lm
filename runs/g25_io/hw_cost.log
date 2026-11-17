@@ -1,0 +1,1 @@
+g25_io                   snn  119.3M  8-bit  119.3 MB  dense MACs   52.4M + sparse adds  1.59M  state 1327.1 KB  MB/token 8-bit: 1 stream   53.5, 16 streams   4.3  (rate 0.054)

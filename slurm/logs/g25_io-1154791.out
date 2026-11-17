@@ -1,0 +1,30 @@
+queued the next part of runs/g25_io: job 1155382
+xgpi18 NVIDIA H100 NVL | runs/g25_io | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_write_avg true --out_classes 225 --class_file runs/classes/tf163_head225.npy --in_groups 2 --in_class_file runs/classes/tf163_embed225.npy --accum 4
+params 119.34M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.5921 (EMA weights 4.5017)
+params 119.34M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 5000 val_loss 4.3135 (EMA weights 4.2206)
+== eval step 7500 val_loss 4.1907 (EMA weights 4.0998)
+== eval step 10000 val_loss 4.0980 (EMA weights 4.0254)
+== eval step 12500 val_loss 4.0245 (EMA weights 3.9736)
+== eval step 15000 val_loss 3.9655 (EMA weights 3.9358)
+params 119.34M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 17500 val_loss 3.9274 (EMA weights 3.9115)
+== eval step 20000 val_loss 3.9084 (EMA weights 3.8966)
+hellaswag        acc 0.2656  acc_norm 0.2666
+lambada_openai   perplexity 6700.9795  acc 0.0406
+piqa             acc 0.5680  acc_norm 0.5582
+arc_easy         acc 0.4099  acc_norm 0.3864
+arc_challenge    acc 0.1655  acc_norm 0.2312
+winogrande       acc 0.5185
+hellaswag        acc 0.2644  acc_norm 0.2687
+lambada_openai   perplexity 6751.7539  acc 0.0417
+piqa             acc 0.5658  acc_norm 0.5631
+arc_easy         acc 0.4158  acc_norm 0.3939
+arc_challenge    acc 0.1689  acc_norm 0.2287
+winogrande       acc 0.5083
+ "val_loss": 3.9181238443010353,
+   " need to keep your hands dirty.\nThere are thousands of ways to clean your hair, but it\u2019s easy to do. It\u2019s easy for you to wash the hair and make your way to your hair. Always keep your hair clean \u2014 the process is simple.\nUse one hair every day to help prevent fungus. You may even need a few drops of hot water for a couple of days. It\u2019s a good idea to use a small amount of water to get your hair pulled out of the hair.\nIt\u2019s important to have a hair wash twice a day with a clean brush.\nIf you have had to cut hair on the hair, put a small amount of white hair on it to your hair. It\u2019s a good idea to clean the hair for at least six months. If you can\u2019t take it and take a short period of time, get the first few minutes of hair loss every morning. If you can get your hair dry up, it\u2019s important to have a clean and dry hair dry.\nIf you\u2019re new to the hair loss treatment process, your hair may not be as sharp. It\u2019s a good idea to have",
+g25_io                   snn  119.3M  8-bit  119.3 MB  dense MACs   52.4M + sparse adds  1.59M  state 1327.1 KB  MB/token 8-bit: 1 stream   53.5, 16 streams   4.3  (rate 0.054)
+done Tue Nov 17 12:16:50 PM +08 2026
