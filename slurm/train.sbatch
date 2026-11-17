@@ -29,6 +29,14 @@ echo "$(hostname) $(nvidia-smi --query-gpu=name --format=csv,noheader) | $out | 
 python3 train.py --device cuda --out "$out" "$@" --resume >> "$out/stdout.log" 2>&1
 code=$?
 grep -E "^params|val_loss|Error|Traceback" "$out/stdout.log" | tail -20
+# Exit code 120 is Python failing to flush its output at exit: a write error on the file system, not the run
+# (g26_snn212, job 1155339). With RELAY, up to 3 of them per run let the queued next part continue from the last checkpoint.
+n120=$(cat "$out/exit120_count" 2>/dev/null || echo 0)
+if [ $code -eq 120 ] && [ -n "$RELAY" ] && [ "$n120" -lt 3 ]; then
+  echo $((n120 + 1)) > "$out/exit120_count"
+  echo "train.py exited with code 120 (output write error; job $SLURM_JOB_ID), $((n120 + 1)) of 3 allowed: the next part continues"
+  exit $code
+fi
 if [ $code -ne 0 ]; then
   echo "train.py failed with exit code $code (job $SLURM_JOB_ID)" | tee "$out/FAILED"
   exit $code
