@@ -8,7 +8,10 @@
 # +0.034, training with 4-bit weights from the start +0.033, from 1/3, 2/3 or 5/6 of the way +0.018 / +0.017 / +0.018,
 # and from 2/3 with one scale per 64 inputs +0.014. Here, 20,000 steps, seed 0, the same batches as g27_io2k:
 #  - io2k_q4l     at full precision, then with 4-bit weights (one scale per 128 inputs) for the last 5,000 steps (25%)
-#  - io2k_q4lg64  the same with one scale per 64 inputs (4.25 instead of 4.125 bits per weight with 16-bit scales)
+#  - io2k_q4lm8   the same with the readout and the input rows kept at 8 bits (--wbits8). Replaced the planned
+#                 io2k_q4lg64 (one scale per 64 inputs) before it started: rounding only the readout of a trained
+#                 network costs +0.07 to +0.14 of the +0.13 to +0.17 of rounding everything (wbits_sens.py, 5.38),
+#                 and the word readout neurons sit in HBM, so 8 bits there costs no on-chip memory
 # and the validation loss of the full-precision runs of waves 21-27 with their weights rounded after training to 8 and
 # 4 bits (slurm/wbits.sbatch), as the reference: those finished when this script runs (wave 27's, once finished, with
 #   sbatch -J g28_wbits27 --gres=gpu:h100-47:1 slurm/wbits.sbatch runs/g27_cls2k runs/g27_cls8k runs/g27_io2k ).
@@ -31,8 +34,8 @@ sub() {  # sub NAME GPU_TYPE train.py-flags...   (prints the job id of the first
 }
 a=$(sub io2k_q4l    a100-40 $DATA $SPREAD $SHORT $N138 $SNN $KD $MEM $IO --wbits 4 --wbits_from 15000 --accum 4)
 echo "$a g28_io2k_q4l (a100-40)"
-b=$(sub io2k_q4lg64 a100-40 $DATA $SPREAD $SHORT $N138 $SNN $KD $MEM $IO --wbits 4 --wgroup 64 --wbits_from 15000 --accum 4)
-echo "$b g28_io2k_q4lg64 (a100-40)"
+b=$(sub io2k_q4lm8  a100-40 $DATA $SPREAD $SHORT $N138 $SNN $KD $MEM $IO --wbits 4 --wbits_from 15000 --wbits8 '^head\.,^embed\.' --accum 4)
+echo "$b g28_io2k_q4lm8 (a100-40)"
 runs=""
 for r in g21_kdwa138 g21_wa212 g25_cls g25_inc g25_io g27_cls2k g27_cls8k g27_io2k; do
   [ -e runs/$r/done ] && runs="$runs runs/$r"
