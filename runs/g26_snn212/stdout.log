@@ -131,3 +131,31 @@ gradient spike at step 29623: gn 3.75 (median 0.27), loss 3.8029; mems.8.kq_in.w
 gradient spike at step 29819: gn 1.40 (median 0.26), loss 3.7217; mems.9.kq_in.weight 1.20, layers.0.w_out.weight 0.24, layers.8.w_out.weight 0.22, head.weight 0.21
 step  30000 loss 3.7243 kl 0.5647 lr 6.00e-04 gn 0.24 79,340 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.02 0.03 0.04 0.05]
 == eval step 30000 val_loss 3.8180 (EMA weights 3.6781)
+   >> The history of the city| is the biggest source of traffic. In 2009, there were two major earthquakes in the town of New York City. Since then, the city has experienced a major earthquake and tsunami in the previous month. This earthquake in New York has been hit by the earthquake of 2010, causing the city to be hit hardest. / The earthquake was caused by a heavy earthquake, but it was also one that happened during the earthquake. The magnitude of the earthquake was calculated during the first half of 2011 and the second quarter of 2011. / What has been done in the earthquake was to take place from a place called the
+   >> In mathematics, a prime number is| the number of possible future generations per day. A number, however, is represented by a number of numbers — each with a maximum number. It is possible to use the number only as a number of possible future generations: by finding the number of future generations to be the number of these generations of each future generation, the number of future generations can be calculated. In other words, the number of generations is the number of generations before they can ever be counted among the number of generations to be counted. This is a useful way to express the number of generations, or the number of generations, of each
+   >> Plants need sunlight because| it depends upon the plant it's grown. / In most cases in the winter when it's cold, the leaves are also planted. / How does heaping water from a flower? / - If the plants are in the ground near an area of water, the leaves will be exposed to the sun. / - If the leaves are wet, the soil may become dry or wet. / - If the plants are waterlogged, the leaves are waterlogged. / - If the leaves are wet or wet, the leaves must be wetted. / How does the plant care? / How
+gradient spike at step 30422: gn 2.29 (median 0.26), loss 3.7092; layers.1.w_in.weight 1.57, layers.0.w_out.weight 0.94, head.weight 0.71, layers.0.w_in.weight 0.40
+step  30500 loss 3.7584 kl 0.5374 lr 6.00e-04 gn 0.29 79,380 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.03 0.04 0.06]
+gradient spike at step 30971: gn 2.17 (median 0.27), loss 3.6130; mems.10.kq_in.weight 1.61, layers.0.w_out.weight 0.46, mems.5.v_in.weight 0.39, mems.5.w_out.weight 0.37
+gradient spike at step 30979: gn 1.46 (median 0.27), loss 3.8552; mems.9.kq_in.weight 1.00, mems.8.kq_in.weight 0.75, head.weight 0.23, layers.7.w_out.weight 0.22
+step  31000 loss 3.8052 kl 0.5703 lr 6.00e-04 gn 0.27 79,342 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.02 0.03 0.04 0.06]
+gradient spike at step 31344: gn 1.47 (median 0.26), loss 3.6961; mems.9.kq_in.weight 1.25, layers.0.w_out.weight 0.31, mems.6.kq_in.weight 0.24, head.weight 0.23
+step  31500 loss 3.6648 kl 0.5158 lr 6.00e-04 gn 0.25 79,365 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.03 0.04 0.06]
+gradient spike at step 31961: gn 2.14 (median 0.26), loss 3.7430; mems.11.kq_in.weight 1.47, mems.10.v_in.weight 0.49, layers.0.w_out.weight 0.49, mems.9.v_in.weight 0.35
+step  32000 loss 3.7456 kl 0.5333 lr 6.00e-04 gn 0.23 79,364 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.03 0.04 0.06]
+step  32500 loss 3.8126 kl 0.5571 lr 6.00e-04 gn 0.27 79,387 tok/s mem 46.8GB rate 0.021 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.02 0.03 0.04 0.05]
+gradient spike at step 32670: gn 1.40 (median 0.26), loss 3.8651; mems.10.kq_in.weight 1.15, layers.0.w_out.weight 0.31, head.weight 0.20, layers.9.w_in.weight 0.16
+step  33000 loss 3.7583 kl 0.5520 lr 6.00e-04 gn 0.25 79,364 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.03 0.04 0.06]
+gradient spike at step 33094: gn 1.40 (median 0.26), loss 3.7790; mems.8.kq_in.weight 1.08, layers.0.w_out.weight 0.39, mems.7.v_in.weight 0.24, mems.9.kq_in.weight 0.23
+gradient spike at step 33483: gn 1.87 (median 0.26), loss 3.8230; mems.6.kq_in.weight 1.72, layers.0.w_out.weight 0.32, layers.5.w_out.weight 0.31, head.weight 0.20
+step  33500 loss 3.7082 kl 0.5486 lr 6.00e-04 gn 0.27 79,379 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.03 0.04 0.05]
+gradient spike at step 33576: gn 1.48 (median 0.27), loss 3.9278; mems.0.gain 0.81, mems.6.kq_in.weight 0.54, layers.0.w_out.weight 0.46, mems.4.kq_in.weight 0.43
+gradient spike at step 33839: gn 1.88 (median 0.27), loss 3.7477; mems.11.kq_in.weight 1.25, mems.10.v_in.weight 0.55, layers.0.w_out.weight 0.37, mems.10.w_out.weight 0.37
+step  34000 loss 3.7425 kl 0.5581 lr 6.00e-04 gn 0.27 79,353 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.02 0.03 0.04 0.06]
+gradient spike at step 34408: gn 1.99 (median 0.26), loss 3.6435; mems.6.kq_in.weight 1.35, layers.0.w_out.weight 0.55, mems.5.w_out.weight 0.54, mems.5.v_in.weight 0.48
+step  34500 loss 3.8363 kl 0.5438 lr 6.00e-04 gn 0.25 79,369 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.02 0.03 0.04 0.06]
+gradient spike at step 34639: gn 1.92 (median 0.27), loss 3.7161; mems.8.kq_in.weight 1.53, mems.7.kq_in.weight 0.68, layers.0.w_out.weight 0.39, head.weight 0.22
+gradient spike at step 34849: gn 1.55 (median 0.27), loss 3.7457; mems.10.kq_in.weight 1.05, mems.7.v_in.weight 0.42, layers.0.w_out.weight 0.30, mems.7.w_out.weight 0.29
+gradient spike at step 34959: gn 2.72 (median 0.26), loss 3.7798; mems.9.kq_in.weight 2.12, layers.6.w_out.weight 0.50, layers.7.w_out.weight 0.48, layers.8.w_out.weight 0.48 -- update skipped
+step  35000 loss 3.7983 kl 0.5448 lr 6.00e-04 gn 0.30 79,365 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.03 0.04 0.06]
+== eval step 35000 val_loss 3.8005 (EMA weights 3.6601)
