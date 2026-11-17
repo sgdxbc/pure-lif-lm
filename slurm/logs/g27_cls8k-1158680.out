@@ -1,0 +1,33 @@
+queued the next part of runs/g27_cls8k: job 1159275
+xgph10 NVIDIA A100 80GB PCIe | runs/g27_cls8k | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --accum 4
+params 157.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3008
+== eval step 2500 val_loss 4.5328 (EMA weights 4.4558)
+== eval step 5000 val_loss 4.2515 (EMA weights 4.1597)
+params 157.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 7500 val_loss 4.1244 (EMA weights 4.0370)
+== eval step 10000 val_loss 4.0305 (EMA weights 3.9642)
+params 157.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 3.9600 (EMA weights 3.9116)
+== eval step 15000 val_loss 3.9061 (EMA weights 3.8760)
+params 157.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 17500 val_loss 3.8660 (EMA weights 3.8515)
+== eval step 20000 val_loss 3.8477 (EMA weights 3.8370)
+params 157.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+hellaswag        acc 0.2673  acc_norm 0.2660
+lambada_openai   perplexity 6274.3513  acc 0.0386
+piqa             acc 0.5789  acc_norm 0.5653
+arc_easy         acc 0.4390  acc_norm 0.3893
+arc_challenge    acc 0.1843  acc_norm 0.2278
+winogrande       acc 0.4909
+hellaswag        acc 0.2666  acc_norm 0.2680
+lambada_openai   perplexity 6292.8233  acc 0.0433
+piqa             acc 0.5816  acc_norm 0.5620
+arc_easy         acc 0.4348  acc_norm 0.3872
+arc_challenge    acc 0.1775  acc_norm 0.2210
+winogrande       acc 0.4743
+ "val_loss": 3.85925665902774,
+g27_cls8k                snn  157.7M  8-bit  157.7 MB  dense MACs   58.6M + sparse adds  1.56M  state 1327.1 KB  MB/token 8-bit: 1 stream   59.8, 16 streams   4.6  (rate 0.053)
+  weights rounded to 8 bits: "val_loss": 3.8490402838418376,
+  weights rounded to 4 bits: "val_loss": 3.968393436066627,
+done Wed Nov 18 02:31:29 AM +08 2026

@@ -1,0 +1,80 @@
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+params 157.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3008
+step      1 loss 10.2023 kl 6.7166 lr 6.00e-07 gn 2.78 3,335 tok/s mem 23.8GB rate 0.117 [0.07 0.08 0.08 0.09 0.11 0.11 0.13 0.13 0.14 0.15 0.15 0.16]
+step    500 loss 5.9439 kl 2.4923 lr 3.00e-04 gn 0.91 16,819 tok/s mem 25.0GB rate 0.108 [0.06 0.06 0.07 0.08 0.08 0.09 0.11 0.12 0.13 0.15 0.16 0.19]
+step   1000 loss 5.1819 kl 1.7944 lr 6.00e-04 gn 0.58 16,784 tok/s mem 25.0GB rate 0.071 [0.05 0.05 0.05 0.06 0.06 0.06 0.07 0.07 0.08 0.09 0.10 0.12]
+step   1500 loss 4.7673 kl 1.3896 lr 5.99e-04 gn 0.36 16,783 tok/s mem 25.0GB rate 0.057 [0.04 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.06 0.07 0.08 0.10]
+step   2000 loss 4.6890 kl 1.3006 lr 5.96e-04 gn 0.36 16,788 tok/s mem 25.0GB rate 0.050 [0.04 0.05 0.04 0.04 0.04 0.04 0.04 0.04 0.05 0.06 0.07 0.09]
+step   2500 loss 4.4926 kl 1.1764 lr 5.92e-04 gn 0.34 16,783 tok/s mem 25.0GB rate 0.046 [0.04 0.04 0.04 0.04 0.04 0.03 0.04 0.04 0.04 0.05 0.07 0.09]
+== eval step 2500 val_loss 4.5328 (EMA weights 4.4558)
+   >> The history of the city|’s history is a list of examples of the ‘narcotic’ and its characteristics. / Biological of the ‘dist’ and the ‘d’ are most likely to be the true. These are the two most interesting and most fascinating. There is not only one place but one place where the ‘d’ area’ is also one of the most beautiful sites to the area. The ‘h’ or ‘d’ is very well known. The ‘d’ are a great way of looking at the
+   >> In mathematics, a prime number is| estimated from .05 to 1,000. / The fact that the more severe the average the rate of change is, there is no difference in the extent to which the risk of any damage is expected. If the increase in the price of the average, then the risk of death to be reduced as was the case in the study. / However, the risk of death and the effects of aging are also increasing. In addition, it is not the risk of death from a certain stage of death or a death toll because it is the risk of death and because the death penalty is more likely to be
+   >> Plants need sunlight because| they are not the only part of the earth. / If we can be surprised by using a knife coating as a protective layer and in the sun, they would be able to make sure that the sun is the same. / If this chemical is so hot, it’s important to carefully check the skin for a couple of hours. It’s important to make sure that they are healthy enough to be exposed to their suns so the sun can be removed. / If you do not think it’s good to make sure they are sun-free, avoid sun protection and sun
+step   3000 loss 4.4749 kl 1.1261 lr 5.85e-04 gn 0.31 16,781 tok/s mem 26.6GB rate 0.044 [0.04 0.04 0.04 0.04 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08]
+step   3500 loss 4.2810 kl 1.0423 lr 5.77e-04 gn 0.29 16,782 tok/s mem 26.6GB rate 0.043 [0.04 0.04 0.04 0.03 0.03 0.03 0.04 0.04 0.04 0.05 0.06 0.08]
+step   4000 loss 4.3038 kl 0.9711 lr 5.67e-04 gn 0.27 16,785 tok/s mem 26.6GB rate 0.042 [0.04 0.04 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08]
+step   4500 loss 4.1457 kl 0.9790 lr 5.56e-04 gn 0.38 16,784 tok/s mem 26.6GB rate 0.042 [0.04 0.04 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08]
+step   5000 loss 4.0454 kl 0.8648 lr 5.43e-04 gn 0.26 16,783 tok/s mem 26.6GB rate 0.042 [0.04 0.04 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08]
+== eval step 5000 val_loss 4.2515 (EMA weights 4.1597)
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 5000
+params 157.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step   5500 loss 4.1263 kl 0.8734 lr 5.29e-04 gn 0.28 16,765 tok/s mem 21.9GB rate 0.041 [0.03 0.04 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08]
+step   6000 loss 4.1257 kl 0.8804 lr 5.13e-04 gn 0.31 16,788 tok/s mem 21.9GB rate 0.042 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.04 0.05 0.06 0.08]
+step   6500 loss 4.0969 kl 0.8385 lr 4.96e-04 gn 0.28 16,786 tok/s mem 21.9GB rate 0.041 [0.03 0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.09]
+step   7000 loss 4.1309 kl 0.8466 lr 4.78e-04 gn 0.26 16,786 tok/s mem 21.9GB rate 0.041 [0.03 0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08]
+step   7500 loss 4.1155 kl 0.8276 lr 4.59e-04 gn 0.28 16,786 tok/s mem 21.9GB rate 0.042 [0.03 0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.07 0.09]
+== eval step 7500 val_loss 4.1244 (EMA weights 4.0370)
+   >> The history of the city| is well documented. / The town has more to offer, as a great way to raise money from the local economy. / History of the town / The town has been named after the town of Averigworth, who was named after the town, and is now a symbol of the town's ancient population. The town was named after the town who built a great city in the 18th century. The town was built in the 17th century and is now called by the Town Hall. In the early 1900s, the school was named a World Heritage Site and it was established as a modern
+   >> In mathematics, a prime number is| given by the sum of the prime prime prime. As the sum of the prime prime is multiplied by the prime number, that is the prime prime prime is the prime factor, and a prime number of prime prime prime prime prime prime prime prime prime prime prime factor. / This second number is a prime prime prime prime and prime prime prime prime prime prime prime prime prime prime prime integer, the prime prime prime prime prime prime prime prime prime prime prime prime prime prime prime prime prime prime prime prime. / Number of prime is prime prime prime prime prime . / where the prime prime prime is the prime prime
+   >> Plants need sunlight because| they need extra sunlight. / - Some animals need to be outdoors for a week’s time. A warm day isn’t necessarily a good idea; they don’t need the water in order to get a chance to spend in on the sun. / - It’s important to know that plants are constantly exposed to the sun until they are exposed to sunlight in order to protect themselves. It’s not always the case that many wild animals will become a part of the night. / Some animals that have become part of the night sky show up in other animals,
+step   8000 loss 4.0642 kl 0.8190 lr 4.38e-04 gn 0.27 16,777 tok/s mem 23.5GB rate 0.041 [0.03 0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.09]
+step   8500 loss 4.1396 kl 0.7764 lr 4.18e-04 gn 0.26 16,801 tok/s mem 23.5GB rate 0.042 [0.03 0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.05 0.05 0.07 0.09]
+step   9000 loss 4.0501 kl 0.7452 lr 3.96e-04 gn 0.26 16,869 tok/s mem 23.5GB rate 0.042 [0.03 0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.05 0.05 0.07 0.09]
+step   9500 loss 3.8660 kl 0.7174 lr 3.74e-04 gn 0.25 16,822 tok/s mem 23.5GB rate 0.043 [0.03 0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.05 0.06 0.07 0.09]
+step  10000 loss 4.1056 kl 0.8163 lr 3.52e-04 gn 0.31 16,859 tok/s mem 23.5GB rate 0.042 [0.03 0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.07 0.09]
+== eval step 10000 val_loss 4.0305 (EMA weights 3.9642)
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 10000
+params 157.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step  10500 loss 4.0993 kl 0.7288 lr 3.30e-04 gn 0.28 16,550 tok/s mem 21.9GB rate 0.043 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.05 0.07 0.09]
+step  11000 loss 4.0416 kl 0.7210 lr 3.08e-04 gn 0.27 16,775 tok/s mem 21.9GB rate 0.045 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.07 0.09]
+step  11500 loss 3.9312 kl 0.7052 lr 2.86e-04 gn 0.25 16,810 tok/s mem 21.9GB rate 0.044 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.07 0.09]
+step  12000 loss 3.9289 kl 0.6843 lr 2.64e-04 gn 0.36 16,844 tok/s mem 21.9GB rate 0.045 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.07 0.10]
+step  12500 loss 3.8869 kl 0.6414 lr 2.42e-04 gn 0.24 16,819 tok/s mem 21.9GB rate 0.046 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08 0.10]
+== eval step 12500 val_loss 3.9600 (EMA weights 3.9116)
+   >> The history of the city|, of the Persian Empire, shows how the city was formed when the Turkish power reached its eastern part during the 6th century AD. / The city was the center of trade and economic development in the area. It became the centre of the city's economic development, making the city a strategic centre of trade, and providing essential services for businesses to the rural areas of the region. / An urban area, the center of the city centre, was the center of trade and trade in the region of the region. Its economy was centered in the region of Asia which had been around long since the 19th
+   >> In mathematics, a prime number is| defined by the number of a number as the number of equal numbers of equal numbers of equal numbers of a number. / If it is possible, then the number of an equal number of the same number will be equal to one number of all numbers in all numbers the same number (for example, not exactly equal). / In this way, a number of numbers is created, which is equal to the number of its number of numbers, and in the same proportion as the number of the series of numbers in total number. / In this way, the number of number of numbers is equal to the number
+   >> Plants need sunlight because| they are able to grow healthy and grow quickly. / In the spring, we have a lot of sunbathe outdoors and don’t have to worry about the sun. / On our last day we observed the sun in our little areas. In the mid afternoon sun and the sun go south all over our country. / There is a new scientific discovery that we should be aware about. / The sun is changing the seasons. / We would have had more sun in the winter when we are back at this time of year. / In the autumn and fall, we are going to get more
+step  13000 loss 3.8161 kl 0.6433 lr 2.22e-04 gn 0.24 16,817 tok/s mem 23.5GB rate 0.047 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08 0.10]
+step  13500 loss 3.8857 kl 0.6576 lr 2.02e-04 gn 0.25 16,816 tok/s mem 23.5GB rate 0.047 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08 0.10]
+step  14000 loss 4.0266 kl 0.7368 lr 1.82e-04 gn 0.31 16,807 tok/s mem 23.5GB rate 0.047 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08 0.10]
+step  14500 loss 3.9391 kl 0.6541 lr 1.64e-04 gn 0.28 16,828 tok/s mem 23.5GB rate 0.048 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08 0.10]
+gradient spike at step 14566: gn 1.76 (median 0.26), loss 3.9495; head.w_cls 1.16, layers.0.w_in.weight 0.86, mems.4.kq_in.weight 0.38, mems.0.v_in.weight 0.36
+step  15000 loss 4.0202 kl 0.6745 lr 1.47e-04 gn 0.27 16,863 tok/s mem 23.5GB rate 0.047 [0.03 0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.08 0.10]
+== eval step 15000 val_loss 3.9061 (EMA weights 3.8760)
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 15000
+params 157.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step  15500 loss 3.8403 kl 0.5895 lr 1.31e-04 gn 0.23 16,805 tok/s mem 21.9GB rate 0.049 [0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.05 0.06 0.08 0.10]
+step  16000 loss 3.9110 kl 0.6019 lr 1.17e-04 gn 0.24 16,821 tok/s mem 21.9GB rate 0.050 [0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.05 0.06 0.08 0.11]
+step  16500 loss 3.7182 kl 0.5865 lr 1.04e-04 gn 0.25 16,812 tok/s mem 21.9GB rate 0.051 [0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.07 0.08 0.11]
+step  17000 loss 3.8877 kl 0.6151 lr 9.26e-05 gn 0.26 16,821 tok/s mem 21.9GB rate 0.050 [0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.05 0.06 0.08 0.11]
+step  17500 loss 3.6496 kl 0.5641 lr 8.28e-05 gn 0.26 16,846 tok/s mem 21.9GB rate 0.052 [0.03 0.03 0.03 0.03 0.03 0.04 0.05 0.05 0.06 0.07 0.08 0.11]
+== eval step 17500 val_loss 3.8660 (EMA weights 3.8515)
+   >> The history of the city| of San Jose was first published in 1842. / According to History of San Jose, the city was first created in 1867, with a small population and a population of approximately 1.5 million visitors, a total of about 100,000 who lived in the area. / The town was named after the city of San Luis, which it was named after the city. The city is called San Pedro, and the city is the third largest city in San Fernando.
+   >> In mathematics, a prime number is| a number that represents each factor that is not the same number that is the same number. / To represent a number, you must have the following formula: / Number of digits in a number / For a number, a number is a number that is the number in the area of a particular number and is the number in the number. / For example, if a number is a number, the number is a number, if a number is a number, it is a number. / To ensure that the number is a number, and if it is a number, it is a number, such that
+   >> Plants need sunlight because| of the air’s high pH. / Fruit has a pH of 7.8 and is not acid. / The pH of the apple tree is 8.5. / The pH of pelluca trees is 7.5 pH. It is alkalic acid. / The pH of the pellucagon tree is approximately 6.6. / The pH of the pellucagon tree is 7.7. / The pH of the pellucagon tree is 0.0. / The pH of the pellucagon tree is 7.6. / 
+step  18000 loss 3.8121 kl 0.6029 lr 7.46e-05 gn 0.28 16,850 tok/s mem 23.5GB rate 0.052 [0.03 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.07 0.08 0.11]
+step  18500 loss 3.8619 kl 0.5589 lr 6.83e-05 gn 0.24 16,857 tok/s mem 23.5GB rate 0.052 [0.04 0.03 0.03 0.03 0.03 0.04 0.05 0.05 0.06 0.07 0.08 0.11]
+step  19000 loss 3.8451 kl 0.5965 lr 6.37e-05 gn 0.25 16,831 tok/s mem 23.5GB rate 0.053 [0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.05 0.06 0.07 0.09 0.11]
+step  19500 loss 3.8716 kl 0.5938 lr 6.09e-05 gn 0.28 16,824 tok/s mem 23.5GB rate 0.053 [0.04 0.04 0.03 0.03 0.04 0.04 0.05 0.05 0.06 0.07 0.09 0.11]
+step  20000 loss 3.8454 kl 0.5633 lr 6.00e-05 gn 0.27 16,822 tok/s mem 23.5GB rate 0.053 [0.04 0.04 0.03 0.03 0.04 0.04 0.05 0.05 0.06 0.07 0.09 0.11]
+== eval step 20000 val_loss 3.8477 (EMA weights 3.8370)
+   >> The history of the city| of Athens is a fascinating and an open-ended field of study of Greece.
+   >> In mathematics, a prime number is| given by the number of squares you need to obtain the numbers from the number. / For example, I have a number of times. / In mathematics, I have a number of numbers that are either positive or negative. These numbers have a number of times a number that is negative. / In mathematics, number is a number that can be negative or positive. When we say a number that is positive or negative, it is positive or negative. / In mathematics, I mean negative numbers. I’ve learned that if you are positive or negative, I have positive numbers and I have positive numbers
+   >> Plants need sunlight because| they are able to produce seed before germination. / Plants use light and dry plants which have a good heat. They need a lot of water. / Plant seeds and seed. / Plant seeds of the genus Lilies (Lantana) in the genus Lantium. / Plant seeds in the seeds, so that they do not pollinate them. / Plant seeds in the seed pods and seeds. / Plant seeds in the ground. / Plants and seeds in the seeds. / Plant seeds in the ground. / Plant seeds in the ground.
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 20000
+params 157.70M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
