@@ -1,0 +1,22 @@
+queued the next part of runs/g26_tf163_b225000: job 1157468
+xgpi11 NVIDIA H100 NVL | runs/g26_tf163_b225000 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 225000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --schedule wsd --decay_steps 45000 --min_lr_frac 0 --init_ckpt runs/g26_tf163/ckpt_step180000.pt --arch tf --d_model 768 --n_layers 12 --n_heads 12 --lr 6e-4
+params 163.01M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 182500 val_loss 3.4673
+== eval step 185000 val_loss 3.4362
+== eval step 187500 val_loss 3.4109
+== eval step 190000 val_loss 3.3933
+== eval step 192500 val_loss 3.3728
+== eval step 195000 val_loss 3.3555
+== eval step 197500 val_loss 3.3418
+== eval step 200000 val_loss 3.3236
+== eval step 202500 val_loss 3.3083
+== eval step 205000 val_loss 3.2889
+== eval step 207500 val_loss 3.2738
+== eval step 210000 val_loss 3.2574
+== eval step 212500 val_loss 3.2406
+== eval step 215000 val_loss 3.2251
+== eval step 217500 val_loss 3.2080
+== eval step 220000 val_loss 3.1941
+== eval step 222500 val_loss 3.1814
+== eval step 225000 val_loss 3.1736
+[2026-11-17T20:48:16.994] error: *** JOB 1157418 ON xgpi11 CANCELLED AT 2026-11-17T20:48:16 DUE TO TIME LIMIT ***

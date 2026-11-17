@@ -1,0 +1,1 @@
+g27_cls2k                snn  157.6M  8-bit  157.6 MB  dense MACs   53.9M + sparse adds  1.52M  state 1327.1 KB  MB/token 8-bit: 1 stream   55.0, 16 streams   4.3  (rate 0.051)
