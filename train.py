@@ -77,6 +77,9 @@ def get_args():
                    "file git does not track and copies it to log.jsonl)")
     p.add_argument("--warmup", type=int, default=200)
     p.add_argument("--wd", type=float, default=0.1)
+    p.add_argument("--embed_wd", type=float, default=-1.0,
+                   help="weight decay of the input rows (embed.*); -1 = the same as --wd. With no normalisation in the "
+                        "spiking network, decay shrinks the input rows over a long run (docs/experiments.md 5.37)")
     p.add_argument("--neuron_lr_mult", type=float, default=1.0,
                    help="learning-rate multiplier for the per-neuron dynamics parameters (beta, theta, gamma)")
     p.add_argument("--clip", type=float, default=1.0)
@@ -354,9 +357,13 @@ def main():
     is_muon = lambda n, p: (a.optim == "muon" and p.dim() == 2 and not n.split(".")[0] in ("embed", "head", "pos")
                             and not any(k in n for k in skip))
     named = [(n, p) for n, p in model.named_parameters() if p.requires_grad]
-    decay = [p for n, p in named if p.dim() >= 2 and not is_muon(n, p)]
-    no_decay = [p for n, p in named if p.dim() < 2 and not is_neuron(n)]
+    own_embed_wd = a.embed_wd >= 0 and a.embed_wd != a.wd   # separate group only when used (older checkpoints resume)
+    is_embed = lambda n: own_embed_wd and n.startswith("embed.")
+    decay = [p for n, p in named if p.dim() >= 2 and not is_muon(n, p) and not is_embed(n)]
+    no_decay = [p for n, p in named if p.dim() < 2 and not is_neuron(n) and not is_embed(n)]
     groups = [{"params": decay, "weight_decay": a.wd}, {"params": no_decay, "weight_decay": 0.0}]
+    if own_embed_wd:
+        groups.append({"params": [p for n, p in named if is_embed(n)], "weight_decay": a.embed_wd})
     if a.neuron_lr_mult != 1.0:   # separate group only when used, so older checkpoints still resume
         neuron = [p for n, p in named if is_neuron(n)]
         groups.append({"params": neuron, "weight_decay": 0.0, "lr_mult": a.neuron_lr_mult})
