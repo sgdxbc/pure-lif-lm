@@ -1,0 +1,17 @@
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+params 120.92M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3008
+step      1 loss 9.7396 kl 6.2784 lr 6.00e-07 gn 3.00 3,252 tok/s mem 23.4GB rate 0.120 [0.07 0.08 0.09 0.10 0.10 0.12 0.12 0.14 0.15 0.15 0.16 0.17]
+step    500 loss 5.7549 kl 2.3257 lr 3.00e-04 gn 0.75 15,387 tok/s mem 24.3GB rate 0.107 [0.07 0.07 0.07 0.07 0.08 0.10 0.11 0.12 0.13 0.14 0.16 0.17]
+gradient spike at step 751: gn 4.05 (median 0.70), loss 5.7167; head.w_cls 3.43, head.w_word 1.14, layers.4.w_in.weight 0.64, layers.7.w_in.weight 0.43
+step   1000 loss 5.1014 kl 1.7201 lr 6.00e-04 gn 0.52 15,356 tok/s mem 24.8GB rate 0.070 [0.05 0.05 0.06 0.06 0.06 0.06 0.07 0.07 0.08 0.08 0.10 0.11]
+step   1500 loss 4.7529 kl 1.3726 lr 5.99e-04 gn 0.36 15,367 tok/s mem 24.8GB rate 0.055 [0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.06 0.06 0.07 0.09]
+step   2000 loss 4.6827 kl 1.2974 lr 5.96e-04 gn 0.33 15,399 tok/s mem 24.8GB rate 0.049 [0.05 0.04 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.08]
+step   2500 loss 4.4996 kl 1.1818 lr 5.92e-04 gn 0.34 15,371 tok/s mem 24.8GB rate 0.046 [0.05 0.04 0.04 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.08]
+== eval step 2500 val_loss 4.5796 (EMA weights 4.4877) [4-bit weights; unrounded EMA 4.4482]
+   >> The history of the city|’s social capital is not limited to the city. / - “It is a matter of political science, it is a very comprehensive collection of literature.” / - “It was like a very good idea that it was not a place for the great news of a problem, and this was a major step in our history and for a lot of modern history.” / - “It was a country where the people of the world had been living, and the rest of history was the center of the earth.” / - “The real world is a
+   >> In mathematics, a prime number is| an equal number of equal parts with respect to all. A number of non-linear equations vary, but has a positive relation to each other. / Here are a few of the many equation equations: / 1. The linear regression of the equation is a linear equations. / 1. The rate is calculated by dividing the equations. / 2. The algebraic curve is a given number of equations. The number of equations is 2. / 1. The sum of numbers is a linear algebra. / 2. A square in a cube. A coefficient is a linear regression that is used to get a
+   >> Plants need sunlight because| they are easily damaged by light. / With a light bulb in the sun, the infrared light spectrum can be easily converted into a light bulb. The light UV light is not at all the time (in the form of light – this chemical is so visible to us through light.) / The reason for our vision is that the light emitted by the blue light are more efficient than the light coming from outside. / The blue light is one of the very few plants that have a very large amount of light. The blue light is produced as a blue light source - the lowest in the sky. / If
+step   3000 loss 4.4851 kl 1.1343 lr 5.85e-04 gn 0.29 15,406 tok/s mem 28.3GB rate 0.044 [0.04 0.04 0.04 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.07]
+gradient spike at step 3216: gn 1.77 (median 0.29), loss 4.3739; layers.11.w_in.weight 1.16, head.w_cls 0.50, layers.0.w_out.weight 0.42, layers.10.w_out.weight 0.33
+step   3500 loss 4.2975 kl 1.0618 lr 5.77e-04 gn 0.29 15,308 tok/s mem 28.3GB rate 0.043 [0.04 0.04 0.04 0.03 0.03 0.03 0.03 0.04 0.04 0.05 0.06 0.07]
