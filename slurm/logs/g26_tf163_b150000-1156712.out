@@ -1,0 +1,24 @@
+queued the next part of runs/g26_tf163_b150000: job 1156746
+xgpi11 NVIDIA H100 NVL | runs/g26_tf163_b150000 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 150000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --schedule wsd --decay_steps 30000 --min_lr_frac 0 --init_ckpt runs/g26_tf163/ckpt_step120000.pt --arch tf --d_model 768 --n_layers 12 --n_heads 12 --lr 6e-4
+params 163.01M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 122500 val_loss 3.4656
+== eval step 125000 val_loss 3.4267
+== eval step 127500 val_loss 3.3955
+== eval step 130000 val_loss 3.3700
+== eval step 132500 val_loss 3.3462
+== eval step 135000 val_loss 3.3218
+== eval step 137500 val_loss 3.2993
+== eval step 140000 val_loss 3.2762
+== eval step 142500 val_loss 3.2560
+== eval step 145000 val_loss 3.2357
+== eval step 147500 val_loss 3.2179
+== eval step 150000 val_loss 3.2069
+hellaswag        acc 0.2881  acc_norm 0.3096
+lambada_openai   perplexity 240.6973  acc 0.2185
+piqa             acc 0.6170  acc_norm 0.6104
+arc_easy         acc 0.4987  acc_norm 0.4512
+arc_challenge    acc 0.2116  acc_norm 0.2466
+winogrande       acc 0.5170
+ "val_loss": 3.2173914687180605,
+g26_tf163_b150000        tf   163.0M  8-bit  163.0 MB  at context 256/2048/8192: MACs 128.3/161.3/274.6M  state 4.7/37.7/151.0 MB  MB/token 8-bit: 1 stream 128.3/161.3/274.6, 16 streams 12.4/45.5/158.7
+done Tue Nov 17 05:44:01 PM +08 2026
