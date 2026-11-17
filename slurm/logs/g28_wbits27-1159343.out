@@ -1,0 +1,6 @@
+runs/g27_cls2k 8-bit weights:  "val_loss": 3.874387902817968, (02:35)
+runs/g27_cls2k 4-bit weights:  "val_loss": 3.9951748810849677, (02:38)
+runs/g27_cls8k 8-bit weights:  "val_loss": 3.8490402838418376, (02:41)
+runs/g27_cls8k 4-bit weights:  "val_loss": 3.968393436066627, (02:44)
+runs/g27_io2k 8-bit weights:  "val_loss": 3.8817986751542723, (02:47)
+runs/g27_io2k 4-bit weights:  "val_loss": 4.008341194578641, (02:50)

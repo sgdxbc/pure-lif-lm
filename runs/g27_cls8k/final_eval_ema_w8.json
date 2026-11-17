@@ -8,8 +8,8 @@
  "bits_per_char": 1.2100851221701934,
  "chars_per_token": 4.588926206878414,
  "eval_tokens": 9999360,
- "eval_seconds": 137.32723593711853,
- "gen_tokens_per_s": 63.95352010860027,
+ "eval_seconds": 137.44573044776917,
+ "gen_tokens_per_s": 65.3399393445044,
  "device": "cuda",
  "samples": {
   "The history of the city": [
