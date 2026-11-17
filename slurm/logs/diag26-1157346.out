@@ -1,0 +1,14 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+5153 passages, 81.5% of the last words appear earlier in the passage; 84 tokens per passage on average
+g26_snn212_b37500 (EMA)  acc 0.095 ppl    1969.3 | word earlier in passage (82%): acc 0.113 loss 7.49 (short 11.48, gain +3.99) | not: acc 0.014 loss 8.01 (gain +1.11) | net gain +2.87 | passage loss 4.247 | check {'passages': 20, 'max_diff_single_fp32': 0.7252902984619141, 'max_diff_stepwise_fp32': 0.7252845764160156}
+g26_tf163_b37500         acc 0.169 ppl     638.6 | word earlier in passage (82%): acc 0.200 loss 6.18 (short 11.37, gain +5.19) | not: acc 0.032 loss 7.70 (gain +1.36) | net gain +3.83 | passage loss 4.155 | check {'passages': 20, 'max_diff_single_fp32': 0.09161543846130371}
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights:  45%|████▍     | 66/148 [00:00<00:00, 654.60it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 834.32it/s]
+gpt2                     acc 0.322 ppl      34.2 | word earlier in passage (82%): acc 0.381 loss 2.99 (short 9.61, gain +6.61) | not: acc 0.063 loss 5.92 (gain +1.99) | net gain +4.63 | passage loss 3.652 | check {'passages': 20, 'max_diff_single_fp32': 0.5494034290313721}
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  27%|██▋       | 80/292 [00:00<00:00, 790.49it/s]Loading weights:  55%|█████▍    | 160/292 [00:00<00:00, 735.08it/s]Loading weights:  80%|████████  | 234/292 [00:00<00:00, 604.19it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 692.89it/s]
+gpt2-medium              acc 0.419 ppl      16.8 | word earlier in passage (82%): acc 0.485 loss 2.36 (short 9.19, gain +6.83) | not: acc 0.129 loss 4.84 (gain +2.51) | net gain +4.32 | passage loss 3.451 | check {'passages': 20, 'max_diff_single_fp32': 0.6047921180725098}
+probe_lambada: exit 0 Tue Nov 17 05:29:15 PM +08 2026
+g26_snn212_b37500: 2528 books of >= 1024 tokens, mean 3.5711  0-64 3.855  64-128 3.549  128-256 3.513  256-512 3.527  512-1024 3.575
+runs/g26_snn212_b37500 eval_long: exit 0 Tue Nov 17 05:29:57 PM +08 2026
+g26_tf163_b37500: 2528 books of >= 1024 tokens, mean 3.3326  0-64 3.677  64-128 3.343  128-256 3.296  256-512 3.295  512-1024 3.316
+runs/g26_tf163_b37500 eval_long: exit 0 Tue Nov 17 05:30:25 PM +08 2026
