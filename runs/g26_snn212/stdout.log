@@ -177,3 +177,21 @@ gradient spike at step 37259: gn 1.33 (median 0.26), loss 3.6278; mems.5.kq_in.w
 step  37500 loss 3.8301 kl 0.5391 lr 6.00e-04 gn 0.25 79,380 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.02 0.03 0.04 0.06]
 gradient spike at step 37611: gn 1.79 (median 0.27), loss 3.7971; mems.10.kq_in.weight 1.36, layers.0.w_out.weight 0.32, layers.9.w_out.weight 0.27, layers.5.w_out.weight 0.26
 gradient spike at step 37798: gn 5.64 (median 0.27), loss 3.7316; mems.0.gain 4.67, layers.0.w_in.bias 2.25, layers.0.w_in.weight 1.79, mems.0.w_out.weight 0.81 -- update skipped
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 35000
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+step  35500 loss 3.7425 kl 0.5339 lr 6.00e-04 gn 0.29 79,089 tok/s mem 45.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.02 0.03 0.04 0.06]
+step  36000 loss 3.7278 kl 0.5376 lr 6.00e-04 gn 0.26 79,396 tok/s mem 45.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.02 0.03 0.04 0.06]
+gradient spike at step 36114: gn 1.43 (median 0.26), loss 3.8238; mems.4.kq_in.weight 1.19, layers.0.w_out.weight 0.42, head.weight 0.22, mems.0.gain 0.22
+gradient spike at step 36131: gn 5.23 (median 0.27), loss 3.7701; mems.9.kq_in.weight 4.66, layers.0.w_out.weight 1.09, layers.8.w_out.weight 0.59, layers.8.w_in.weight 0.53 -- update skipped
+gradient spike at step 36162: gn 1.49 (median 0.27), loss 3.7058; mems.11.kq_in.weight 0.99, mems.10.v_in.weight 0.41, layers.0.w_out.weight 0.35, mems.10.w_out.weight 0.35
+gradient spike at step 36232: gn 8.00 (median 0.27), loss 3.6520; layers.5.w_in.weight 5.83, layers.0.w_out.weight 2.40, mems.5.v_in.weight 2.32, mems.0.gain 1.57 -- update skipped
+step  36500 loss 3.7331 kl 0.5151 lr 6.00e-04 gn 0.31 79,388 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.03 0.04 0.06]
+gradient spike at step 36682: gn 1.36 (median 0.27), loss 3.7677; mems.0.gain 1.02, layers.0.w_in.bias 0.60, layers.0.w_in.weight 0.46, mems.0.w_out.weight 0.24
+gradient spike at step 36725: gn 1.84 (median 0.27), loss 3.8316; layers.4.leak_out.weight 1.09, mems.5.kq_in.weight 0.76, layers.4.leak_in.weight 0.58, layers.0.w_out.weight 0.56
+step  37000 loss 3.7682 kl 0.5208 lr 6.00e-04 gn 0.24 79,408 tok/s mem 46.8GB rate 0.021 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.02 0.03 0.04 0.06]
+gradient spike at step 37056: gn 1.54 (median 0.27), loss 3.7569; mems.7.kq_in.weight 1.44, head.weight 0.25, layers.0.w_out.weight 0.23, layers.4.w_out.weight 0.14
+gradient spike at step 37259: gn 1.33 (median 0.26), loss 3.6278; mems.5.kq_in.weight 1.07, layers.0.w_out.weight 0.44, head.weight 0.23, mems.0.gain 0.22
+step  37500 loss 3.8301 kl 0.5391 lr 6.00e-04 gn 0.25 79,362 tok/s mem 46.8GB rate 0.022 [0.03 0.01 0.01 0.01 0.01 0.01 0.02 0.02 0.02 0.03 0.04 0.06]
+gradient spike at step 37611: gn 1.79 (median 0.27), loss 3.7971; mems.10.kq_in.weight 1.36, layers.0.w_out.weight 0.32, layers.9.w_out.weight 0.27, layers.5.w_out.weight 0.26
+gradient spike at step 37798: gn 5.64 (median 0.27), loss 3.7316; mems.0.gain 4.67, layers.0.w_in.bias 2.25, layers.0.w_in.weight 1.79, mems.0.w_out.weight 0.81 -- update skipped
