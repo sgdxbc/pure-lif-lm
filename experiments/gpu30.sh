@@ -1,6 +1,7 @@
 #!/bin/bash
 # GPU wave 30: no weight decay on the input rows (train.py --embed_wd 0; docs/experiments.md 5.40). From the repository
-# root:  bash experiments/gpu30.sh
+# root:  bash experiments/gpu30.sh          g30_ewd0
+#        bash experiments/gpu30.sh base     g30_base, its control
 # Every 2-D weight is decayed (--wd 0.1), and the spiking network has no normalisation anywhere, so the input rows
 # (the word vectors, initialised at size 1.0) shrink at almost exactly the rate weight decay alone would give:
 # 0.52 after 20,000 cosine steps, 0.16 after the 37,500 wsd steps of g26_snn212_b37500, 0.045 after 75,000
@@ -13,6 +14,10 @@
 #          step 30,000 and as its branch g26_snn212_b37500 after it, only --embed_wd 0. Paired with both: the trunk's
 #          evaluations every 5,000 steps (same validation batches) and the branch's final 3.625 (1.23B tokens).
 #          The batches differ (each run draws them from its own part boundaries).
+#  - base  the same run with the input rows decayed as before (no --embed_wd), on the same card type with the same
+#          --accum and seed: its first relay part reads exactly g30_ewd0's batches (each part draws them from seed +
+#          its first step), so it is g30_ewd0's closest control; against the trunk and g26_snn212_b37500 it also measures
+#          how much two runs of the same recipe differ on the GPU (not measured so far).
 # GPU=... picks the card (default h100-47); ACCUM=n splits each batch in n (default 4: the 212M shape at 32 x 1024
 # needs about 47 GB with --accum 2).
 set -e
@@ -29,6 +34,7 @@ N212="--d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128"
 SNN="--ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10"
 KD="--teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1"
 MEM="--mem_heads 8 --mem_keys 256 --mem_tau_min 1"
-j=$(sbatch --parsable -p gpu -J g30_ewd0 --gres=gpu:$gpu:1 --export=ALL,RELAY=$gpu,HW=1 slurm/train.sbatch runs/g30_ewd0 \
-    $DATA $SPREAD $LEN $WSD $N212 $SNN $KD $MEM --accum $acc --embed_wd 0)
-echo "$j g30_ewd0 ($gpu, accum $acc)"
+if [ "$1" = "base" ]; then name=g30_base; extra=""; else name=g30_ewd0; extra="--embed_wd 0"; fi
+j=$(sbatch --parsable -p gpu -J $name --gres=gpu:$gpu:1 --export=ALL,RELAY=$gpu,HW=1 slurm/train.sbatch runs/$name \
+    $DATA $SPREAD $LEN $WSD $N212 $SNN $KD $MEM --accum $acc $extra)
+echo "$j $name ($gpu, accum $acc)"
