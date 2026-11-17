@@ -29,7 +29,7 @@ def load(ckpt_path, ema=False, device="cpu", wbits=None):
     if ck.get("arch") != "tf":
         bits = model.cfg.wbits if wbits is None else wbits
         if bits:
-            round_weights_(model, bits, model.cfg.wgroup)
+            round_weights_(model, bits, model.cfg.wgroup, model.cfg.wbits8)
     model.to(device).eval()
     return model, ck.get("step")
 

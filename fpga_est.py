@@ -33,6 +33,8 @@ def estimate(hw, args, bits, dev):
     f = hw["firing"]
     dense_w = hw.get("dense_weights", L * (d * H + (d * r + r * H if r else 0) + H) + d * V)   # as in hw_cost.py
     weights = hw["params"] * b
+    if hw.get("weights_bytes_trained") and bits == hw.get("wbits"):   # the bits it was trained for, scales included
+        weights = hw["weights_bytes_trained"]
     ops = hw["dense_macs"] + hw["sparse_adds"]                               # per token and stream
     rate = dev["dsp"] * 3 * dev["clock_mhz"] * 1e6 * dev["eff"]              # MAC/s reached
     bw = dev["bw_gbs"] * 1e9 * dev["eff"]

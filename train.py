@@ -73,6 +73,8 @@ def get_args():
                    "the run directory has none yet: a decay branch of a wsd run")
     p.add_argument("--wbits_from", type=int, default=0, help="with --wbits: train with the weight matrices rounded "
                    "from this step on (full precision before it); evaluations always use the rounded network")
+    p.add_argument("--log_file", default="log.jsonl", help="the JSON-lines log in --out (slurm/train.sbatch writes a "
+                   "file git does not track and copies it to log.jsonl)")
     p.add_argument("--warmup", type=int, default=200)
     p.add_argument("--wd", type=float, default=0.1)
     p.add_argument("--neuron_lr_mult", type=float, default=1.0,
@@ -255,7 +257,7 @@ def lr_at(step, a):
 def evaluate(model, val, a, rounded=True):
     """Validation loss and firing rates; with --wbits, of the network with its weight matrices rounded unless
     rounded=False."""
-    saved = round_weights_(model, a.wbits, a.wgroup) if a.wbits and rounded else None
+    saved = round_weights_(model, a.wbits, a.wgroup, a.wbits8) if a.wbits and rounded else None
     model.eval()
     rng = np.random.default_rng(1234)   # same eval batches every time
     tot, rates = 0.0, 0.0
@@ -390,7 +392,7 @@ def main():
           f"train tokens {len(train.arr)/1e6:.0f}M, tokens/step {a.batch*a.seq:,}")
     with open(os.path.join(a.out, "args.json"), "w") as f:
         json.dump(vars(a), f, indent=1)
-    logf = open(os.path.join(a.out, "log.jsonl"), "a")
+    logf = open(os.path.join(a.out, a.log_file), "a")
     prompts = ["Once upon a time", "Lily wanted to go to the park, but", "The little dog was sad because"]
     if a.data != "data":   # general text (PG-19, FineWeb-Edu)
         prompts = ["The history of the city", "In mathematics, a prime number is", "Plants need sunlight because"]
@@ -423,7 +425,7 @@ def main():
         opt.zero_grad(set_to_none=True)
         logged = []
         # --wbits: forward and backward with the weight matrices rounded; the update goes to the full-precision values
-        saved = round_weights_(model, a.wbits, a.wgroup) if a.wbits and step >= a.wbits_from else None
+        saved = round_weights_(model, a.wbits, a.wgroup, a.wbits8) if a.wbits and step >= a.wbits_from else None
         for xm, ym in zip(x.chunk(a.accum), y.chunk(a.accum)):   # --accum: micro-batches, gradients summed
             model.keep_bus = hint is not None
             with amp():

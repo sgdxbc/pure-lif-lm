@@ -26,11 +26,23 @@ if [ -n "$RELAY" ]; then
   echo "queued the next part of $out: job $next"
 fi
 echo "$(hostname) $(nvidia-smi --query-gpu=name --format=csv,noheader) | $out | $*"
-python3 train.py --device cuda --out "$out" "$@" --resume >> "$out/stdout.log" 2>&1
+# While training, train.py writes its output and log to stdout.live.log and log.live.jsonl, which git does not track
+# (.gitignore), and they are copied to stdout.log and log.jsonl every 10 minutes and at the end. Why: when a git
+# command on another node (the Claude session's pull, stash or rebase) rewrites a tracked file that a running job
+# appends to, the network file system makes the job's open file stale, its next write fails, and Python exits with
+# code 120 without a traceback (g26_snn212, jobs 1155339 and 1156672, both at the session's git operations).
+for f in stdout.log log.jsonl; do   # a run started before this: continue its files
+  live="$out/${f%.*}.live.${f##*.}"
+  [ -s "$out/$f" ] && [ ! -e "$live" ] && cp "$out/$f" "$live"
+done
+snap() { cp "$out/stdout.live.log" "$out/stdout.log" 2>/dev/null; cp "$out/log.live.jsonl" "$out/log.jsonl" 2>/dev/null; }
+( while sleep 600; do snap; done ) & snapper=$!
+python3 train.py --device cuda --out "$out" "$@" --resume --log_file log.live.jsonl >> "$out/stdout.live.log" 2>&1
 code=$?
+kill $snapper 2>/dev/null; snap
 grep -E "^params|val_loss|Error|Traceback" "$out/stdout.log" | tail -20
-# Exit code 120 is Python failing to flush its output at exit: a write error on the file system, not the run
-# (g26_snn212, job 1155339). With RELAY, up to 3 of them per run let the queued next part continue from the last checkpoint.
+# Exit code 120 is Python failing to flush its output at exit, i.e. a write error on the file system, not the run
+# (the cause above). With RELAY, up to 3 of them per run let the queued next part continue from the last checkpoint.
 n120=$(cat "$out/exit120_count" 2>/dev/null || echo 0)
 if [ $code -eq 120 ] && [ -n "$RELAY" ] && [ "$n120" -lt 3 ]; then
   echo $((n120 + 1)) > "$out/exit120_count"

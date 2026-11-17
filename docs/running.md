@@ -160,6 +160,8 @@ python3 train.py --device cuda --out runs/my_snn \
   `--wbits_from s`：从第 s 步起才取整训练，之前照常训练。评估一律用取整后的网络；有平均权重时另外报告它不取整时的验证 loss。
   b 记在网络的配置里，`sample.load`（因此 `evaluate.py`、`eval_lm.py`、`hw_cost.py`）载入时自动取整；
   `evaluate.py --wbits 4` 和 `eval_lm.py --wbits 4` 可以把任何检查点按 4 位取整后评估（`--wbits 0` 不取整）。
+  `--wbits8 '^head\.,^embed\.'`：名字和其中某个正则表达式匹配的矩阵改用 8 位（混合精度；用 `experiments/wbits_sens.py` 找最敏感的几类）。
+  `hw_cost.py` 按训练时的位数（含每组 16 位的系数）算权重的存储量，`fpga_est.py` 用它判断能否整个放在片上。
 - `--accum n`：把每个批次分成 n 份依次计算、梯度相加（显存约降为 1/n，结果和不分时相同，只是慢一些）。不能和 `--carry_state` 同用。
 
 **数据**：`--data 目录 --tokenizer 文件`（见上面的表）。Transformer 另有 `--rope`（旋转位置编码），最长长度取 1024 和 `--seq` 中较大的一个。

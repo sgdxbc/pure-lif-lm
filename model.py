@@ -78,6 +78,7 @@ Low-precision weights (wbits, docs/experiments.md 5.38): every weight matrix (th
            train.py --wbits trains with the matrices rounded (quantization-aware training: forward and backward see
            the rounded values, the update goes to the full-precision ones, a straight-through estimate), and
            sample.load rounds them when it loads such a checkpoint, so every evaluation sees the rounded network.
+           wbits8: matrices whose names match (e.g. "^head,^embed": the readout and the input rows) get 8 bits instead.
 Removed options (tried, did not help, deleted to keep the code small; the code is in git history):
            same-layer synapses rec_rank (docs/experiments.md 5.2), delayed synapses delay_k (5.9), the spiking bus
            spike_bus (5.23), the current scaled by (1 - beta) leak_gate (5.26), all last in commit 490e9e6;
@@ -87,6 +88,7 @@ Removed options (tried, did not help, deleted to keep the code small; the code i
            Checkpoints that saved them switched off still load (Config.from_dict); ones that used them need that commit.
 """
 import math
+import re
 from dataclasses import dataclass, asdict, fields
 
 import torch
@@ -141,6 +143,7 @@ class Config:
     mem_write_avg: bool = False   # write (1 - lambda) v: S is a running average, not a sum (module docstring)
     wbits: int = 0            # >0: the weight matrices are used rounded to this many bits (module docstring)
     wgroup: int = 128         # one scale per this many inputs of a weight matrix (per row if it does not divide)
+    wbits8: str = ""          # with wbits: comma-separated regular expressions; matrices whose names match get 8 bits
 
     @classmethod
     def from_dict(cls, d):
@@ -169,14 +172,16 @@ def quantize_weight(w, bits, group=0):
 
 
 @torch.no_grad()
-def round_weights_(model, bits, group=128):
-    """Round the model's weight matrices (its 2-D parameters) in place; returns their previous values, which
-    restore_weights_ puts back."""
+def round_weights_(model, bits, group=128, bits8=""):
+    """Round the model's weight matrices (its 2-D parameters) in place, to 8 bits those whose names match one of the
+    comma-separated regular expressions bits8; returns their previous values, which restore_weights_ puts back."""
+    pats = [re.compile(x) for x in bits8.split(",") if x]
     saved = []
-    for p in model.parameters():
+    for n, p in model.named_parameters():
         if p.dim() == 2 and p.is_floating_point():
             saved.append(p.detach().clone())
-            p.copy_(quantize_weight(p.float(), bits, group).to(p.dtype))
+            b = 8 if any(x.search(n) for x in pats) else bits
+            p.copy_(quantize_weight(p.float(), b, group).to(p.dtype))
     return saved
 
 
