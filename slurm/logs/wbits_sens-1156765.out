@@ -1,0 +1,42 @@
+runs/g21_kdwa138: full precision 3.8224 (655,360 tokens)
+  only input rows               ( 38.63M weights) to 4 bits: +0.0131
+  only readout                  ( 38.63M weights) to 4 bits: +0.0979
+  only W_in                     ( 28.31M weights) to 4 bits: +0.0184
+  only W_out                    ( 28.31M weights) to 4 bits: +0.0083
+  only leak synapses            (  4.42M weights) to 4 bits: +0.0004
+  only plastic: key/query in    (  9.44M weights) to 4 bits: +0.0015
+  only plastic: value in        (  4.72M weights) to 4 bits: +0.0030
+  only plastic: out             (  4.72M weights) to 4 bits: +0.0033
+  all to 4 bits: +0.1482
+  all to 4 bits but readout at 8 bits (+19.3 MB): +0.0499
+  all to 4 bits but readout, plastic: out at 8 bits (+21.7 MB): +0.0463
+  all to 4 bits but readout, plastic: out, W_in at 8 bits (+35.8 MB): +0.0288
+  all to 4 bits but readout, plastic: out, W_in, plastic: value in at 8 bits (+38.2 MB): +0.0246
+runs/g25_io: full precision 3.9125 (655,360 tokens)
+  only input rows               (  0.35M weights) to 4 bits: +0.0158
+  only readout                  ( 38.88M weights) to 4 bits: +0.0708
+  only W_in                     ( 28.31M weights) to 4 bits: +0.0209
+  only W_out                    ( 28.31M weights) to 4 bits: +0.0132
+  only leak synapses            (  4.42M weights) to 4 bits: +0.0008
+  only plastic: key/query in    (  9.44M weights) to 4 bits: +0.0018
+  only plastic: value in        (  4.72M weights) to 4 bits: +0.0024
+  only plastic: out             (  4.72M weights) to 4 bits: +0.0038
+  all to 4 bits: +0.1314
+  all to 4 bits but input rows at 8 bits (+0.2 MB): +0.1157
+  all to 4 bits but input rows, readout at 8 bits (+19.6 MB): +0.0446
+  all to 4 bits but input rows, readout, plastic: out at 8 bits (+22.0 MB): +0.0404
+  all to 4 bits but input rows, readout, plastic: out, W_in at 8 bits (+36.1 MB): +0.0187
+runs/g21_wa212: full precision 3.5456 (655,360 tokens)
+  only input rows               ( 51.51M weights) to 4 bits: +0.0052
+  only readout                  ( 51.51M weights) to 4 bits: +0.1420
+  only W_in                     ( 50.33M weights) to 4 bits: +0.0118
+  only W_out                    ( 50.33M weights) to 4 bits: +0.0098
+  only leak synapses            (  7.86M weights) to 4 bits: +0.0010
+  only plastic: key/query in    ( 12.58M weights) to 4 bits: +0.0016
+  only plastic: value in        (  6.29M weights) to 4 bits: +0.0025
+  only plastic: out             (  6.29M weights) to 4 bits: +0.0023
+  all to 4 bits: +0.1749
+  all to 4 bits but readout at 8 bits (+25.8 MB): +0.0345
+  all to 4 bits but readout, plastic: value in at 8 bits (+28.9 MB): +0.0320
+  all to 4 bits but readout, plastic: value in, plastic: out at 8 bits (+32.0 MB): +0.0291
+  all to 4 bits but readout, plastic: value in, plastic: out, W_in at 8 bits (+57.2 MB): +0.0175

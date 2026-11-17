@@ -1,0 +1,62 @@
+{
+ "full": 3.822416824102402,
+ "weights": {
+  "input rows": 38633472,
+  "readout": 38633472,
+  "W_in": 28311552,
+  "W_out": 28311552,
+  "leak synapses": 4423680,
+  "plastic: key/query in": 9437184,
+  "plastic: value in": 4718592,
+  "plastic: out": 4718592
+ },
+ "only": {
+  "input rows": 0.01307954788207999,
+  "readout": 0.09793451428413391,
+  "W_in": 0.01840121150016749,
+  "W_out": 0.008308029174804332,
+  "leak synapses": 0.000388836860656383,
+  "plastic: key/query in": 0.0015221238136291504,
+  "plastic: value in": 0.003020375967025757,
+  "plastic: out": 0.0032848536968228537
+ },
+ "group": 128,
+ "tokens": 655360,
+ "all4": 0.14823338389396667,
+ "keep8": [
+  {
+   "kinds": [
+    "readout"
+   ],
+   "loss": 0.04992614984512311,
+   "extra_MB": 19.316736
+  },
+  {
+   "kinds": [
+    "readout",
+    "plastic: out"
+   ],
+   "loss": 0.04628647565841648,
+   "extra_MB": 21.676032
+  },
+  {
+   "kinds": [
+    "readout",
+    "plastic: out",
+    "W_in"
+   ],
+   "loss": 0.028848743438720348,
+   "extra_MB": 35.831808
+  },
+  {
+   "kinds": [
+    "readout",
+    "plastic: out",
+    "W_in",
+    "plastic: value in"
+   ],
+   "loss": 0.024636858701705844,
+   "extra_MB": 38.191104
+  }
+ ]
+}
