@@ -7,6 +7,8 @@
 #     START    a kept step: 30000, 60000, 120000 or 180000 -> the branch ends at 1.25 x START (37,500, 75,000,
 #              150,000 or 225,000 steps) in runs/g26_RUN_bEND
 #     TEACHER  snn212 only: the teacher the run had at START (default runs/g13_tf163/ckpt.pt)
+#   SUFFIX=...  appended to the run name, for a second branch from the same START with another TEACHER, e.g.
+#     SUFFIX=_t26 bash experiments/gpu26_branch.sh snn212 120000 runs/g26_tf163/ckpt.pt  -> runs/g26_snn212_b150000_t26
 # The flags are those of gpu26.sh without --keep_ckpt, with evaluations every 2,500 steps. The weights, Adam moments
 # and average come from the checkpoint; the batches are drawn afresh from its step on.
 set -e
@@ -24,7 +26,7 @@ N212="--d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128"
 SNN="--ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10"
 KD="--teacher $teacher --distill_weight 0.9 --distill_temp 1"
 MEM="--mem_heads 8 --mem_keys 256 --mem_tau_min 1"
-name=g26_${run}_b$end
+name=g26_${run}_b$end${SUFFIX:-}
 case $run in
   snn212) flags="$DATA $SPREAD $LEN $WSD $N212 $SNN $KD $MEM --accum 2"; gpu=${GPU:-h200-141} ;;
   tf163)  flags="$DATA $LEN $WSD --arch tf --d_model 768 --n_layers 12 --n_heads 12 --lr 6e-4"; gpu=${GPU:-h100-96} ;;
