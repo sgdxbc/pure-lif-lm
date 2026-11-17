@@ -1,0 +1,20 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+5153 passages, 81.5% of the last words appear earlier in the passage; 84 tokens per passage on average
+g26_snn212_b75000 (EMA)  acc 0.108 ppl    1360.8 | word earlier in passage (82%): acc 0.127 loss 7.06 (short 11.44, gain +4.38) | not: acc 0.021 loss 7.90 (gain +1.16) | net gain +3.23 | passage loss 4.222 | check {'passages': 20, 'max_diff_single_fp32': 0.4840364456176758, 'max_diff_stepwise_fp32': 0.4840354919433594}
+g26_tf163_b75000         acc 0.202 ppl     359.7 | word earlier in passage (82%): acc 0.238 loss 5.53 (short 11.13, gain +5.61) | not: acc 0.041 loss 7.47 (gain +1.42) | net gain +4.18 | passage loss 4.173 | check {'passages': 20, 'max_diff_single_fp32': 0.17429351806640625}
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/148 [00:00<?, ?it/s]Loading weights:  59%|█████▉    | 88/148 [00:00<00:00, 836.92it/s]Loading weights: 100%|██████████| 148/148 [00:00<00:00, 942.09it/s]
+gpt2                     acc 0.322 ppl      34.2 | word earlier in passage (82%): acc 0.381 loss 2.99 (short 9.61, gain +6.61) | not: acc 0.063 loss 5.92 (gain +1.99) | net gain +4.63 | passage loss 3.652 | check {'passages': 20, 'max_diff_single_fp32': 0.5494034290313721}
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  22%|██▏       | 65/292 [00:00<00:00, 641.73it/s]Loading weights:  45%|████▍     | 130/292 [00:00<00:00, 623.17it/s]Loading weights:  66%|██████▋   | 194/292 [00:00<00:00, 617.39it/s]Loading weights:  90%|████████▉ | 262/292 [00:00<00:00, 625.34it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 666.41it/s]
+gpt2-medium              acc 0.419 ppl      16.8 | word earlier in passage (82%): acc 0.485 loss 2.36 (short 9.19, gain +6.83) | not: acc 0.129 loss 4.84 (gain +2.51) | net gain +4.32 | passage loss 3.451 | check {'passages': 20, 'max_diff_single_fp32': 0.6047921180725098}
+probe_lambada: exit 0 Wed Nov 18 12:31:50 AM +08 2026
+g26_snn212_b75000: 2528 books of >= 1024 tokens, mean 3.5088  0-64 3.792  64-128 3.486  128-256 3.452  256-512 3.466  512-1024 3.512
+runs/g26_snn212_b75000 eval_long: exit 0 Wed Nov 18 12:32:34 AM +08 2026
+g26_tf163_b75000: 2528 books of >= 1024 tokens, mean 3.2326  0-64 3.574  64-128 3.241  128-256 3.196  256-512 3.194  512-1024 3.217
+runs/g26_tf163_b75000 eval_long: exit 0 Wed Nov 18 12:33:03 AM +08 2026
+g26_tf163_b75000: 2528 books of >= 1024 tokens, mean 3.9653  0-64 3.912  64-128 3.850  128-256 3.882  256-512 3.942  512-1024 4.019
+runs/g26_tf163_b75000 eval_long window 16: exit 0 Wed Nov 18 12:34:53 AM +08 2026
+g26_tf163_b75000: 2528 books of >= 1024 tokens, mean 3.5001  0-64 3.574  64-128 3.386  128-256 3.414  256-512 3.468  512-1024 3.543
+runs/g26_tf163_b75000 eval_long window 64: exit 0 Wed Nov 18 12:35:51 AM +08 2026
+g26_tf163_b75000: 2528 books of >= 1024 tokens, mean 3.3013  0-64 3.574  64-128 3.241  128-256 3.196  256-512 3.257  512-1024 3.323
+runs/g26_tf163_b75000 eval_long window 256: exit 0 Wed Nov 18 12:37:37 AM +08 2026
