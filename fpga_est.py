@@ -14,7 +14,9 @@ Assumptions (all can be changed by options):
     measured power instead, so this side is the conservative one);
   - weights stay on chip when they and the streams' membrane potentials fit in 90% of the on-chip memory; otherwise
     weights are read from HBM every step, and the potentials stay on chip if they fit, else are read and written
-    back each step;
+    back each step. The word tables (hw_cost.py table_weights: the input rows and, with the two-level readout, the
+    word readout neurons) do not count against the on-chip memory: a stream uses only a few of their rows per token
+    (the word's input rows, its class's block of word neurons), read from HBM each step;
   - B streams are generated together, one token each per step: dense weights (W_in, leak synapses, readout) are read
     once per step for all streams, the W_out row of a neuron once if it fired in any stream. The share of neurons
     that fire in any of B streams is 1 - (1 - q)^B, with q set per layer so that it equals the measured share for 16
@@ -32,9 +34,10 @@ def estimate(hw, args, bits, dev):
     b = bits / 8
     f = hw["firing"]
     dense_w = hw.get("dense_weights", L * (d * H + (d * r + r * H if r else 0) + H) + d * V)   # as in hw_cost.py
-    weights = hw["params"] * b
+    weights, table, own = hw["params"] * b, hw.get("table_weights", 0) * b, hw.get("per_stream_weights", d) * b
     if hw.get("weights_bytes_trained") and bits == hw.get("wbits"):   # the bits it was trained for, scales included
-        weights = hw["weights_bytes_trained"]
+        weights, table = hw["weights_bytes_trained"], hw["table_bytes_trained"]
+        own *= table / (hw["table_weights"] * b) if hw.get("table_weights") else 1.0
     ops = hw["dense_macs"] + hw["sparse_adds"]                               # per token and stream
     rate = dev["dsp"] * 3 * dev["clock_mhz"] * 1e6 * dev["eff"]              # MAC/s reached
     bw = dev["bw_gbs"] * 1e9 * dev["eff"]
@@ -42,15 +45,15 @@ def estimate(hw, args, bits, dev):
     rows = []
     for B in STREAMS:
         state = B * hw["state_bytes"]
-        if weights + state <= budget:
-            read, where = 0.0, "weights on chip"
+        if weights - table + state <= budget:
+            read, where = (B * own, "weights on chip, word tables in HBM") if table else (0.0, "weights on chip")
         else:
             def share(l):
                 if B == 1:
                     return f["token"][l]
                 q = 1 - (1 - f["token_any"][l]) ** (1 / 16)
                 return 1 - (1 - q) ** B
-            read = (dense_w + sum(share(l) * H * d for l in range(L))) * b + B * hw.get("per_stream_weights", d) * b
+            read = (dense_w + sum(share(l) * H * d for l in range(L))) * b + B * own
             where = "weights in HBM"
             if state > budget:
                 read += 2 * state

@@ -91,17 +91,24 @@ def snn_cost(model, f):
            "state_bytes": L * H * 3 + mem_state,
            "dense_weights": dense_w, "per_stream_weights": own, "plastic_layers": M,
            "firing": {k: v.tolist() for k, v in f.items()}}
+    # word tables: rows used by one word at a time (the input rows; with out_classes the word readout neurons, of which
+    # each stream uses one class's block per token), so they can stay in off-chip memory (fpga_est.py)
+    tables = ("embed.weight", "head.w_word") if C else ("embed.weight",)
+    params = dict(model.named_parameters())
+    out["table_weights"] = sum(params[n].numel() for n in tables if n in params)
     if getattr(c, "wbits", 0):   # trained for low-precision weights (train.py --wbits; docs/experiments.md 5.38)
         pats = [re.compile(x) for x in c.wbits8.split(",") if x]
-        wb = 0.0
-        for name, p in model.named_parameters():
+        wb = tb = 0.0
+        for name, p in params.items():
             if p.dim() == 2:
                 bits = 8 if any(x.search(name) for x in pats) else c.wbits
                 g = c.wgroup if c.wgroup and p.shape[1] % c.wgroup == 0 else p.shape[1]
-                wb += p.numel() * bits / 8 + p.numel() / g * 2   # integers + one 16-bit scale per group
+                nb = p.numel() * bits / 8 + p.numel() / g * 2   # integers + one 16-bit scale per group
+                wb += nb
+                tb += nb if name in tables else 0.0
             else:
                 wb += p.numel() * 2                              # per-neuron parameters at 16 bits
-        out.update(wbits=c.wbits, wbits8=c.wbits8, weights_bytes_trained=wb)
+        out.update(wbits=c.wbits, wbits8=c.wbits8, weights_bytes_trained=wb, table_bytes_trained=tb)
     for bits in (8, 4):
         b = bits / 8
         one = (dense_w + sum(f["token"][l] * H * d for l in range(L))) * b + own * b
