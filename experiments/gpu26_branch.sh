@@ -9,6 +9,9 @@
 #     TEACHER  snn212 only: the teacher the run had at START (default runs/g13_tf163/ckpt.pt)
 #   SUFFIX=...  appended to the run name, for a second branch from the same START with another TEACHER, e.g.
 #     SUFFIX=_t26 bash experiments/gpu26_branch.sh snn212 120000 runs/g26_tf163/ckpt.pt  -> runs/g26_snn212_b150000_t26
+#   KDW=w       snn212 only: the distillation weight of the branch (default 0.9, as the run; 0 = no teacher, plain
+#     next-word cross-entropy), e.g. KDW=0 SUFFIX=_nokd bash experiments/gpu26_branch.sh snn212 120000
+#   GPU=..., ACCUM=n  the card type and the split of each batch (snn212: default h200-141 and 2; 4 on a 40-47 GB card)
 # The flags are those of gpu26.sh without --keep_ckpt, with evaluations every 2,500 steps. The weights, Adam moments
 # and average come from the checkpoint; the batches are drawn afresh from its step on.
 set -e
@@ -24,11 +27,12 @@ LEN="--batch 32 --seq 1024 --steps $end --warmup 1000 --eval_every 2500 --eval_b
 WSD="--schedule wsd --decay_steps $decay --min_lr_frac 0 --init_ckpt $ck"
 N212="--d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128"
 SNN="--ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10"
-KD="--teacher $teacher --distill_weight 0.9 --distill_temp 1"
+KD="--teacher $teacher --distill_weight ${KDW:-0.9} --distill_temp 1"
+[ "${KDW:-0.9}" = "0" ] && KD=""   # no teacher at all
 MEM="--mem_heads 8 --mem_keys 256 --mem_tau_min 1"
 name=g26_${run}_b$end${SUFFIX:-}
 case $run in
-  snn212) flags="$DATA $SPREAD $LEN $WSD $N212 $SNN $KD $MEM --accum 2"; gpu=${GPU:-h200-141} ;;
+  snn212) flags="$DATA $SPREAD $LEN $WSD $N212 $SNN $KD $MEM --accum ${ACCUM:-2}"; gpu=${GPU:-h200-141} ;;
   tf163)  flags="$DATA $LEN $WSD --arch tf --d_model 768 --n_layers 12 --n_heads 12 --lr 6e-4"; gpu=${GPU:-h100-96} ;;
   *) echo "RUN is snn212 or tf163"; exit 1 ;;
 esac
