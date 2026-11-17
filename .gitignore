@@ -17,3 +17,5 @@ data/fineweb/raw/
 data/fineweb/*.bin
 data/fineweb/*.tmp
 slurm/.g26seen
+slurm/claude_session.id
+slurm/claude_session.stop

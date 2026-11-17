@@ -9,7 +9,10 @@ How the session runs now (since 2026-11-15 11:06 SGT, batch job 1143785 on xcnc9
           (runs `claude remote-control` in tmux, server `-L claude`, session `cc`, on a compute node; partition long)
   look:   srun --jobid=<id> --overlap tmux -L claude capture-pane -p -t cc
           (read-only; Claude's last screen is also kept in slurm/logs/claude-session-<id>.out when it exits)
-  renew:  before the 3-day limit: stop the job (scancel <id>), then sbatch it again.
+  renew:  by itself since 2026-11-17 (slurm/claude_session.sbatch): 15 min before the 3-day limit the job queues its
+          successor (--dependency=afterany on itself) and stops Claude; the successor reattaches to the same session
+          (claude remote-control --session-id <slurm/claude_session.id>). After a renewal, start the background
+          watchers again (slurm/g26_events.sh and any wait_groups.sh). Stop the chain: touch slurm/claude_session.stop.
 
 2026-11-15: why the Claude session in interactive job 1143176 (xcnc9) exited at 22:05 UTC on 2026-11-14 (read-only check)
 Evidence:
@@ -81,5 +84,5 @@ Watch with slurm/g26_events.sh (run_in_background; reported events are in slurm/
    flags of experiments/gpu26.sh but --teacher runs/g26_tf163/ckpt.pt (same out dir; it resumes from ckpt.pt).
    Record the switch step in a commit; snn212 branches with START >= that step get runs/g26_tf163/ckpt.pt as the
    third argument of gpu26_branch.sh.
-This Claude session's batch job (1143785) ends about 2026-11-18 09:00 SGT, before g26_snn212 finishes (~35 h); it
-needs renewing (scancel 1143785, then sbatch slurm/claude_session.sbatch from the login node).
+This Claude session's batch job (1143785) ends about 2026-11-18 09:00 SGT, before g26_snn212 finishes (~35 h);
+it runs the old script, so its successor is queued by hand once (see "renew" at the top).
