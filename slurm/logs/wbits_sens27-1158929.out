@@ -1,0 +1,14 @@
+runs/g27_io2k: full precision 3.8888 (655,360 tokens)
+  only input rows               (  1.91M weights) to 4 bits: +0.0147
+  only readout                  ( 38.90M weights) to 4 bits: +0.0719
+  only W_in                     ( 28.31M weights) to 4 bits: +0.0206
+  only W_out                    ( 28.31M weights) to 4 bits: +0.0097
+  only leak synapses            (  4.42M weights) to 4 bits: +0.0007
+  only plastic: key/query in    (  9.44M weights) to 4 bits: +0.0015
+  only plastic: value in        (  4.72M weights) to 4 bits: +0.0031
+  only plastic: out             (  4.72M weights) to 4 bits: +0.0028
+  all to 4 bits: +0.1274
+  all to 4 bits but input rows at 8 bits (+1.0 MB): +0.1117
+  all to 4 bits but input rows, readout at 8 bits (+20.4 MB): +0.0398
+  all to 4 bits but input rows, readout, W_in at 8 bits (+34.6 MB): +0.0188
+  all to 4 bits but input rows, readout, W_in, plastic: value in at 8 bits (+36.9 MB): +0.0156
