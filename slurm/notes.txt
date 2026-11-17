@@ -86,3 +86,13 @@ Watch with slurm/g26_events.sh (run_in_background; reported events are in slurm/
    third argument of gpu26_branch.sh.
 This Claude session's batch job (1143785) ends about 2026-11-18 09:00 SGT, before g26_snn212 finishes (~35 h);
 it runs the old script, so its successor is queued by hand once (see "renew" at the top).
+
+Session renewal test (2026-11-17, approved by the owner): slurm/claude_session.id holds
+session_017FuF8wVUfCZdqUSmMn5iLC (the bridge ID of this session, from ~/.claude/sessions/<pid>.json); successor job
+1155788 (slurm/claude_session.sbatch, -p long, afterany:1143785) was queued, then the old job 1143785 (xcnc9) cancelled.
+Background watchers running in the old session at that moment, to restart after the reattach (all read-only):
+ - RELAY=1 slurm/wait_groups.sh "g25_"   (only g25_io is still open, step ~13000 of 20000; g25_cls / g25_inc are
+   committed in da0401b; g25_io's summary is to be committed when it finishes)
+ - slurm/g26_events.sh                   (wave-26 events). Reported so far (slurm/.g26seen): runs/g26_tf163/
+   ckpt_step30000.pt -> branch g26_tf163_b37500 launched (job 1155728, h100-47). No g26_snn212 kept checkpoint yet.
+Nothing else was pending: all finished runs up to g25_cls / g25_inc are committed and pushed.
