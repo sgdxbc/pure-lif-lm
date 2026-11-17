@@ -16,3 +16,4 @@ data/pg19/*.tmp
 data/fineweb/raw/
 data/fineweb/*.bin
 data/fineweb/*.tmp
+slurm/.g26seen

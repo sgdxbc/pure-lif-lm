@@ -67,3 +67,19 @@ CPU jobs submitted from inside this session's batch job land in partition `long`
 the script or with -p on the command line (pg19-prep 1146033, fineweb-prep 1146815); the cause is on the cluster's
 side, not the inherited SLURM_JOB_PARTITION as first thought. Harmless for these jobs (long allows 3 days). GPU jobs
 are not affected: with -p gpu they all ran in `gpu`.
+
+Wave 26 follow-ups (2026-11-17; plan from the cloud session, docs/experiments.md 5.37). Chains: g26_snn212 (h200-141,
+first part 1155211; 300k steps, kept ckpts at 30k/60k/120k/180k/240k) and g26_tf163 (h100-96, first part 1155212).
+Watch with slurm/g26_events.sh (run_in_background; reported events are in slurm/.g26seen). On each event:
+ - kept checkpoint runs/g26_snn212/ckpt_stepN.pt, N in 30000/60000/120000/180000: launch its branch
+     GPU=a100-80 bash experiments/gpu26_branch.sh snn212 N [TEACHER]   (h100-96 also fine once g26_tf163 is done)
+   and commit+push runs/g26_snn212/{log.jsonl,stdout.log} with val / EMA val and the spike and skipped-step lines.
+   (No branch for 240000.)
+ - kept checkpoint runs/g26_tf163/ckpt_stepN.pt: GPU=h100-47 bash experiments/gpu26_branch.sh tf163 N
+ - runs/g26_tf163/done: commit g26_tf163; then at the NEXT kept snn212 checkpoint, right after it is written, switch
+   the teacher: scancel the running g26_snn212 part and its queued successor, and resubmit the chain with exactly the
+   flags of experiments/gpu26.sh but --teacher runs/g26_tf163/ckpt.pt (same out dir; it resumes from ckpt.pt).
+   Record the switch step in a commit; snn212 branches with START >= that step get runs/g26_tf163/ckpt.pt as the
+   third argument of gpu26_branch.sh.
+This Claude session's batch job (1143785) ends about 2026-11-18 09:00 SGT, before g26_snn212 finishes (~35 h); it
+needs renewing (scancel 1143785, then sbatch slurm/claude_session.sbatch from the login node).
