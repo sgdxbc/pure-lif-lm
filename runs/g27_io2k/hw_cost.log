@@ -1,0 +1,1 @@
+g27_io2k                 snn  120.9M  8-bit  120.9 MB  dense MACs   53.9M + sparse adds  1.59M  state 1327.1 KB  MB/token 8-bit: 1 stream   55.1, 16 streams   4.4  (rate 0.054)
