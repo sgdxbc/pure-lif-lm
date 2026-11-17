@@ -102,9 +102,12 @@ python3 train.py --device cuda --out runs/my_snn \
 - `--out_classes C [--class_file f.npy]`：两级读出（5.36 节）：C 个类读出神经元，每类最多 ⌈词表 / C⌉ 个词读出神经元；
   P(词) = P(类) × P(词 | 类)，训练和评测照常（模型输出的是 log P(词)），生成时每个词只算 C 加一类的词读出神经元。
   `--class_file` 是每个词所属的类（`experiments/word_classes.py` 生成：按词频，或对训练好的网络的读出行做均衡 k-means）；默认按编号分类。
+  加 `--out_short S`：S 个词（一个"短名单"，`word_classes.py --short S` 取训练数据里最常见的 S 个，类号记为 −1）不分类，
+  各有自己的读出神经元，和 C 个类读出神经元一起做一次 softmax；其余的词再分成 C 类。生成时每个词算 S + C 加一类的词读出神经元。
 - `--in_groups k [--in_class_file f.npy]`：组合输入（5.36 节）：k 群各 n = ⌈词表^(1/k)⌉ 个输入神经元，每个词在每群里各让一个发放，
   注入它们的突触之和。默认按编号的 k 位数字；k = 2 时 `--in_class_file` 按类分配（第一群是类，第二群是类里的序号；用
-  `word_classes.py --rows embed` 对训练好的网络的输入行聚类）。
+  `word_classes.py --rows embed` 对训练好的网络的输入行聚类）。加 `--in_short S`：短名单里的 S 个词（类号 −1）各有自己的一个输入神经元，
+  其余的词照常用 k 个脉冲；此时 n = ⌈(词表 − S)^(1/k)⌉，分类时类数和每类的词数都不能超过 n。
 - `--mem_heads h [--mem_keys m --mem_dv dv --mem_every k]`：**可塑突触**（5.28 节）。每隔 k 层（默认每层），在神经元群之前加 h 组
   键神经元和查询神经元（每组各 m 个，时间常数短，减法复位）和一个 m × dv 的突触矩阵 S：
   `S[t] = λ·S[t-1] + k[t]·v[t]ᵀ`（k 是键神经元的脉冲，v = W_v·总线，λ 每组一个、可学习，初始时间常数在

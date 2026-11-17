@@ -69,11 +69,11 @@ def snn_cost(model, f):
     V, d, H, L, r, T = c.vocab, c.d_model, c.d_hidden, c.n_layers, c.leak_rank, c.steps_per_token
     into = d * H + (d * r if r else 0)                       # W_in and the leak synapses' first factor: read the bus
     leak2 = r * H if r else 0                                # second factor of the leak synapses: dense (rank-r input)
-    # readout: all vocab neurons, or with out_classes the C class neurons (shared by all streams) and the m word
-    # neurons of the class each stream draws (its own); input: one synapse row per word, or in_groups rows
-    C = getattr(c, "out_classes", 0)
-    m = math.ceil(V / C) if C else 0
-    head_shared, head_own = (d * C, d * m) if C else (d * V, 0)
+    # readout: all vocab neurons, or with out_classes the S short-list and C class neurons (shared by all streams) and
+    # the m word neurons of the class each stream draws (its own); input: one synapse row per word, or in_groups rows
+    C, S = getattr(c, "out_classes", 0), getattr(c, "out_short", 0)
+    m = math.ceil((V - S) / C) if C else 0
+    head_shared, head_own = (d * (S + C), d * m) if C else (d * V, 0)
     own = head_own + d * max(1, getattr(c, "in_groups", 0))   # weights each stream reads for itself per token
     dense_step, dense_w = into + leak2, L * (into + leak2 + H) + head_shared
     M = len(getattr(model, "mem_layers", []))
