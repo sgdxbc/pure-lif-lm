@@ -1,0 +1,31 @@
+queued the next part of runs/g26_tf163: job 1157835
+xgpi10 NVIDIA H100 NVL | runs/g26_tf163 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 300000 --warmup 1000 --eval_every 5000 --eval_batches 40 --log_every 500 --schedule wsd --decay_steps 60000 --min_lr_frac 0 --keep_ckpt 30000,60000,120000,180000,240000 --arch tf --d_model 768 --n_layers 12 --n_heads 12 --lr 6e-4
+== eval step 210000 val_loss 3.5312
+== eval step 215000 val_loss 3.5338
+== eval step 220000 val_loss 3.5355
+== eval step 225000 val_loss 3.5352
+params 163.01M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 230000 val_loss 3.5387
+== eval step 235000 val_loss 3.5367
+== eval step 240000 val_loss 3.5334
+== eval step 245000 val_loss 3.4456
+== eval step 250000 val_loss 3.4073
+== eval step 255000 val_loss 3.3756
+== eval step 260000 val_loss 3.3495
+== eval step 265000 val_loss 3.3271
+== eval step 270000 val_loss 3.3000
+== eval step 275000 val_loss 3.2735
+== eval step 280000 val_loss 3.2465
+== eval step 285000 val_loss 3.2201
+== eval step 290000 val_loss 3.1932
+== eval step 295000 val_loss 3.1684
+== eval step 300000 val_loss 3.1518
+hellaswag        acc 0.2954  acc_norm 0.3204
+lambada_openai   perplexity 193.4698  acc 0.2305
+piqa             acc 0.6224  acc_norm 0.6115
+arc_easy         acc 0.5189  acc_norm 0.4718
+arc_challenge    acc 0.2065  acc_norm 0.2491
+winogrande       acc 0.5185
+ "val_loss": 3.1622697388033223,
+g26_tf163                tf   163.0M  8-bit  163.0 MB  at context 256/2048/8192: MACs 128.3/161.3/274.6M  state 4.7/37.7/151.0 MB  MB/token 8-bit: 1 stream 128.3/161.3/274.6, 16 streams 12.4/45.5/158.7
+done Tue Nov 17 10:21:04 PM +08 2026
