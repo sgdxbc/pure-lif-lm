@@ -52,7 +52,8 @@ def main():
         from transformers import GPT2Config
         D, L, H = (int(x) for x in a.model[len("shape:"):].split(","))
         model = tempfile.mkdtemp(prefix="gpt2shape_")
-        GPT2Config(vocab_size=50257, n_positions=1024, n_embd=D, n_layer=L, n_head=H,
+        # architectures: without it vLLM 0.33 picks an embedding ("pooling") runner and refuses generate()
+        GPT2Config(vocab_size=50257, n_positions=1024, n_embd=D, n_layer=L, n_head=H, architectures=["GPT2LMHeadModel"],
                    bos_token_id=50256, eos_token_id=50256).save_pretrained(model)
         # vLLM 0.33 needs a tokenizer even when only token ids are used (skip_tokenizer_init fails in its constructor)
         extra, tag = dict(load_format="dummy", tokenizer="openai-community/gpt2"), f"gpt2shape_d{D}_l{L}_h{H}"
