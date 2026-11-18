@@ -1,0 +1,24 @@
+queued the next part of runs/g29_hw_m8w_b75000: job 1160867
+xgpi9 NVIDIA H100 NVL | runs/g29_hw_m8w_b75000 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 75000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --schedule wsd --decay_steps 15000 --min_lr_frac 0 --init_ckpt runs/g29_hw/ckpt_step60000.pt --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --accum 2 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --wbits 4 --wbits_from 60000 --wbits8 ^head\.,^embed\.,^layers\.\d+\.w_in\.
+params 120.97M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 62500 val_loss 3.8914 (EMA weights 3.8138) [4-bit weights; unrounded EMA 3.8064]
+== eval step 65000 val_loss 3.8432 (EMA weights 3.7891) [4-bit weights; unrounded EMA 3.7841]
+== eval step 67500 val_loss 3.8073 (EMA weights 3.7690) [4-bit weights; unrounded EMA 3.7657]
+== eval step 70000 val_loss 3.7766 (EMA weights 3.7530) [4-bit weights; unrounded EMA 3.7531]
+== eval step 72500 val_loss 3.7522 (EMA weights 3.7413) [4-bit weights; unrounded EMA 3.7460]
+== eval step 75000 val_loss 3.7348 (EMA weights 3.7343) [4-bit weights; unrounded EMA 3.7455]
+hellaswag        acc 0.2682  acc_norm 0.2741
+lambada_openai   perplexity 3310.6178  acc 0.0662
+piqa             acc 0.5751  acc_norm 0.5582
+arc_easy         acc 0.4478  acc_norm 0.4104
+arc_challenge    acc 0.1766  acc_norm 0.2244
+winogrande       acc 0.5075
+hellaswag        acc 0.2684  acc_norm 0.2715
+lambada_openai   perplexity 3277.0887  acc 0.0650
+piqa             acc 0.5881  acc_norm 0.5571
+arc_easy         acc 0.4482  acc_norm 0.4137
+arc_challenge    acc 0.1698  acc_norm 0.2218
+winogrande       acc 0.5043
+ "val_loss": 3.745149144769875,
+g29_hw_m8w_b75000        snn  121.0M  8-bit  121.0 MB  dense MACs   58.6M + sparse adds  1.16M  state 1327.1 KB  MB/token 8-bit: 1 stream   59.4, 16 streams   4.4  (rate 0.039)
+done Wed Nov 18 02:06:05 PM +08 2026
