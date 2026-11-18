@@ -12,6 +12,12 @@ board's (also reported above the idle power); the GPU only, no CPU, host memory 
 Needs vllm and nvidia-ml-py (a separate venv, slurm/bench_gpu.sbatch). From the repository root:
   python3 bench_gpu.py --model openai-community/gpt2 [--batches 1,4,16,64,256] [--contexts 128,896] [--gen 128]
 writes runs/bench_gpu/<gpu>_<model>.json
+  python3 bench_gpu.py --model shape:D,L,H
+measures a GPT-2 of that shape (width D, L blocks, H heads, the 50,304-word vocabulary, 1,024 positions) with random
+weights (vLLM load_format "dummy", no tokenizer): the time and energy of generation do not depend on the weights'
+values (ignore_eos, fixed lengths), so this is the cost of our own Transformers (model_tf.py: the same matrices;
+RMSNorm and no biases instead of LayerNorm and biases, a negligible difference) without converting them. Writes
+runs/bench_gpu/<gpu>_gpt2shape_dD_lL_hH.json.
 """
 import argparse, json, os, time
 import numpy as np
@@ -39,11 +45,20 @@ def main():
     gpu = pynvml.nvmlDeviceGetName(h)
     gpu = gpu.decode() if isinstance(gpu, bytes) else gpu
     batches = [int(b) for b in a.batches.split(",")]
-    cfg = AutoConfig.from_pretrained(a.model)
+    model, extra, tag = a.model, {}, a.model.split("/")[-1]
+    if a.model.startswith("shape:"):   # a GPT-2 of this shape with random weights (see the top of this file)
+        import tempfile
+        from transformers import GPT2Config
+        D, L, H = (int(x) for x in a.model[len("shape:"):].split(","))
+        model = tempfile.mkdtemp(prefix="gpt2shape_")
+        GPT2Config(vocab_size=50304, n_positions=1024, n_embd=D, n_layer=L, n_head=H,
+                   bos_token_id=50256, eos_token_id=50256).save_pretrained(model)
+        extra, tag = dict(load_format="dummy", skip_tokenizer_init=True), f"gpt2shape_d{D}_l{L}_h{H}"
+    cfg = AutoConfig.from_pretrained(model)
     max_len = getattr(cfg, "max_position_embeddings", None) or getattr(cfg, "n_positions", 1024)
     vocab = cfg.vocab_size
-    llm = LLM(model=a.model, dtype="bfloat16", seed=0, enable_prefix_caching=False, max_num_seqs=max(batches),
-              max_model_len=max_len, gpu_memory_utilization=0.85)
+    llm = LLM(model=model, dtype="bfloat16", seed=0, enable_prefix_caching=False, max_num_seqs=max(batches),
+              max_model_len=max_len, gpu_memory_utilization=0.85, **extra)
     contexts = [int(c) for c in a.contexts.split(",")] if a.contexts else [128, max_len - a.gen]
     rng = np.random.default_rng(0)
 
@@ -57,7 +72,7 @@ def main():
         """Repeat the generation (fresh prompts each time, made beforehand) for at least min_s seconds, so the
         energy counter, which updates only every few tens of milliseconds, is read over a long window.
         Returns seconds and joules per call, and the number of calls."""
-        sp = SamplingParams(max_tokens=gen, temperature=0.0, ignore_eos=True)
+        sp = SamplingParams(max_tokens=gen, temperature=0.0, ignore_eos=True, detokenize=False)
         t0 = time.perf_counter()
         llm.generate(prompts_for(B, C), sp, use_tqdm=False)          # also a warm-up for this shape
         n = max(1, int(np.ceil(min_s / max(time.perf_counter() - t0, 1e-3))))
@@ -90,7 +105,7 @@ def main():
                   f"(above idle {r['decode_J_per_token_above_idle'] * 1000:.2f}), {r['decode_avg_W']:.0f} W", flush=True)
     out = os.path.join(HERE, "runs", "bench_gpu")
     os.makedirs(out, exist_ok=True)
-    name = f"{gpu.replace(' ', '_')}_{a.model.split('/')[-1]}.json"
+    name = f"{gpu.replace(' ', '_')}_{tag}.json"
     json.dump({"model": a.model, "gpu": gpu, "idle_W": idle_w, "max_model_len": max_len, "rows": rows,
                "vllm": __import__("vllm").__version__}, open(os.path.join(out, name), "w"), indent=1)
     print("wrote", os.path.join(out, name), f"(idle {idle_w:.0f} W)")
