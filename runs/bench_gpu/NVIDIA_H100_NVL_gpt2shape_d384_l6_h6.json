@@ -1,0 +1,179 @@
+{
+ "model": "shape:384,6,6",
+ "gpu": "NVIDIA H100 NVL",
+ "idle_W": 90.70715687863489,
+ "max_model_len": 1024,
+ "rows": [
+  {
+   "streams": 1,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 981.0030334729405,
+   "decode_tok_s_per_stream": 981.0030334729405,
+   "ms_per_token": 1.0193648397393904,
+   "decode_J_per_token": 0.10289153737773139,
+   "decode_avg_W": 100.93691028624895,
+   "decode_J_per_token_above_idle": 0.010427850942925984,
+   "prefill_s": 0.0034849266854503538,
+   "prefill_J": 0.33198808615799597,
+   "calls": [
+    2602,
+    75
+   ]
+  },
+  {
+   "streams": 4,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 3722.883959648717,
+   "decode_tok_s_per_stream": 930.7209899121792,
+   "ms_per_token": 1.0744358522465018,
+   "decode_J_per_token": 0.027337629070727478,
+   "decode_avg_W": 101.77482076223778,
+   "decode_J_per_token_above_idle": 0.0029728737192891747,
+   "prefill_s": 0.005901545983798495,
+   "prefill_J": 0.5761415728022543,
+   "calls": [
+    1335,
+    70
+   ]
+  },
+  {
+   "streams": 16,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 13176.402115400155,
+   "decode_tok_s_per_stream": 823.5251322125097,
+   "ms_per_token": 1.21429202447455,
+   "decode_J_per_token": 0.007820165121493333,
+   "decode_avg_W": 103.04164024962327,
+   "decode_J_per_token_above_idle": 0.0009361040489628226,
+   "prefill_s": 0.008432108548826445,
+   "prefill_J": 0.8661078068403506,
+   "calls": [
+    538,
+    60
+   ]
+  },
+  {
+   "streams": 64,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 36509.935534177894,
+   "decode_tok_s_per_stream": 570.4677427215296,
+   "ms_per_token": 1.7529474939797673,
+   "decode_J_per_token": 0.0030967998664088265,
+   "decode_avg_W": 113.06396348483698,
+   "decode_J_per_token_above_idle": 0.0006123485642770666,
+   "prefill_s": 0.017100144761410193,
+   "prefill_J": 1.8589316243120069,
+   "calls": [
+    351,
+    43
+   ]
+  },
+  {
+   "streams": 256,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 68290.81206112882,
+   "decode_tok_s_per_stream": 266.76098461378444,
+   "ms_per_token": 3.7486741228212077,
+   "decode_J_per_token": 0.001834252003039693,
+   "decode_avg_W": 125.26255881233276,
+   "decode_J_per_token_above_idle": 0.0005060036759083559,
+   "prefill_s": 0.04542237799614668,
+   "prefill_J": 5.400535714058649,
+   "calls": [
+    168,
+    19
+   ]
+  },
+  {
+   "streams": 1,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 974.8851559685268,
+   "decode_tok_s_per_stream": 974.8851559685268,
+   "ms_per_token": 1.0257618488472338,
+   "decode_J_per_token": 0.10565287530495676,
+   "decode_avg_W": 102.99941982019608,
+   "decode_J_per_token_above_idle": 0.012608934361452146,
+   "prefill_s": 0.004389837637463707,
+   "prefill_J": 0.44822182481887446,
+   "calls": [
+    1677,
+    73
+   ]
+  },
+  {
+   "streams": 4,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 3622.900803044309,
+   "decode_tok_s_per_stream": 905.7252007610773,
+   "ms_per_token": 1.1040876406659592,
+   "decode_J_per_token": 0.02940297179288496,
+   "decode_avg_W": 106.52405012033209,
+   "decode_J_per_token_above_idle": 0.004365809085472703,
+   "prefill_s": 0.004964285253216981,
+   "prefill_J": 0.595180952485907,
+   "calls": [
+    945,
+    64
+   ]
+  },
+  {
+   "streams": 16,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 12810.3526365026,
+   "decode_tok_s_per_stream": 800.6470397814124,
+   "ms_per_token": 1.2489898173769727,
+   "decode_J_per_token": 0.009305746266740389,
+   "decode_avg_W": 119.20989122276197,
+   "decode_J_per_token_above_idle": 0.0022249765602009772,
+   "prefill_s": 0.010516331475717563,
+   "prefill_J": 1.606673582295989,
+   "calls": [
+    723,
+    60
+   ]
+  },
+  {
+   "streams": 64,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 36203.662630169114,
+   "decode_tok_s_per_stream": 565.6822285963924,
+   "ms_per_token": 1.7677769416254512,
+   "decode_J_per_token": 0.004423704452891967,
+   "decode_avg_W": 160.1543035880776,
+   "decode_J_per_token_above_idle": 0.0019182353846036355,
+   "prefill_s": 0.03086392220396262,
+   "prefill_J": 5.486073075808012,
+   "calls": [
+    260,
+    35
+   ]
+  },
+  {
+   "streams": 256,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 66547.6503657579,
+   "decode_tok_s_per_stream": 259.9517592412418,
+   "ms_per_token": 3.846867599276275,
+   "decode_J_per_token": 0.0031535986813113074,
+   "decode_avg_W": 209.86458243782005,
+   "decode_J_per_token_above_idle": 0.0017905579671750156,
+   "prefill_s": 0.1068543057356562,
+   "prefill_J": 20.520324676067798,
+   "calls": [
+    77,
+    16
+   ]
+  }
+ ],
+ "vllm": "0.33.0"
+}
