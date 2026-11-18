@@ -1,0 +1,39 @@
+queued the next part of runs/g26_snn212: job 1164596
+xgpk0 NVIDIA H200 NVL | runs/g26_snn212 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 300000 --warmup 1000 --eval_every 5000 --eval_batches 40 --log_every 500 --schedule wsd --decay_steps 60000 --min_lr_frac 0 --keep_ckpt 30000,60000,120000,180000,240000 --d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --teacher runs/g26_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_keys 256 --mem_tau_min 1 --accum 2
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 225000 val_loss 3.6984 (EMA weights 3.5587)
+== eval step 230000 val_loss 3.7000 (EMA weights 3.5557)
+== eval step 235000 val_loss 3.7055 (EMA weights 3.5585)
+== eval step 240000 val_loss 3.7265 (EMA weights 3.5608)
+== eval step 245000 val_loss 3.6389 (EMA weights 3.5392)
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 250000 val_loss 3.5998 (EMA weights 3.5122)
+== eval step 255000 val_loss 3.5611 (EMA weights 3.4922)
+== eval step 260000 val_loss 3.5364 (EMA weights 3.4756)
+== eval step 265000 val_loss 3.5155 (EMA weights 3.4616)
+== eval step 270000 val_loss 3.4996 (EMA weights 3.4522)
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 275000 val_loss 3.4782 (EMA weights 3.4422)
+== eval step 280000 val_loss 3.4612 (EMA weights 3.4327)
+== eval step 285000 val_loss 3.4464 (EMA weights 3.4258)
+== eval step 290000 val_loss 3.4342 (EMA weights 3.4204)
+== eval step 295000 val_loss 3.4236 (EMA weights 3.4173)
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 300000 val_loss 3.4180 (EMA weights 3.4175)
+hellaswag        acc 0.2755  acc_norm 0.2860
+lambada_openai   perplexity 831.7726  acc 0.1184
+piqa             acc 0.6045  acc_norm 0.5974
+arc_easy         acc 0.4907  acc_norm 0.4360
+arc_challenge    acc 0.1877  acc_norm 0.2346
+winogrande       acc 0.5036
+hellaswag        acc 0.2729  acc_norm 0.2858
+lambada_openai   perplexity 830.7000  acc 0.1184
+piqa             acc 0.6094  acc_norm 0.5947
+arc_easy         acc 0.4958  acc_norm 0.4364
+arc_challenge    acc 0.1886  acc_norm 0.2466
+winogrande       acc 0.5170
+ "val_loss": 3.428399180633498,
+g26_snn212               snn  274.8M  8-bit  274.8 MB  dense MACs  174.2M + sparse adds  2.17M  state 5013.5 KB  MB/token 8-bit: 1 stream  174.6, 16 streams  11.9  (rate 0.038)
+  weights rounded to 8 bits: "val_loss": 3.4283792199566006,
+  weights rounded to 4 bits: "val_loss": 3.5886171571914196,
+done Thu Nov 19 03:46:35 AM +08 2026
