@@ -1,0 +1,162 @@
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  89%|████████▉ | 261/292 [00:00<00:00, 2582.43it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 2300.77it/s]
+distilling from hf:openai-community/gpt2-medium (weight 0.9, temperature 1.0)
+resumed from step 120000 of runs/g26_snn212/ckpt_step120000.pt
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+gradient spike at step 120078: gn 3.27 (median 0.34), loss 3.7425; mems.8.kq_in.weight 2.75, mems.7.v_in.weight 0.61, layers.0.w_out.weight 0.53, layers.0.w_in.bias 0.51
+step 120500 loss 3.7292 kl 0.8437 lr 6.00e-04 gn 0.28 13,088 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 120546: gn 2.17 (median 0.33), loss 3.7161; mems.0.gain 1.81, layers.0.w_in.bias 0.93, layers.0.w_in.weight 0.30, mems.10.kq_in.weight 0.29
+gradient spike at step 120637: gn 2.36 (median 0.33), loss 3.7046; mems.11.kq_in.weight 1.45, layers.0.w_out.weight 0.54, mems.10.v_in.weight 0.53, layers.7.w_in.weight 0.49
+gradient spike at step 120765: gn 2.68 (median 0.32), loss 3.8633; mems.0.gain 1.95, layers.0.w_in.bias 1.69, layers.0.w_in.weight 0.53, embed.weight 0.31
+gradient spike at step 120866: gn 3.84 (median 0.32), loss 3.7905; mems.0.gain 3.45, layers.0.w_in.bias 1.60, layers.0.w_in.weight 0.36, embed.weight 0.30 -- update skipped
+gradient spike at step 120922: gn 1.99 (median 0.32), loss 3.6923; mems.0.gain 1.68, layers.0.w_in.bias 0.93, layers.0.w_in.weight 0.28, layers.3.w_in.weight 0.23
+gradient spike at step 120955: gn 1.85 (median 0.32), loss 3.6957; mems.11.kq_in.weight 1.07, mems.7.kq_in.weight 0.70, layers.0.w_out.weight 0.52, mems.10.v_in.weight 0.50
+step 121000 loss 3.7312 kl 0.8990 lr 6.00e-04 gn 0.35 13,096 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 121022: gn 1.73 (median 0.32), loss 3.7391; mems.10.kq_in.weight 0.88, mems.8.kq_in.weight 0.68, layers.0.w_out.weight 0.43, layers.0.w_in.bias 0.37
+gradient spike at step 121212: gn 1.92 (median 0.31), loss 3.7162; mems.9.kq_in.weight 1.48, layers.2.w_in.weight 0.40, layers.0.w_out.weight 0.39, mems.0.gain 0.36
+gradient spike at step 121478: gn 39.78 (median 0.33), loss 3.6316; layers.4.w_in.weight 32.61, layers.0.w_out.weight 13.72, mems.0.gain 10.78, layers.0.w_in.bias 7.54 -- update skipped
+step 121500 loss 3.7893 kl 0.8569 lr 6.00e-04 gn 0.29 13,112 tok/s mem 28.6GB rate 0.022 [0.04 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+step 122000 loss 3.6995 kl 0.8235 lr 6.00e-04 gn 0.29 13,116 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 122426: gn 183.29 (median 0.33), loss 3.6722; layers.5.w_in.weight 126.44, layers.4.w_in.weight 72.37, layers.0.w_out.weight 42.56, mems.3.kq_in.weight 35.13 -- update skipped
+step 122500 loss 3.8157 kl 0.9231 lr 6.00e-04 gn 0.45 13,116 tok/s mem 28.6GB rate 0.021 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+== eval step 122500 val_loss 3.7454 (EMA weights 3.5801)
+   >> The history of the city|-state in the eighteenth century. In the seventeenth century, a central government was elected, with an administrative capacity, a large, centralized parliament that would later become a central form of government. While this was not possible on the twentieth century, it is currently the most important project in the history of the city. / The urban population in the eighteenth century was concentrated within the urban areas of the county. In the eighteenth century, the population was reduced to less than 6,000. The population decreased to about 100,000 by 1800. However, in 1878, the population declined to 6,
+   >> In mathematics, a prime number is| how many sentences (or sentences) can be constructed from a single number, and the number of blocks that are constructed. /  /  /  /  / The mathematical world of mathematics includes a plethora of variables, including: / Grammatical representation: A representation of a certain number, such as a list of integers, or numbers. / For example: / As the name suggests, many mathematicians are required to read the numbers as a function of many functions like: / A new x = x=y (Rt = x + y = x + y = x) / This means that x=
+   >> Plants need sunlight because| of their ability to absorb sunlight. They also need nutrients and water. /  /  /  /  /  / -Loss of sunlight is bad for your eyes / -Poor eye / -Poor skin tone / - Litter of water to plants / - Skin irritations on the skin / - Skin irritation, skin flaking, or discoloration / - Lazy eyes / - Lazy eyes / - Shortness of breath / - Tiredness/nausea / - Skin irritation or flushing of skin /  /  / - Feeling too hot or cold / - Sensitive eyes and skin / - Ir
+gradient spike at step 122563: gn 2.25 (median 0.33), loss 3.6951; mems.11.kq_in.weight 2.11, head.weight 0.25, mems.10.v_in.weight 0.23, layers.10.w_out.weight 0.20
+gradient spike at step 122568: gn 1.72 (median 0.33), loss 3.7202; layers.0.w_in.bias 1.24, mems.0.gain 1.08, layers.0.w_in.weight 0.34, head.weight 0.26
+gradient spike at step 122737: gn 3.50 (median 0.34), loss 3.7361; mems.0.gain 2.91, layers.1.w_in.weight 1.63, layers.0.w_in.bias 0.65, layers.0.w_out.weight 0.49 -- update skipped
+step 123000 loss 3.7337 kl 0.8254 lr 6.00e-04 gn 0.32 13,116 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 123117: gn 2.05 (median 0.34), loss 3.7731; mems.0.gain 1.88, layers.0.w_in.bias 0.70, head.weight 0.30, layers.0.w_in.weight 0.21
+gradient spike at step 123421: gn 2.39 (median 0.34), loss 3.7714; mems.9.kq_in.weight 1.38, layers.0.w_in.bias 0.77, mems.7.v_in.weight 0.58, mems.8.v_in.weight 0.49
+step 123500 loss 3.8377 kl 0.8709 lr 6.00e-04 gn 0.32 13,115 tok/s mem 28.6GB rate 0.021 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 123535: gn 4.95 (median 0.34), loss 3.7289; mems.9.kq_in.weight 2.57, mems.0.gain 1.97, mems.8.kq_in.weight 1.47, layers.0.w_out.weight 1.39 -- update skipped
+gradient spike at step 123557: gn 3.14 (median 0.35), loss 3.7787; layers.0.w_in.bias 1.85, mems.9.kq_in.weight 1.27, mems.0.gain 0.85, mems.4.kq_in.weight 0.78
+gradient spike at step 123558: gn 4.69 (median 0.35), loss 3.7829; mems.9.kq_in.weight 3.19, layers.5.w_in.weight 1.02, layers.0.w_in.bias 0.85, mems.0.gain 0.82 -- update skipped
+gradient spike at step 123566: gn 7.73 (median 0.35), loss 3.6994; mems.0.gain 5.95, layers.0.w_in.bias 4.47, layers.0.w_in.weight 1.30, embed.weight 1.00 -- update skipped
+gradient spike at step 123618: gn 2.80 (median 0.36), loss 3.8237; mems.10.kq_in.weight 1.75, layers.0.w_out.weight 0.86, mems.8.kq_in.weight 0.84, mems.11.kq_in.weight 0.70
+gradient spike at step 123706: gn 2.93 (median 0.36), loss 3.7620; mems.11.kq_in.weight 2.45, layers.0.w_out.weight 0.70, embed.weight 0.45, mems.10.v_in.weight 0.43
+gradient spike at step 123824: gn 3.08 (median 0.36), loss 3.7477; mems.0.gain 2.65, layers.0.w_in.bias 1.42, layers.0.w_in.weight 0.43, embed.weight 0.28
+step 124000 loss 3.7578 kl 0.8789 lr 6.00e-04 gn 0.33 13,100 tok/s mem 28.6GB rate 0.021 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 124154: gn 3.26 (median 0.35), loss 3.7087; mems.9.kq_in.weight 2.76, mems.7.v_in.weight 0.73, mems.8.v_in.weight 0.64, layers.0.w_out.weight 0.43
+gradient spike at step 124195: gn 3.69 (median 0.35), loss 3.7844; layers.0.w_in.bias 2.78, mems.0.gain 1.99, layers.0.w_in.weight 0.71, embed.weight 0.71 -- update skipped
+gradient spike at step 124202: gn 35.95 (median 0.35), loss 3.7655; mems.9.kq_in.weight 26.12, layers.0.w_out.weight 10.08, mems.8.v_in.weight 7.00, layers.8.w_in.weight 6.13 -- update skipped
+gradient spike at step 124246: gn 2.35 (median 0.35), loss 3.6089; mems.9.kq_in.weight 1.62, mems.0.gain 0.59, mems.8.v_in.weight 0.55, layers.0.w_out.weight 0.53
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:  90%|████████▉ | 262/292 [00:00<00:00, 2588.39it/s]Loading weights: 100%|██████████| 292/292 [00:00<00:00, 2236.86it/s]
+distilling from hf:openai-community/gpt2-medium (weight 0.9, temperature 1.0)
+resumed from step 122500
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+gradient spike at step 122825: gn 2.42 (median 0.33), loss 3.7360; mems.10.kq_in.weight 2.16, layers.9.w_out.weight 0.36, layers.8.w_out.weight 0.30, head.weight 0.28
+gradient spike at step 122936: gn 1.68 (median 0.33), loss 3.6772; mems.11.kq_in.weight 1.04, mems.7.kq_in.weight 0.52, mems.10.v_in.weight 0.41, layers.4.w_in.weight 0.38
+step 123000 loss 3.7357 kl 0.8800 lr 6.00e-04 gn 0.34 13,092 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 123428: gn 1.82 (median 0.33), loss 3.6593; layers.0.w_in.bias 0.74, mems.0.gain 0.71, embed.weight 0.60, layers.0.w_in.weight 0.56
+step 123500 loss 3.7010 kl 0.8314 lr 6.00e-04 gn 0.31 13,114 tok/s mem 28.6GB rate 0.021 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 123595: gn 1.94 (median 0.33), loss 3.7724; mems.11.kq_in.weight 1.59, layers.0.w_out.weight 0.41, mems.10.v_in.weight 0.34, head.weight 0.26
+gradient spike at step 123648: gn 2.61 (median 0.32), loss 3.7951; mems.11.kq_in.weight 1.71, mems.10.kq_in.weight 0.83, layers.0.w_out.weight 0.79, mems.10.v_in.weight 0.46
+gradient spike at step 123817: gn 2.51 (median 0.33), loss 3.5886; mems.9.kq_in.weight 1.85, layers.8.w_in.weight 0.73, layers.0.w_out.weight 0.56, mems.8.v_in.weight 0.43
+gradient spike at step 123835: gn 12.81 (median 0.33), loss 3.6931; mems.9.kq_in.weight 8.81, mems.8.kq_in.weight 3.85, mems.8.v_in.weight 2.71, layers.0.w_out.weight 2.69 -- update skipped
+gradient spike at step 123887: gn 1.98 (median 0.33), loss 3.7206; mems.9.kq_in.weight 1.60, layers.0.w_out.weight 0.44, head.weight 0.27, layers.6.w_out.weight 0.27
+gradient spike at step 123905: gn 5.70 (median 0.33), loss 3.5726; layers.0.w_in.bias 4.35, mems.0.gain 3.00, layers.0.w_in.weight 1.49, mems.9.kq_in.weight 0.83 -- update skipped
+gradient spike at step 123923: gn 2.35 (median 0.33), loss 3.7681; mems.11.kq_in.weight 1.71, mems.10.v_in.weight 0.58, layers.0.w_out.weight 0.53, layers.10.w_out.weight 0.37
+gradient spike at step 123932: gn 1.67 (median 0.33), loss 3.7062; mems.9.kq_in.weight 1.06, mems.8.kq_in.weight 0.49, layers.0.w_out.weight 0.41, mems.7.v_in.weight 0.28
+gradient spike at step 123954: gn 1.80 (median 0.33), loss 3.6569; mems.9.kq_in.weight 1.17, mems.11.kq_in.weight 0.51, mems.0.gain 0.43, layers.0.w_out.weight 0.37
+gradient spike at step 123964: gn 3.48 (median 0.33), loss 3.6806; mems.9.kq_in.weight 2.69, layers.0.w_out.weight 1.10, embed.weight 0.70, mems.8.v_in.weight 0.53 -- update skipped
+step 124000 loss 3.8349 kl 0.8523 lr 6.00e-04 gn 0.27 13,115 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 124063: gn 1.87 (median 0.34), loss 3.6231; mems.9.kq_in.weight 1.45, layers.8.w_out.weight 0.38, mems.8.v_in.weight 0.34, mems.0.gain 0.33
+gradient spike at step 124155: gn 2.44 (median 0.35), loss 3.7813; mems.0.gain 2.22, layers.0.w_in.bias 0.91, head.weight 0.28, layers.0.w_in.weight 0.21
+gradient spike at step 124156: gn 1.84 (median 0.35), loss 3.7890; mems.9.kq_in.weight 1.26, mems.0.gain 0.50, layers.0.w_out.weight 0.43, mems.8.v_in.weight 0.40
+gradient spike at step 124157: gn 2.11 (median 0.35), loss 3.8762; mems.9.kq_in.weight 1.90, head.weight 0.32, layers.8.w_out.weight 0.28, layers.0.w_out.weight 0.22
+gradient spike at step 124325: gn 1.93 (median 0.34), loss 3.6448; mems.11.kq_in.weight 1.26, mems.9.kq_in.weight 0.64, mems.10.v_in.weight 0.50, layers.0.w_out.weight 0.39
+step 124500 loss 3.7497 kl 0.9044 lr 6.00e-04 gn 0.37 13,083 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 124554: gn 1.84 (median 0.34), loss 3.7903; mems.11.kq_in.weight 1.38, layers.0.w_out.weight 0.40, layers.6.leak_out.weight 0.38, mems.10.v_in.weight 0.35
+gradient spike at step 124628: gn 7.03 (median 0.35), loss 3.7541; mems.9.kq_in.weight 5.24, layers.0.w_out.weight 2.27, embed.weight 1.39, mems.8.v_in.weight 1.25 -- update skipped
+step 125000 loss 3.7838 kl 0.8294 lr 6.00e-04 gn 0.36 13,051 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+== eval step 125000 val_loss 3.7478 (EMA weights 3.5859)
+   >> The history of the city| /  /  /  /  / It was in December 1831, it was the beginning of the Great Depression. It had been for many years. It wasn't, it was, it was. It was, as they were, a state in which the U.S. government was built. Its citizens were the leaders of the United States and it was the state that led the way. / But as we get closer to the history of the U.S. and its allies, one thing remains to be seen: it was the economic industrial powerhouse that drove the nation that we created. Not really for
+   >> In mathematics, a prime number is| one. In fact, it's a prime number in a certain form. /  /  /  /  / If it's a finite number, it's a finite number. / When it's a prime, it's a prime number. / It's a prime number, since it's a prime number. / It's a prime prime number. / It's a prime number. / If it's a prime number, it's a prime number. / It's a prime number. / It's a prime number. / It's a prime number. / It's a prime number because it's a
+   >> Plants need sunlight because| they are more susceptible to damage from pesticides and herbicides because of the increased pesticide use. For example, the USDA's Biodiversity Conservation Program currently provides more than 95 million acres of grassland habitat for more than 15 million acres of land. /  /  / The U.S. Environmental Protection Agency (EPA) has long recognized that the EPA's pesticide residues, pesticides, chemicals and other chemicals that can disrupt the health of the soil and water supplies for thousands of people. In fact, it has been repeatedly demonstrated that pesticides are the primary source of pollution that negatively impacts food crops. A wide variety
+gradient spike at step 125036: gn 4.23 (median 0.35), loss 3.7419; mems.0.gain 4.06, layers.0.w_in.bias 0.92, mems.10.kq_in.weight 0.45, layers.0.w_in.weight 0.28 -- update skipped
+gradient spike at step 125073: gn 1.74 (median 0.35), loss 3.7322; mems.0.gain 1.52, layers.0.w_in.bias 0.73, head.weight 0.25, layers.0.w_in.weight 0.22
+gradient spike at step 125218: gn 2.22 (median 0.36), loss 3.6389; mems.11.kq_in.weight 1.38, mems.6.kq_in.weight 0.89, layers.0.w_out.weight 0.65, mems.10.kq_in.weight 0.50
+gradient spike at step 125279: gn 2.06 (median 0.35), loss 3.8315; mems.6.kq_in.weight 1.37, layers.0.w_out.weight 0.78, embed.weight 0.54, mems.11.kq_in.weight 0.44
+gradient spike at step 125389: gn 4.02 (median 0.36), loss 3.6505; mems.11.kq_in.weight 3.27, mems.10.v_in.weight 1.08, mems.10.w_out.weight 0.91, layers.0.w_out.weight 0.81 -- update skipped
+gradient spike at step 125396: gn 4.14 (median 0.36), loss 3.5606; mems.0.gain 3.97, layers.0.w_in.bias 1.02, layers.0.w_in.weight 0.29, head.weight 0.27 -- update skipped
+gradient spike at step 125397: gn 1.87 (median 0.36), loss 3.6802; mems.0.gain 1.77, layers.0.w_in.bias 0.45, head.weight 0.26, layers.0.w_in.weight 0.13
+step 125500 loss 3.7882 kl 0.8503 lr 6.00e-04 gn 0.38 13,057 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 125519: gn 1.95 (median 0.38), loss 3.8019; mems.8.kq_in.weight 1.15, mems.9.kq_in.weight 0.78, layers.0.w_out.weight 0.64, mems.0.gain 0.57
+gradient spike at step 125548: gn 9.33 (median 0.38), loss 3.7098; mems.9.kq_in.weight 7.65, layers.0.w_out.weight 2.57, embed.weight 1.51, mems.7.kq_in.weight 1.32 -- update skipped
+gradient spike at step 125564: gn 3.34 (median 0.38), loss 3.7280; mems.9.kq_in.weight 2.60, layers.0.w_out.weight 0.77, mems.8.kq_in.weight 0.69, layers.7.w_out.weight 0.53
+gradient spike at step 125573: gn 4.46 (median 0.38), loss 3.7832; mems.0.gain 4.03, layers.0.w_in.bias 1.42, layers.0.w_in.weight 0.88, embed.weight 0.70 -- update skipped
+gradient spike at step 125599: gn 1.97 (median 0.37), loss 3.7866; mems.8.kq_in.weight 1.42, layers.0.w_out.weight 0.61, mems.7.v_in.weight 0.41, embed.weight 0.32
+gradient spike at step 125627: gn 10.49 (median 0.36), loss 3.6534; mems.9.kq_in.weight 7.98, layers.0.w_out.weight 3.34, embed.weight 2.25, layers.0.w_in.weight 1.49 -- update skipped
+gradient spike at step 125780: gn 2.44 (median 0.35), loss 3.6823; mems.11.kq_in.weight 1.72, mems.10.v_in.weight 0.65, layers.0.w_out.weight 0.56, mems.6.kq_in.weight 0.40
+gradient spike at step 125821: gn 1.76 (median 0.35), loss 3.7183; mems.11.kq_in.weight 1.25, mems.10.v_in.weight 0.53, layers.0.w_out.weight 0.43, mems.10.w_out.weight 0.34
+gradient spike at step 125896: gn 2.41 (median 0.36), loss 3.8111; mems.0.gain 2.29, layers.0.w_in.bias 0.59, head.weight 0.28, layers.0.w_in.weight 0.19
+step 126000 loss 3.9115 kl 0.8818 lr 6.00e-04 gn 0.31 13,088 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 126008: gn 2.35 (median 0.38), loss 3.6782; mems.10.kq_in.weight 1.64, mems.7.kq_in.weight 0.66, layers.0.w_out.weight 0.63, mems.7.v_in.weight 0.56
+gradient spike at step 126302: gn 6.50 (median 0.38), loss 3.8479; layers.4.w_in.weight 5.90, layers.0.w_out.weight 1.58, mems.0.gain 0.92, layers.0.w_in.bias 0.81 -- update skipped
+gradient spike at step 126317: gn 1.94 (median 0.38), loss 3.8232; layers.2.w_in.weight 1.31, mems.5.kq_in.weight 0.83, layers.0.w_out.weight 0.51, layers.0.w_in.bias 0.40
+gradient spike at step 126348: gn 1.99 (median 0.38), loss 3.8337; mems.11.kq_in.weight 1.08, mems.10.kq_in.weight 0.97, mems.10.v_in.weight 0.53, layers.0.w_out.weight 0.47
+gradient spike at step 126406: gn 2.77 (median 0.39), loss 3.7776; layers.4.w_in.weight 2.55, layers.0.w_out.weight 0.61, layers.0.w_in.bias 0.36, mems.0.gain 0.34
+step 126500 loss 3.7882 kl 0.9330 lr 6.00e-04 gn 0.38 13,115 tok/s mem 28.6GB rate 0.021 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 126673: gn 2.22 (median 0.37), loss 3.7364; mems.9.kq_in.weight 1.39, layers.0.w_in.bias 0.72, mems.8.v_in.weight 0.52, mems.0.gain 0.47
+gradient spike at step 126681: gn 3.44 (median 0.37), loss 3.7339; mems.0.gain 2.90, layers.6.w_in.weight 1.26, layers.0.w_in.bias 0.84, layers.0.w_in.weight 0.38
+gradient spike at step 126713: gn 6.31 (median 0.38), loss 3.7729; mems.9.kq_in.weight 4.89, layers.8.w_out.weight 1.28, layers.7.w_out.weight 1.13, mems.8.kq_in.weight 1.07 -- update skipped
+gradient spike at step 126726: gn 1.97 (median 0.38), loss 3.8309; mems.0.gain 1.83, layers.0.w_in.bias 0.63, head.weight 0.24, layers.0.w_in.weight 0.19
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/292 [00:00<?, ?it/s]Loading weights:   9%|▉         | 26/292 [00:00<00:01, 255.35it/s]Loading weights:  20%|█▉        | 58/292 [00:00<00:00, 262.53it/s]Loading weights:  29%|██▉       | 85/292 [00:00<00:00, 256.05it/s]Loading weights:  40%|████      | 118/292 [00:00<00:00, 270.31it/s]Loading weights:  50%|████▉     | 145/292 [00:00<00:00, 270.04it/s]Loading weights:  61%|██████    | 178/292 [00:00<00:00, 273.13it/s]Loading weights:  71%|███████   | 206/292 [00:00<00:00, 270.92it/s]Loading weights:  82%|████████▏ | 238/292 [00:00<00:00, 274.63it/s]Loading weights:  91%|█████████ | 266/292 [00:00<00:00, 265.11it/s]Loading weights: 100%|██████████| 292/292 [00:01<00:00, 236.38it/s]
+distilling from hf:openai-community/gpt2-medium (weight 0.9, temperature 1.0)
+resumed from step 125000
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+gradient spike at step 125268: gn 2.01 (median 0.35), loss 3.8923; mems.9.kq_in.weight 1.54, layers.0.w_out.weight 0.51, mems.7.v_in.weight 0.31, mems.6.kq_in.weight 0.30
+gradient spike at step 125359: gn 1.81 (median 0.35), loss 3.8065; mems.0.gain 1.25, mems.7.kq_in.weight 0.61, layers.0.w_in.bias 0.60, layers.0.w_out.weight 0.31
+step 125500 loss 3.7977 kl 0.8414 lr 6.00e-04 gn 0.31 27,190 tok/s mem 28.6GB rate 0.021 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 125931: gn 21.03 (median 0.35), loss 3.7224; mems.11.kq_in.weight 10.80, layers.0.w_in.bias 10.78, mems.0.gain 8.63, mems.10.v_in.weight 4.23 -- update skipped
+gradient spike at step 125966: gn 4.32 (median 0.36), loss 3.8280; mems.10.kq_in.weight 3.30, mems.6.kq_in.weight 1.20, mems.0.gain 0.95, layers.0.w_out.weight 0.90 -- update skipped
+step 126000 loss 3.6973 kl 0.8490 lr 6.00e-04 gn 0.47 27,260 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 126183: gn 5.25 (median 0.40), loss 3.6764; mems.0.gain 3.35, layers.0.w_in.bias 3.29, embed.weight 1.51, layers.0.w_in.weight 1.20 -- update skipped
+gradient spike at step 126253: gn 2.20 (median 0.39), loss 3.6814; mems.0.gain 2.07, layers.0.w_in.bias 0.57, head.weight 0.25, mems.11.kq_in.weight 0.17
+gradient spike at step 126283: gn 2.84 (median 0.39), loss 3.7887; mems.11.kq_in.weight 2.18, layers.0.w_out.weight 0.66, mems.10.v_in.weight 0.51, layers.10.w_out.weight 0.46
+gradient spike at step 126459: gn 5.00 (median 0.38), loss 3.7300; layers.0.w_in.bias 3.22, mems.0.gain 3.21, embed.weight 1.20, layers.0.w_in.weight 1.07 -- update skipped
+step 126500 loss 3.6426 kl 0.8329 lr 6.00e-04 gn 0.36 27,218 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 126521: gn 2.29 (median 0.38), loss 3.6455; mems.11.kq_in.weight 1.95, layers.0.w_out.weight 0.43, mems.10.v_in.weight 0.39, head.weight 0.30
+gradient spike at step 126544: gn 5.88 (median 0.38), loss 3.6692; mems.9.kq_in.weight 3.91, mems.7.kq_in.weight 2.27, layers.0.w_out.weight 1.30, mems.8.kq_in.weight 1.27 -- update skipped
+gradient spike at step 126671: gn 105.34 (median 0.38), loss 3.7768; mems.11.kq_in.weight 61.51, mems.0.gain 54.56, layers.6.w_in.weight 33.73, layers.0.w_in.bias 27.38 -- update skipped
+gradient spike at step 126710: gn 3.03 (median 0.38), loss 3.7226; mems.11.kq_in.weight 1.98, mems.7.kq_in.weight 0.95, mems.0.gain 0.72, layers.0.w_out.weight 0.68
+gradient spike at step 126906: gn 3.01 (median 0.38), loss 3.7854; mems.11.kq_in.weight 2.15, mems.10.v_in.weight 1.01, mems.10.kq_in.weight 0.64, layers.0.w_out.weight 0.60
+step 127000 loss 3.7790 kl 0.8710 lr 6.00e-04 gn 0.38 27,262 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 127047: gn 3.60 (median 0.39), loss 3.7415; layers.3.w_in.weight 2.72, mems.0.gain 1.21, layers.0.w_in.bias 1.19, mems.8.kq_in.weight 0.89
+gradient spike at step 127211: gn 2.12 (median 0.37), loss 3.7053; mems.0.gain 1.65, layers.0.w_in.bias 1.24, layers.0.w_in.weight 0.32, head.weight 0.26
+step 127500 loss 3.8016 kl 0.8710 lr 6.00e-04 gn 0.31 27,265 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+== eval step 127500 val_loss 3.7666 (EMA weights 3.5990)
+   >> The history of the city|'s current status as a city of Rome dates back to at least the 9th century. It is considered a landmark archaeological site in the area of the city. The site was a settlement in the 6th century BC, and later became known as the Church of the Roman Empire (the Roman emperor). /  / The Roman Empire also formed the Roman Empire, with the empire stretching from the Roman Empire to the empire of the Mediterranean. Although the Romans were not the first to establish a Roman colony, the world was eventually divided. The Roman empire continued to grow, after some time, gradually becoming part of
+   >> In mathematics, a prime number is| a number, and a prime number is a prime number is a prime number. In math, a prime number is a prime number and a prime number is prime. /  /  /  / A prime number is one prime number. To write a prime number, you have to know the prime number which is a prime number. / For more information on prime numbers and their properties, see the following article: / http://www.math.com/a/math/
+   >> Plants need sunlight because| of the fact that the plants do not have enough sunlight. /  /  /  / The plants that are very large are often harvested in the winter and spring, not because of their nutrient and chemical need but because the plants cannot survive in the hot climate. / The plants that are large in hot climates are called "homes" or "homes" because they are able to make heat that can be used in the summer. / They have a lot of other plant species but they can be very hardy in cold climates. / Some types of plants are hardy and require more heat than others because
+gradient spike at step 127830: gn 5.38 (median 0.36), loss 3.7181; mems.11.kq_in.weight 4.28, mems.10.v_in.weight 1.39, layers.0.w_out.weight 1.38, mems.10.w_out.weight 1.06 -- update skipped
+gradient spike at step 127882: gn 1.97 (median 0.36), loss 3.7455; mems.11.kq_in.weight 1.28, mems.6.kq_in.weight 0.80, layers.0.w_out.weight 0.58, embed.weight 0.40
+step 128000 loss 3.8352 kl 0.8643 lr 6.00e-04 gn 0.42 27,244 tok/s mem 28.6GB rate 0.021 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 128382: gn 11.44 (median 0.35), loss 3.7450; mems.10.kq_in.weight 10.70, layers.0.w_out.weight 1.53, layers.9.w_out.weight 1.15, layers.8.w_out.weight 1.06 -- update skipped
+gradient spike at step 128399: gn 2.00 (median 0.35), loss 3.6727; mems.11.kq_in.weight 1.84, mems.0.gain 0.29, layers.0.w_in.bias 0.27, head.weight 0.24
+gradient spike at step 128444: gn 2.56 (median 0.35), loss 3.7155; mems.11.kq_in.weight 1.95, layers.0.w_out.weight 0.68, mems.10.v_in.weight 0.55, mems.0.gain 0.50
+gradient spike at step 128476: gn 2.72 (median 0.35), loss 3.6741; mems.11.kq_in.weight 2.59, mems.10.v_in.weight 0.29, mems.6.kq_in.weight 0.26, head.weight 0.26
+gradient spike at step 128491: gn 1.88 (median 0.36), loss 3.6957; mems.0.gain 1.64, layers.0.w_in.bias 0.77, head.weight 0.27, layers.0.w_in.weight 0.24
+step 128500 loss 3.7448 kl 0.8800 lr 6.00e-04 gn 0.43 27,243 tok/s mem 28.6GB rate 0.021 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 128541: gn 2.10 (median 0.37), loss 3.7273; mems.11.kq_in.weight 1.72, layers.0.w_out.weight 0.39, mems.10.v_in.weight 0.34, layers.10.w_out.weight 0.29
+gradient spike at step 128619: gn 2.94 (median 0.37), loss 3.8302; mems.11.kq_in.weight 2.79, mems.10.v_in.weight 0.38, mems.0.gain 0.33, head.weight 0.25
+gradient spike at step 128675: gn 1.87 (median 0.37), loss 3.6915; layers.3.w_in.weight 1.71, layers.0.w_out.weight 0.40, mems.0.gain 0.31, head.weight 0.29
+gradient spike at step 128889: gn 3.47 (median 0.35), loss 3.7180; mems.0.gain 2.15, mems.9.kq_in.weight 2.12, layers.0.w_in.bias 0.89, layers.0.w_out.weight 0.47
+gradient spike at step 128937: gn 1.87 (median 0.35), loss 3.6858; mems.10.kq_in.weight 1.02, mems.6.kq_in.weight 0.94, layers.0.w_out.weight 0.47, head.weight 0.29
+step 129000 loss 3.7309 kl 0.8324 lr 6.00e-04 gn 0.35 27,239 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 129032: gn 3.40 (median 0.35), loss 3.6985; mems.6.kq_in.weight 2.44, mems.10.kq_in.weight 1.72, layers.0.w_out.weight 0.66, embed.weight 0.40
+gradient spike at step 129269: gn 4.43 (median 0.36), loss 3.7980; mems.11.kq_in.weight 2.84, mems.10.kq_in.weight 1.87, mems.10.v_in.weight 0.95, layers.0.w_out.weight 0.94 -- update skipped
+gradient spike at step 129350: gn 3.17 (median 0.35), loss 3.6437; mems.5.kq_in.weight 2.05, layers.0.w_out.weight 1.33, layers.3.w_in.weight 0.79, embed.weight 0.74
+gradient spike at step 129384: gn 2.12 (median 0.35), loss 3.7394; layers.4.w_in.weight 1.68, mems.0.gain 0.84, layers.0.w_out.weight 0.55, layers.0.w_in.bias 0.33
+step 129500 loss 3.8178 kl 0.9264 lr 6.00e-04 gn 0.53 27,248 tok/s mem 28.6GB rate 0.021 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+gradient spike at step 129572: gn 3.45 (median 0.35), loss 3.7218; mems.5.kq_in.weight 3.24, layers.0.w_in.bias 0.73, layers.0.w_out.weight 0.38, mems.0.gain 0.31
+gradient spike at step 129967: gn 1.87 (median 0.35), loss 3.7352; mems.5.kq_in.weight 1.52, mems.0.gain 0.68, layers.0.w_out.weight 0.36, layers.2.w_in.weight 0.33
+step 130000 loss 3.6607 kl 0.8268 lr 6.00e-04 gn 0.34 27,262 tok/s mem 28.6GB rate 0.022 [0.03 0.00 0.00 0.01 0.01 0.01 0.01 0.02 0.02 0.03 0.04 0.07]
+== eval step 130000 val_loss 3.7557 (EMA weights 3.5923)
+   >> The history of the city|, or what was the connection it had to it - we're all familiar with the city. We'll try to explain it in another interesting way. /  /  /  / Boatley, / Boatley, / Celeste and Ijernup / A few days after the discovery of a new city in Ijernland, a new city was set up to celebrate the city's history.   / Boatjernland, / A major exhibition in the City of Ijernland, / "The palace has been the site of the great city of Ijernland
+   >> In mathematics, a prime number is| a series of numbers, and a number is a result of the rotation of each other. It is well known that a series of numbers (like the numbers mentioned above) form a series of numbers that are multiplied by a number. The number of numbers in the series is a number of numbers, and the number and the two numbers are not multiplied by a series of numbers. These numbers are divided into three different types of numbers: "Number", "Number", and "Number". /  / When you are in a particular situation, do not divide by a number into two equal numbers, to give numerical
+   >> Plants need sunlight because| sunscreens and plants are much better at blocking the light of the spectrum than when they are too hot to be grown successfully. /  / One of the problems with plants producing plants is that they die easily. Planting them, for example, is not enough, and plants have so few of their root systems that require more direct heat to survive. Plants that survive for a short time in the air are susceptible to diseases. / Planting plants that survive for too long are not too good for plants that need a long time. / Plants that need less than one nutrient in an extended period
