@@ -1,0 +1,30 @@
+queued the next part of runs/g35_r256: job 1164293
+xgpi18 NVIDIA H100 NVL | runs/g35_r256 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --in_rank 256 --accum 4
+params 104.46M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.5912 (EMA weights 4.5007)
+== eval step 5000 val_loss 4.3208 (EMA weights 4.2167)
+== eval step 7500 val_loss 4.1953 (EMA weights 4.1010)
+== eval step 10000 val_loss 4.1146 (EMA weights 4.0295)
+params 104.46M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 4.0364 (EMA weights 3.9771)
+== eval step 15000 val_loss 3.9760 (EMA weights 3.9403)
+== eval step 17500 val_loss 3.9372 (EMA weights 3.9173)
+== eval step 20000 val_loss 3.9155 (EMA weights 3.9028)
+hellaswag        acc 0.2667  acc_norm 0.2667
+lambada_openai   perplexity 7774.8804  acc 0.0388
+piqa             acc 0.5745  acc_norm 0.5658
+arc_easy         acc 0.4348  acc_norm 0.3779
+arc_challenge    acc 0.1775  acc_norm 0.2167
+winogrande       acc 0.4822
+hellaswag        acc 0.2674  acc_norm 0.2657
+lambada_openai   perplexity 7658.3771  acc 0.0373
+piqa             acc 0.5778  acc_norm 0.5582
+arc_easy         acc 0.4196  acc_norm 0.3746
+arc_challenge    acc 0.1689  acc_norm 0.2235
+winogrande       acc 0.5020
+ "val_loss": 3.9270387993796447,
+g35_r256                 snn  104.5M  8-bit  104.5 MB  dense MACs   42.1M + sparse adds  1.54M  state 1327.1 KB  MB/token 8-bit: 1 stream   43.2, 16 streams   3.6  (rate 0.052)
+  weights rounded to 8 bits: "val_loss": 3.9140943388052616,
+  weights rounded to 4 bits: "val_loss": 4.0720444570366565,
+done Thu Nov 19 03:52:56 AM +08 2026
