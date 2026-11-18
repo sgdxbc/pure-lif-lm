@@ -174,6 +174,8 @@ python3 train.py --device cuda --out runs/my_snn \
 - `--accum n`：把每个批次分成 n 份依次计算、梯度相加（显存约降为 1/n，结果和不分时相同，只是慢一些）。不能和 `--carry_state` 同用。
 
 **数据**：`--data 目录 --tokenizer 文件`（见上面的表）。Transformer 另有 `--rope`（旋转位置编码），最长长度取 1024 和 `--seq` 中较大的一个。
+`--attn linear`（5.47 节）：把每一层的 softmax 注意力换成带门控的线性注意力（状态大小固定、不随文本变长，没有位置编码），
+作为"非脉冲、但同样只有固定大小状态"的对照组。
 
 ## 试用最早的模型
 

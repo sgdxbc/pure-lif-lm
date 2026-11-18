@@ -106,6 +106,8 @@ def get_args():
     p.add_argument("--data", default="data", help="directory with train.bin / valid.bin (e.g. data/pg19)")
     p.add_argument("--tokenizer", default="tok4096.json", help="tokenizer file in --data")
     p.add_argument("--rope", action="store_true", help="tf: rotary position embedding instead of learned positions")
+    p.add_argument("--attn", default="softmax", choices=["softmax", "linear"],
+                   help="tf: linear = gated linear attention, a fixed-size state (model_tf.py; docs 5.47)")
     p.add_argument("--optim", default="adamw", choices=["adamw", "muon"])
     p.add_argument("--muon_momentum", type=float, default=0.95)
     p.add_argument("--muon_skip", default="", help="with --optim muon: comma-separated name parts of 2-D weights "
@@ -305,7 +307,7 @@ def main():
     if a.arch == "tf":
         from model_tf import GPT, TFConfig
         cfg = TFConfig(vocab=a.vocab, d_model=a.d_model, n_layers=a.n_layers, n_heads=a.n_heads,
-                       max_len=max(1024, a.seq), rope=a.rope)
+                       max_len=max(1024, a.seq), rope=a.rope, attn=a.attn)
         model = GPT(cfg)
     else:
         cfg = Config(**{f.name: getattr(a, f.name) for f in fields(Config)})
