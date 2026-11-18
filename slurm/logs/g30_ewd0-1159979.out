@@ -1,0 +1,39 @@
+queued the next part of runs/g30_ewd0: job 1160491
+xgpi20 NVIDIA H100 NVL | runs/g30_ewd0 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 37500 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --schedule wsd --decay_steps 7500 --min_lr_frac 0 --d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_keys 256 --mem_tau_min 1 --accum 4 --embed_wd 0
+== eval step 5000 val_loss 4.2131 (EMA weights 4.0967)
+== eval step 7500 val_loss 4.0795 (EMA weights 3.9441)
+== eval step 10000 val_loss 4.0097 (EMA weights 3.8654)
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+Traceback (most recent call last):
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 1.54 GiB. GPU 0 has a total capacity of 93.09 GiB of which 323.00 MiB is free. Process 2888103 has 72.33 GiB memory in use. Including non-PyTorch memory, this process has 20.35 GiB memory in use. Of the allocated memory 18.82 GiB is allocated by PyTorch, and 881.51 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 3.9584 (EMA weights 3.8160)
+== eval step 15000 val_loss 3.9339 (EMA weights 3.7821)
+== eval step 17500 val_loss 3.8985 (EMA weights 3.7578)
+== eval step 20000 val_loss 3.8810 (EMA weights 3.7383)
+== eval step 22500 val_loss 3.8644 (EMA weights 3.7221)
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 25000 val_loss 3.8539 (EMA weights 3.7073)
+== eval step 27500 val_loss 3.8382 (EMA weights 3.6962)
+== eval step 30000 val_loss 3.8202 (EMA weights 3.6839)
+== eval step 32500 val_loss 3.7050 (EMA weights 3.6560)
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 35000 val_loss 3.6501 (EMA weights 3.6309)
+== eval step 37500 val_loss 3.6228 (EMA weights 3.6207)
+hellaswag        acc 0.2709  acc_norm 0.2719
+lambada_openai   perplexity 2102.4335  acc 0.0928
+piqa             acc 0.5832  acc_norm 0.5767
+arc_easy         acc 0.4625  acc_norm 0.4032
+arc_challenge    acc 0.1928  acc_norm 0.2363
+winogrande       acc 0.5264
+hellaswag        acc 0.2698  acc_norm 0.2722
+lambada_openai   perplexity 2079.6138  acc 0.0928
+piqa             acc 0.5783  acc_norm 0.5767
+arc_easy         acc 0.4625  acc_norm 0.4053
+arc_challenge    acc 0.1877  acc_norm 0.2449
+winogrande       acc 0.5185
+ "val_loss": 3.6343794870059183,
+g30_ewd0                 snn  274.8M  8-bit  274.8 MB  dense MACs  174.2M + sparse adds  1.95M  state 5013.5 KB  MB/token 8-bit: 1 stream  174.3, 16 streams  11.8  (rate 0.032)
+  weights rounded to 8 bits: "val_loss": 3.6327783455191915,
+  weights rounded to 4 bits: "val_loss": 3.736769317103482,
+done Wed Nov 18 11:56:58 AM +08 2026

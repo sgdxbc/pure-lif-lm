@@ -1,0 +1,1 @@
+g30_ewd0                 snn  274.8M  8-bit  274.8 MB  dense MACs  174.2M + sparse adds  1.95M  state 5013.5 KB  MB/token 8-bit: 1 stream  174.3, 16 streams  11.8  (rate 0.032)
