@@ -7,6 +7,9 @@
 //   ./hw_ref DIR WINDOWS.bin N LEN [OUT_LOGP.bin]
 // WINDOWS.bin: int32 tokens, N windows of LEN + 1 tokens; each window is read from rest (all potentials and synapses
 // zero), and log P(token t+1) is computed for t = 0..LEN-1. OUT_LOGP.bin: those N x LEN values (float64).
+// For checking the FPGA kernel (fpga/csim.sh): HWREF_BUS=FILE writes the bus after the last layer at every step
+// (N x LEN x d int32), HWREF_GREEDY=FILE the greedy prediction after every step (N x LEN int32: the most likely
+// short-list or class neuron, then the most likely word of that class; the first one on ties).
 //
 // Rounding: float -> integer is floor(x + 0.5f) in float32; an integer product with a 16-bit fraction is
 // (x + 2^15) >> 16. float32 sums run in the order written (no fused multiply-add: -ffp-contract=off).
@@ -303,6 +306,31 @@ static double logp(const Net& n, Stream& st, int target) {
   return lc + (double)st.y2[slot - n.S_short - (int)r0] - lse(st.y2.data(), n.M, T.u8("used") + r0);
 }
 
+// greedy prediction from the readout's input (st.a): the most likely short-list or class neuron, then the most likely
+// word of that class (first on ties); plain readout: the most likely word
+static int greedy(const Net& n, Stream& st, const std::vector<int>& short_word, const std::vector<int>& class_word) {
+  const Tables& T = n.T;
+  if (n.C == 0) {
+    matvec(T.i8("h_w"), T.f32("h_comb"), st.a.data(), n.vocab, n.d, n.gof(n.d), st.y.data());
+    return (int)(std::max_element(st.y.begin(), st.y.begin() + n.vocab) - st.y.begin());
+  }
+  int top = n.S_short + n.C;
+  matvec(T.i8("h_cls_w"), T.f32("h_cls_comb"), st.a.data(), top, n.d, n.gof(n.d), st.y.data());
+  int best = 0;
+  for (int i = 1; i < top; i++) if (st.y[i] > st.y[best]) best = i;
+  if (best < n.S_short) return short_word[best];
+  int c = best - n.S_short;
+  size_t r0 = (size_t)c * n.M;
+  matvec(T.i8("h_word_w") + r0 * n.d, T.f32("h_word_comb") + r0 * (n.d / n.gof(n.d)), st.a.data(), n.M, n.d,
+         n.gof(n.d), st.y2.data());
+  int bp = -1;
+  for (int p = 0; p < n.M; p++) {
+    if (class_word[r0 + p] < 0) continue;
+    if (bp < 0 || st.y2[p] > st.y2[bp]) bp = p;
+  }
+  return class_word[r0 + bp];
+}
+
 int main(int argc, char** argv) {
   if (argc < 5) { fprintf(stderr, "usage: %s DIR WINDOWS.bin N LEN [OUT_LOGP.bin]\n", argv[0]); return 1; }
   Tables T;
@@ -314,14 +342,30 @@ int main(int argc, char** argv) {
   if (!f || fread(tok.data(), 4, tok.size(), f) != tok.size()) { fprintf(stderr, "cannot read %s\n", argv[2]); return 1; }
   fclose(f);
   std::vector<double> lp((size_t)N * LEN);
+  const char* bus_out = getenv("HWREF_BUS");
+  const char* greedy_out = getenv("HWREF_GREEDY");
+  std::vector<int32_t> bus_dump(bus_out ? (size_t)N * LEN * net.d : 0), gr(greedy_out ? (size_t)N * LEN : 0);
+  std::vector<int> short_word(net.S_short, -1), class_word((size_t)net.C * net.M, -1);
+  if (net.C) {
+    const int32_t* wc = T.i32("word_cls");
+    const int32_t* sl = T.i32("slot");
+    for (int v = 0; v < net.vocab; v++) {
+      if (wc[v] < 0) short_word[sl[v]] = v;
+      else class_word[sl[v] - net.S_short] = v;
+    }
+  }
 #pragma omp parallel for schedule(dynamic, 1)
   for (int w = 0; w < N; w++) {
     Stream st(net);
     for (int t = 0; t < LEN; t++) {
       step(net, st, tok[(size_t)w * (LEN + 1) + t]);
+      if (bus_out) std::copy(st.bus.begin(), st.bus.end(), bus_dump.begin() + ((size_t)w * LEN + t) * net.d);
       lp[(size_t)w * LEN + t] = logp(net, st, tok[(size_t)w * (LEN + 1) + t + 1]);
+      if (greedy_out) gr[(size_t)w * LEN + t] = greedy(net, st, short_word, class_word);
     }
   }
+  if (bus_out) { FILE* o = fopen(bus_out, "wb"); fwrite(bus_dump.data(), 4, bus_dump.size(), o); fclose(o); }
+  if (greedy_out) { FILE* o = fopen(greedy_out, "wb"); fwrite(gr.data(), 4, gr.size(), o); fclose(o); }
   double tot = 0;
   for (double v : lp) tot -= v;
   printf("windows %d x %d tokens: loss %.6f\n", N, LEN, tot / lp.size());
