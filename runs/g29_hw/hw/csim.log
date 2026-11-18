@@ -1,0 +1,4 @@
+kernel: 4 streams x 16 steps done
+kernel: 4 streams x 16 steps done
+teacher forcing, 4 streams x 16 steps: bus identical: True (0 of 49152 values differ); greedy predictions identical: True
+generation from 4 prompt tokens: hw_ref predicts the kernel's 13 generated tokens exactly: True
