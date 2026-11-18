@@ -31,6 +31,13 @@ typedef ap_uint<512> word_t;
 #define MAXO (MAXO_A > 2 * NH * MK ? MAXO_A : 2 * NH * MK)
 #define HM (NH * MK)
 #define HD (NH * DV)
+#define AMAX ((1 << (AB - 1)) - 1)   // activations: AB-bit integers (pack.py from hw_export.py --a_bits)
+typedef int16_t act_t;
+#if SB <= 16                         // the plastic synapses' storage (SB bits, hw_export.py --s_bits)
+typedef int16_t s_t;
+#else
+typedef int32_t s_t;
+#endif
 
 static inline int64_t rnd(float x) { return (int64_t)floorf(x + 0.5f); }
 static inline int64_t rshift16(int64_t x) { return (x + ((int64_t)1 << 15)) >> 16; }
@@ -45,7 +52,7 @@ static inline float pf(long i) { return f32_of(P[i]); }
 static inline int32_t pi(long i) { return (int32_t)P[i]; }
 
 // y[b][o] = sum over the groups, in order, of (float)(integer sum of the group) * comb, for streams b < ns
-static void matvec(const word_t* w, long off, int O, int I, int bits, int ns, int8_t act[NB][MAXI],
+static void matvec(const word_t* w, long off, int O, int I, int bits, int ns, act_t act[NB][MAXI],
                    float y[NB][MAXO]) {
   const int ng = (I + 127) / 128, nb = (O + RB - 1) / RB, wpg = bits == 4 ? 1 : 2;
   long p = off;
@@ -84,11 +91,11 @@ blocks:
   }
 }
 
-static void act_from_bus(const int32_t bus[D], long ainv, int8_t a[MAXI]) {
-  for (int c = 0; c < D; c++) a[c] = (int8_t)clampi(rnd((float)bus[c] * pf(ainv + c / 128)), -127, 127);
+static void act_from_bus(const int32_t bus[D], long ainv, act_t a[MAXI]) {
+  for (int c = 0; c < D; c++) a[c] = (act_t)clampi(rnd((float)bus[c] * pf(ainv + c / 128)), -AMAX, AMAX);
 }
-static void act_from_float(const float* x, long ainv, int n, int g, int8_t* a) {
-  for (int c = 0; c < n; c++) a[c] = (int8_t)clampi(rnd(x[c] * pf(ainv + c / g)), -127, 127);
+static void act_from_float(const float* x, long ainv, int n, int g, act_t* a) {
+  for (int c = 0; c < n; c++) a[c] = (act_t)clampi(rnd(x[c] * pf(ainv + c / g)), -AMAX, AMAX);
 }
 static void add_to_bus(int32_t bus[D], const float* y) {
   for (int c = 0; c < D; c++) bus[c] = (int32_t)clampi((int64_t)bus[c] + rnd(y[c]), INT32_MIN, INT32_MAX);
@@ -114,10 +121,10 @@ static void lif(int n, const float* I, int32_t* v, long betap, const int32_t* be
 // state of the NB streams
 static int32_t V[NB][NL][H];
 static int32_t KQ[NB][NL][2 * HM];
-static int16_t S[NB][NL][NH][MK][DV];
+static s_t S[NB][NL][NH][MK][DV];
 static int32_t BUS[NB][D];
 // scratch
-static int8_t ACT[NB][MAXI];
+static act_t ACT[NB][MAXI];
 static float Y[NB][MAXO];
 static float Y2[NB][MAXO];
 static uint8_t SPK[NB][MAXI];
@@ -129,7 +136,7 @@ static int greedy(const word_t* w, const int32_t* aux, int b) {
     if (Y[b][i] > Y[b][best]) best = i;
   if (best < NSHORT) return aux[A_SHORT + best];
   int c = best - NSHORT;
-  static int8_t a1[NB][MAXI];
+  static act_t a1[NB][MAXI];
   static float y1[NB][MAXO];
   for (int k = 0; k < D; k++) a1[0][k] = ACT[b][k];
   matvec(w, W_H_WORD + (long)c * CLASS_WORDS, CM, D, BITS_H_WORD, 1, a1, y1);
@@ -171,19 +178,19 @@ layers:
     for (int b = 0; b < NB; b++) {
       for (int o = 0; o < 2 * HM; o++) Y[b][o] = Y[b][o] + pf(P_M_KQB[l] + o);
       lif(2 * HM, Y[b], KQ[b][l], P_M_KQBETA[l], 0, -1, KQINT[l], SPK[b]);
-      int8_t va[HD];
+      act_t va[HD];
       act_from_float(Y2[b], P_M_VAIN[l], HD, HD % 128 == 0 ? 128 : HD, va);
       float z[HD];
       for (int hh = 0; hh < NH; hh++) {
         int64_t lam = pi(P_M_LAM[l] + hh);
         for (int k = 0; k < MK; k++)
-          for (int ch = 0; ch < DV; ch++) S[b][l][hh][k][ch] = (int16_t)clampi(rshift16(lam * S[b][l][hh][k][ch]), slo, shi);
+          for (int ch = 0; ch < DV; ch++) S[b][l][hh][k][ch] = (s_t)clampi(rshift16(lam * S[b][l][hh][k][ch]), slo, shi);
         for (int k = 0; k < MK; k++) {
           if (!SPK[b][hh * MK + k]) continue;   // key neuron k fired: write its row
           for (int ch = 0; ch < DV; ch++) {
             int cc = hh * DV + ch;
             int64_t vs = rnd((float)va[cc] * pf(P_M_VTOS[l] + cc / (HD % 128 == 0 ? 128 : HD)));
-            S[b][l][hh][k][ch] = (int16_t)clampi(S[b][l][hh][k][ch] + vs, slo, shi);
+            S[b][l][hh][k][ch] = (s_t)clampi(S[b][l][hh][k][ch] + vs, slo, shi);
           }
         }
         int64_t r[DV];
@@ -221,7 +228,7 @@ layers:
         betas[o] = pi(P_SIG + clampi(rnd((pf(P_P_BLOGIT[l] + o) + Y2[b][o]) * sc), -SIGN, SIGN) + SIGN);
       }
       lif(H, Y[b], V[b][l], -1, betas, P_P_G1[l], VINT[l], SPK[b]);
-      for (int o = 0; o < H; o++) ACT[b][o] = (int8_t)SPK[b][o];   // W_out's input: the spikes, 0 or 1
+      for (int o = 0; o < H; o++) ACT[b][o] = (act_t)SPK[b][o];   // W_out's input: the spikes, 0 or 1
     }
     matvec(w, W_P_OUT[l], D, H, BITS_P_OUT[l], NB, ACT, Y);
     for (int b = 0; b < NB; b++) add_to_bus(BUS[b], Y[b]);

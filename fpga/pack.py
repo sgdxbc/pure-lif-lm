@@ -172,7 +172,8 @@ def main():
          "#pragma once",
          f"#define D {d}\n#define H {H}\n#define NL {L}\n#define R {R}\n#define NH {nh}\n#define MK {mk}\n#define DV {dv}",
          f"#define VOCAB {V}\n#define NSHORT {S}\n#define NCLS {C}\n#define CM {M}\n#define NCODE {code.shape[1]}",
-         f"#define BF {int(P['BF'])}\n#define VB {int(P['V_BITS'])}\n#define SB {int(P['S_BITS'])}",
+         f"#define BF {int(P['BF'])}\n#define VB {int(P['V_BITS'])}\n#define SB {int(P['S_BITS'])}\n"
+         f"#define AB {int(P.get('A_BITS', 8))}",
          f"#define SIGSTEP {int(P['SIG_STEP'])}\n#define SIGN ({int(P['SIG_RANGE'])} << SIGSTEP)",
          f"#define MEM_EPS {float(P['mem_eps'])!r}f",
          f"#define RB {RB}\n#define NWORDS {nwords[0]}L\n#define NPARAMS {sum(len(x) for x in prm)}L",

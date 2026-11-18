@@ -72,16 +72,19 @@ static inline int64_t rnd(float x) { return (int64_t)std::floor(x + 0.5f); }
 static inline int64_t rshift16(int64_t x) { return (x + (int64_t(1) << 15)) >> 16; }
 static inline int64_t clampi(int64_t x, int64_t lo, int64_t hi) { return x < lo ? lo : (x > hi ? hi : x); }
 
-// int8 activations, one scale per group of g channels: a = clamp(round(x * ainv[group]), -127, 127)
-static void act_from_bus(const int32_t* bus, const float* ainv, int n, int g, int8_t* a) {
-  for (int c = 0; c < n; c++) a[c] = (int8_t)clampi(rnd((float)bus[c] * ainv[c / g]), -127, 127);
+// activations: A_BITS-bit integers (stored as int16), one scale per group of g channels:
+// a = clamp(round(x * ainv[group]), -AMAX, AMAX), AMAX = 2^(A_BITS-1) - 1
+typedef int16_t act_t;
+static int AMAX = 127;
+static void act_from_bus(const int32_t* bus, const float* ainv, int n, int g, act_t* a) {
+  for (int c = 0; c < n; c++) a[c] = (act_t)clampi(rnd((float)bus[c] * ainv[c / g]), -AMAX, AMAX);
 }
-static void act_from_float(const float* x, const float* ainv, int n, int g, int8_t* a) {
-  for (int c = 0; c < n; c++) a[c] = (int8_t)clampi(rnd(x[c] * ainv[c / g]), -127, 127);
+static void act_from_float(const float* x, const float* ainv, int n, int g, act_t* a) {
+  for (int c = 0; c < n; c++) a[c] = (act_t)clampi(rnd(x[c] * ainv[c / g]), -AMAX, AMAX);
 }
 
 // y[o] = sum over the groups, in order, of (float)(integer sum of the group) * comb[o][group]
-static void matvec(const int8_t* w, const float* comb, const int8_t* a, int O, int I, int g, float* y) {
+static void matvec(const int8_t* w, const float* comb, const act_t* a, int O, int I, int g, float* y) {
   int ng = I / g;
   for (int o = 0; o < O; o++) {
     const int8_t* wr = w + (size_t)o * I;
@@ -107,6 +110,8 @@ struct Net {
     SIGSTEP = T.pi("SIG_STEP"); N = T.pi("SIG_RANGE") << SIGSTEP; hard = T.pi("hard_reset");
     S_short = T.pi("out_short"); C = T.pi("out_classes"); vocab = T.pi("vocab"); eps = T.pf("mem_eps");
     M = C > 0 ? T.pi("class_m") : 0;
+    AMAX = (T.p.count("A_BITS") ? (int)T.pi("A_BITS") : 8);
+    AMAX = (1 << (AMAX - 1)) - 1;
     nrows_code = T.dim("code", 1);
     memlayer.assign(L, -1);
     nmem = 0;
@@ -126,7 +131,7 @@ struct Stream {
   std::vector<int32_t> KQ;     // nmem x 2hm key and query potentials
   std::vector<int32_t> S;      // nmem x h x m x dv plastic synapses
   std::vector<int32_t> bus;
-  std::vector<int8_t> a, a2;
+  std::vector<act_t> a, a2;
   std::vector<float> y, y2, z;
   std::vector<uint8_t> spk;
   std::vector<int64_t> r;

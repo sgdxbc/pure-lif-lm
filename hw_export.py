@@ -8,7 +8,8 @@ What the hardware computes for one token of one stream (hw_ref.cpp is the exact 
            Start: the sum of the word's input rows (in_groups: two rows, or one own row for a short-list word).
   matrices every weight matrix as int8 values (4-bit or 8-bit range, as trained) with one float32 scale per output row
            and group of 128 inputs (per row when 128 does not divide the inputs). A matrix-vector product: the input
-           is rounded to int8 with one scale per group of 128 channels (A8g128; calibrated, static), each group's
+           is rounded to A_BITS-bit integers (8, or wider) with one scale per group of 128 channels (A8g128; calibrated,
+           static), each group's
            integer sum (int32, exact) is multiplied by one float32 "comb" = weight scale x activation scale (x any
            constant folded in: 1/threshold, 2^BF, (1 - lambda)), and the groups are summed in order in float32.
   neurons  potentials in V-bit fixed point (V_BITS, integer bits from the calibration, threshold folded so they fire at
@@ -49,11 +50,14 @@ def int_weights(w, bits):
     return q.to(torch.int8).numpy(), s.numpy().astype(np.float64), g
 
 
+A_BITS = 8      # activations (matrix inputs): signed integers of this many bits (export(a_bits=...))
+
+
 def act_scale(amax, n):
     """Per-group (G channels) activation scales of n channels from per-channel maxima (one group if G does not divide)."""
     amax = amax.detach().float().cpu().numpy().astype(np.float64)
     g = G if n % G == 0 else n
-    return amax.reshape(n // g, g).max(-1).clip(min=1e-12) / 127.0, g
+    return amax.reshape(n // g, g).max(-1).clip(min=1e-12) / (2 ** (A_BITS - 1) - 1), g
 
 
 class Writer:
@@ -81,7 +85,9 @@ def b16(x):
 
 
 @torch.no_grad()
-def export(model, cal, out, v_bits=24, s_bits=16):
+def export(model, cal, out, v_bits=24, s_bits=16, a_bits=8):
+    global A_BITS
+    A_BITS = a_bits
     c = model.cfg
     assert c.steps_per_token == 1, "one step per token"
     os.makedirs(out, exist_ok=True)
@@ -94,7 +100,7 @@ def export(model, cal, out, v_bits=24, s_bits=16):
                [float(x.max()) for x in (cal.get("mem_bus") or [])])
     bus_int = max(0, math.ceil(math.log2(bmax * 1.25)))
     BF = 30 - bus_int
-    for k, v in dict(d=d, H=H, L=L, vocab=c.vocab, BF=BF, V_BITS=v_bits, S_BITS=s_bits, BETA_BITS=BETA_BITS,
+    for k, v in dict(d=d, H=H, L=L, vocab=c.vocab, BF=BF, V_BITS=v_bits, S_BITS=s_bits, A_BITS=a_bits, BETA_BITS=BETA_BITS,
                      SIG_STEP=SIG_STEP, SIG_RANGE=SIG_RANGE, G=G, hard_reset=int(c.hard_reset),
                      leak_rank=c.leak_rank, mem_heads=c.mem_heads, mem_keys=c.mem_keys, mem_dv=c.mem_dv,
                      mem_eps=c.mem_eps, out_classes=c.out_classes, out_short=c.out_short,
@@ -207,7 +213,8 @@ def main():
     p.add_argument("--device", default="cpu")
     p.add_argument("--out", default="")
     p.add_argument("--v_bits", type=int, default=24)
-    p.add_argument("--s_bits", type=int, default=16)
+    p.add_argument("--s_bits", type=int, default=16, help="plastic synapses S (at most 24)")
+    p.add_argument("--a_bits", type=int, default=8, help="activations, the matrices' inputs (at most 15)")
     p.add_argument("--windows", type=int, default=0, help="also write OUT/windows.bin: quant_sim.py's N validation "
                    "windows of 256 tokens (int32, N x 257: each window and its last target), for hw_ref")
     a = p.parse_args()
@@ -217,7 +224,7 @@ def main():
     xc, _ = Q.windows(16, 256, 128, a.device, args.get("data", "data"))
     Q.run(model, xc, {}, rec=rec)
     out = a.out or os.path.join(a.run, "hw")
-    BF = export(model, Q.calibrate(rec), out, a.v_bits, a.s_bits)
+    BF = export(model, Q.calibrate(rec), out, a.v_bits, a.s_bits, a.a_bits)
     if a.windows:
         x, y = Q.windows(a.windows, 256, 0, "cpu", args.get("data", "data"))
         torch.cat([x, y[:, -1:]], 1).numpy().astype(np.int32).tofile(os.path.join(out, "windows.bin"))
