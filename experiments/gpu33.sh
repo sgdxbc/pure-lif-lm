@@ -4,6 +4,7 @@
 #   bash experiments/gpu33.sh [NAME]   the three small Transformers (training), or only NAME (tf31, tf50 or tf77),
 #                                      e.g. GPU=a100-80 bash experiments/gpu33.sh tf50 to put one on another card type
 #   bash experiments/gpu33.sh bench    their shapes measured on the GPU with vLLM (bench_gpu.py --model shape:D,L,H)
+#   bash experiments/gpu33.sh bench_big   the small shapes again at 256, 1,024 and 4,096 streams
 # The hardware network g29_hw (121M, 4-bit weights, fits on chip) reaches 3.753 after 2.46B tokens, and fpga_est.py
 # estimates 131k tokens/s and 1.45 mJ per token for it on an AMD V80. The only Transformers measured on the GPU so far
 # are GPT-2 124M and larger (3.277 on this validation set): far better, so not a comparison at the same quality.
@@ -28,6 +29,15 @@ if [ "$1" = "bench" ]; then
   j=$(sbatch --parsable -J bench_gpu33 --gres=gpu:h100-96:1 slurm/bench_gpu.sbatch \
       shape:256,6,4 shape:384,6,6 shape:512,8,8 shape:768,12,12)
   echo "$j bench_gpu33 (h100-96): shapes 256/6, 384/6, 512/8 and 768/12 (GPT-2 124M's)"
+  exit 0
+fi
+# bench_big: the three small shapes at 256, 1,024 and 4,096 streams (5.43: at 256 streams these small models leave the
+# H100 nearly idle, 114-125 W, and every shape takes the same 3.7 ms per step; the comparison takes the Transformer's
+# best numbers, so more streams). Writes runs/bench_gpu/<gpu>_gpt2shape_..._big.json.
+if [ "$1" = "bench_big" ]; then
+  j=$(BENCH_ARGS="--batches 256,1024,4096 --suffix _big" sbatch --parsable -J bench_gpu33b --gres=gpu:h100-96:1 \
+      slurm/bench_gpu.sbatch shape:256,6,4 shape:384,6,6 shape:512,8,8)
+  echo "$j bench_gpu33b (h100-96): shapes 256/6, 384/6, 512/8 at 256, 1024 and 4096 streams"
   exit 0
 fi
 [ -s runs/g13_tf163/ckpt.pt ] || { echo "runs/g13_tf163/ckpt.pt missing"; exit 1; }

@@ -10,8 +10,8 @@ energy counter updates only every few tens of milliseconds and a single short ru
 differences. Prompts are random token ids, different in every call, with prefix caching off. Energy is the whole
 board's (also reported above the idle power); the GPU only, no CPU, host memory or cooling.
 Needs vllm and nvidia-ml-py (a separate venv, slurm/bench_gpu.sbatch). From the repository root:
-  python3 bench_gpu.py --model openai-community/gpt2 [--batches 1,4,16,64,256] [--contexts 128,896] [--gen 128]
-writes runs/bench_gpu/<gpu>_<model>.json
+  python3 bench_gpu.py --model openai-community/gpt2 [--batches 1,4,16,64,256] [--contexts 128,896] [--gen 128] [--suffix S]
+writes runs/bench_gpu/<gpu>_<model>[S].json
   python3 bench_gpu.py --model shape:D,L,H
 measures a GPT-2 of that shape (width D, L blocks, H heads, GPT-2's 50,257-word vocabulary, 1,024 positions) with
 random weights (vLLM load_format "dummy"; GPT-2's tokenizer, which vLLM requires although only token ids go in and
@@ -32,6 +32,7 @@ def main():
     p.add_argument("--batches", default="1,4,16,64,256")
     p.add_argument("--contexts", default="", help="default: 128 and the longest that fits with --gen")
     p.add_argument("--gen", type=int, default=128)
+    p.add_argument("--suffix", default="", help="appended to the output file's name (e.g. for a second set of batches)")
     p.add_argument("--min_seconds", type=float, default=10.0,
                    help="each measurement repeats the generation for at least this long (energy counter resolution)")
     a = p.parse_args()
@@ -57,6 +58,8 @@ def main():
                    bos_token_id=50256, eos_token_id=50256).save_pretrained(model)
         # vLLM 0.33 needs a tokenizer even when only token ids are used (skip_tokenizer_init fails in its constructor)
         extra, tag = dict(load_format="dummy", tokenizer="openai-community/gpt2"), f"gpt2shape_d{D}_l{L}_h{H}"
+    if max(batches) > 2048:   # let one decode step hold every stream (vLLM's default token budget per step is smaller)
+        extra["max_num_batched_tokens"] = max(16384, max(batches))
     cfg = AutoConfig.from_pretrained(model)
     max_len = getattr(cfg, "max_position_embeddings", None) or getattr(cfg, "n_positions", 1024)
     vocab = cfg.vocab_size
@@ -108,7 +111,7 @@ def main():
                   f"(above idle {r['decode_J_per_token_above_idle'] * 1000:.2f}), {r['decode_avg_W']:.0f} W", flush=True)
     out = os.path.join(HERE, "runs", "bench_gpu")
     os.makedirs(out, exist_ok=True)
-    name = f"{gpu.replace(' ', '_')}_{tag}.json"
+    name = f"{gpu.replace(' ', '_')}_{tag}{a.suffix}.json"
     json.dump({"model": a.model, "gpu": gpu, "idle_W": idle_w, "max_model_len": max_len, "rows": rows,
                "vllm": __import__("vllm").__version__}, open(os.path.join(out, name), "w"), indent=1)
     print("wrote", os.path.join(out, name), f"(idle {idle_w:.0f} W)")
