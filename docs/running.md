@@ -81,6 +81,7 @@ python3 train.py --device cuda --out runs/my_snn \
 | `experiments/wbits_sens.py runs/X` | 哪类权重矩阵取整到 4 位损失最大；把最敏感的几类留在 8 位时的损失和多用的存储（5.38） |
 | `fpga_est.py runs/X [--device u55c --cards 2]` | 脉冲网络在 FPGA 上的延迟、吞吐量和能耗估算（默认 AMD Alveo V80 的参数，5.25；U55C 和多卡流水线见 5.44） |
 | `bench_gpu.py --model 名字` | Transformer 在 GPU 上用 vLLM 实测：吞吐量、每 token 延迟、每 token 能耗（5.25） |
+| `bench_gpu_lean.py --shape D,L,H` | 同样的量，但用最简的生成程序（固定大小的键值缓存、CUDA graph），给出 GPU 本身能做到多少的界限（5.43）；`--check` 在 CPU 上核对 |
 
 ## 在 SLURM 集群上
 

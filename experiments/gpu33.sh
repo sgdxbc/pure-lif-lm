@@ -5,6 +5,7 @@
 #                                      e.g. GPU=a100-80 bash experiments/gpu33.sh tf50 to put one on another card type
 #   bash experiments/gpu33.sh bench    their shapes measured on the GPU with vLLM (bench_gpu.py --model shape:D,L,H)
 #   bash experiments/gpu33.sh bench_big   the small shapes again at 256, 1,024 and 4,096 streams
+#   bash experiments/gpu33.sh bench_lean  the small shapes decoded by a minimal program (bench_gpu_lean.py)
 # The hardware network g29_hw (121M, 4-bit weights, fits on chip) reaches 3.753 after 2.46B tokens, and fpga_est.py
 # estimates 131k tokens/s and 1.45 mJ per token for it on an AMD V80. The only Transformers measured on the GPU so far
 # are GPT-2 124M and larger (3.277 on this validation set): far better, so not a comparison at the same quality.
@@ -38,6 +39,14 @@ if [ "$1" = "bench_big" ]; then
   j=$(BENCH_ARGS="--batches 256,1024,4096 --suffix _big" sbatch --parsable -J bench_gpu33b --gres=gpu:h100-96:1 \
       slurm/bench_gpu.sbatch shape:256,6,4 shape:384,6,6 shape:512,8,8)
   echo "$j bench_gpu33b (h100-96): shapes 256/6, 384/6, 512/8 at 256, 1024 and 4096 streams"
+  exit 0
+fi
+# bench_lean: the same shapes decoded by a minimal program (bench_gpu_lean.py: static cache, CUDA graphs, nothing else),
+# 1 to 4,096 streams. vLLM's time per step is the same for every shape (a fixed cost per step and per stream outside
+# the GPU's arithmetic), so this bounds what the GPU itself can do for these small models.
+if [ "$1" = "bench_lean" ]; then
+  j=$(sbatch --parsable -J bench_lean33 --gres=gpu:h100-96:1 slurm/bench_lean.sbatch 256,6,4 384,6,6 512,8,8)
+  echo "$j bench_lean33 (h100-96): shapes 256/6, 384/6, 512/8, minimal decoding program"
   exit 0
 fi
 [ -s runs/g13_tf163/ckpt.pt ] || { echo "runs/g13_tf163/ckpt.pt missing"; exit 1; }
