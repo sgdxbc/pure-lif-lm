@@ -1,0 +1,35 @@
+queued the next part of runs/g33_tf50: job 1163992
+xgpi11 NVIDIA H100 NVL | runs/g33_tf50 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 75000 --warmup 1000 --eval_every 5000 --eval_batches 40 --log_every 500 --schedule wsd --decay_steps 15000 --min_lr_frac 0 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --arch tf --lr 1e-3 --ema 0.999 --d_model 384 --n_layers 6 --n_heads 6 --accum 2
+params 49.65M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 5000 val_loss 4.0763 (EMA weights 3.9828)
+== eval step 10000 val_loss 3.9443 (EMA weights 3.8316)
+== eval step 15000 val_loss 3.8817 (EMA weights 3.7697)
+== eval step 20000 val_loss 3.8525 (EMA weights 3.7372)
+== eval step 25000 val_loss 3.8322 (EMA weights 3.7165)
+== eval step 30000 val_loss 3.8183 (EMA weights 3.7018)
+== eval step 35000 val_loss 3.8100 (EMA weights 3.6911)
+params 49.65M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 40000 val_loss 3.8004 (EMA weights 3.6817)
+== eval step 45000 val_loss 3.7940 (EMA weights 3.6743)
+== eval step 50000 val_loss 3.7880 (EMA weights 3.6688)
+== eval step 55000 val_loss 3.7852 (EMA weights 3.6642)
+== eval step 60000 val_loss 3.7764 (EMA weights 3.6596)
+== eval step 65000 val_loss 3.6797 (EMA weights 3.6267)
+params 49.65M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 70000 val_loss 3.6331 (EMA weights 3.6076)
+== eval step 75000 val_loss 3.6024 (EMA weights 3.6014)
+hellaswag        acc 0.2659  acc_norm 0.2687
+lambada_openai   perplexity 1481.4093  acc 0.1446
+piqa             acc 0.5838  acc_norm 0.5811
+arc_easy         acc 0.4537  acc_norm 0.4019
+arc_challenge    acc 0.1775  acc_norm 0.2278
+winogrande       acc 0.5067
+hellaswag        acc 0.2654  acc_norm 0.2700
+lambada_openai   perplexity 1483.0290  acc 0.1438
+piqa             acc 0.5876  acc_norm 0.5789
+arc_easy         acc 0.4503  acc_norm 0.4036
+arc_challenge    acc 0.1766  acc_norm 0.2287
+winogrande       acc 0.5138
+ "val_loss": 3.613002882623941,
+done Thu Nov 19 01:26:45 AM +08 2026

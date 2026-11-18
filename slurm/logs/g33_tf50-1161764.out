@@ -1,0 +1,3 @@
+queued the next part of runs/g33_tf50: job 1162292
+xgpi11 NVIDIA H100 NVL | runs/g33_tf50 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 75000 --warmup 1000 --eval_every 5000 --eval_batches 40 --log_every 500 --schedule wsd --decay_steps 15000 --min_lr_frac 0 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --arch tf --lr 1e-3 --ema 0.999 --d_model 384 --n_layers 6 --n_heads 6 --accum 2
+[2026-11-18T20:25:43.989] error: *** JOB 1161764 ON xgpi11 CANCELLED AT 2026-11-18T20:25:43 DUE TO TIME LIMIT ***
