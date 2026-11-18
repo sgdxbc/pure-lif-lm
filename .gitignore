@@ -26,3 +26,11 @@ runs/**/hw/tables.bin
 runs/**/hw/windows.bin
 runs/**/hw/logp.bin
 /hw_ref
+# Vitis build outputs and packed tables (fpga/Makefile, fpga/pack.py)
+fpga/build/
+fpga/host_nb*
+fpga/_x/
+fpga/.Xil/
+runs/**/fpga/weights.bin
+runs/**/fpga/params.bin
+runs/**/fpga/aux.bin

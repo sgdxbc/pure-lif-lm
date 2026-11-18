@@ -36,6 +36,8 @@ static inline int64_t rnd(float x) { return (int64_t)floorf(x + 0.5f); }
 static inline int64_t rshift16(int64_t x) { return (x + ((int64_t)1 << 15)) >> 16; }
 static inline int64_t clampi(int64_t x, int64_t lo, int64_t hi) { return x < lo ? lo : (x > hi ? hi : x); }
 static inline float f32_of(uint32_t u) { union { uint32_t u; float f; } c; c.u = u; return c.f; }
+// 2^k as a float, exactly (|k| < 62), without ldexpf
+static inline float pow2f(int k) { return k >= 0 ? (float)((int64_t)1 << k) : 1.0f / (float)((int64_t)1 << -k); }
 
 // on-chip copies of the small tables (params.bin)
 static uint32_t P[NPARAMS];
@@ -97,7 +99,7 @@ static void add_to_bus(int32_t bus[D], const float* y) {
 static void lif(int n, const float* I, int32_t* v, long betap, const int32_t* betas, long g1p, int intb, uint8_t* spk) {
   const int VF = VB - 1 - intb;
   const int64_t lo = -((int64_t)1 << (VB - 1)), hi = ((int64_t)1 << (VB - 1)) - 1, one = (int64_t)1 << VF;
-  const float sc = ldexpf(1.0f, VF);
+  const float sc = pow2f(VF);
   for (int o = 0; o < n; o++) {
     int64_t Ii = clampi(rnd(I[o] * sc), lo, hi);
     int64_t b = betap >= 0 ? pi(betap + o) : betas[o];
@@ -165,7 +167,7 @@ layers:
     matvec(w, W_M_V[l], HD, D, BITS_M_V[l], NB, ACT, Y2);
     const int SF = SB - 1 - SINT[l];
     const int64_t slo = -((int64_t)1 << (SB - 1)), shi = ((int64_t)1 << (SB - 1)) - 1;
-    const float unit = ldexpf(1.0f, -SF);
+    const float unit = pow2f(-SF);
     for (int b = 0; b < NB; b++) {
       for (int o = 0; o < 2 * HM; o++) Y[b][o] = Y[b][o] + pf(P_M_KQB[l] + o);
       lif(2 * HM, Y[b], KQ[b][l], P_M_KQBETA[l], 0, -1, KQINT[l], SPK[b]);
@@ -213,7 +215,7 @@ layers:
     matvec(w, W_P_LO[l], H, R, BITS_P_LO[l], NB, ACT, Y2);
     for (int b = 0; b < NB; b++) {
       static int32_t betas[H];
-      const float sc = ldexpf(1.0f, SIGSTEP);
+      const float sc = pow2f(SIGSTEP);
       for (int o = 0; o < H; o++) {
         Y[b][o] = Y[b][o] + pf(P_P_INB[l] + o);
         betas[o] = pi(P_SIG + clampi(rnd((pf(P_P_BLOGIT[l] + o) + Y2[b][o]) * sc), -SIGN, SIGN) + SIGN);
