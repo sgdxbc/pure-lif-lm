@@ -275,6 +275,7 @@ def main():
     p.add_argument("--windows", type=int, default=256, help="validation windows of 256 tokens")
     p.add_argument("--batch", type=int, default=32)
     p.add_argument("--configs", default="", help="comma-separated subset of the setting names")
+    p.add_argument("--out", default="", help="default: runs/X/quant.json")
     a = p.parse_args()
     dev = torch.device(a.device)
     args = json.load(open(os.path.join(a.run, "args.json")))
@@ -317,7 +318,7 @@ def main():
         res["loss"][name] = loss_of(lambda xb: run(model, xb, q, cal))
         d = res["loss"][name] - res["loss"]["fp32"]
         print(f"{name:22s} {res['loss'][name]:.4f}  ({d:+.4f} vs fp32)", flush=True)
-    json.dump(res, open(os.path.join(a.run, "quant.json"), "w"), indent=1)
+    json.dump(res, open(a.out or os.path.join(a.run, "quant.json"), "w"), indent=1)
 
 
 if __name__ == "__main__":
