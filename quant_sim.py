@@ -265,6 +265,12 @@ def configs_for(cfg):
         out.append(("B16 T10", dict(b=16, bt=10)))
         if cfg.wbits and cfg.mem_heads:
             out.append(("A8g128 V24 B16 T10 S16", dict(full, ag=128, s=16, bt=10)))
+            # 5.44: A8g128 (+0.016) and S16 (+0.012) were the integer reference's two costs; wider activations with
+            # the same group scales, and wider plastic synapses (18 bits pack four to a 72-bit UltraRAM word, as 16)
+            out += [("A10g128", dict(a=10, ag=128)), ("A12g128", dict(a=12, ag=128)), ("S18", dict(s=18)),
+                    ("S20", dict(s=20)),
+                    ("A10g128 V24 B16 T10 S18", dict(full, a=10, ag=128, s=18, bt=10)),
+                    ("A12g128 V24 B16 T10 S20", dict(full, a=12, ag=128, s=20, bt=10))]
     return out
 
 
