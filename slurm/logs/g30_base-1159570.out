@@ -1,0 +1,14 @@
+queued the next part of runs/g30_base: job 1159572
+xgpi19 NVIDIA H100 NVL | runs/g30_base | --vocab 50304 --d_model 1024 --d_hidden 4096 --n_layers 12 --tau_min 0.5 --tau_max 200.0 --hard_reset true --detach_reset false --sg fast_sigmoid --alpha 4.0 --in_norm theta --out_init 0.02 --head_init 0.02 --in_groups 0 --in_short 0 --out_classes 0 --out_short 0 --learn_beta true --learn_theta true --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --leak_rank 128 --steps_per_token 1 --mem_heads 8 --mem_keys 256 --mem_dv 64 --mem_every 1 --mem_tau_min 1.0 --mem_tau_max 1024.0 --mem_theta 1.5 --mem_chunk 128 --mem_eps 1.0 --mem_write_avg false --wbits 0 --wgroup 128 --arch snn --n_heads 6 --batch 32 --accum 4 --seq 1024 --steps 37500 --lr 0.0006 --min_lr_frac 0.0 --schedule wsd --decay_steps 7500 --wbits_from 0 --log_file log.live.jsonl --warmup 1000 --wd 0.1 --embed_wd -1.0 --neuron_lr_mult 10.0 --clip 1.0 --spike_log 5.0 --spike_skip 10.0 --eval_every 2500 --eval_batches 40 --log_every 500 --seed 0 --sample_every 0 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1.0 --ema 0.999 --data data/fineweb --tokenizer gpt2.json --rope false --optim adamw --muon_momentum 0.95 --hint_weight 0.0 --hint_layers 0
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.4585 (EMA weights 4.3376)
+== eval step 5000 val_loss 4.1747 (EMA weights 4.0416)
+== eval step 7500 val_loss 4.0590 (EMA weights 3.9184)
+== eval step 10000 val_loss 3.9924 (EMA weights 3.8481)
+== eval step 12500 val_loss 3.9459 (EMA weights 3.7998)
+== eval step 15000 val_loss 3.9108 (EMA weights 3.7665)
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+Traceback (most recent call last):
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 1.54 GiB. GPU 0 has a total capacity of 93.09 GiB of which 323.00 MiB is free. Process 2888103 has 72.33 GiB memory in use. Including non-PyTorch memory, this process has 20.35 GiB memory in use. Of the allocated memory 18.82 GiB is allocated by PyTorch, and 881.51 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+train.py failed with exit code 2 (job 1159570)
