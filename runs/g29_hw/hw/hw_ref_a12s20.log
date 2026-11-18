@@ -1,0 +1,17 @@
+$ python3 hw_export.py runs/g29_hw --ema --windows 256
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/cuda/__init__.py:180: UserWarning: CUDA initialization: CUDA unknown error - this may be due to an incorrectly set up environment, e.g. changing env variable CUDA_VISIBLE_DEVICES after program start. Setting the available devices to be zero. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)
+  return torch._C._cuda_getDeviceCount() > 0
+W1118 14:23:32.810000 1731346 torch/utils/cpp_extension.py:140] No CUDA runtime is found, using CUDA_HOME='/usr'
+wrote runs/g29_hw/hw/manifest.txt, tables.bin (126.1 MB); bus fractional bits 23
+exit 0
+$ g++ -O3 -march=native -fopenmp -ffp-contract=off -o hw_ref hw_ref.cpp
+exit 0
+$ ./hw_ref runs/g29_hw/hw runs/g29_hw/hw/windows.bin 256 256 runs/g29_hw/hw/logp.bin
+windows 256 x 256 tokens: loss 3.842884
+exit 0
+$ bash fpga/csim.sh runs/g29_hw/hw 4 16 4
+kernel: 4 streams x 16 steps done
+kernel: 4 streams x 16 steps done
+teacher forcing, 4 streams x 16 steps: bus identical: True (0 of 49152 values differ); greedy predictions identical: True
+generation from 4 prompt tokens: hw_ref predicts the kernel's 13 generated tokens exactly: True
+exit 0

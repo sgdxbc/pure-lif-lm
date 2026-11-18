@@ -4,7 +4,8 @@ param L 12
 param vocab 50304
 param BF 23
 param V_BITS 24
-param S_BITS 16
+param S_BITS 20
+param A_BITS 12
 param BETA_BITS 16
 param SIG_STEP 10
 param SIG_RANGE 16
