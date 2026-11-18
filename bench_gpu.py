@@ -13,10 +13,11 @@ Needs vllm and nvidia-ml-py (a separate venv, slurm/bench_gpu.sbatch). From the 
   python3 bench_gpu.py --model openai-community/gpt2 [--batches 1,4,16,64,256] [--contexts 128,896] [--gen 128]
 writes runs/bench_gpu/<gpu>_<model>.json
   python3 bench_gpu.py --model shape:D,L,H
-measures a GPT-2 of that shape (width D, L blocks, H heads, the 50,304-word vocabulary, 1,024 positions) with random
-weights (vLLM load_format "dummy", no tokenizer): the time and energy of generation do not depend on the weights'
-values (ignore_eos, fixed lengths), so this is the cost of our own Transformers (model_tf.py: the same matrices;
-RMSNorm and no biases instead of LayerNorm and biases, a negligible difference) without converting them. Writes
+measures a GPT-2 of that shape (width D, L blocks, H heads, GPT-2's 50,257-word vocabulary, 1,024 positions) with
+random weights (vLLM load_format "dummy"; GPT-2's tokenizer, which vLLM requires although only token ids go in and
+out): the time and energy of generation do not depend on the weights' values (ignore_eos, fixed lengths), so this is
+the cost of our own Transformers (model_tf.py: the same matrices, a 50,304-word vocabulary; RMSNorm and no biases
+instead of LayerNorm and biases, a negligible difference) without converting them. Writes
 runs/bench_gpu/<gpu>_gpt2shape_dD_lL_hH.json.
 """
 import argparse, json, os, time
@@ -51,9 +52,10 @@ def main():
         from transformers import GPT2Config
         D, L, H = (int(x) for x in a.model[len("shape:"):].split(","))
         model = tempfile.mkdtemp(prefix="gpt2shape_")
-        GPT2Config(vocab_size=50304, n_positions=1024, n_embd=D, n_layer=L, n_head=H,
+        GPT2Config(vocab_size=50257, n_positions=1024, n_embd=D, n_layer=L, n_head=H,
                    bos_token_id=50256, eos_token_id=50256).save_pretrained(model)
-        extra, tag = dict(load_format="dummy", skip_tokenizer_init=True), f"gpt2shape_d{D}_l{L}_h{H}"
+        # vLLM 0.33 needs a tokenizer even when only token ids are used (skip_tokenizer_init fails in its constructor)
+        extra, tag = dict(load_format="dummy", tokenizer="openai-community/gpt2"), f"gpt2shape_d{D}_l{L}_h{H}"
     cfg = AutoConfig.from_pretrained(model)
     max_len = getattr(cfg, "max_position_embeddings", None) or getattr(cfg, "n_positions", 1024)
     vocab = cfg.vocab_size

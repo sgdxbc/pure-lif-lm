@@ -75,7 +75,9 @@ python3 train.py --device cuda --out runs/my_snn \
 | 脚本 | 做什么 |
 |---|---|
 | `hw_cost.py [--ema] runs/X` | 每个 token 的稠密乘加、可以跳过零的加法、要读的数据量、每路状态大小（按实测发放率；docs/experiments.md 5.20） |
-| `quant_sim.py [--ema] runs/X` | 低精度模拟：权重、总线、膜电位按硬件的整数位宽取整后的验证 loss（不支持可塑突触；只看权重时用 `evaluate.py --wbits 4`） |
+| `quant_sim.py [--ema] runs/X` | 低精度模拟：权重、总线、膜电位、可塑突触按硬件的整数位宽取整后的验证 loss（只看权重时用 `evaluate.py --wbits 4`；5.20、5.44） |
+| `hw_export.py runs/X --ema [--windows 256]` | 把网络导出成 FPGA 原型用的整数表格（`runs/X/hw/`，约 126 MB，不进 git），可同时写出验证片段（5.44） |
+| `hw_ref.cpp` | 整数参考实现（C++）：`g++ -O3 -march=native -fopenmp -ffp-contract=off -o hw_ref hw_ref.cpp`，`./hw_ref runs/X/hw runs/X/hw/windows.bin 256 256` 打印验证 loss；FPGA 程序要和它逐位一致（5.44） |
 | `experiments/wbits_sens.py runs/X` | 哪类权重矩阵取整到 4 位损失最大；把最敏感的几类留在 8 位时的损失和多用的存储（5.38） |
 | `fpga_est.py runs/X [--device u55c --cards 2]` | 脉冲网络在 FPGA 上的延迟、吞吐量和能耗估算（默认 AMD Alveo V80 的参数，5.25；U55C 和多卡流水线见 5.44） |
 | `bench_gpu.py --model 名字` | Transformer 在 GPU 上用 vLLM 实测：吞吐量、每 token 延迟、每 token 能耗（5.25） |

@@ -21,3 +21,8 @@ slurm/claude_session.id
 slurm/claude_session.stop
 # what a running job writes (slurm/train.sbatch copies them to stdout.log and log.jsonl): never touched by git
 runs/**/*.live.*
+# the FPGA prototype's integer tables (hw_export.py, ~126 MB, regenerable) and the reference binary
+runs/**/hw/tables.bin
+runs/**/hw/windows.bin
+runs/**/hw/logp.bin
+/hw_ref

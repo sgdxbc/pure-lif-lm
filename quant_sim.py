@@ -17,6 +17,8 @@ the differences are paired. From the repository root:
                      layer come from the calibration, the rest are fractional. Rounded after the update and the reset.
   V16p               as V16, but the integer bits cover the 99.99th percentile of |V| in the calibration instead of
                      its maximum (a few neurons drift thousands of thresholds away); values beyond saturate.
+  T10                with the leak synapses, beta from a table of the sigmoid over its argument in steps of 2^-10
+                     (the FPGA prototype's, hw_export.py), before the B rounding
   B12 / B16          the leak factor beta (every step, after the sigmoid: a lookup table in hardware) and the reset
                      fraction gamma, with 12 or 16 fractional bits (and the plastic synapses' decay lambda and their
                      key and query neurons' leak).
@@ -200,7 +202,10 @@ def run(model, x, q, cal=None, rec=None):
             m = F.linear(xin, qw(f32(layer.leak_in.weight), w, g_))
             if A:
                 m = qa(m, cal["m"][li], A, ag)
-            beta = torch.sigmoid(f32(layer.beta_logit) + F.linear(m, qw(f32(layer.leak_out.weight), w, g_)))
+            arg = f32(layer.beta_logit) + F.linear(m, qw(f32(layer.leak_out.weight), w, g_))
+            if q.get("bt"):   # the hardware's sigmoid table: the argument in steps of 2^-bt, over [-16, 16]
+                arg = (torch.round(arg * 2 ** q["bt"]) / 2 ** q["bt"]).clamp(-16, 16)
+            beta = torch.sigmoid(arg)
         else:
             beta = layer.beta().float()
         gam = layer.gamma().float()
@@ -256,6 +261,10 @@ def configs_for(cfg):
         out += [(tag + " S16", dict(full, s=16)), (tag + " S12", dict(full, s=12))]
         if cfg.wbits:
             out.append(("A8g128 V24 B16 S16", dict(full, ag=128, s=16)))
+    if cfg.leak_rank:   # the FPGA prototype's sigmoid table (hw_export.py SIG_STEP) for the leak synapses' beta
+        out.append(("B16 T10", dict(b=16, bt=10)))
+        if cfg.wbits and cfg.mem_heads:
+            out.append(("A8g128 V24 B16 T10 S16", dict(full, ag=128, s=16, bt=10)))
     return out
 
 
