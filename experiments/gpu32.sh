@@ -11,7 +11,7 @@
 #           for 10,000 steps, distilled from GPT-2 XL instead of g26_tf163. Its first relay part reads the same batches
 #           as the trunk's part that started at step 120,000 (each part draws them from seed + its first step), so it
 #           is paired with the trunk's evaluations at steps 125,000 and 130,000 (3.597 / 3.587, averaged weights).
-# If it is clearly better, the trunk switches to GPT-2 XL at its next kept checkpoint (step 180,000). Cost: GPT-2 XL's
+# If it is clearly better, the trunk switches to GPT-2 XL at its next checkpoint after this result. Cost: GPT-2 XL's
 # forward pass is about 1e14 FLOPs per batch of 32 x 1,024 tokens, about as much as the student's own step on an H100.
 # PROBES=0: no full-validation or zero-shot evaluation afterwards (the evaluations in the log are paired).
 # GPU=... picks the card (default h100-47), ACCUM=n the split of each batch (default 4; 2 on an 80 GB card or larger).
