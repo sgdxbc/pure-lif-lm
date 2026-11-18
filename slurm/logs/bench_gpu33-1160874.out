@@ -1,0 +1,165 @@
+NVIDIA H100 NVL, 400.00 W
+(EngineCore pid=673231) INFO 11-18 14:27:28 [kv_cache_utils.py:1147] GPU KV cache size: 13,773,056 tokens, Maximum concurrency for 1,024 tokens per request: 13450.25x
+(EngineCore pid=673231) INFO 11-18 14:27:28 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=673231) INFO 11-18 14:27:28 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=673231) INFO 11-18 14:27:28 [kernel_warmup.py:485] Using FlashInfer managed autotune cache (root=flashinfer default). Pass --disable-flashinfer-autotune to skip autotuning.
+2026-11-18 14:27:28,910 - INFO - autotuner.py:1048 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-11-18 14:27:29,088 - INFO - autotune_cache.py:495 - flashinfer.jit: [Autotuner]: Managed autotune cache attached for this process: ManagedAutotuneCache(env_dir='/home/s/sung/.cache/flashinfer/autotune/v2/dfbe7a891ade0bb6', hits=0, misses=0)
+(EngineCore pid=673231) INFO 11-18 14:27:29 [kernel_warmup.py:371] Running FlashInfer autotune with 16384 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192, 16384).
+2026-11-18 14:27:29,098 - INFO - autotuner.py:1071 - flashinfer.jit: [Autotuner]: Autotuning process ends
+(EngineCore pid=673231) INFO 11-18 14:27:31 [model_runner.py:1163] Graph capturing finished in 1 secs, took 0.04 GiB
+(EngineCore pid=673231) INFO 11-18 14:27:31 [gpu_worker.py:1003] CUDA graph pool memory: 0.04 GiB (actual), 0.08 GiB (estimated), difference: 0.04 GiB (110.5%).
+(EngineCore pid=673231) INFO 11-18 14:27:31 [gpu_worker.py:1066] Free memory on device (92.39/93.09 GiB) on startup. Desired GPU memory utilization is (0.85, 79.12 GiB). Actual usage is 0.11 GiB for consumed memory (weights + non-torch), 0.21 GiB for peak activation, and 0.04 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=84424541082` (78.63 GiB) to fit into requested memory, or `--kv-cache-memory=98665294336` (91.89 GiB) to fully utilize gpu memory. Current kv cache memory in use is 78.81 GiB.
+(EngineCore pid=673231) INFO 11-18 14:27:32 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=673231) INFO 11-18 14:27:32 [core.py:405] init engine (profile, create kv cache, warmup model) took 14.18 s (compilation: 3.32 s)
+(EngineCore pid=673231) INFO 11-18 14:27:33 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(EngineCore pid=673231) INFO 11-18 14:27:33 [core.py:486] Resolved pooling config: pooling_type=LAST(source=model_default), tok_pooling_type=ALL(source=model_default), use_activation=True(source=pooler_default), supported_tasks=('embed', 'token_embed')
+(MainProcess pid=673168) INFO 11-18 14:27:33 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(MainProcess pid=673168) INFO 11-18 14:27:33 [offline.py:49] Supported pooling task: embed
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 117, in <module>
+    main()
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 93, in main
+    run(4, 64, 16, 1.0)   # warm-up (compilation, CUDA graphs)
+    ^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 79, in run
+    llm.generate(prompts_for(B, C), sp, use_tqdm=False)          # also a warm-up for this shape
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-vllm/lib/python3.12/site-packages/vllm/entrypoints/llm.py", line 463, in generate
+    raise ValueError(
+ValueError: LLM.generate() is only supported for generative models. Try passing `--runner generate` to use the model as a generative model.
+(MainProcess pid=673168) INFO 11-18 14:27:43 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=673231) INFO 11-18 14:27:43 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=673231) INFO 11-18 14:27:43 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=673231) INFO 11-18 14:27:43 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=673231) INFO 11-18 14:27:43 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+(MainProcess pid=673168) WARNING 11-18 14:27:44 [core_client.py:839] [shutdown] MPClient: engine core exited unexpectedly; starting cleanup
+(MainProcess pid=673168) INFO 11-18 14:27:44 [core_client.py:792] [shutdown] MPClient: start timeout=default
+(MainProcess pid=673168) INFO 11-18 14:27:44 [core_client.py:794] [shutdown] MPClient: stopping engine manager
+(MainProcess pid=673168) INFO 11-18 14:27:44 [core_client.py:796] [shutdown] MPClient: engine manager stopped
+(MainProcess pid=673168) INFO 11-18 14:27:44 [core_client.py:797] [shutdown] MPClient: cleaning up background resources
+(MainProcess pid=673168) INFO 11-18 14:27:44 [core_client.py:799] [shutdown] MPClient: complete
+shape:256,6,4: exit 1 Wed Nov 18 02:27:46 PM +08 2026
+(EngineCore pid=673413) INFO 11-18 14:28:11 [kv_cache_utils.py:1147] GPU KV cache size: 9,172,240 tokens, Maximum concurrency for 1,024 tokens per request: 8957.27x
+(EngineCore pid=673413) INFO 11-18 14:28:11 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=673413) INFO 11-18 14:28:11 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=673413) INFO 11-18 14:28:11 [kernel_warmup.py:485] Using FlashInfer managed autotune cache (root=flashinfer default). Pass --disable-flashinfer-autotune to skip autotuning.
+2026-11-18 14:28:11,637 - INFO - autotuner.py:1048 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-11-18 14:28:11,807 - INFO - autotune_cache.py:495 - flashinfer.jit: [Autotuner]: Managed autotune cache attached for this process: ManagedAutotuneCache(env_dir='/home/s/sung/.cache/flashinfer/autotune/v2/dfbe7a891ade0bb6', hits=0, misses=0)
+(EngineCore pid=673413) INFO 11-18 14:28:11 [kernel_warmup.py:371] Running FlashInfer autotune with 16384 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192, 16384).
+2026-11-18 14:28:11,817 - INFO - autotuner.py:1071 - flashinfer.jit: [Autotuner]: Autotuning process ends
+(EngineCore pid=673413) INFO 11-18 14:28:13 [model_runner.py:1163] Graph capturing finished in 1 secs, took 0.06 GiB
+(EngineCore pid=673413) INFO 11-18 14:28:13 [gpu_worker.py:1003] CUDA graph pool memory: 0.06 GiB (actual), 0.1 GiB (estimated), difference: 0.04 GiB (72.4%).
+(EngineCore pid=673413) INFO 11-18 14:28:13 [gpu_worker.py:1066] Free memory on device (92.39/93.09 GiB) on startup. Desired GPU memory utilization is (0.85, 79.12 GiB). Actual usage is 0.13 GiB for consumed memory (weights + non-torch), 0.26 GiB for peak activation, and 0.06 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=84313392026` (78.52 GiB) to fit into requested memory, or `--kv-cache-memory=98554145280` (91.79 GiB) to fully utilize gpu memory. Current kv cache memory in use is 78.73 GiB.
+(EngineCore pid=673413) INFO 11-18 14:28:14 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=673413) INFO 11-18 14:28:14 [core.py:405] init engine (profile, create kv cache, warmup model) took 11.58 s (compilation: 3.26 s)
+(EngineCore pid=673413) INFO 11-18 14:28:15 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(EngineCore pid=673413) INFO 11-18 14:28:15 [core.py:486] Resolved pooling config: pooling_type=LAST(source=model_default), tok_pooling_type=ALL(source=model_default), use_activation=True(source=pooler_default), supported_tasks=('embed', 'token_embed')
+(MainProcess pid=673367) INFO 11-18 14:28:15 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(MainProcess pid=673367) INFO 11-18 14:28:15 [offline.py:49] Supported pooling task: embed
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 117, in <module>
+    main()
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 93, in main
+    run(4, 64, 16, 1.0)   # warm-up (compilation, CUDA graphs)
+    ^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 79, in run
+    llm.generate(prompts_for(B, C), sp, use_tqdm=False)          # also a warm-up for this shape
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-vllm/lib/python3.12/site-packages/vllm/entrypoints/llm.py", line 463, in generate
+    raise ValueError(
+ValueError: LLM.generate() is only supported for generative models. Try passing `--runner generate` to use the model as a generative model.
+(MainProcess pid=673367) INFO 11-18 14:28:25 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=673413) INFO 11-18 14:28:25 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=673413) INFO 11-18 14:28:25 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=673413) INFO 11-18 14:28:25 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=673413) INFO 11-18 14:28:25 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+(MainProcess pid=673367) WARNING 11-18 14:28:26 [core_client.py:839] [shutdown] MPClient: engine core exited unexpectedly; starting cleanup
+(MainProcess pid=673367) INFO 11-18 14:28:26 [core_client.py:792] [shutdown] MPClient: start timeout=default
+(MainProcess pid=673367) INFO 11-18 14:28:26 [core_client.py:794] [shutdown] MPClient: stopping engine manager
+(MainProcess pid=673367) INFO 11-18 14:28:26 [core_client.py:796] [shutdown] MPClient: engine manager stopped
+(MainProcess pid=673367) INFO 11-18 14:28:26 [core_client.py:797] [shutdown] MPClient: cleaning up background resources
+(MainProcess pid=673367) INFO 11-18 14:28:26 [core_client.py:799] [shutdown] MPClient: complete
+shape:384,6,6: exit 1 Wed Nov 18 02:28:28 PM +08 2026
+(EngineCore pid=673592) INFO 11-18 14:29:00 [kv_cache_utils.py:1147] GPU KV cache size: 5,157,088 tokens, Maximum concurrency for 1,024 tokens per request: 5036.22x
+(EngineCore pid=673592) INFO 11-18 14:29:00 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=673592) INFO 11-18 14:29:00 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=673592) INFO 11-18 14:29:00 [kernel_warmup.py:485] Using FlashInfer managed autotune cache (root=flashinfer default). Pass --disable-flashinfer-autotune to skip autotuning.
+2026-11-18 14:29:00,370 - INFO - autotuner.py:1048 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-11-18 14:29:00,564 - INFO - autotune_cache.py:495 - flashinfer.jit: [Autotuner]: Managed autotune cache attached for this process: ManagedAutotuneCache(env_dir='/home/s/sung/.cache/flashinfer/autotune/v2/dfbe7a891ade0bb6', hits=0, misses=0)
+(EngineCore pid=673592) INFO 11-18 14:29:00 [kernel_warmup.py:371] Running FlashInfer autotune with 16384 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192, 16384).
+2026-11-18 14:29:00,581 - INFO - autotuner.py:1071 - flashinfer.jit: [Autotuner]: Autotuning process ends
+(EngineCore pid=673592) INFO 11-18 14:29:02 [model_runner.py:1163] Graph capturing finished in 1 secs, took 0.06 GiB
+(EngineCore pid=673592) INFO 11-18 14:29:02 [gpu_worker.py:1003] CUDA graph pool memory: 0.06 GiB (actual), 0.11 GiB (estimated), difference: 0.06 GiB (100.0%).
+(EngineCore pid=673592) INFO 11-18 14:29:02 [gpu_worker.py:1066] Free memory on device (92.39/93.09 GiB) on startup. Desired GPU memory utilization is (0.85, 79.12 GiB). Actual usage is 0.18 GiB for consumed memory (weights + non-torch), 0.25 GiB for peak activation, and 0.06 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=84275643290` (78.49 GiB) to fit into requested memory, or `--kv-cache-memory=98516396544` (91.75 GiB) to fully utilize gpu memory. Current kv cache memory in use is 78.69 GiB.
+(EngineCore pid=673592) INFO 11-18 14:29:03 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=673592) INFO 11-18 14:29:03 [core.py:405] init engine (profile, create kv cache, warmup model) took 12.13 s (compilation: 3.45 s)
+(EngineCore pid=673592) INFO 11-18 14:29:04 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(EngineCore pid=673592) INFO 11-18 14:29:04 [core.py:486] Resolved pooling config: pooling_type=LAST(source=model_default), tok_pooling_type=ALL(source=model_default), use_activation=True(source=pooler_default), supported_tasks=('embed', 'token_embed')
+(MainProcess pid=673546) INFO 11-18 14:29:04 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(MainProcess pid=673546) INFO 11-18 14:29:04 [offline.py:49] Supported pooling task: embed
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 117, in <module>
+    main()
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 93, in main
+    run(4, 64, 16, 1.0)   # warm-up (compilation, CUDA graphs)
+    ^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 79, in run
+    llm.generate(prompts_for(B, C), sp, use_tqdm=False)          # also a warm-up for this shape
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-vllm/lib/python3.12/site-packages/vllm/entrypoints/llm.py", line 463, in generate
+    raise ValueError(
+ValueError: LLM.generate() is only supported for generative models. Try passing `--runner generate` to use the model as a generative model.
+(MainProcess pid=673546) INFO 11-18 14:29:14 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=673592) INFO 11-18 14:29:14 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=673592) INFO 11-18 14:29:14 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=673592) INFO 11-18 14:29:14 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=673592) INFO 11-18 14:29:14 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+(MainProcess pid=673546) WARNING 11-18 14:29:15 [core_client.py:839] [shutdown] MPClient: engine core exited unexpectedly; starting cleanup
+(MainProcess pid=673546) INFO 11-18 14:29:15 [core_client.py:792] [shutdown] MPClient: start timeout=default
+(MainProcess pid=673546) INFO 11-18 14:29:15 [core_client.py:794] [shutdown] MPClient: stopping engine manager
+(MainProcess pid=673546) INFO 11-18 14:29:15 [core_client.py:796] [shutdown] MPClient: engine manager stopped
+(MainProcess pid=673546) INFO 11-18 14:29:15 [core_client.py:797] [shutdown] MPClient: cleaning up background resources
+(MainProcess pid=673546) INFO 11-18 14:29:15 [core_client.py:799] [shutdown] MPClient: complete
+shape:512,8,8: exit 1 Wed Nov 18 02:29:16 PM +08 2026
+(EngineCore pid=673764) INFO 11-18 14:29:43 [kv_cache_utils.py:1147] GPU KV cache size: 2,285,664 tokens, Maximum concurrency for 1,024 tokens per request: 2232.09x
+(EngineCore pid=673764) INFO 11-18 14:29:43 [kernel_warmup.py:179] JIT kernel warmup starting.
+(EngineCore pid=673764) INFO 11-18 14:29:43 [kernel_warmup.py:192] JIT kernel warmup finished in 0.00s.
+(EngineCore pid=673764) INFO 11-18 14:29:43 [kernel_warmup.py:485] Using FlashInfer managed autotune cache (root=flashinfer default). Pass --disable-flashinfer-autotune to skip autotuning.
+2026-11-18 14:29:43,708 - INFO - autotuner.py:1048 - flashinfer.jit: [Autotuner]: Autotuning process starts ...
+2026-11-18 14:29:43,919 - INFO - autotune_cache.py:495 - flashinfer.jit: [Autotuner]: Managed autotune cache attached for this process: ManagedAutotuneCache(env_dir='/home/s/sung/.cache/flashinfer/autotune/v2/dfbe7a891ade0bb6', hits=0, misses=0)
+(EngineCore pid=673764) INFO 11-18 14:29:43 [kernel_warmup.py:371] Running FlashInfer autotune with 16384 tokens and token buckets (1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 768, 1024, 1280, 1536, 1792, 2048, 2560, 3072, 3584, 4096, 8192, 16384).
+2026-11-18 14:29:43,934 - INFO - autotuner.py:1071 - flashinfer.jit: [Autotuner]: Autotuning process ends
+(EngineCore pid=673764) INFO 11-18 14:29:46 [model_runner.py:1163] Graph capturing finished in 2 secs, took 0.06 GiB
+(EngineCore pid=673764) INFO 11-18 14:29:46 [gpu_worker.py:1003] CUDA graph pool memory: 0.06 GiB (actual), 0.14 GiB (estimated), difference: 0.08 GiB (140.0%).
+(EngineCore pid=673764) INFO 11-18 14:29:46 [gpu_worker.py:1066] Free memory on device (92.39/93.09 GiB) on startup. Desired GPU memory utilization is (0.85, 79.12 GiB). Actual usage is 0.32 GiB for consumed memory (weights + non-torch), 0.33 GiB for peak activation, and 0.06 GiB for CUDAGraph memory. Replace gpu_memory_utilization config with `--kv-cache-memory=84038665114` (78.27 GiB) to fit into requested memory, or `--kv-cache-memory=98279418368` (91.53 GiB) to fully utilize gpu memory. Current kv cache memory in use is 78.47 GiB.
+(EngineCore pid=673764) INFO 11-18 14:29:47 [jit_monitor.py:84] Kernel JIT monitor activated; monitored JIT compilations during inference will use mode=warn.
+(EngineCore pid=673764) INFO 11-18 14:29:47 [core.py:405] init engine (profile, create kv cache, warmup model) took 13.81 s (compilation: 3.96 s)
+(EngineCore pid=673764) INFO 11-18 14:29:47 [kernel.py:480] Final IR op priority after setting platform defaults: IrOpPriorityConfig(rms_norm=['native'], fused_add_rms_norm=['native'], gelu_and_mul_sparse=['triton', 'native'])
+(EngineCore pid=673764) INFO 11-18 14:29:47 [core.py:486] Resolved pooling config: pooling_type=LAST(source=model_default), tok_pooling_type=ALL(source=model_default), use_activation=True(source=pooler_default), supported_tasks=('embed', 'token_embed')
+(MainProcess pid=673722) INFO 11-18 14:29:48 [hf.py:736] Detected the chat template content format to be 'string'. You can set `--chat-template-content-format` to override this.
+(MainProcess pid=673722) INFO 11-18 14:29:48 [offline.py:49] Supported pooling task: embed
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 117, in <module>
+    main()
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 93, in main
+    run(4, 64, 16, 1.0)   # warm-up (compilation, CUDA graphs)
+    ^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/bench_gpu.py", line 79, in run
+    llm.generate(prompts_for(B, C), sp, use_tqdm=False)          # also a warm-up for this shape
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-vllm/lib/python3.12/site-packages/vllm/entrypoints/llm.py", line 463, in generate
+    raise ValueError(
+ValueError: LLM.generate() is only supported for generative models. Try passing `--runner generate` to use the model as a generative model.
+(MainProcess pid=673722) INFO 11-18 14:29:58 [utils.py:628] [shutdown] Process manager: send sigterm to process EngineCore
+(EngineCore pid=673764) INFO 11-18 14:29:58 [core.py:1525] [shutdown] EngineCore: trigger received signal=SIGTERM
+(EngineCore pid=673764) INFO 11-18 14:29:58 [core.py:1712] [shutdown] EngineCore: start mode=abort timeout=0s
+(EngineCore pid=673764) INFO 11-18 14:29:58 [core.py:1743] [shutdown] EngineCore: request processing complete; starting resource teardown
+(EngineCore pid=673764) INFO 11-18 14:29:58 [core.py:1573] [shutdown] EngineCore: exiting busy loop
+(MainProcess pid=673722) WARNING 11-18 14:29:59 [core_client.py:839] [shutdown] MPClient: engine core exited unexpectedly; starting cleanup
+(MainProcess pid=673722) INFO 11-18 14:29:59 [core_client.py:792] [shutdown] MPClient: start timeout=default
+(MainProcess pid=673722) INFO 11-18 14:29:59 [core_client.py:794] [shutdown] MPClient: stopping engine manager
+(MainProcess pid=673722) INFO 11-18 14:29:59 [core_client.py:796] [shutdown] MPClient: engine manager stopped
+(MainProcess pid=673722) INFO 11-18 14:29:59 [core_client.py:797] [shutdown] MPClient: cleaning up background resources
+(MainProcess pid=673722) INFO 11-18 14:29:59 [core_client.py:799] [shutdown] MPClient: complete
+shape:768,12,12: exit 1 Wed Nov 18 02:30:00 PM +08 2026
