@@ -1,0 +1,36 @@
+queued the next part of runs/g26_snn212_b150000_nokd: job 1161678
+xgpg5 NVIDIA A100-PCIE-40GB | runs/g26_snn212_b150000_nokd | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 150000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --schedule wsd --decay_steps 30000 --min_lr_frac 0 --init_ckpt runs/g26_snn212/ckpt_step120000.pt --d_model 1024 --d_hidden 4096 --n_layers 12 --leak_rank 128 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --mem_heads 8 --mem_keys 256 --mem_tau_min 1 --accum 4
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 122500 val_loss 3.8405 (EMA weights 3.6432)
+== eval step 125000 val_loss 3.8152 (EMA weights 3.6447)
+== eval step 127500 val_loss 3.7800 (EMA weights 3.6356)
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 130000 val_loss 3.7480 (EMA weights 3.6240)
+== eval step 132500 val_loss 3.7193 (EMA weights 3.6100)
+== eval step 135000 val_loss 3.6961 (EMA weights 3.5994)
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 137500 val_loss 3.6630 (EMA weights 3.5879)
+== eval step 140000 val_loss 3.6335 (EMA weights 3.5753)
+== eval step 142500 val_loss 3.6123 (EMA weights 3.5667)
+== eval step 145000 val_loss 3.5886 (EMA weights 3.5611)
+== eval step 147500 val_loss 3.5701 (EMA weights 3.5563)
+params 274.82M, LIF neurons 49,152, train tokens 9944M, tokens/step 32,768
+== eval step 150000 val_loss 3.5571 (EMA weights 3.5558)
+hellaswag        acc 0.2760  acc_norm 0.2856
+lambada_openai   perplexity 1569.1807  acc 0.0897
+piqa             acc 0.6007  acc_norm 0.5838
+arc_easy         acc 0.4630  acc_norm 0.4129
+arc_challenge    acc 0.1775  acc_norm 0.2338
+winogrande       acc 0.5004
+hellaswag        acc 0.2740  acc_norm 0.2861
+lambada_openai   perplexity 1531.2752  acc 0.0885
+piqa             acc 0.5963  acc_norm 0.5843
+arc_easy         acc 0.4676  acc_norm 0.4024
+arc_challenge    acc 0.1843  acc_norm 0.2406
+winogrande       acc 0.4988
+ "val_loss": 3.5678145853971373,
+   " of the presence of water within the soil.\nThe water also contains high amounts of arsenic, an antifreeze, and an antifungal agent.\nThe amount of arsenic in the water byproduct varies depending on the product.\nThe amount of arsenic in the water varies at a different rate than in the air, but it usually ranges between two to five times more than in the water.\nToxic arsenic in water occurs within a short time when the water is heated through the chemical reaction and gets into the water.\nToxic effects generally include nausea, vomiting, and diarrhea.\nToxic effects include nausea, vomiting, headaches, loss of appetite, and muscle cramping.\nToxic effects of arsenic may include:\n- Decreased respiration\n- Increased urination\nToxic effects can occur when a water source is contaminated with arsenic.\n- Thirsty diarrhea\n- Muscle spasms\n- Gastric cramps\n- Respiratory problems\n- Heart problems\n- Kidney problems\n- High blood pressure\n- High blood pressure\n- Heart infections\n- High blood pressure\n- Bladder stones\n- Bladder stones\n- Urinary tract problems\n- Kidney stones\n-",
+g26_snn212_b150000_nokd  snn  274.8M  8-bit  274.8 MB  dense MACs  174.2M + sparse adds  2.25M  state 5013.5 KB  MB/token 8-bit: 1 stream  174.6, 16 streams  11.9  (rate 0.039)
+  weights rounded to 8 bits: "val_loss": 3.567761531806395,
+  weights rounded to 4 bits: "val_loss": 3.9842409255989257,
+done Wed Nov 18 03:44:22 PM +08 2026
