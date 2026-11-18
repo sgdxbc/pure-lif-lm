@@ -1,0 +1,1 @@
+g37_anneal               snn  121.0M  8-bit  121.0 MB  dense MACs   58.6M + sparse adds  1.42M  state 1327.1 KB  MB/token 8-bit: 1 stream   59.6, 16 streams   4.5  (rate 0.049)

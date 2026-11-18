@@ -1,0 +1,129 @@
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+params 159.90M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3008
+step      1 loss 10.1386 kl 6.6564 lr 6.00e-07 gn 3.72 2,876 tok/s mem 24.6GB rate 0.120 [0.07 0.08 0.09 0.10 0.10 0.12 0.12 0.14 0.15 0.15 0.16 0.17]
+step    500 loss 5.7768 kl 2.3446 lr 3.00e-04 gn 0.81 15,415 tok/s mem 25.9GB rate 0.121 [0.07 0.07 0.08 0.09 0.10 0.11 0.12 0.13 0.15 0.16 0.18 0.20]
+step   1000 loss 5.1697 kl 1.7782 lr 6.00e-04 gn 0.58 15,424 tok/s mem 25.9GB rate 0.079 [0.06 0.06 0.07 0.07 0.07 0.07 0.07 0.08 0.09 0.10 0.11 0.12]
+step   1500 loss 4.7898 kl 1.4137 lr 5.99e-04 gn 0.37 15,454 tok/s mem 25.9GB rate 0.064 [0.05 0.06 0.06 0.06 0.06 0.06 0.06 0.06 0.06 0.07 0.08 0.09]
+step   2000 loss 4.7256 kl 1.3403 lr 5.96e-04 gn 0.37 15,499 tok/s mem 25.9GB rate 0.057 [0.05 0.06 0.06 0.05 0.05 0.05 0.05 0.05 0.05 0.06 0.07 0.08]
+gradient spike at step 2062: gn 3.75 (median 0.35), loss 4.5856; layers.5.w_in.weight 2.89, mems.0.w_out.weight 1.03, layers.0.w_out.weight 0.99, layers.4.w_out.weight 0.75 -- update skipped
+step   2500 loss 4.5390 kl 1.2238 lr 5.92e-04 gn 0.31 15,540 tok/s mem 26.5GB rate 0.054 [0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.06 0.06 0.08]
+== eval step 2500 val_loss 4.5852 (EMA weights 4.4945)
+   >> The history of the city|’s history is a real and fascinating story. / The story of the people who have suffered from the loss of the people and who lived in these areas. / I do not know what the people like, I don't have. But I do not mean that you do. I am only not a one tribe. I have a lot of them. I want to see people who want to come to me. I am going to come. I am coming back.” / I have the courage to the people who want to know the people who are. I don’t think
+   >> In mathematics, a prime number is| of equal importance. It has been around since 1825 that is a very important one. It's not just a matter of time, but many times it is a thing that makes us aware of what we want. It can change our behavior from having a different way of life, to become more and more important, as is an effective way of thinking. / In addition to the effects of aging, the American Academy of Technology (NDS) has also shown that those who do not know what they are doing, because they cannot remember to take responsibility and responsibility. So that is how to get them
+   >> Plants need sunlight because| they are not able to penetrate up. / This is another example of the fact that when we are in the midst of a new home, we look at the world with a little bit of time (in the world, it is too much!). / These are just the things that will do, but we’ve all done about. It’s important to be aware that they have never seen with so many things. / The most obvious thing about the world is and was completely wrong, but it’s hard to make sense. It’s not just a matter of the
+step   3000 loss 4.5242 kl 1.1718 lr 5.85e-04 gn 0.32 15,580 tok/s mem 27.3GB rate 0.051 [0.05 0.05 0.05 0.04 0.05 0.04 0.04 0.05 0.05 0.06 0.06 0.07]
+step   3500 loss 4.3445 kl 1.1030 lr 5.77e-04 gn 0.31 15,613 tok/s mem 27.3GB rate 0.051 [0.05 0.05 0.05 0.04 0.05 0.04 0.04 0.05 0.05 0.06 0.06 0.07]
+step   4000 loss 4.3624 kl 1.0210 lr 5.67e-04 gn 0.26 15,633 tok/s mem 27.3GB rate 0.049 [0.05 0.05 0.05 0.04 0.04 0.04 0.04 0.05 0.05 0.05 0.06 0.07]
+step   4500 loss 4.2528 kl 1.0800 lr 5.56e-04 gn 0.47 15,638 tok/s mem 27.3GB rate 0.050 [0.05 0.05 0.05 0.04 0.04 0.04 0.04 0.05 0.05 0.05 0.06 0.08]
+step   5000 loss 4.0970 kl 0.9155 lr 5.43e-04 gn 0.30 15,647 tok/s mem 27.3GB rate 0.049 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.06 0.07]
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/train.py", line 554, in <module>
+    
+  File "/home/s/sung/pure-lif-lm/train.py", line 523, in main
+    logf.write(json.dumps(rec) + "\n"); logf.flush()
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/train.py", line 271, in evaluate
+    x, y = x.to(a.device), y.to(a.device)
+                        ^^^^^^^^^^^
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/model.py", line 528, in forward
+    logits = self.head(bus)
+             ^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/model.py", line 461, in forward
+    lw = (F.log_softmax(lw.view(*lw.shape[:-1], self.C, self.m), -1) + lc.unsqueeze(-1)).flatten(-2)  # per slot
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 5.16 GiB. GPU 0 has a total capacity of 39.25 GiB of which 2.95 GiB is free. Including non-PyTorch memory, this process has 36.19 GiB memory in use. Process 440300 has 6.36 GiB memory in use. Process 440307 has 6.36 GiB memory in use. Of the allocated memory 22.12 GiB is allocated by PyTorch, and 13.83 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 2500
+params 159.90M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step   3000 loss 4.4252 kl 1.1522 lr 5.85e-04 gn 0.30 26,324 tok/s mem 22.7GB rate 0.052 [0.05 0.05 0.05 0.04 0.05 0.04 0.04 0.05 0.05 0.06 0.06 0.08]
+step   3500 loss 4.3155 kl 1.0676 lr 5.77e-04 gn 0.32 26,659 tok/s mem 22.7GB rate 0.051 [0.05 0.05 0.05 0.04 0.04 0.04 0.04 0.05 0.05 0.05 0.06 0.07]
+step   4000 loss 4.4595 kl 1.0862 lr 5.67e-04 gn 0.26 26,583 tok/s mem 22.7GB rate 0.049 [0.05 0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.06 0.06 0.07]
+step   4500 loss 4.3193 kl 1.0404 lr 5.56e-04 gn 0.38 26,593 tok/s mem 22.7GB rate 0.049 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.07]
+step   5000 loss 4.2439 kl 0.9791 lr 5.43e-04 gn 0.29 26,665 tok/s mem 22.7GB rate 0.049 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.04 0.05 0.06 0.06 0.07]
+== eval step 5000 val_loss 4.3149 (EMA weights 4.2174)
+   >> The history of the city| in the late nineteenth century has long been an important source of information and information. The history of the city has not been used for many years but also for the present. / The city has been part of medieval Europe, known for its historic history, its history, and its history. / The building of the castle dates back to the beginning of the 19th century. The palace was built at the time of the Battle of the castle at the site of the castle. / The ancient walls of the house are now under the name of the royal family and the king of the original castle. / The
+   >> In mathematics, a prime number is| a person of their age, not even the age of which is very much the subject—the age of the person who is a child or a very young person, etc., whose life is very different from the other person it is by their age. So, if you are a person you are a person of a person with a different age. / If you are a person, a person is a person. If you are a person, then you are a person, an individual, a person, a person person. But if you give an adult person about his age, then it is very important
+   >> Plants need sunlight because| they are so light and hard to get dark, which makes them to make them visible on the surface of the earth. When a moon is out of its way out, the sky is as bright as it is called as the sun. / In the U.S., scientists have shown that the moon is the perfect place to rest on this planet and the moon is in the sky while the main moon is the solar corpegg. / The moon is an island from the northern sky, the moon. The moon is a planet that is about 2 billion miles away. The moon is approximately 200 billion
+step   5500 loss 4.2513 kl 0.9333 lr 5.29e-04 gn 0.27 26,756 tok/s mem 23.5GB rate 0.048 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.06 0.07]
+step   6000 loss 4.2640 kl 0.9590 lr 5.13e-04 gn 0.28 26,857 tok/s mem 23.5GB rate 0.049 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.04 0.05 0.06 0.06 0.07]
+gradient spike at step 6398: gn 1.67 (median 0.27), loss 4.2219; layers.7.w_in.weight 1.16, head.w_cls 0.64, layers.0.w_out.weight 0.36, layers.1.w_out.weight 0.30
+step   6500 loss 4.3053 kl 0.9144 lr 4.96e-04 gn 0.28 26,868 tok/s mem 23.5GB rate 0.048 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.08]
+step   7000 loss 4.0890 kl 0.9379 lr 4.78e-04 gn 0.28 26,944 tok/s mem 23.5GB rate 0.048 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.08]
+step   7500 loss 4.1606 kl 0.8635 lr 4.59e-04 gn 0.25 26,987 tok/s mem 23.5GB rate 0.049 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.05 0.06 0.08]
+== eval step 7500 val_loss 4.1880 (EMA weights 4.0964)
+   >> The history of the city| is well-defined and can be used to assess a number of people's lives. / Some people may have had a very serious medical condition, but others may be experiencing some sort of health problems. / There are many factors that can make you feel as though you are being overweight or having a heart disease or having diabetes. However, there are some lifestyle choices that can help you make healthy lifestyle choices. / Other factors that may be included in the regular diet include: / - exercise, staying, and eating well. / - exercise together and being in a healthy environment. / - exercise, including
+   >> In mathematics, a prime number is| sometimes referred to as "first word." / When I first noticed about the phrase "I was talking in the first place that I had the first two names," I think the second thought was a real one. / The first person was a computer, though his name was usually taken from another name. One person asked me to look at the last name, and told me what he was thinking. / When I got up to the office when I was asked to make another name, I heard it about the last name. Then I thought I was talking about what I said. / When it was finished
+   >> Plants need sunlight because|, if the soil is dry, they do need to be sertilized. / The soil will be very sown and germinated, but the root ball should be firm. The best part is to make sure that the soil does not get any of it. / The soil is important to the roots of plants and of the soil as well as in the soil. The soil must be very high in alkaline soil that is rich in potassium and magnesium. The soil should be well aerated with very low pH. The soil should be moist but should be light, in other words,
+step   8000 loss 4.1900 kl 0.8277 lr 4.38e-04 gn 0.23 27,107 tok/s mem 24.1GB rate 0.048 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.06 0.08]
+step   8500 loss 4.1291 kl 0.8298 lr 4.18e-04 gn 0.25 27,015 tok/s mem 24.1GB rate 0.049 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.06 0.08]
+step   9000 loss 4.0365 kl 0.8697 lr 3.96e-04 gn 0.30 27,058 tok/s mem 24.1GB rate 0.049 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.06 0.08]
+step   9500 loss 4.1038 kl 0.7479 lr 3.74e-04 gn 0.23 27,113 tok/s mem 24.1GB rate 0.049 [0.05 0.04 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.06 0.08]
+step  10000 loss 4.0190 kl 0.8087 lr 3.52e-04 gn 0.26 27,079 tok/s mem 24.1GB rate 0.052 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.06 0.08]
+== eval step 10000 val_loss 4.0924 (EMA weights 4.0230)
+   >> The history of the city| is a source of inspiration for the people who sought it. The city’s people are a source of inspiration for their people. They are often the leaders of our nation. And it’s the pride of our people that we serve them in shaping our people. And with our community we are one of the best people for the people of our nation.
+   >> In mathematics, a prime number is| a prime number, a decimal number, a denominator, and a number. So, how many people make up the fraction of the number, and how many? There are many ways to resolve the problem. You might think, “We’re going to solve all the problems by solving some number problems,” you can use the technique. / Here are some ways you can save time and money from the problems yourself. / - Set up a task with students to solve a number, or a task. / - Use small groups to solve a number problem. / - Use smaller
+   >> Plants need sunlight because| they are easier to extract from food and fiber. / Boil and the Environment / So are you only to take your food? You can find the amount of food a person does for you. The average person is 11-16 hours per person, and the average person takes 6 hours to reach the top 10 points of the food chain. / The above table shows the top food consumption rates of food and water. / The bottom line here is the bottom number per student. / This graph shows that the top left side gets the bottom right food waste. / The bottom third top bottom is the bottom
+gradient spike at step 10161: gn 1.44 (median 0.27), loss 4.0563; layers.0.w_in.weight 0.91, head.w_cls 0.81, mems.0.v_in.weight 0.52, mems.0.w_out.weight 0.46
+step  10500 loss 4.0524 kl 0.7862 lr 3.30e-04 gn 0.29 27,075 tok/s mem 24.1GB rate 0.051 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.06 0.08]
+step  11000 loss 3.9274 kl 0.7613 lr 3.08e-04 gn 0.26 27,115 tok/s mem 24.1GB rate 0.052 [0.05 0.05 0.04 0.04 0.05 0.04 0.04 0.05 0.06 0.06 0.06 0.08]
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 10000
+params 159.90M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step  10500 loss 4.1769 kl 0.7942 lr 3.30e-04 gn 0.27 27,094 tok/s mem 22.7GB rate 0.050 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.06 0.08]
+step  11000 loss 4.1136 kl 0.7870 lr 3.08e-04 gn 0.27 27,194 tok/s mem 22.7GB rate 0.052 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.06 0.08]
+step  11500 loss 3.9983 kl 0.7690 lr 2.86e-04 gn 0.27 27,193 tok/s mem 22.7GB rate 0.052 [0.05 0.05 0.04 0.04 0.04 0.04 0.04 0.05 0.06 0.06 0.07 0.08]
+step  12000 loss 3.9730 kl 0.7222 lr 2.64e-04 gn 0.29 27,205 tok/s mem 22.7GB rate 0.054 [0.05 0.05 0.04 0.04 0.05 0.04 0.04 0.05 0.06 0.06 0.07 0.09]
+step  12500 loss 3.9465 kl 0.7001 lr 2.42e-04 gn 0.26 27,233 tok/s mem 22.7GB rate 0.054 [0.05 0.05 0.04 0.04 0.05 0.04 0.05 0.05 0.06 0.06 0.07 0.09]
+== eval step 12500 val_loss 4.0241 (EMA weights 3.9714)
+   >> The history of the city|, of the present year, is a great example of the past. / It was also the site of the Old Town of Long March, which was named the site of the ancient Roman town. It was the name of the former city and was an important cultural center in the city. The present ancient city of this town, one of the present-day cities of the former capital of the city of the former city of the ancient city of the city was a royal palace. / There are a number of ancient cities and cities in the city of this town which are not easily accessible. There are two
+   >> In mathematics, a prime number is| considered a number. According to that estimate, the number of numbers in a number can be divided into two numbers. Therefore, it can be divided into two and divided by the number of the number of the number of a number in a sequence.
+   >> Plants need sunlight because| it is the color that is most attractive for people and because it is one of the main reasons that plants may be an issue. / - It is the second plant kingdom that is also called the “peal fauna” or “whole plant.” To this end, the plants that are produced will be green in color. / - The light that is given by plants is called the “black-colored”. / - The light that is present in a rock is called the “blossom”. / It is the light that is produced by
+step  13000 loss 3.8788 kl 0.6955 lr 2.22e-04 gn 0.26 27,252 tok/s mem 23.5GB rate 0.054 [0.05 0.05 0.04 0.04 0.05 0.04 0.05 0.05 0.06 0.07 0.07 0.09]
+step  13500 loss 3.9287 kl 0.7031 lr 2.02e-04 gn 0.25 27,272 tok/s mem 23.5GB rate 0.056 [0.05 0.05 0.04 0.04 0.05 0.05 0.05 0.06 0.06 0.07 0.07 0.09]
+step  14000 loss 4.1062 kl 0.8098 lr 1.82e-04 gn 0.34 27,287 tok/s mem 23.5GB rate 0.056 [0.05 0.05 0.04 0.04 0.05 0.05 0.04 0.05 0.06 0.07 0.07 0.09]
+gradient spike at step 14228: gn 1.73 (median 0.27), loss 3.8518; layers.0.w_in.weight 1.12, head.w_cls 0.90, mems.0.v_in.weight 0.63, mems.0.w_out.weight 0.60
+step  14500 loss 4.0132 kl 0.7254 lr 1.64e-04 gn 0.30 27,269 tok/s mem 23.5GB rate 0.056 [0.05 0.05 0.04 0.04 0.05 0.05 0.05 0.06 0.06 0.07 0.07 0.09]
+step  15000 loss 4.0914 kl 0.7376 lr 1.47e-04 gn 0.29 27,267 tok/s mem 23.5GB rate 0.056 [0.05 0.05 0.04 0.04 0.05 0.05 0.05 0.05 0.06 0.07 0.07 0.09]
+== eval step 15000 val_loss 3.9698 (EMA weights 3.9366)
+   >> The history of the city|, including the city of Piazza or the city of Piazza, was founded by the Roman Emperor Akbar of Mysore in 1561. / The city's name, the city, was chosen from a general reference to the city, but not to a city's name. It was built in 705 by an archaeological survey, which measured the city's population as the city's population. / It contains 1,500 historical sites: / - one of the cities of the city, the city is the most diverse city in the world from the same city that is the city.
+   >> In mathematics, a prime number is| a prime number, which indicates that the number of prime numbers is prime. A prime number is not prime, however, when a prime number is prime, a prime number is prime. / In the case of the prime prime prime, prime prime has a prime number. The prime prime is prime prime. It is not a prime prime, with its divinity only constant. / This word list is useful for understanding math problems in math, science, and business.
+   >> Plants need sunlight because| of their intense heat and humidity. / On average, a lot of our indoor plants have a lot of moisture, and their moisture content is lower than that of other plants. / There is a great deal of variation in the humidity levels between the plants and that of plants, and both plants and their plants and animals are not affected by a particular climate change event. / The humidity levels are based on plant growth, with the humidity levels as well as the humidity. If we do not control humidity, we can have a plant and its plants and we will see some humidity levels. / What is a
+step  15500 loss 3.9429 kl 0.6624 lr 1.31e-04 gn 0.27 27,264 tok/s mem 24.1GB rate 0.058 [0.05 0.05 0.04 0.04 0.05 0.05 0.05 0.06 0.06 0.07 0.08 0.10]
+step  16000 loss 3.9814 kl 0.6641 lr 1.17e-04 gn 0.27 27,273 tok/s mem 24.1GB rate 0.059 [0.05 0.05 0.04 0.04 0.05 0.05 0.05 0.06 0.06 0.07 0.08 0.10]
+step  16500 loss 3.9301 kl 0.6524 lr 1.04e-04 gn 0.31 27,280 tok/s mem 24.1GB rate 0.059 [0.05 0.05 0.05 0.04 0.05 0.05 0.05 0.06 0.06 0.07 0.08 0.10]
+step  17000 loss 3.9192 kl 0.6781 lr 9.26e-05 gn 0.30 27,283 tok/s mem 24.1GB rate 0.060 [0.05 0.05 0.04 0.04 0.05 0.05 0.05 0.06 0.06 0.07 0.08 0.10]
+step  17500 loss 3.9830 kl 0.6153 lr 8.28e-05 gn 0.25 27,285 tok/s mem 24.1GB rate 0.061 [0.05 0.05 0.05 0.04 0.05 0.05 0.05 0.06 0.07 0.07 0.08 0.10]
+== eval step 17500 val_loss 3.9316 (EMA weights 3.9141)
+   >> The history of the city| in the United States had been a direct influence on the city’s history. / The historic city center was located in the city center and was a place of worship, for the poor and needy, and a place where the ancient city was built and built. The city built a house that stood on top of the city. / The original location was that of the ancient town of the city of New York City the city of Paris. The city was home to another, a city that would have been a city that had an ideal culture that had been abandoned over the past century. The original city
+   >> In mathematics, a prime number is| the number that precedes an actual value or percentage of a value. What is the value of a unit, and how does the value of a number actually result from its value of its value? / - If 1 or 0 is equal to 1 and 1 is equal to 1, then 0 is one with a different value, and 0 is equal to 1. / - If 1 has at least one positive element, and if 2 is negative, then 2 is positive. If 2 is positive, then the value of x is negative. If 2 is negative, then 0 is positive. If 5 is
+   >> Plants need sunlight because| their eyes cannot be seen in the light and are unable to absorb wavelengths, so they should be exposed to the sun. In a few cases, this is not necessary. / To prevent the use of pesticides that harm the plant, you should wear sunscreen with a UV-D (E) sun-loving spray. If you're using a sunscreen, apply sunscreen and UV-C (B) D to prevent it, too. If you use a sunscreen, then apply sunscreen with a sunscreen. / If you are using sunscreen and are using sunscreen, contact your local Health Department or local state or local
+step  18000 loss 3.8291 kl 0.6237 lr 7.46e-05 gn 0.25 27,310 tok/s mem 24.1GB rate 0.061 [0.05 0.05 0.05 0.04 0.05 0.05 0.05 0.06 0.07 0.07 0.08 0.10]
+step  18500 loss 3.9464 kl 0.6593 lr 6.83e-05 gn 0.29 27,311 tok/s mem 24.1GB rate 0.062 [0.05 0.05 0.05 0.04 0.05 0.05 0.05 0.06 0.07 0.08 0.08 0.10]
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 17500
+params 159.90M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step  18000 loss 3.8692 kl 0.6277 lr 7.46e-05 gn 0.29 27,251 tok/s mem 22.7GB rate 0.061 [0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.06 0.07 0.08 0.08 0.10]
+step  18500 loss 3.8251 kl 0.6382 lr 6.83e-05 gn 0.30 27,326 tok/s mem 22.7GB rate 0.062 [0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.06 0.07 0.08 0.08 0.10]
+step  19000 loss 3.9852 kl 0.6076 lr 6.37e-05 gn 0.26 27,328 tok/s mem 22.7GB rate 0.062 [0.05 0.05 0.05 0.04 0.05 0.05 0.05 0.06 0.07 0.08 0.08 0.10]
+step  19500 loss 3.8951 kl 0.6074 lr 6.09e-05 gn 0.30 27,341 tok/s mem 22.7GB rate 0.063 [0.05 0.05 0.05 0.05 0.05 0.05 0.06 0.06 0.07 0.08 0.08 0.10]
+step  20000 loss 3.9254 kl 0.6378 lr 6.00e-05 gn 0.28 27,342 tok/s mem 22.7GB rate 0.063 [0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.06 0.07 0.08 0.08 0.11]
+== eval step 20000 val_loss 3.9129 (EMA weights 3.9010)
+   >> The history of the city| of Yucatan is the greatest legacy of the city. / The city of Yucatan is a city in the province of Tel Aviv. It was constructed by the King of Yucatan as a city, and a part of the city of Yucatan was the capital of Yucatan. It is the world’s largest producer of oil. The city was founded in 1221, and the city was the heart of the city. It was later that it became the City’s capital at the time when King Yucatan was founded. / It’s one
+   >> In mathematics, a prime number is| set on the basis of a fixed number of prime numbers. For example, say A, which is 2, 4, 4, 5, 12, and 16 are 2, which are 2, 5, 6, 8, and 9. These are also called the form of prime numbers, which is the sum of the denominator and the prime number. / In the prime number you can add a prime number. This is the number of positive numbers with a prime number. This number is an integer number with three prime prime numbers, and a prime number with a prime number. In the prime number
+   >> Plants need sunlight because| they are able to form the seedlings of plants.” / Aerina, S. A., Vayak, R., & P. Weisling, T. A. (2012). Anemones (T.). Ecosystems and the Plants of the Eocene: A Study of Earth’s Adaptations of Ecology and Evolutionary Evolution, 2nd ed. (E. E. K. D. W. Duaneck, D. J. Wilson, & J. W. T. Stansbury, N. E. Lening, S.

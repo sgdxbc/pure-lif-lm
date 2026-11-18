@@ -1,0 +1,34 @@
+queued the next part of runs/g35_mspk: job 1164803
+xgpg6 NVIDIA A100-PCIE-40GB | runs/g35_mspk | --vocab 50304 --d_model 768 --d_hidden 3072 --n_layers 12 --tau_min 0.5 --tau_max 200.0 --hard_reset true --detach_reset false --sg fast_sigmoid --alpha 4.0 --in_norm theta --out_init 0.02 --head_init 0.02 --in_groups 2 --in_short 2048 --out_classes 225 --out_short 8192 --learn_beta true --learn_theta true --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --leak_rank 96 --in_rank 0 --steps_per_token 1 --mem_heads 8 --mem_keys 64 --mem_dv 64 --mem_every 1 --mem_tau_min 8.0 --mem_tau_max 1024.0 --mem_theta 1.5 --mem_chunk 128 --mem_eps 1.0 --mem_write_avg true --mem_src spikes --wbits 0 --wgroup 128 --arch snn --n_heads 6 --batch 32 --accum 4 --seq 1024 --steps 20000 --lr 0.0006 --min_lr_frac 0.1 --schedule cosine --decay_steps 0 --class_file runs/classes/tf163_head225_s8192.npy --in_class_file runs/classes/tf163_embed220_s2048.npy --wbits_from 0 --log_file log.live.jsonl --warmup 1000 --wd 0.1 --embed_wd -1.0 --neuron_lr_mult 10.0 --clip 1.0 --spike_log 5.0 --spike_skip 10.0 --eval_every 2500 --eval_batches 40 --log_every 500 --seed 0 --sample_every 0 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1.0 --ema 0.999 --data data/fineweb --tokenizer gpt2.json --optim adamw --muon_momentum 0.95 --hint_weight 0.0 --hint_layers 0
+params 159.90M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3008
+== eval step 2500 val_loss 4.5852 (EMA weights 4.4945)
+Traceback (most recent call last):
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 5.16 GiB. GPU 0 has a total capacity of 39.25 GiB of which 2.95 GiB is free. Including non-PyTorch memory, this process has 36.19 GiB memory in use. Process 440300 has 6.36 GiB memory in use. Process 440307 has 6.36 GiB memory in use. Of the allocated memory 22.12 GiB is allocated by PyTorch, and 13.83 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+params 159.90M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 5000 val_loss 4.3149 (EMA weights 4.2174)
+== eval step 7500 val_loss 4.1880 (EMA weights 4.0964)
+== eval step 10000 val_loss 4.0924 (EMA weights 4.0230)
+params 159.90M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 4.0241 (EMA weights 3.9714)
+== eval step 15000 val_loss 3.9698 (EMA weights 3.9366)
+== eval step 17500 val_loss 3.9316 (EMA weights 3.9141)
+params 159.90M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 20000 val_loss 3.9129 (EMA weights 3.9010)
+hellaswag        acc 0.2659  acc_norm 0.2679
+lambada_openai   perplexity 14878.1512  acc 0.0196
+piqa             acc 0.5707  acc_norm 0.5555
+arc_easy         acc 0.4263  acc_norm 0.3876
+arc_challenge    acc 0.1766  acc_norm 0.2304
+winogrande       acc 0.4933
+hellaswag        acc 0.2686  acc_norm 0.2695
+lambada_openai   perplexity 13664.6102  acc 0.0192
+piqa             acc 0.5740  acc_norm 0.5664
+arc_easy         acc 0.4259  acc_norm 0.3843
+arc_challenge    acc 0.1852  acc_norm 0.2218
+winogrande       acc 0.4783
+ "val_loss": 3.9245659729058597,
+g35_mspk                 snn  159.9M  8-bit  159.9 MB  dense MACs   45.7M + sparse adds  4.83M  state 1327.1 KB  MB/token 8-bit: 1 stream   98.9, 16 streams   7.2  (rate 0.062)
+  weights rounded to 8 bits: "val_loss": 3.913060253434345,
+  weights rounded to 4 bits: "val_loss": 4.044707831418398,
+done Thu Nov 19 06:45:33 AM +08 2026

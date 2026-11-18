@@ -1,0 +1,1 @@
+g35_mspk                 snn  159.9M  8-bit  159.9 MB  dense MACs   45.7M + sparse adds  4.83M  state 1327.1 KB  MB/token 8-bit: 1 stream   98.9, 16 streams   7.2  (rate 0.062)
