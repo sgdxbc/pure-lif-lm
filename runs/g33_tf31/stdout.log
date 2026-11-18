@@ -1,0 +1,226 @@
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+params 30.74M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+step      1 loss 10.8672 kl 7.4048 lr 1.00e-06 gn 3.58 10,438 tok/s mem 48.7GB rate 0.000 [0.00]
+step    500 loss 6.1932 kl 2.7168 lr 5.00e-04 gn 0.44 216,676 tok/s mem 49.0GB rate 0.000 [0.00]
+step   1000 loss 5.4111 kl 2.0012 lr 1.00e-03 gn 0.69 214,561 tok/s mem 49.0GB rate 0.000 [0.00]
+step   1500 loss 4.9140 kl 1.5167 lr 1.00e-03 gn 0.62 213,777 tok/s mem 49.0GB rate 0.000 [0.00]
+step   2000 loss 4.7297 kl 1.3191 lr 1.00e-03 gn 0.67 213,700 tok/s mem 49.0GB rate 0.000 [0.00]
+step   2500 loss 4.4941 kl 1.1614 lr 1.00e-03 gn 0.63 213,700 tok/s mem 49.0GB rate 0.000 [0.00]
+step   3000 loss 4.4512 kl 1.0803 lr 1.00e-03 gn 0.56 213,703 tok/s mem 49.0GB rate 0.000 [0.00]
+step   3500 loss 4.2583 kl 1.0045 lr 1.00e-03 gn 0.51 213,309 tok/s mem 49.0GB rate 0.000 [0.00]
+step   4000 loss 4.2939 kl 0.9335 lr 1.00e-03 gn 0.50 213,203 tok/s mem 49.0GB rate 0.000 [0.00]
+step   4500 loss 4.1071 kl 0.9276 lr 1.00e-03 gn 0.56 212,985 tok/s mem 49.0GB rate 0.000 [0.00]
+step   5000 loss 4.0677 kl 0.8671 lr 1.00e-03 gn 0.52 212,830 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 5000 val_loss 4.2395 (EMA weights 4.1570)
+   >> The history of the city| of Bauro. / What is an earthquake that would be the beginning of a tsunami? The city of Bauro is a tsunami that is tsunami-prone. / The city has been part of a tsunami-prone area in two decades (I say, “What is a tsunami-intensive tsunami?”). / The tsunami-brough is the only one since the beginning of a tsunami. / It is another major earthquake that, during the tsunami, is one of the main major disasters of the tsunami. / The tsunami in the area is a major threat of the tsunami.
+   >> In mathematics, a prime number is| a two-part formula, not a good. / Now, you will find one-part formula that is considered a square. We need a very simple calculator, which you will see the values in numbers, even though it is very small. / So, since we have a calculator you need a calculator you need an calculator or a calculator. / Now, we need a calculator of numbers to get you a decimal. / So, if you want another calculator you need an calculator, it should you choose the calculator and make it a large calculator for a little less time. / You can find the
+   >> Plants need sunlight because| they are so heavy it is used to keep the body warm. / If you are not sure the plants are too short to use, it is better to use the best form of sun as you need it. / How to use one of these bulbs? / The sun may be very hot and dry. / A shade shade is essential to the body's health. It is more likely that the sun may be a more severe than a sun shade. / You won't be able to heat the sun. / Sitting more often helps you reduce your risk of having an underlying underlying problem. / S
+step   5500 loss 4.1154 kl 0.8624 lr 1.00e-03 gn 0.50 213,556 tok/s mem 49.0GB rate 0.000 [0.00]
+step   6000 loss 4.2743 kl 0.8658 lr 1.00e-03 gn 0.66 212,428 tok/s mem 49.0GB rate 0.000 [0.00]
+step   6500 loss 4.1929 kl 0.8398 lr 1.00e-03 gn 0.53 212,416 tok/s mem 49.0GB rate 0.000 [0.00]
+step   7000 loss 4.0850 kl 0.8227 lr 1.00e-03 gn 0.52 212,214 tok/s mem 49.0GB rate 0.000 [0.00]
+step   7500 loss 4.0767 kl 0.8372 lr 1.00e-03 gn 0.48 212,310 tok/s mem 49.0GB rate 0.000 [0.00]
+step   8000 loss 4.1726 kl 0.8218 lr 1.00e-03 gn 0.52 212,382 tok/s mem 49.0GB rate 0.000 [0.00]
+step   8500 loss 4.1126 kl 0.8197 lr 1.00e-03 gn 0.46 212,406 tok/s mem 49.0GB rate 0.000 [0.00]
+step   9000 loss 4.0722 kl 0.7880 lr 1.00e-03 gn 0.45 212,419 tok/s mem 49.0GB rate 0.000 [0.00]
+step   9500 loss 4.1597 kl 0.8041 lr 1.00e-03 gn 0.51 212,328 tok/s mem 49.0GB rate 0.000 [0.00]
+step  10000 loss 4.0352 kl 0.7584 lr 1.00e-03 gn 0.48 212,536 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 10000 val_loss 4.1059 (EMA weights 3.9998)
+   >> The history of the city| of Charts are quite different from the city of Charts. / Charts have long been a city in the form of great city. / Chart is said to have been the ancient city of Charts. / As in the history of Charts we see it is the site of Charts there are of the village of Charts. / The city of Charts is the city of Charts. / Charts is located in Charts and there is a village of Charts. / The people of Charts are of the town of Charts. / Charts are of the town
+   >> In mathematics, a prime number is| used to write number of works in an array. In a way, it has to be said that it is a good idea to use a number of works in a single function. It also has to be said that there are some number of works in which a function contains all of a works in a set, and not all of a number are stored in a function. The value of the works in a given function is not known until at the start of the first program. It is generally assumed that the function of the works in a number of works is one in which a work is done in order
+   >> Plants need sunlight because| they grow in an environment where they have adequate sunlight. This is why the plants do not need to grow plants with enough sunlight for them to grow in one area. / A little bit of a certain thing is that you are not sure for them because you don't need to work with them. / To test the weather well, you must install a thermostat in your house to help keep the temperature up and humidity. / If you want to take a look at some of the most common conditions, you know that people can have a problem with it. / As a result, you can look
+step  10500 loss 4.0992 kl 0.7852 lr 1.00e-03 gn 0.47 212,382 tok/s mem 49.0GB rate 0.000 [0.00]
+step  11000 loss 4.0018 kl 0.7741 lr 1.00e-03 gn 0.43 212,514 tok/s mem 49.0GB rate 0.000 [0.00]
+step  11500 loss 4.0155 kl 0.7569 lr 1.00e-03 gn 0.47 212,423 tok/s mem 49.0GB rate 0.000 [0.00]
+step  12000 loss 4.0656 kl 0.7322 lr 1.00e-03 gn 0.47 212,562 tok/s mem 49.0GB rate 0.000 [0.00]
+step  12500 loss 4.0116 kl 0.7489 lr 1.00e-03 gn 0.50 212,408 tok/s mem 49.0GB rate 0.000 [0.00]
+step  13000 loss 4.1433 kl 0.7801 lr 1.00e-03 gn 0.53 212,536 tok/s mem 49.0GB rate 0.000 [0.00]
+step  13500 loss 4.0853 kl 0.7403 lr 1.00e-03 gn 0.49 212,564 tok/s mem 49.0GB rate 0.000 [0.00]
+step  14000 loss 3.9549 kl 0.7355 lr 1.00e-03 gn 0.53 212,554 tok/s mem 49.0GB rate 0.000 [0.00]
+step  14500 loss 4.0318 kl 0.7372 lr 1.00e-03 gn 0.52 212,589 tok/s mem 49.0GB rate 0.000 [0.00]
+step  15000 loss 4.0425 kl 0.7271 lr 1.00e-03 gn 0.50 212,574 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 15000 val_loss 4.0449 (EMA weights 3.9371)
+   >> The history of the city| we see today. / - The city of San Francisco was located in the town of San Francisco in the City of San Francisco, it was the largest city. / - The city also had its own city. San Francisco was home to the city’s chief and a city of nine towns. / - The city of San Francisco, the city of San Francisco in addition to the city of San Francisco, was the largest city there ever. / - San Francisco City, San Francisco, San Francisco, San Francisco, San Francisco, San Francisco, San Francisco, San Francisco, San Francisco, San
+   >> In mathematics, a prime number is| a prime number when the numbers are prime number and prime number is prime number. So the prime number is prime number. So the prime number is prime number. / The prime number is prime number. How does the prime number be prime number? It is prime number. So the prime number is prime number. So the prime number is prime number. So the prime number are prime number. So the prime number is prime number. / The prime number is prime number by prime number. So the prime number is prime number. So the prime number is prime number. / The prime number is prime number
+   >> Plants need sunlight because| it helps to cool the leaves. / - Remove unwanted buds / - Remove any leaves from the leaves / - Remove damaged leaves / - Remove any remaining leaves from the leaves / - Remove any leaves of the plant / - Remove dead leaves from the leaves / - Remove any leaves that have gone in the middle of the new leaves
+step  15500 loss 4.0265 kl 0.7221 lr 1.00e-03 gn 0.48 212,250 tok/s mem 49.0GB rate 0.000 [0.00]
+step  16000 loss 3.9558 kl 0.7080 lr 1.00e-03 gn 0.50 211,982 tok/s mem 49.0GB rate 0.000 [0.00]
+step  16500 loss 4.0070 kl 0.7561 lr 1.00e-03 gn 0.54 212,121 tok/s mem 49.0GB rate 0.000 [0.00]
+step  17000 loss 4.0202 kl 0.7185 lr 1.00e-03 gn 0.52 212,173 tok/s mem 49.0GB rate 0.000 [0.00]
+step  17500 loss 4.0035 kl 0.7226 lr 1.00e-03 gn 0.56 212,149 tok/s mem 49.0GB rate 0.000 [0.00]
+step  18000 loss 4.0519 kl 0.6953 lr 1.00e-03 gn 0.51 212,417 tok/s mem 49.0GB rate 0.000 [0.00]
+step  18500 loss 4.0293 kl 0.7071 lr 1.00e-03 gn 0.49 212,263 tok/s mem 49.0GB rate 0.000 [0.00]
+step  19000 loss 4.0145 kl 0.7159 lr 1.00e-03 gn 0.52 212,418 tok/s mem 49.0GB rate 0.000 [0.00]
+step  19500 loss 4.0724 kl 0.7120 lr 1.00e-03 gn 0.52 212,501 tok/s mem 49.0GB rate 0.000 [0.00]
+step  20000 loss 3.9715 kl 0.6855 lr 1.00e-03 gn 0.53 212,701 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 20000 val_loss 4.0198 (EMA weights 3.9036)
+   >> The history of the city| of Yashm is the greatest legacy of the city of Yashm. / When the city of Yashm is located in the town of Yashm, Yashm's history of a community like Yashm and Yashm is not only a historical historical record but one of the great works of the city of Yashm. It is the ancient site of Yashm, which dates to the early Islamic times, which is the site of Yashm. Yashm's history of the city of Yashm is one of the oldest places in the history of
+   >> In mathematics, a prime number is| set on the basis of the mathematical model of the mathematics. For example, the mathematical model of Mathematics requires the calculation of the physical force force, or the force of a constant force. Also, the fundamental factors of a mathematical model are the formulas of that force. The mathematical model of Maths is the formula which defines the mathematical model of Mathematics. Mathematics is a mathematical model of Mathematics. Mathematics is a mathematical model of Mathematics. Mathematics is a mathematical model of Mathematics. Mathematics is a mathematical model of Mathematics. Mathematics is a mathematical model of Mathematics. Mathematics is a mathematical model of Mathematics. Mathematics is
+   >> Plants need sunlight because| they are able to produce enough water to release the sun’s heat. This can be done by the sun and other suns without the sun’s heat. / You can see the photos below. / The sun’s heat produces about 2 degrees F heat, depending on the sun. It’s only about 9 degrees F heat, depending on your temperature. The sun is the best source of sunlight for your sun. / A sun-flower seeds are a very effective source of water so the sun’s heat is about 10 degrees F hotter than the sun.
+step  20500 loss 3.8735 kl 0.6768 lr 1.00e-03 gn 0.51 212,552 tok/s mem 49.0GB rate 0.000 [0.00]
+step  21000 loss 4.0456 kl 0.7125 lr 1.00e-03 gn 0.51 212,670 tok/s mem 49.0GB rate 0.000 [0.00]
+step  21500 loss 3.9822 kl 0.6795 lr 1.00e-03 gn 0.47 212,683 tok/s mem 49.0GB rate 0.000 [0.00]
+step  22000 loss 4.0737 kl 0.6961 lr 1.00e-03 gn 0.50 212,795 tok/s mem 49.0GB rate 0.000 [0.00]
+step  22500 loss 4.0241 kl 0.6908 lr 1.00e-03 gn 0.49 212,682 tok/s mem 49.0GB rate 0.000 [0.00]
+step  23000 loss 3.9577 kl 0.6915 lr 1.00e-03 gn 0.53 212,715 tok/s mem 49.0GB rate 0.000 [0.00]
+step  23500 loss 3.9639 kl 0.6826 lr 1.00e-03 gn 0.50 212,784 tok/s mem 49.0GB rate 0.000 [0.00]
+step  24000 loss 4.0001 kl 0.6996 lr 1.00e-03 gn 0.52 212,813 tok/s mem 49.0GB rate 0.000 [0.00]
+step  24500 loss 3.8911 kl 0.6771 lr 1.00e-03 gn 0.46 212,765 tok/s mem 49.0GB rate 0.000 [0.00]
+step  25000 loss 3.8859 kl 0.6680 lr 1.00e-03 gn 0.47 212,758 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 25000 val_loss 4.0004 (EMA weights 3.8832)
+   >> The history of the city|. It was in the middle of the 18th century, that of the people of the city. / The city was the first city to exist in the world and has existed for thousands of years. The cities and the towns of the city of the city were originally the first cities to exist in the 20th century, the first large cities to exist in the 20th century, and the first cities to exist in the world. The cities of the city were the main cities in the 19th century, and some of the cities from the early 20th century were built and the first cities to exist
+   >> In mathematics, a prime number is| assumed, as explained by the function: / - For a number, a child is given a decimal line, by which the numbers have the number. / - For a number, a number is assumed to be the number. / - For a number, a number is expected by the child. / - For a number, a number is derived by the child to be in the number. / - For a number with a number is assumed to be the number of the digits. / - For a number with a number, the child must have a number number. / - For a number with a
+   >> Plants need sunlight because| they are a little more expensive than photosynthesis. They are easy to get because they need sunlight to survive. If you get them to survive, their plants need to be planted in the spring, and when they are in the early spring these plants will be very expensive. And they don't need to be done. But they're not too expensive to buy that soil. Just be sure to plant that soil. Once you plant a good deal of soil that's not easy to grow, your plants need to be planted in the spring where they can grow. / The best way to grow your plants is
+step  25500 loss 4.0241 kl 0.6891 lr 1.00e-03 gn 0.51 212,674 tok/s mem 49.0GB rate 0.000 [0.00]
+step  26000 loss 3.9265 kl 0.7042 lr 1.00e-03 gn 0.48 212,545 tok/s mem 49.0GB rate 0.000 [0.00]
+step  26500 loss 3.9605 kl 0.6795 lr 1.00e-03 gn 0.51 212,443 tok/s mem 49.0GB rate 0.000 [0.00]
+step  27000 loss 4.0029 kl 0.6881 lr 1.00e-03 gn 0.52 212,512 tok/s mem 49.0GB rate 0.000 [0.00]
+step  27500 loss 3.9922 kl 0.6968 lr 1.00e-03 gn 0.54 212,528 tok/s mem 49.0GB rate 0.000 [0.00]
+step  28000 loss 3.9478 kl 0.6768 lr 1.00e-03 gn 0.46 212,517 tok/s mem 49.0GB rate 0.000 [0.00]
+step  28500 loss 4.0421 kl 0.6685 lr 1.00e-03 gn 0.48 212,596 tok/s mem 49.0GB rate 0.000 [0.00]
+step  29000 loss 4.0154 kl 0.6828 lr 1.00e-03 gn 0.49 212,667 tok/s mem 49.0GB rate 0.000 [0.00]
+step  29500 loss 3.8616 kl 0.6896 lr 1.00e-03 gn 0.47 212,680 tok/s mem 49.0GB rate 0.000 [0.00]
+step  30000 loss 3.9983 kl 0.7035 lr 1.00e-03 gn 0.51 212,632 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 30000 val_loss 3.9864 (EMA weights 3.8681)
+   >> The history of the city| is the biggest source of traffic with the rest of the world. The city has been the catalyst for the emergence of the city’s new city, which is the largest city in the world. / The city’s growth is a major result of the current events of the city that have begun. An expansion to commercialization of cities, which had been the most important in that modern economy in history, has been the culprit. / The city’s rapid growth and the expansion of infrastructure have become a key part of the economy in shaping modern society. This includes cities, bridges,
+   >> In mathematics, a prime number is| the number of objects we can look at. A number is a number of objects that can be measured. A number is a number of objects that can be measured. The number of objects that are measured are called the number of objects that are measured. A number of objects that are measured are called the number of objects that are measured. The number of objects that are measured are called the number of objects that are measured. / The number of objects that are measured are called the number of objects that are measured. For example: / A number of objects that are measured are called the number of objects that
+   >> Plants need sunlight because| it helps to grow plants throughout the year. / In most ways in the world, it can help in increasing the humidity. However, water can also help you grow some of the most humid areas during winter. These can also help you grow plants so you can grow your plants accordingly. / Paintaining Hydration: / - Use a warm water system to prevent rainbiotic runoff from the trees. This water water can be useful for you to use as well. / - Apply fresh air for the production of leaves and leaves. / - Apply the water regularly to the plant after planting. / 
+step  30500 loss 3.8712 kl 0.6795 lr 1.00e-03 gn 0.48 212,753 tok/s mem 49.0GB rate 0.000 [0.00]
+step  31000 loss 3.9976 kl 0.6630 lr 1.00e-03 gn 0.50 212,720 tok/s mem 49.0GB rate 0.000 [0.00]
+step  31500 loss 3.9676 kl 0.6751 lr 1.00e-03 gn 0.52 212,851 tok/s mem 49.0GB rate 0.000 [0.00]
+step  32000 loss 3.9666 kl 0.6567 lr 1.00e-03 gn 0.49 212,799 tok/s mem 49.0GB rate 0.000 [0.00]
+step  32500 loss 4.0421 kl 0.6898 lr 1.00e-03 gn 0.53 212,576 tok/s mem 49.0GB rate 0.000 [0.00]
+step  33000 loss 3.9769 kl 0.6779 lr 1.00e-03 gn 0.51 212,536 tok/s mem 49.0GB rate 0.000 [0.00]
+step  33500 loss 3.9068 kl 0.6666 lr 1.00e-03 gn 0.49 212,450 tok/s mem 49.0GB rate 0.000 [0.00]
+step  34000 loss 3.8816 kl 0.6657 lr 1.00e-03 gn 0.48 212,469 tok/s mem 49.0GB rate 0.000 [0.00]
+step  34500 loss 3.8398 kl 0.6448 lr 1.00e-03 gn 0.52 212,546 tok/s mem 49.0GB rate 0.000 [0.00]
+step  35000 loss 3.8548 kl 0.6635 lr 1.00e-03 gn 0.53 212,576 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 35000 val_loss 3.9796 (EMA weights 3.8577)
+   >> The history of the city| of Jerusalem was a very important moment when the city of Jerusalem was still in its history. But the history of Jerusalem was not only a place of worship, it is not only the place where the city of Jerusalem was built. It is at the time the people of Jerusalem were not to know the place of the city, but the place of the city of Jerusalem. / This was another great point of reference to Jerusalem. / When the city of Jerusalem was not built, the town was not built. / This city was not built, it was not built, it was not the place where Jerusalem was
+   >> In mathematics, a prime number is| an algebraic value. The numerator can be used in this way. The denominator is an integrals (which are a series of integers). The denominator is a series of integers (which are the square or square of the integers). / What is an algebraic number? / An algebraic number is a series of integers which are equal integers. A number is a series of integers, but not a series of integers. An algebraic number is a series of integers. This is one of the six basic mathematical rules of the number system. An algebraic number is a series of integers
+   >> Plants need sunlight because| they don’t have any sun or shade. They can’t tolerate the sun more than 400 degrees of sun. / “If you don’t have sun, you’re going to get a great outdoors.” said Dr. Michael. ‘It’s great to start with more sun,” Dr. Michael said. / A sun can keep the sun from being too low. “It can also help you breathe while getting a great sun,” Dr. Michael said. “It is something that is wonderful for you and
+step  35500 loss 3.9648 kl 0.6744 lr 1.00e-03 gn 0.47 212,727 tok/s mem 49.0GB rate 0.000 [0.00]
+step  36000 loss 3.9972 kl 0.6830 lr 1.00e-03 gn 0.55 212,385 tok/s mem 49.0GB rate 0.000 [0.00]
+step  36500 loss 3.9486 kl 0.6772 lr 1.00e-03 gn 0.52 212,398 tok/s mem 49.0GB rate 0.000 [0.00]
+step  37000 loss 4.0776 kl 0.6794 lr 1.00e-03 gn 0.48 212,563 tok/s mem 49.0GB rate 0.000 [0.00]
+step  37500 loss 3.9444 kl 0.6811 lr 1.00e-03 gn 0.49 212,641 tok/s mem 49.0GB rate 0.000 [0.00]
+step  38000 loss 3.9150 kl 0.6556 lr 1.00e-03 gn 0.47 212,463 tok/s mem 49.0GB rate 0.000 [0.00]
+step  38500 loss 3.9318 kl 0.6846 lr 1.00e-03 gn 0.53 212,464 tok/s mem 49.0GB rate 0.000 [0.00]
+step  39000 loss 3.8329 kl 0.6447 lr 1.00e-03 gn 0.47 212,517 tok/s mem 49.0GB rate 0.000 [0.00]
+step  39500 loss 3.8874 kl 0.6596 lr 1.00e-03 gn 0.52 212,444 tok/s mem 49.0GB rate 0.000 [0.00]
+step  40000 loss 3.9806 kl 0.6452 lr 1.00e-03 gn 0.47 212,487 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 40000 val_loss 3.9692 (EMA weights 3.8491)
+   >> The history of the city| of London. This book is published in the English community of London. The book is published in the English community of London. / 2. A second volume which is published in the English community of London. / 3. A second edition of the British Society of London. / 4. A second edition which is published in the English community of London. / 5. A second edition of the British Society of London. / 6. A fourth edition which is published in the French community of London. / 6. The third edition of the British Society of London in the English community of London. / 7
+   >> In mathematics, a prime number is| the number of different units of a given number of individuals in the population, and the numbers of each individual that includes all the total numbers of individuals. (The numbers of each individual is divided according to their number of equal persons.) / One of these units is the following: / a = 1, / b = 5, / c = 10, / c = 20, / c = 25, / d = 20, / d = 20, / d = 20, / d = 20, / d = 20, / d = 22, / d = 20, / 6 = 4,
+   >> Plants need sunlight because| they need to be removed before they start breeding. In the early season, the temperatures around 40 degrees F will stay cooler. / For those of you age 50, there can be a couple of problems: / - Frequent watering! / - Reduced humidity levels / - Increased body temperature / - Increased weight / - Improved temperature / - Increased immune system / - Increased immune response / - Decreased energy levels / If you want to have plenty of sunlight, consider using your health care professional as a source of nutrients for your body. They will require more information and expertise to be helpful! / 1.
+step  40500 loss 3.8398 kl 0.6516 lr 1.00e-03 gn 0.50 212,452 tok/s mem 49.0GB rate 0.000 [0.00]
+step  41000 loss 3.9802 kl 0.6525 lr 1.00e-03 gn 0.45 212,529 tok/s mem 49.0GB rate 0.000 [0.00]
+step  41500 loss 4.0140 kl 0.6339 lr 1.00e-03 gn 0.48 212,643 tok/s mem 49.0GB rate 0.000 [0.00]
+step  42000 loss 3.9411 kl 0.6610 lr 1.00e-03 gn 0.50 212,629 tok/s mem 49.0GB rate 0.000 [0.00]
+step  42500 loss 3.8418 kl 0.6784 lr 1.00e-03 gn 0.51 212,554 tok/s mem 49.0GB rate 0.000 [0.00]
+step  43000 loss 3.9247 kl 0.6540 lr 1.00e-03 gn 0.47 212,666 tok/s mem 49.0GB rate 0.000 [0.00]
+step  43500 loss 4.0226 kl 0.6505 lr 1.00e-03 gn 0.50 212,749 tok/s mem 49.0GB rate 0.000 [0.00]
+step  44000 loss 4.0325 kl 0.6359 lr 1.00e-03 gn 0.47 212,734 tok/s mem 49.0GB rate 0.000 [0.00]
+step  44500 loss 3.9229 kl 0.6726 lr 1.00e-03 gn 0.55 212,588 tok/s mem 49.0GB rate 0.000 [0.00]
+step  45000 loss 3.9766 kl 0.6452 lr 1.00e-03 gn 0.47 212,740 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 45000 val_loss 3.9636 (EMA weights 3.8415)
+   >> The history of the city| and its future has been a place of cultural heritage. The city has the first archaeological and archaeological evidence of ancient Greece. It is believed to have emerged from a legacy of the old culture and its history. The city has been preserved in the cemetery, and has the second-most important modern-day cultural heritage. Since so many tourists can observe and report a history of ancient Greece, it is unlikely that a particular culture will be created as part of that cultural heritage. / The archaeological findings in the area that are being studied by archaeologists will be the first to examine the history of the area and they
+   >> In mathematics, a prime number is| a number. A number is a number which is the number in that is the number of the elements. A number is a number which is the number of the elements is the number of the elements. A number is the number of elements which are the elements that are the number of elements or elements in a number of the elements which are the number of elements which is the number of elements which is the number of elements and a number of elements which are the number of elements which are the number of elements which are the number of elements which are the number of elements which are the number of elements which are
+   >> Plants need sunlight because| their air filters are the source of heat for the soil. / Some children need to put their eyes on it to be the first to stop the flow of water. If your baby has left too many of the moisture in them, they can go too long to get it too much. Children need to be able to move their eyes to an environment that makes them more susceptible to severe weather conditions. Therefore, a child not only needs to be able to move the eyes to a safe location, but also to the environment that it is not conducive to the development of sleep patterns. / - Babies need
+step  45500 loss 3.9637 kl 0.6545 lr 1.00e-03 gn 0.53 212,996 tok/s mem 49.0GB rate 0.000 [0.00]
+step  46000 loss 3.9002 kl 0.6465 lr 1.00e-03 gn 0.46 212,794 tok/s mem 49.0GB rate 0.000 [0.00]
+step  46500 loss 4.0776 kl 0.6438 lr 1.00e-03 gn 0.46 212,740 tok/s mem 49.0GB rate 0.000 [0.00]
+step  47000 loss 3.9609 kl 0.6454 lr 1.00e-03 gn 0.46 212,828 tok/s mem 49.0GB rate 0.000 [0.00]
+step  47500 loss 3.9084 kl 0.6499 lr 1.00e-03 gn 0.54 212,664 tok/s mem 49.0GB rate 0.000 [0.00]
+step  48000 loss 3.9206 kl 0.6559 lr 1.00e-03 gn 0.51 212,828 tok/s mem 49.0GB rate 0.000 [0.00]
+step  48500 loss 3.9653 kl 0.6531 lr 1.00e-03 gn 0.45 212,677 tok/s mem 49.0GB rate 0.000 [0.00]
+step  49000 loss 3.8641 kl 0.6473 lr 1.00e-03 gn 0.48 212,831 tok/s mem 49.0GB rate 0.000 [0.00]
+step  49500 loss 3.8848 kl 0.6547 lr 1.00e-03 gn 0.52 212,708 tok/s mem 49.0GB rate 0.000 [0.00]
+step  50000 loss 3.9952 kl 0.6478 lr 1.00e-03 gn 0.47 212,766 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 50000 val_loss 3.9587 (EMA weights 3.8362)
+   >> The history of the city|'s history and nature, and the importance of the cities and the history of the city, and to the history of the town, is not to be confused with the historical tradition of the city, because the city is not to be a history, but rather an historical tradition of how the city originated and evolved. In the modern world, the city is not only a historical and historical story, it is not to be a historical one. / The city is the center of the world, in the center of the cities. The historic city is the center, a place where people can be seen, and
+   >> In mathematics, a prime number is| considered in mathematics. / Each mathematical number used in mathematics is divided into two components. The first is equal to the number of digits. This is the number of digits by a decimal number. / The second function that is the function of numbers is the decimal number. This is the decimal number used in mathematics. / The third function that is used is the decimal number used in mathematics. The decimal number used in mathematics is the decimal number used in mathematics. / The decimal number used in mathematics is the hexadecimal number used in math. The decimal number used in mathematics is also the decimal number
+   >> Plants need sunlight because| they are a better option to plant on the ground as well as plant them. / Some of the options are: / - Potassium nitrate. / - Fertilize plant roots and buds for planting so they are able to grow inside of a plant that is full of nutrients. / - Potassium nitrate. / - Potassium nitrate. / - Potassium nitrate. / - Potassium nitrate. / - Potassium nitrate. / - Potassium nitrate. / - Potassium nitrate. / - Potassium nitrate. / - Potassium nitrate
+step  50500 loss 3.9126 kl 0.6602 lr 1.00e-03 gn 0.49 212,130 tok/s mem 49.0GB rate 0.000 [0.00]
+step  51000 loss 3.8566 kl 0.6385 lr 1.00e-03 gn 0.51 212,243 tok/s mem 49.0GB rate 0.000 [0.00]
+step  51500 loss 3.8447 kl 0.6405 lr 1.00e-03 gn 0.48 212,374 tok/s mem 49.0GB rate 0.000 [0.00]
+step  52000 loss 3.8031 kl 0.6257 lr 1.00e-03 gn 0.53 212,458 tok/s mem 49.0GB rate 0.000 [0.00]
+step  52500 loss 3.9309 kl 0.6373 lr 1.00e-03 gn 0.49 212,353 tok/s mem 49.0GB rate 0.000 [0.00]
+step  53000 loss 3.8569 kl 0.6189 lr 1.00e-03 gn 0.48 212,493 tok/s mem 49.0GB rate 0.000 [0.00]
+step  53500 loss 3.9246 kl 0.6319 lr 1.00e-03 gn 0.45 212,401 tok/s mem 49.0GB rate 0.000 [0.00]
+step  54000 loss 3.8800 kl 0.6370 lr 1.00e-03 gn 0.50 212,619 tok/s mem 49.0GB rate 0.000 [0.00]
+step  54500 loss 3.8577 kl 0.6463 lr 1.00e-03 gn 0.50 212,713 tok/s mem 49.0GB rate 0.000 [0.00]
+step  55000 loss 3.9425 kl 0.6454 lr 1.00e-03 gn 0.53 212,731 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 55000 val_loss 3.9571 (EMA weights 3.8310)
+   >> The history of the city| of Murekama was in the reign of the Suez Canal. The town’s history dates back from the 14th century, when a town was built to protect its natural resources. / The town’s history dates back to the 13th century, when the town was known as the “Little Boy” and served the state’s military. / The town’s history dates back to the 18th century and dates from the 17th century. Murekama’s history is just one of the past. / The town of Mure
+   >> In mathematics, a prime number is| a prime number in a way that can be simplified by using the new prime, which is the single prime. The prime number is a prime which is the prime number of a given number. / In order to understand the basics of an mathematics project or research project, we must understand the basics of a mathematical project in the context of a real world. First, the mathematics project is a prime first-year project and the first two-year project. First, the mathematics project is a prime second year, the second term is a prime. Second, the mathematics project is a prime. The mathematics project
+   >> Plants need sunlight because| of the high temperatures in the atmosphere. Therefore, the best part of the plant care is to use a healthy, vigorous plant growth that will not be fully developed. / Plant-planting soil is a crucial time management decision. The plant will need to be planted in order to avoid root rot. / Plant-planting soil / Plant-planting soil is a key component of plant growth. The plant will need to be watered for more than 12 weeks. Therefore, plant-planting soil is a crucial consideration. / Plant-planting soil / Plant-plant
+step  55500 loss 3.8627 kl 0.6503 lr 1.00e-03 gn 0.51 212,737 tok/s mem 49.0GB rate 0.000 [0.00]
+step  56000 loss 3.9494 kl 0.6476 lr 1.00e-03 gn 0.52 212,591 tok/s mem 49.0GB rate 0.000 [0.00]
+step  56500 loss 3.9581 kl 0.6386 lr 1.00e-03 gn 0.54 212,630 tok/s mem 49.0GB rate 0.000 [0.00]
+step  57000 loss 3.9328 kl 0.6291 lr 1.00e-03 gn 0.50 212,627 tok/s mem 49.0GB rate 0.000 [0.00]
+step  57500 loss 3.9959 kl 0.6512 lr 1.00e-03 gn 0.53 212,480 tok/s mem 49.0GB rate 0.000 [0.00]
+step  58000 loss 3.9174 kl 0.6401 lr 1.00e-03 gn 0.51 212,549 tok/s mem 49.0GB rate 0.000 [0.00]
+step  58500 loss 3.9122 kl 0.6306 lr 1.00e-03 gn 0.53 212,492 tok/s mem 49.0GB rate 0.000 [0.00]
+step  59000 loss 3.8502 kl 0.6412 lr 1.00e-03 gn 0.52 212,536 tok/s mem 49.0GB rate 0.000 [0.00]
+step  59500 loss 3.9958 kl 0.6526 lr 1.00e-03 gn 0.53 212,436 tok/s mem 49.0GB rate 0.000 [0.00]
+step  60000 loss 3.9902 kl 0.6357 lr 1.00e-03 gn 0.47 212,541 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 60000 val_loss 3.9515 (EMA weights 3.8261)
+   >> The history of the city| of Alexandria, and the history of the city, and the city of Alexandria, and the history of the city, and of the history of the city. / Lincoln is the great, most popular of his friends, and his friends. His views are so much more diverse and he is also an important man. He has his own vision, and he gives no certainty. All of his people, of all ages and with his religion, are a great citizen. / Lincoln is a great, great, great, and perfect citizen of the world. The people have their own eyes, and the
+   >> In mathematics, a prime number is| the number of digits that can be used to represent the number of digits. This is why the number of digits are required for every digit in the world. / - The number of digits on a given number of digits. / - The number of digits on a given number of digits. / - The number of digits on a given number of digits. / - The number of digits on a given number. / - The number of digits on a given number. / - The number of digits on a given number of digits. / - The number of digits on a given number of digits. / -
+   >> Plants need sunlight because| they don’t necessarily do it properly. While some plants may grow and grow, they prefer a bright, warm, sunny location. / Although the plants are not as tall as some of the plants grow, they are often found in the sun when they start up before they start flowering. As they grow, they can be planted in full sun in the sun. / The soil of a tree is great for the propagation of insects and insects. It is much easier to get the seeds from the ground in the shade. You can also add a mulch to the water that can then spread out
+step  60500 loss 3.9430 kl 0.6416 lr 8.18e-04 gn 0.53 212,813 tok/s mem 49.0GB rate 0.000 [0.00]
+step  61000 loss 3.8723 kl 0.5967 lr 7.42e-04 gn 0.52 212,704 tok/s mem 49.0GB rate 0.000 [0.00]
+step  61500 loss 3.9065 kl 0.5941 lr 6.84e-04 gn 0.45 212,676 tok/s mem 49.0GB rate 0.000 [0.00]
+step  62000 loss 3.8128 kl 0.5936 lr 6.35e-04 gn 0.52 212,627 tok/s mem 49.0GB rate 0.000 [0.00]
+step  62500 loss 3.8511 kl 0.5813 lr 5.92e-04 gn 0.53 212,744 tok/s mem 49.0GB rate 0.000 [0.00]
+step  63000 loss 3.9048 kl 0.5763 lr 5.53e-04 gn 0.44 212,679 tok/s mem 49.0GB rate 0.000 [0.00]
+step  63500 loss 3.7582 kl 0.5611 lr 5.17e-04 gn 0.51 212,514 tok/s mem 49.0GB rate 0.000 [0.00]
+step  64000 loss 3.8151 kl 0.5455 lr 4.84e-04 gn 0.46 212,616 tok/s mem 49.0GB rate 0.000 [0.00]
+step  64500 loss 3.7988 kl 0.5440 lr 4.52e-04 gn 0.55 212,804 tok/s mem 49.0GB rate 0.000 [0.00]
+step  65000 loss 3.8370 kl 0.5568 lr 4.23e-04 gn 0.50 212,780 tok/s mem 49.0GB rate 0.000 [0.00]
+== eval step 65000 val_loss 3.8530 (EMA weights 3.7961)
+   >> The history of the city| was a period when the city became a very dangerous city. As a result, the city was a centre of civilization, not only for its own people, but also for its own people. / A new concept emerged. In the 1920’s the city became a place for the most part of its inhabitants. It was a place for the world’s citizens, it was a place for the city, to name it, and it was a place for the people to visit. The city was a place for the people of different regions and all the cities were created, and cities were all
+   >> In mathematics, a prime number is| the value of each other, so the number of digits of each digits is the number of digits of both the number of digits of each digit of the number of characters of each digit of the number of characters of the number of characters of each digit of a given character. / Another popular way to describe the number of characters of a character is to express the quantity of the number of digits of the number of characters in the number of characters of the number of characters of the number of characters of the number of characters of the number of characters of the number of characters of the number of characters of the number
+   >> Plants need sunlight because| they are generally a good source of vitamins C, D, C, and D. / Bacteria are found in organic products such as tomatoes and other citrus fruits that are grown in our cities. One study found that bacteria in the soil was more likely to grow in the soil than in the soil and on the soil. / The new study found that bacteria in plants are the main building blocks of the soil and their function at the soil level. / The researchers used the old study to determine the optimal size of the soil and how long it takes to germinate in the soil. / The results
+step  65500 loss 3.8439 kl 0.5465 lr 3.95e-04 gn 0.55 212,325 tok/s mem 49.0GB rate 0.000 [0.00]
+step  66000 loss 3.7881 kl 0.5355 lr 3.68e-04 gn 0.55 212,202 tok/s mem 49.0GB rate 0.000 [0.00]
+step  66500 loss 3.8051 kl 0.5286 lr 3.42e-04 gn 0.53 212,213 tok/s mem 49.0GB rate 0.000 [0.00]
+step  67000 loss 3.6748 kl 0.5250 lr 3.17e-04 gn 0.54 212,402 tok/s mem 49.0GB rate 0.000 [0.00]
+step  67500 loss 3.8426 kl 0.5172 lr 2.93e-04 gn 0.53 212,476 tok/s mem 49.0GB rate 0.000 [0.00]
+step  68000 loss 3.8241 kl 0.5271 lr 2.70e-04 gn 0.50 212,504 tok/s mem 49.0GB rate 0.000 [0.00]
+step  68500 loss 3.7496 kl 0.5174 lr 2.47e-04 gn 0.52 212,512 tok/s mem 49.0GB rate 0.000 [0.00]
+step  69000 loss 3.6796 kl 0.5171 lr 2.25e-04 gn 0.55 212,561 tok/s mem 49.0GB rate 0.000 [0.00]
+step  69500 loss 3.6964 kl 0.5210 lr 2.04e-04 gn 0.55 212,475 tok/s mem 49.0GB rate 0.000 [0.00]
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 65000
+params 30.74M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+step  65500 loss 3.7939 kl 0.5439 lr 3.95e-04 gn 0.49 207,682 tok/s mem 45.9GB rate 0.000 [0.00]
+step  66000 loss 3.8304 kl 0.5452 lr 3.68e-04 gn 0.54 210,381 tok/s mem 45.9GB rate 0.000 [0.00]
+step  66500 loss 3.7702 kl 0.5363 lr 3.42e-04 gn 0.48 210,227 tok/s mem 45.9GB rate 0.000 [0.00]
+step  67000 loss 3.8644 kl 0.5272 lr 3.17e-04 gn 0.57 210,211 tok/s mem 45.9GB rate 0.000 [0.00]
+step  67500 loss 3.8213 kl 0.5329 lr 2.93e-04 gn 0.55 210,522 tok/s mem 45.9GB rate 0.000 [0.00]
+step  68000 loss 3.8613 kl 0.5303 lr 2.70e-04 gn 0.50 210,497 tok/s mem 45.9GB rate 0.000 [0.00]
+step  68500 loss 3.8155 kl 0.5148 lr 2.47e-04 gn 0.54 210,729 tok/s mem 45.9GB rate 0.000 [0.00]
+step  69000 loss 3.8261 kl 0.5225 lr 2.25e-04 gn 0.49 210,983 tok/s mem 45.9GB rate 0.000 [0.00]
+step  69500 loss 3.8056 kl 0.5247 lr 2.04e-04 gn 0.53 210,719 tok/s mem 45.9GB rate 0.000 [0.00]
+step  70000 loss 3.7514 kl 0.5167 lr 1.84e-04 gn 0.58 210,905 tok/s mem 45.9GB rate 0.000 [0.00]
+== eval step 70000 val_loss 3.8083 (EMA weights 3.7803)
+   >> The history of the city| of Chittel was not unknown, but I would have suggested that there was an actual town. At a time when Chittel was the best-known example of the town, the town was not really a town, but a town. Many other towns remained until the end of the 19th or 20th century. Most of Chittel's population (at least from about 1900 to 1910) was taken up by the area. A few years later, Chittel's town was known as the "the City of Chittel." / In the 19th century Chittel became
+   >> In mathematics, a prime number is| in the answer box. / Here is the number that number that is in the answer box. / Now that you know the number number and the number you will need to have to have to have to have to have to have to have to have to have to have to have to have to have to have to have to have to have to have a certain number, we can define the number and solve the problem. / So we can use the numbers with the decimal point numbers above. / Here is the number that is present when we want to have to have an decimal point number for the first time
+   >> Plants need sunlight because| they absorb the sun's heat without rain. A sunspot cannot reach the sun's surface. / When you are outdoors at a time when you are outdoors, the sun's rays are coming from the tree roots. As we move out of sight, you get to the bottom of the tree roots, which can reach the soil that is not a good spot for sun. / If you get enough sun to reach the tree roots, then the tree roots are planted in a more efficient way. / - Get your garden and use the sun on a daily basis. / - Do nothing more than set a
+step  70500 loss 3.8167 kl 0.5196 lr 1.63e-04 gn 0.52 211,453 tok/s mem 45.9GB rate 0.000 [0.00]
+step  71000 loss 3.7972 kl 0.5053 lr 1.44e-04 gn 0.53 209,945 tok/s mem 45.9GB rate 0.000 [0.00]
+step  71500 loss 3.7956 kl 0.4871 lr 1.24e-04 gn 0.52 209,895 tok/s mem 45.9GB rate 0.000 [0.00]
+step  72000 loss 3.7597 kl 0.4897 lr 1.06e-04 gn 0.51 210,035 tok/s mem 45.9GB rate 0.000 [0.00]
+step  72500 loss 3.7930 kl 0.4958 lr 8.72e-05 gn 0.49 210,164 tok/s mem 45.9GB rate 0.000 [0.00]
+step  73000 loss 3.6876 kl 0.4870 lr 6.91e-05 gn 0.49 210,225 tok/s mem 45.9GB rate 0.000 [0.00]
+step  73500 loss 3.8316 kl 0.4789 lr 5.14e-05 gn 0.51 210,574 tok/s mem 45.9GB rate 0.000 [0.00]
+step  74000 loss 3.8092 kl 0.4716 lr 3.39e-05 gn 0.49 210,806 tok/s mem 45.9GB rate 0.000 [0.00]
+step  74500 loss 3.7170 kl 0.4641 lr 1.68e-05 gn 0.45 210,697 tok/s mem 45.9GB rate 0.000 [0.00]
+step  75000 loss 3.7197 kl 0.4826 lr 3.33e-08 gn 0.46 210,813 tok/s mem 45.9GB rate 0.000 [0.00]
+== eval step 75000 val_loss 3.7783 (EMA weights 3.7767)
+   >> The history of the city| of Chilah. The city was a city of men and women, and the Jews were Jews. On the way, the Jews lived in Chilah, even though the Jews had to be treated as Jewish. / The Jewish community was part of the Jewish community, the Jewish community founded by the Jews, and in the area of the town of Chilah. The Jews lived in their homes, and in the town of Chilah, the Jews lived in the town of Chilah, and the Jews lived in their homes. The Jews lived in a neighborhood with their families and
+   >> In mathematics, a prime number is| added to its own "s," which is the difference between the numbers and the numbers. The numbers, which are part of mathematical operations, can be translated into decimal numbers, such as those in the decimal system, when the numbers are "x', we do not know their value at that point. For example, an operator will add a factor to the binary system for this number. The number that is a fraction can be translated into an integer number, which is a decimal number's number -- a decimal number that is a decimal number's number's number's number's number's number of letters.
+   >> Plants need sunlight because| they’re able to survive if you have a high-pest size in your yard. Therefore, if you want to keep these plants in one area, check your gardening plans daily. Plant this plant to make a living. If you decide to plant these plants, set the plant up. / If you want to grow plants in the ground, you have a good chance of it growing in the ground or in the ground. Don’t just plant and start seedling at the bottom of the plant. Start planting in the ground and make a good plan. If you want to make
