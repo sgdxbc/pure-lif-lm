@@ -1,7 +1,8 @@
 #!/bin/bash
 # GPU wave 33: the Transformer of the same quality as the hardware network, for the FPGA comparison (stage goal 3;
 # docs/experiments.md 5.43). From the repository root:
-#   bash experiments/gpu33.sh          the three small Transformers (training)
+#   bash experiments/gpu33.sh [NAME]   the three small Transformers (training), or only NAME (tf31, tf50 or tf77),
+#                                      e.g. GPU=a100-80 bash experiments/gpu33.sh tf50 to put one on another card type
 #   bash experiments/gpu33.sh bench    their shapes measured on the GPU with vLLM (bench_gpu.py --model shape:D,L,H)
 # The hardware network g29_hw (121M, 4-bit weights, fits on chip) reaches 3.753 after 2.46B tokens, and fpga_est.py
 # estimates 131k tokens/s and 1.45 mJ per token for it on an AMD V80. The only Transformers measured on the GPU so far
@@ -28,7 +29,8 @@ if [ "$1" = "bench" ]; then
   exit 0
 fi
 [ -s runs/g13_tf163/ckpt.pt ] || { echo "runs/g13_tf163/ckpt.pt missing"; exit 1; }
-gpu=${GPU:-h100-47}
+gpu=${GPU:-h100-47}; only=$1
+case "$only" in ""|tf31|tf50|tf77) ;; *) echo "NAME is tf31, tf50 or tf77 (or bench)"; exit 1 ;; esac
 DATA="--data data/fineweb --tokenizer gpt2.json --vocab 50304"
 LEN="--batch 32 --seq 1024 --steps 75000 --warmup 1000 --eval_every 5000 --eval_batches 40 --log_every 500"
 WSD="--schedule wsd --decay_steps 15000 --min_lr_frac 0"
@@ -36,6 +38,7 @@ KD="--teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1"
 TF="--arch tf --lr 1e-3 --ema 0.999"
 for s in "tf31 256 6 4" "tf50 384 6 6" "tf77 512 8 8"; do
   set -- $s; name=g33_$1
+  [ -n "$only" ] && [ "$only" != "$1" ] && continue
   j=$(sbatch --parsable -p gpu -J $name --gres=gpu:$gpu:1 --export=ALL,RELAY=$gpu slurm/train.sbatch runs/$name \
       $DATA $LEN $WSD $KD $TF --d_model $2 --n_layers $3 --n_heads $4)
   echo "$j $name ($gpu): d $2, $3 blocks, $4 heads"
