@@ -2,13 +2,22 @@
 the Transformer measured on a GPU (bench_gpu.py). An estimate from the network's measured firing (hw_cost.py ->
 hw_cost.json) and the device's published figures, with the assumptions below, until a prototype exists.
 From the repository root:
-  python3 fpga_est.py runs/X [--bits 8] [--compare runs/bench_gpu/NVIDIA_H100_NVL_gpt2.json]   (writes runs/X/fpga_est.json)
+  python3 fpga_est.py runs/X [--bits 8] [--device u55c --cards 2] [--compare runs/bench_gpu/NVIDIA_H100_NVL_gpt2.json]
+  (writes runs/X/fpga_est.json for one V80, runs/X/fpga_est_u55cx2.json etc. for the others)
 
-Device (defaults: AMD Alveo V80, product page and datasheet DS1013): HBM2e 820 GB/s, 673 Mb (84 MB) of on-chip
-memory, 10,848 DSP58 slices, thermal design power up to 190 W.
+Devices (--device; the figures below can each be changed by an option):
+  v80   AMD Alveo V80 (product page, data sheet DS1013): HBM2e 820 GB/s, 673 Mb (84 MB) of on-chip memory, 10,848 DSP58
+        slices, each one 3-element INT8 dot product per cycle (its INT8 vector mode), at 400 MHz: 13.0 TMAC/s peak;
+        thermal design power up to 190 W. Not in the AMD HACC clusters (the default, as before).
+  u55c  AMD Alveo U55C (data sheet DS978; HACC@NUS has 6, two per server): HBM2 460 GB/s, 70.9 Mb of block RAM + 270 Mb
+        of UltraRAM = 341 Mb (42.6 MB) of on-chip memory (the 36.7 Mb of LUT memory not counted), 9,024 DSP48E2 slices,
+        each two INT8 multiply-accumulates per cycle (two weights packed against one shared input), at 300 MHz (the
+        Vitis platforms' default kernel clock): 5.4 TMAC/s peak; 150 W total card load (thermal design power 115 W).
+  --cards N: N boards as one pipeline (layers split between them, only d_model values per token and stream pass from
+  one to the next): on-chip memory, compute, bandwidth and power all N times one board's.
 Assumptions (all can be changed by options):
-  - every DSP58 does one 3-element INT8 dot product per cycle (its INT8 vector mode), at 400 MHz: 13.0 TMAC/s peak;
-    the additions driven by spikes (W_out) are counted on the same units, although they need no multiplier;
+  - the additions driven by spikes (W_out) are counted on the same units as the multiply-accumulates, although they
+    need no multiplier;
   - 60% of the peak bandwidth and of the peak compute are reached;
   - the board draws its full 190 W whenever it runs (no credit for lighter load; the GPU is credited with its
     measured power instead, so this side is the conservative one);
@@ -27,6 +36,8 @@ Assumptions (all can be changed by options):
 import argparse, json, math, os
 
 STREAMS = (1, 4, 16, 64, 256)
+DEVICES = {"v80": dict(bw_gbs=820.0, onchip_mb=84.0, dsp=10848, macs_per_dsp=3, clock_mhz=400.0, watts=190.0),
+           "u55c": dict(bw_gbs=460.0, onchip_mb=42.6, dsp=9024, macs_per_dsp=2, clock_mhz=300.0, watts=150.0)}
 
 
 def estimate(hw, args, bits, dev):
@@ -39,9 +50,10 @@ def estimate(hw, args, bits, dev):
         weights, table = hw["weights_bytes_trained"], hw["table_bytes_trained"]
         own *= table / (hw["table_weights"] * b) if hw.get("table_weights") else 1.0
     ops = hw["dense_macs"] + hw["sparse_adds"]                               # per token and stream
-    rate = dev["dsp"] * 3 * dev["clock_mhz"] * 1e6 * dev["eff"]              # MAC/s reached
-    bw = dev["bw_gbs"] * 1e9 * dev["eff"]
-    budget = 0.9 * dev["onchip_mb"] * 1e6
+    n = dev["cards"]
+    rate = n * dev["dsp"] * dev["macs_per_dsp"] * dev["clock_mhz"] * 1e6 * dev["eff"]   # MAC/s reached
+    bw = n * dev["bw_gbs"] * 1e9 * dev["eff"]
+    budget = n * 0.9 * dev["onchip_mb"] * 1e6
     rows = []
     for B in STREAMS:
         state = B * hw["state_bytes"]
@@ -61,7 +73,7 @@ def estimate(hw, args, bits, dev):
         t = max(read / bw, B * ops / rate)
         rows.append({"streams": B, "where": where, "bytes_per_step": read, "ops_per_step": B * ops,
                      "bound": "memory" if read / bw >= B * ops / rate else "compute",
-                     "tok_s": B / t, "ms_per_token": t * 1000, "mJ_per_token": dev["watts"] * t / B * 1000})
+                     "tok_s": B / t, "ms_per_token": t * 1000, "mJ_per_token": n * dev["watts"] * t / B * 1000})
     return rows
 
 
@@ -70,24 +82,29 @@ def main():
     p.add_argument("run")
     p.add_argument("--bits", type=int, default=0, help="weight bits; default: the network's own (train.py --wbits), else 8 "
                    "(8 is lossless, docs/experiments.md 5.20; 4 needs training for it, 5.38)")
-    p.add_argument("--bw_gbs", type=float, default=820.0)
-    p.add_argument("--onchip_mb", type=float, default=84.0)
-    p.add_argument("--dsp", type=int, default=10848)
-    p.add_argument("--clock_mhz", type=float, default=400.0)
+    p.add_argument("--device", default="v80", choices=sorted(DEVICES))
+    p.add_argument("--cards", type=int, default=1, help="boards in one pipeline")
+    for k, t in (("bw_gbs", float), ("onchip_mb", float), ("dsp", int), ("macs_per_dsp", int), ("clock_mhz", float),
+                 ("watts", float)):
+        p.add_argument("--" + k, type=t, default=None, help="default: the device's")
     p.add_argument("--eff", type=float, default=0.6, help="share of peak bandwidth and compute reached")
-    p.add_argument("--watts", type=float, default=190.0)
+    p.add_argument("--out", default="", help="default: runs/X/fpga_est.json for the V80, runs/X/fpga_est_DEVICExN.json "
+                   "otherwise")
     p.add_argument("--compare", nargs="*", default=[], help="bench_gpu.py results to print alongside")
     a = p.parse_args()
     hw = json.load(open(os.path.join(a.run, "hw_cost.json")))
     args = json.load(open(os.path.join(a.run, "args.json")))
     a.bits = a.bits or args.get("wbits", 0) or 8
     assert hw["arch"] == "snn" and not hw.get("spike_bus"), "for spiking networks without the spiking bus"
-    dev = {k: getattr(a, k) for k in ("bw_gbs", "onchip_mb", "dsp", "clock_mhz", "eff", "watts")}
+    dev = dict(DEVICES[a.device], name=a.device, cards=a.cards, eff=a.eff)
+    dev.update({k: getattr(a, k) for k in DEVICES[a.device] if getattr(a, k) is not None})
     rows = estimate(hw, args, a.bits, dev)
-    json.dump({"device": dev, "bits": a.bits, "params": hw["params"], "rows": rows},
-              open(os.path.join(a.run, "fpga_est.json"), "w"), indent=1)
+    out = a.out or os.path.join(a.run, "fpga_est.json" if (a.device, a.cards) == ("v80", 1) else
+                                f"fpga_est_{a.device}x{a.cards}.json")
+    json.dump({"device": dev, "bits": a.bits, "params": hw["params"], "rows": rows}, open(out, "w"), indent=1)
     print(f"{os.path.basename(a.run.rstrip('/'))}: {hw['params'] / 1e6:.0f}M parameters, {a.bits}-bit weights, "
-          f"{(hw['dense_macs'] + hw['sparse_adds']) / 1e6:.0f}M operations per token; FPGA estimate (any context length):")
+          f"{(hw['dense_macs'] + hw['sparse_adds']) / 1e6:.0f}M operations per token; estimate on {a.cards} x "
+          f"{a.device} (any context length):")
     for r in rows:
         print(f"  streams {r['streams']:4d}: {r['tok_s']:10,.0f} tok/s, {r['ms_per_token']:6.3f} ms/token, "
               f"{r['mJ_per_token']:7.2f} mJ/token  ({r['bound']}-bound, {r['where']})")

@@ -1,0 +1,67 @@
+{
+ "device": {
+  "bw_gbs": 460.0,
+  "onchip_mb": 42.6,
+  "dsp": 9024,
+  "macs_per_dsp": 2,
+  "clock_mhz": 300.0,
+  "watts": 150.0,
+  "name": "u55c",
+  "cards": 1,
+  "eff": 0.6
+ },
+ "bits": 4,
+ "params": 120973920,
+ "rows": [
+  {
+   "streams": 1,
+   "where": "weights in HBM",
+   "bytes_per_step": 29753116.630828857,
+   "ops_per_step": 59794948.863220215,
+   "bound": "memory",
+   "tok_s": 9276.339128587997,
+   "ms_per_token": 0.10780114721314804,
+   "mJ_per_token": 16.170172081972208
+  },
+  {
+   "streams": 4,
+   "where": "weights in HBM",
+   "bytes_per_step": 31368378.94085729,
+   "ops_per_step": 239179795.45288086,
+   "bound": "memory",
+   "tok_s": 35194.67812096725,
+   "ms_per_token": 0.1136535468871641,
+   "mJ_per_token": 4.262008008268653
+  },
+  {
+   "streams": 16,
+   "where": "weights in HBM",
+   "bytes_per_step": 36795838.2890625,
+   "ops_per_step": 956719181.8115234,
+   "bound": "compute",
+   "tok_s": 54329.67268575145,
+   "ms_per_token": 0.2944983691056945,
+   "mJ_per_token": 2.760922210365886
+  },
+  {
+   "streams": 64,
+   "where": "weights in HBM, potentials in HBM",
+   "bytes_per_step": 219255710.428715,
+   "ops_per_step": 3826876727.2460938,
+   "bound": "compute",
+   "tok_s": 54329.67268575145,
+   "ms_per_token": 1.177993476422778,
+   "mJ_per_token": 2.760922210365886
+  },
+  {
+   "streams": 256,
+   "where": "weights in HBM, potentials in HBM",
+   "bytes_per_step": 760262062.2457027,
+   "ops_per_step": 15307506908.984375,
+   "bound": "compute",
+   "tok_s": 54329.67268575145,
+   "ms_per_token": 4.711973905691112,
+   "mJ_per_token": 2.760922210365886
+  }
+ ]
+}

@@ -3,9 +3,12 @@
   "bw_gbs": 820.0,
   "onchip_mb": 84.0,
   "dsp": 10848,
+  "macs_per_dsp": 3,
   "clock_mhz": 400.0,
-  "eff": 0.6,
-  "watts": 190.0
+  "watts": 190.0,
+  "name": "v80",
+  "cards": 1,
+  "eff": 0.6
  },
  "bits": 4,
  "params": 120973920,
