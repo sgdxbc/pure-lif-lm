@@ -1,0 +1,233 @@
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+params 169.52M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+step      1 loss 10.9654 lr 6.00e-07 gn 7.81 44,485 tok/s mem 50.2GB rate 0.000 [0.00]
+step    500 loss 5.6810 lr 3.00e-04 gn 0.97 109,536 tok/s mem 51.6GB rate 0.000 [0.00]
+step   1000 loss 4.9812 lr 6.00e-04 gn 0.49 109,070 tok/s mem 51.6GB rate 0.000 [0.00]
+step   1500 loss 4.5985 lr 6.00e-04 gn 0.39 109,230 tok/s mem 51.6GB rate 0.000 [0.00]
+step   2000 loss 4.4923 lr 6.00e-04 gn 0.39 109,157 tok/s mem 51.6GB rate 0.000 [0.00]
+step   2500 loss 4.2958 lr 5.99e-04 gn 0.40 109,227 tok/s mem 51.6GB rate 0.000 [0.00]
+step   3000 loss 4.2174 lr 5.99e-04 gn 0.39 109,224 tok/s mem 51.6GB rate 0.000 [0.00]
+step   3500 loss 4.0270 lr 5.99e-04 gn 0.41 109,225 tok/s mem 51.6GB rate 0.000 [0.00]
+step   4000 loss 4.0608 lr 5.98e-04 gn 0.41 109,227 tok/s mem 51.6GB rate 0.000 [0.00]
+step   4500 loss 3.8314 lr 5.97e-04 gn 0.47 109,444 tok/s mem 51.6GB rate 0.000 [0.00]
+gradient spike at step 4918: gn 2.25 (median 0.42), loss 3.9007; blocks.5.la.qkv.weight 1.14, blocks.0.la.proj.weight 0.55, embed.weight 0.52, blocks.4.la.proj.weight 0.51
+step   5000 loss 3.7843 lr 5.96e-04 gn 0.41 109,226 tok/s mem 52.2GB rate 0.000 [0.00]
+== eval step 5000 val_loss 3.9673 (EMA weights 3.8331)
+   >> The history of the city| is still alive. / The city is home to a huge number of archeological remains, including the remains of buildings and ruins, and remains of a large number of the remains of this church. The remains are still visible in the west and east of the palace, and are surrounded by a section of a Roman chapel that features wooden poles and four temples. The ruins of the palace are the result of the presence of large, massive statues and the remains of some of the most significant examples of the architecture. The largest is the church of the church in the town of Camilla, which dates to 8
+   >> In mathematics, a prime number is| a number of numbers (such as numbers, numbers, or even numbers). / The number of numbers in a given number varies from 9 to 17. For example, in an Excel spreadsheet, you can get two numbers in one decimal number, but you can also go to Microsoft Excel. This works out in an array of numbers or numbers. You can now do this by looking to a grid that has an array of numbers that range from 5 to 10. Finally, you can check if they are numbers that you can see in the numbers you've listed. Also, you can also check if there is
+   >> Plants need sunlight because| they are so strong and hard to use with, which makes them easy to use. If you have a hard time with your garden, it is better to plant the best plants for your garden. I have worked on a large number of seed crops that we can improve by using seed crops. / If you are new to planting crops, this section offers some tips on how to properly start your garden. / - Learn more about the following: / - Read an article from the Food and Drug Administration
+step   5500 loss 3.8436 lr 5.95e-04 gn 0.42 109,393 tok/s mem 52.2GB rate 0.000 [0.00]
+step   6000 loss 3.9766 lr 5.94e-04 gn 0.44 109,225 tok/s mem 52.2GB rate 0.000 [0.00]
+step   6500 loss 3.8723 lr 5.93e-04 gn 0.44 109,227 tok/s mem 52.2GB rate 0.000 [0.00]
+step   7000 loss 3.7863 lr 5.92e-04 gn 0.48 109,224 tok/s mem 52.2GB rate 0.000 [0.00]
+step   7500 loss 3.7727 lr 5.90e-04 gn 0.46 109,225 tok/s mem 52.2GB rate 0.000 [0.00]
+step   8000 loss 3.8409 lr 5.89e-04 gn 0.44 109,226 tok/s mem 52.2GB rate 0.000 [0.00]
+step   8500 loss 3.7805 lr 5.87e-04 gn 0.48 109,225 tok/s mem 52.2GB rate 0.000 [0.00]
+step   9000 loss 3.7461 lr 5.85e-04 gn 0.45 109,225 tok/s mem 52.2GB rate 0.000 [0.00]
+step   9500 loss 3.8204 lr 5.83e-04 gn 0.47 109,245 tok/s mem 52.2GB rate 0.000 [0.00]
+step  10000 loss 3.6848 lr 5.81e-04 gn 0.51 110,546 tok/s mem 52.2GB rate 0.000 [0.00]
+== eval step 10000 val_loss 3.7585 (EMA weights 3.5993)
+   >> The history of the city| is a mystery of the early history, the city’s many historical monuments, and the structure’s historical position in the city. / The earliest evidence for the city’s existence are found in the city’s early history, dating to c. 1200. The city’s earliest known building dates back to the late 8th century, as is the city’s earliest recorded building. The fortress was a symbol of historical identity, and a place for the city’s medieval and Byzantine architecture. / The city’s early history is a mystery,
+   >> In mathematics, a prime number is| used to denote number of things in an imaginary number. / Note: "A prime number may be a symbol of a particular problem, such as solving a problem for a certain field, or use a general formula for a certain form of operations." / A prime number contains all of a number in a set, and not a number for the number of digits in the number. / In the "Concept" section, the answer is "The prime number is a rational number. It has its own "concept," "Concept a prime number." / In this section, we will take a
+   >> Plants need sunlight because| they grow in an environment where they can get water. This is why the plants do not need water, and they don’t need water all the time. / Most gardeners prefer plants with cool temperatures – you can check the humidity in the room with the humid summer temperatures. Keep your garden moist, but not too humid – even if it gets moist. / What’s more interesting is that if your garden is a little drier, it could be a sign that it needs cooler temperatures. / Related: How to Grow an Integrated Plant Garden / As a gardener, you look
+step  10500 loss 3.7459 lr 5.79e-04 gn 0.48 110,877 tok/s mem 52.2GB rate 0.000 [0.00]
+step  11000 loss 3.6431 lr 5.77e-04 gn 0.48 110,463 tok/s mem 52.2GB rate 0.000 [0.00]
+step  11500 loss 3.6475 lr 5.75e-04 gn 0.50 110,093 tok/s mem 52.2GB rate 0.000 [0.00]
+step  12000 loss 3.7180 lr 5.72e-04 gn 0.50 109,013 tok/s mem 52.2GB rate 0.000 [0.00]
+step  12500 loss 3.6486 lr 5.70e-04 gn 0.49 108,627 tok/s mem 52.2GB rate 0.000 [0.00]
+step  13000 loss 3.7771 lr 5.67e-04 gn 0.53 108,798 tok/s mem 52.2GB rate 0.000 [0.00]
+step  13500 loss 3.7073 lr 5.64e-04 gn 0.51 109,154 tok/s mem 52.2GB rate 0.000 [0.00]
+step  14000 loss 3.5817 lr 5.61e-04 gn 0.51 109,226 tok/s mem 52.2GB rate 0.000 [0.00]
+step  14500 loss 3.6445 lr 5.58e-04 gn 0.50 109,196 tok/s mem 52.2GB rate 0.000 [0.00]
+step  15000 loss 3.6543 lr 5.55e-04 gn 0.53 109,229 tok/s mem 52.2GB rate 0.000 [0.00]
+== eval step 15000 val_loss 3.6623 (EMA weights 3.5105)
+   >> The history of the city|'s social role includes housing. There are also social institutions that include the city's police. Other social functions include the police, police, and guard dogs. / The social network includes local and regional organizations. There are different types of organizations. Some may have large-scale organizations, while others may take a larger-scale organization. / The social network is based on an organization's policies, policies, and programs. The social network consists of the city's police, public administration, and the administration of justice. The government's policies include the policies and systems of the police, police, and control agencies
+   >> In mathematics, a prime number is| a prime number that is not a prime number. / - For any number, it is the number of seconds that you count that is zero, which is a prime number. / - For a prime number, the number is a prime number. / - For a prime number, the number is another prime number, which is a prime number. / - For a prime number, the number is a prime number.
+   >> Plants need sunlight because| the plants can’t grow. There are a few types of plants that need sunlight. Plants need sunlight because sunlight makes the plants grow. / The most important reason for planting trees is to help provide shade. This is because not only does it help keep the soil temperature under control, it can also help the plants grow faster and to give them a boost in temperature. / Lawns are extremely important for growing trees because they create a nice spot that gets the sun’s light. Trees are not the only trees that need sunlight. They help the leaves to grow and grow and encourage
+step  15500 loss 3.6523 lr 5.52e-04 gn 0.53 109,370 tok/s mem 52.2GB rate 0.000 [0.00]
+step  16000 loss 3.5713 lr 5.49e-04 gn 0.52 109,237 tok/s mem 52.2GB rate 0.000 [0.00]
+step  16500 loss 3.5803 lr 5.45e-04 gn 0.53 109,227 tok/s mem 52.2GB rate 0.000 [0.00]
+step  17000 loss 3.6247 lr 5.42e-04 gn 0.58 109,225 tok/s mem 52.2GB rate 0.000 [0.00]
+step  17500 loss 3.5994 lr 5.39e-04 gn 0.53 109,226 tok/s mem 52.2GB rate 0.000 [0.00]
+step  18000 loss 3.6639 lr 5.35e-04 gn 0.53 109,225 tok/s mem 52.2GB rate 0.000 [0.00]
+step  18500 loss 3.6296 lr 5.31e-04 gn 0.52 109,225 tok/s mem 52.2GB rate 0.000 [0.00]
+step  19000 loss 3.6050 lr 5.27e-04 gn 0.51 109,212 tok/s mem 52.2GB rate 0.000 [0.00]
+step  19500 loss 3.6655 lr 5.23e-04 gn 0.58 109,239 tok/s mem 52.2GB rate 0.000 [0.00]
+step  20000 loss 3.5806 lr 5.20e-04 gn 0.56 109,226 tok/s mem 52.2GB rate 0.000 [0.00]
+== eval step 20000 val_loss 3.6035 (EMA weights 3.4654)
+   >> The history of the city| of Yarmouth is the story of the first settlement of the city of Yarmouth. On a fine occasion it first was found that a great part of Xarmouth was founded by the people of Yarmouth. The place was named after Yarmouth, the name given to the village in its territory. In this area the name of the community was given to Xarmouth. The community had its own community in its own country. It was a community that had been founded by the people of Yarmouth. The people of Yarmouth in Yarmouth’s time
+   >> In mathematics, a prime number is| set on the basis that it has a number, and a number is set on the basis that it has a number. / - A number, or a number or a number, has a value of n (zero). / - A number is not zero. / - A number is not zero. / - A number is not a number. / - A number is not a number. / - A number is not equal to another number. / See also: numbers. / - A number is one number. / - A number is a number. / - A number is a number. / 
+   >> Plants need sunlight because| they are able to absorb them throughout the growing season. The same is true for the soil, which has been continuously subjected to weather since the time of the bloom and can withstand some weather during the growing season. / 3. Grow plants indoors and outdoors / You can save money by growing plants in the garden by planting them in a greenhouse to give them that beautiful green backdrop, or a greenhouse to store the weather in the summer. / 4. Water your seeds early in the morning, even if you only need water so the seedlings can be laid in the greenhouse. / 5. Buy seeds from
+step  20500 loss 3.4620 lr 5.15e-04 gn 0.55 109,507 tok/s mem 52.2GB rate 0.000 [0.00]
+step  21000 loss 3.6330 lr 5.11e-04 gn 0.57 109,211 tok/s mem 52.2GB rate 0.000 [0.00]
+step  21500 loss 3.5654 lr 5.07e-04 gn 0.58 109,240 tok/s mem 52.2GB rate 0.000 [0.00]
+step  22000 loss 3.6375 lr 5.03e-04 gn 0.65 109,270 tok/s mem 52.2GB rate 0.000 [0.00]
+step  22500 loss 3.6003 lr 4.98e-04 gn 0.59 109,225 tok/s mem 52.2GB rate 0.000 [0.00]
+step  23000 loss 3.5287 lr 4.94e-04 gn 0.57 109,328 tok/s mem 52.2GB rate 0.000 [0.00]
+step  23500 loss 3.5417 lr 4.90e-04 gn 0.56 109,398 tok/s mem 52.2GB rate 0.000 [0.00]
+step  24000 loss 3.5545 lr 4.85e-04 gn 0.56 110,936 tok/s mem 52.2GB rate 0.000 [0.00]
+step  24500 loss 3.4653 lr 4.80e-04 gn 0.57 110,984 tok/s mem 52.2GB rate 0.000 [0.00]
+step  25000 loss 3.4769 lr 4.76e-04 gn 0.56 110,839 tok/s mem 52.2GB rate 0.000 [0.00]
+== eval step 25000 val_loss 3.5590 (EMA weights 3.4139)
+   >> The history of the city|. / The most important buildings in the town are the White Castle, the Bowery, the Bowery Barracks, Cairns Tower, and the Grand Tower. / The streets in the town are large and round, with the streets and streets lined with people and a large number of shops and shops, the streets of the city. / The streets in the city are about three kilometres from the streets, with numerous road and pedestrian crossings, and the main streets are in the houses in the streets. / The streets are surrounded by lots, and they have many houses. A lot of
+   >> In mathematics, a prime number is| a number that is a number that is a more important, less important, and more interesting number. For example, 1 is the smallest number, which is one that is a prime, and 2 is the smallest number. / If you are familiar with the way a prime is computed, then you will probably be familiar with where the first and last numbers are located. It has been reported that the smallest number is the smallest, so it’s the only number that is the smallest. / When the first and last numbers are located, they are called the first and last, and the last and
+   >> Plants need sunlight because| they are a plant that needs the sun to maintain their photosynthesis. However, they also need the sun to ensure the photosynthesis process is complete and that the plant can grow and use its energy to grow. / If your plant is dying over the winter, getting the soil well-drained would help to keep it healthy. However, if you buy a soil that is easy to care for and grows well, it will give the plant a healthy look. You can buy high-quality soil that you can keep in a place where it can withstand the cold. / The soil type is also important
+step  25500 loss 3.5847 lr 4.71e-04 gn 0.60 110,491 tok/s mem 52.2GB rate 0.000 [0.00]
+step  26000 loss 3.4545 lr 4.66e-04 gn 0.58 109,396 tok/s mem 52.2GB rate 0.000 [0.00]
+step  26500 loss 3.5298 lr 4.61e-04 gn 0.60 109,219 tok/s mem 52.2GB rate 0.000 [0.00]
+step  27000 loss 3.5684 lr 4.56e-04 gn 0.62 108,869 tok/s mem 52.2GB rate 0.000 [0.00]
+step  27500 loss 3.5574 lr 4.51e-04 gn 0.60 109,226 tok/s mem 52.2GB rate 0.000 [0.00]
+step  28000 loss 3.4641 lr 4.46e-04 gn 0.62 109,196 tok/s mem 52.2GB rate 0.000 [0.00]
+step  28500 loss 3.5864 lr 4.41e-04 gn 0.59 109,230 tok/s mem 52.2GB rate 0.000 [0.00]
+step  29000 loss 3.5427 lr 4.36e-04 gn 0.60 110,460 tok/s mem 52.2GB rate 0.000 [0.00]
+step  29500 loss 3.3862 lr 4.31e-04 gn 0.60 111,046 tok/s mem 52.2GB rate 0.000 [0.00]
+step  30000 loss 3.4983 lr 4.25e-04 gn 0.61 110,780 tok/s mem 52.2GB rate 0.000 [0.00]
+== eval step 30000 val_loss 3.5178 (EMA weights 3.3748)
+   >> The history of the city| is the same as a city of the rest of the world. The city has been the birthplace of the Roman Empire since ancient times. The city itself, which existed in 541 BC, was founded by the Romans in the year 250 AD. The city of Rome became part of the Roman Empire in 723 AD. It was the ancient city of Rome, founded by the Roman emperor Augustus. / The city was once an important commercial center of Rome, for the city was the seat of the Roman Emperor Augustus and the ruler of the city of Rome, Rome. In 1704, when Augustus died
+   >> In mathematics, a prime number is| the number itself which is not itself a integer. For example, / p. 4. 2) If you want a number to have a value greater than 0, you need a exponent to get the exponent to be zero. / In a fraction, you need a exponent to get a exponent to be zero. And the exponent to get the exponent to be zero is just the exponent to be zero. If you want a exponent to be zero, you need a exponent to be zero. / One of the advantages of using decimal numbers over decimal numbers is that, in many cases, decimal numbers do not
+   >> Plants need sunlight because| it depends on sun exposure. / When it comes to growing solar panels, it is better to grow fluorescent panels than fluorescent panels because they are more expensive than fluorescent panels. They are so much smaller, they are more expensive, because they are more expensive. If you want them to grow to the size that you want, you can grow them in the soil. / There are also some problems with fluorescent panels. If you are growing solar panels, it’s better to grow the fluorescent panels in the same way as fluorescent panels. You have to grow the panels under the same conditions or the same
+step  30500 loss 3.3995 lr 4.20e-04 gn 0.61 109,714 tok/s mem 52.2GB rate 0.000 [0.00]
+step  31000 loss 3.5045 lr 4.15e-04 gn 0.59 109,128 tok/s mem 52.2GB rate 0.000 [0.00]
+step  31500 loss 3.4917 lr 4.09e-04 gn 0.58 108,842 tok/s mem 52.2GB rate 0.000 [0.00]
+step  32000 loss 3.4795 lr 4.04e-04 gn 0.61 109,090 tok/s mem 52.2GB rate 0.000 [0.00]
+step  32500 loss 3.5730 lr 3.99e-04 gn 0.63 108,866 tok/s mem 52.2GB rate 0.000 [0.00]
+step  33000 loss 3.4915 lr 3.93e-04 gn 0.67 108,888 tok/s mem 52.2GB rate 0.000 [0.00]
+step  33500 loss 3.4092 lr 3.88e-04 gn 0.61 109,551 tok/s mem 52.2GB rate 0.000 [0.00]
+step  34000 loss 3.4025 lr 3.82e-04 gn 0.63 109,359 tok/s mem 52.2GB rate 0.000 [0.00]
+step  34500 loss 3.3406 lr 3.77e-04 gn 0.59 109,659 tok/s mem 52.2GB rate 0.000 [0.00]
+step  35000 loss 3.3451 lr 3.71e-04 gn 0.63 109,150 tok/s mem 52.2GB rate 0.000 [0.00]
+== eval step 35000 val_loss 3.4808 (EMA weights 3.3432)
+   >> The history of the city| of St. Nicholas can be traced back to a time about two hundred years earlier. The city of St. Nicholas was located near the road of Saint Nicholas, from the junction of the Alabamians and the Rhone, and at the time the city of St. Nicholas began to fall out of control. In the second half of the fourteenth century, under the influence of the English, the city of St. Nicholas became an important center of trade, trade and finance. In the fourth century, with the settlement of the city of St. Nicholas, the city of St. Nicholas increased
+   >> In mathematics, a prime number is| an integer. In many other words, a prime number is a number that has an odd number of prime numbers (which are called prime numbers). / The prime number is a prime number, and it is the lowest number in the sequence of numbers. This is the number that is very close to the prime number. The prime numbers are called prime numbers because they have their prime number prime. / If we are interested in finding the prime number and the prime number, we can use the following methods to find prime numbers. / The easiest way is to find the prime number. / Let’s
+   >> Plants need sunlight because| their flowers are exposed to UV rays. / Plants tolerate well in hot, conditions. In the winter months, they need a warmer climate, with plenty of sunlight and plenty of nutrients. Some plants will require at least 7 hours of direct sun before they flower. / Plants need well-drained soil and ample light. If you want to plant in a well-drained soil, you can use any soil you prefer. / Plants do well in many soil types. A short clay soil with a level of drainage helps prevent weeds from growing and is good for growing in most soils.
+step  35500 loss 3.4537 lr 3.65e-04 gn 0.66 109,625 tok/s mem 52.2GB rate 0.000 [0.00]
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+resumed from step 35000
+params 169.52M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+step  35500 loss 3.4191 lr 3.65e-04 gn 0.63 108,949 tok/s mem 51.6GB rate 0.000 [0.00]
+step  36000 loss 3.3970 lr 3.60e-04 gn 0.65 110,822 tok/s mem 51.6GB rate 0.000 [0.00]
+step  36500 loss 3.4016 lr 3.54e-04 gn 0.65 111,112 tok/s mem 51.6GB rate 0.000 [0.00]
+step  37000 loss 3.4518 lr 3.49e-04 gn 0.66 109,949 tok/s mem 51.6GB rate 0.000 [0.00]
+step  37500 loss 3.5070 lr 3.43e-04 gn 0.67 110,757 tok/s mem 51.6GB rate 0.000 [0.00]
+step  38000 loss 3.3953 lr 3.37e-04 gn 0.67 110,583 tok/s mem 51.6GB rate 0.000 [0.00]
+step  38500 loss 3.4631 lr 3.32e-04 gn 0.64 107,399 tok/s mem 51.6GB rate 0.000 [0.00]
+step  39000 loss 3.3956 lr 3.26e-04 gn 0.66 109,659 tok/s mem 51.6GB rate 0.000 [0.00]
+step  39500 loss 3.4915 lr 3.20e-04 gn 0.70 110,042 tok/s mem 51.6GB rate 0.000 [0.00]
+step  40000 loss 3.4595 lr 3.15e-04 gn 0.66 110,174 tok/s mem 51.6GB rate 0.000 [0.00]
+== eval step 40000 val_loss 3.4410 (EMA weights 3.3222)
+   >> The history of the city| of Rome is marked by a large number of Roman monuments. This is a city that is also known as the ‘Roman City’. As its name suggests, the city is not only located in the Alps, it also has a long history of architecture. / What is Rome? / The city was founded by the Romans in the 4th century BC. This is the first time in history when the city was the capital of Rome. / The city is also known as the Forum, Pali, and the Forum. / What is the Roman Empire? / The Roman Empire began in the
+   >> In mathematics, a prime number is| a number that is not equal to any known value, in the sense that its divisibility is a function of the number of numbers that it has (in the sense that its divisibility is a function of the number of the known value). / In mathematics, a prime number is a subset of an unknown number, such that its divisibility is a function of its divisibility. In mathematics, a prime number is a subset of the known value, such that its divisibility is a function of the known value of the known value. / Similarly, a prime number can be
+   >> Plants need sunlight because| the rays from the sun (and they must also rely on the sun, which is a part of the plant’s photosynthesis cycle) are the primary source of energy for the plant, but the plant doesn’t have to take any of the time in the sunlight. Even when the plant doesn’t have sunlight, it requires energy for the plant to get up in the morning. It won’t have energy to use the sunlight to power the plant, it will have to work extra hours in the morning to get it’s energy, and it won’
+step  40500 loss 3.3633 lr 3.09e-04 gn 0.67 110,163 tok/s mem 51.6GB rate 0.000 [0.00]
+step  41000 loss 3.3401 lr 3.04e-04 gn 0.70 109,837 tok/s mem 51.6GB rate 0.000 [0.00]
+step  41500 loss 3.3656 lr 2.98e-04 gn 0.69 109,223 tok/s mem 51.6GB rate 0.000 [0.00]
+step  42000 loss 3.3700 lr 2.92e-04 gn 0.69 109,156 tok/s mem 51.6GB rate 0.000 [0.00]
+step  42500 loss 3.3643 lr 2.87e-04 gn 0.70 109,119 tok/s mem 51.6GB rate 0.000 [0.00]
+step  43000 loss 3.4444 lr 2.81e-04 gn 0.69 109,179 tok/s mem 51.6GB rate 0.000 [0.00]
+step  43500 loss 3.2893 lr 2.76e-04 gn 0.71 109,090 tok/s mem 51.6GB rate 0.000 [0.00]
+step  44000 loss 3.3390 lr 2.70e-04 gn 0.74 109,603 tok/s mem 51.6GB rate 0.000 [0.00]
+step  44500 loss 3.3900 lr 2.65e-04 gn 0.73 110,023 tok/s mem 51.6GB rate 0.000 [0.00]
+step  45000 loss 3.4384 lr 2.59e-04 gn 0.71 110,478 tok/s mem 51.6GB rate 0.000 [0.00]
+== eval step 45000 val_loss 3.4031 (EMA weights 3.2952)
+   >> The history of the city| and its cityscape is fascinating but the city is a much more fragile one. The city has a long and rich history that is still largely unknown. / When we first arrived in the early 1600s, the city was mainly a kingdom. There were several places in which the city fell, but most of the streets were paved over and the streets were paved. They also had a great role in the history of the city. / The city was historically part of the Netherlands in the 17th and 18th centuries. The Netherlands was part of the Dutch East Indies. It was part of the Netherlands East
+   >> In mathematics, a prime number is| a number that does not depend on the number itself. For example, a number can be 1 because it is 1. If a number is 1, then the number is 1. / The following table shows a list of prime numbers. / The following table shows a list of prime numbers: / |1||4||4||0.28||0.36| / |1||3||1.25||0.49||0.46| / |1||2||3||0.25||0.29||0.27| / |0.29||0.
+   >> Plants need sunlight because| their leaves must receive the sun’s rays in order to receive the light that they need. The leaves also need the ultraviolet light that the sun provides. The light in the leaves is converted to heat when the sun is in the air. When the sun is in the air, the leaves need the light. / Plant the seedlings in full sun. / When planting this plant in full sun, the plants will have the best light exposure. If planting in full sun, the leaves will receive the light best. This plant needs plenty of sunlight, but it will not see enough light to
+step  45500 loss 3.3495 lr 2.54e-04 gn 0.77 110,988 tok/s mem 51.6GB rate 0.000 [0.00]
+step  46000 loss 3.3496 lr 2.49e-04 gn 0.74 110,479 tok/s mem 51.6GB rate 0.000 [0.00]
+step  46500 loss 3.4299 lr 2.43e-04 gn 0.76 110,415 tok/s mem 51.6GB rate 0.000 [0.00]
+step  47000 loss 3.4181 lr 2.38e-04 gn 0.78 110,702 tok/s mem 51.6GB rate 0.000 [0.00]
+step  47500 loss 3.3753 lr 2.33e-04 gn 0.74 110,851 tok/s mem 51.6GB rate 0.000 [0.00]
+step  48000 loss 3.3766 lr 2.27e-04 gn 0.74 110,871 tok/s mem 51.6GB rate 0.000 [0.00]
+step  48500 loss 3.2694 lr 2.22e-04 gn 0.79 110,833 tok/s mem 51.6GB rate 0.000 [0.00]
+step  49000 loss 3.3468 lr 2.17e-04 gn 0.77 110,915 tok/s mem 51.6GB rate 0.000 [0.00]
+step  49500 loss 3.3269 lr 2.12e-04 gn 0.77 110,817 tok/s mem 51.6GB rate 0.000 [0.00]
+step  50000 loss 3.4640 lr 2.07e-04 gn 0.77 110,928 tok/s mem 51.6GB rate 0.000 [0.00]
+== eval step 50000 val_loss 3.3665 (EMA weights 3.2745)
+   >> The history of the city| is rich and rich in history. / The New York Times
+   >> In mathematics, a prime number is| a number that has a divisor and a remainder. There are different classes of prime numbers: prime numbers may be defined as integers and decimals, or they may be expressed in specific ways such as decimal numbers or floating-point numbers or even by multiplying by the product of two numbers. The prime number is a number that is divisible by two decimals, or is divisible by four decimals, or by a multiple of a multiple of a base number, or by a divisor and a decimals. The prime numbers may be used in any set of
+   >> Plants need sunlight because| they can be small, slow-growing plants. If they don’t grow healthy, they can be pruned back to grow new growth. / Fertilize your houseplants as soon as possible. / Pruning or pruning your plant can be a lengthy process. If you’re having problems with pruning your plant, don’t panic. We recommend you consult with a trained arborist or a trained professional before undertaking any pruning.
+gradient spike at step 50333: gn 11.22 (median 0.78), loss 3.6313; embed.weight 11.06, head.weight 1.27, blocks.0.la.conv.weight 0.73, blocks.0.la.qkv.weight 0.56
+step  50500 loss 3.3607 lr 2.02e-04 gn 0.78 110,932 tok/s mem 52.2GB rate 0.000 [0.00]
+step  51000 loss 3.3411 lr 1.97e-04 gn 0.80 110,724 tok/s mem 52.2GB rate 0.000 [0.00]
+step  51500 loss 3.3307 lr 1.92e-04 gn 0.80 110,720 tok/s mem 52.2GB rate 0.000 [0.00]
+step  52000 loss 3.2866 lr 1.87e-04 gn 0.79 110,187 tok/s mem 52.2GB rate 0.000 [0.00]
+step  52500 loss 3.3544 lr 1.83e-04 gn 0.84 110,364 tok/s mem 52.2GB rate 0.000 [0.00]
+step  53000 loss 3.3230 lr 1.78e-04 gn 0.82 110,546 tok/s mem 52.2GB rate 0.000 [0.00]
+step  53500 loss 3.2526 lr 1.73e-04 gn 0.76 110,428 tok/s mem 52.2GB rate 0.000 [0.00]
+step  54000 loss 3.2692 lr 1.69e-04 gn 0.81 106,782 tok/s mem 52.2GB rate 0.000 [0.00]
+step  54500 loss 3.4087 lr 1.64e-04 gn 0.80 109,034 tok/s mem 52.2GB rate 0.000 [0.00]
+step  55000 loss 3.4086 lr 1.60e-04 gn 0.84 109,368 tok/s mem 52.2GB rate 0.000 [0.00]
+== eval step 55000 val_loss 3.3315 (EMA weights 3.2570)
+   >> The history of the city| of Florence's development as a city is a story of conflict, and conflict between both the Catholic and the Protestant parties. / In the 15th century, Florence was a centre of trade, and it was known for its trade with Italy, and it was also a region rich in trade. / The city was heavily involved in politics, and it served the interests of the city in politics and government. Many of its political structures and institutions were based on the Church of England, which was the dominant political and cultural force in the city. The city was not a place of worship but a place of learning
+   >> In mathematics, a prime number is| a zero that is divisible by itself, not by itself. / The number 8 is not a prime number, but an integer number. In the above example, 8 is not a prime number, but a prime number, such as 1. / The prime numbers in the above example are not integers. The standard notation for integers is that of a number, not a non-zero number. / The only time in history two numbers were either not a non-zero number or not a non-zero number. / A number can be even or even zero, but not zero. / However,
+   >> Plants need sunlight because| of the way the soil moves and absorbs light. / Soil contains many different types of soil, but most soil types are found in soils of the same types. Soil types that are found in soils in the same region are called soils. / Soil types in which soils are generally in the same soil sub-facies are called soils that are found in the same soil sub-facies regions. Soil type, and sub-facies location are the same thing. Soil sub-facies are found in four sub-parts of the soil, but soil type is the same
+step  55500 loss 3.4204 lr 1.55e-04 gn 0.93 110,392 tok/s mem 52.2GB rate 0.000 [0.00]
+step  56000 loss 3.3562 lr 1.51e-04 gn 0.83 110,203 tok/s mem 52.2GB rate 0.000 [0.00]
+step  56500 loss 3.3105 lr 1.47e-04 gn 0.81 108,414 tok/s mem 52.2GB rate 0.000 [0.00]
+step  57000 loss 3.3575 lr 1.43e-04 gn 0.79 108,731 tok/s mem 52.2GB rate 0.000 [0.00]
+step  57500 loss 3.2900 lr 1.39e-04 gn 0.80 110,330 tok/s mem 52.2GB rate 0.000 [0.00]
+step  58000 loss 3.3473 lr 1.35e-04 gn 0.84 109,932 tok/s mem 52.2GB rate 0.000 [0.00]
+step  58500 loss 3.3623 lr 1.31e-04 gn 0.87 110,327 tok/s mem 52.2GB rate 0.000 [0.00]
+step  59000 loss 3.2359 lr 1.27e-04 gn 0.90 110,381 tok/s mem 52.2GB rate 0.000 [0.00]
+step  59500 loss 3.3657 lr 1.24e-04 gn 0.85 110,328 tok/s mem 52.2GB rate 0.000 [0.00]
+gradient spike at step 59613: gn 6.47 (median 0.84), loss 3.4004; embed.weight 6.41, head.weight 0.78, blocks.0.la.conv.weight 0.24, blocks.0.la.qkv.weight 0.16
+step  60000 loss 3.2105 lr 1.20e-04 gn 0.83 109,845 tok/s mem 52.2GB rate 0.000 [0.00]
+== eval step 60000 val_loss 3.2966 (EMA weights 3.2402)
+   >> The history of the city| of Parma / is a fascinating, not a simple, tale of three major cities that rose to power during the Middle Ages. / The first was Parma, a major city in Italy, situated between the Apennines and the Rhine river. / The first city to be founded was that of Parma, which was founded in the 1st century. It was located in the northeast of the city and the capital of the city, which was surrounded by the river. / The city was founded by Marcus Aurelius (later Pope Alexander I) as the capital of the Roman province of
+   >> In mathematics, a prime number is| the most basic of all numbers. It is the number which is divisible by itself. Another prime number is the smallest number that can be divisible by itself (or a two-digit number containing only one integer), such as a number that is divisible by another number. / The following two prime numbers are prime and they have the same properties as prime numbers, but they are different in that they are both prime. / The following prime number is prime. / The following prime number is prime. / The following prime number is prime. / The following prime number is divisible by itself.
+   >> Plants need sunlight because| it’s the light’s rays that create color. Plants need the sun for lighting in the summer, but plants don’t need it because the sun does not shine through the plants’ leaves. / The sunlight is filtered by the plants and through its leaves, creating a colorful, bright and colorful appearance. / The light gets stronger as light passes through your plants and reaches the leaves. / The light helps the plants absorb the light and also increases the number of chlorophyll in the leaves. / Your plants need the light to make them more green and then they will
+step  60500 loss 3.3239 lr 1.17e-04 gn 0.81 110,180 tok/s mem 52.2GB rate 0.000 [0.00]
+step  61000 loss 3.3240 lr 1.13e-04 gn 0.87 109,910 tok/s mem 52.2GB rate 0.000 [0.00]
+step  61500 loss 3.3015 lr 1.10e-04 gn 0.85 108,939 tok/s mem 52.2GB rate 0.000 [0.00]
+step  62000 loss 3.2220 lr 1.07e-04 gn 0.83 109,430 tok/s mem 52.2GB rate 0.000 [0.00]
+step  62500 loss 3.1807 lr 1.04e-04 gn 0.88 109,226 tok/s mem 52.2GB rate 0.000 [0.00]
+step  63000 loss 3.2929 lr 1.01e-04 gn 0.90 109,207 tok/s mem 52.2GB rate 0.000 [0.00]
+step  63500 loss 3.1666 lr 9.76e-05 gn 0.85 109,305 tok/s mem 52.2GB rate 0.000 [0.00]
+step  64000 loss 3.3405 lr 9.48e-05 gn 0.88 109,821 tok/s mem 52.2GB rate 0.000 [0.00]
+step  64500 loss 3.2472 lr 9.21e-05 gn 0.87 109,602 tok/s mem 52.2GB rate 0.000 [0.00]
+step  65000 loss 3.3422 lr 8.95e-05 gn 0.87 109,551 tok/s mem 52.2GB rate 0.000 [0.00]
+== eval step 65000 val_loss 3.2676 (EMA weights 3.2247)
+   >> The history of the city| was a major factor in its development, but the city’s rich history is now part of its own. In the 1920s, the city became home to many of the leading artists of the time, and it became a major center of the American art scene—particularly in the field of the New York City Museum of Fine Arts. The world’s leading fine art museum features a collection of artworks, which includes paintings, sculptures, prints, architecture, ceramic panels, and drawings by renowned artists from the early twentieth century. / As the city developed, it became the perfect place for
+   >> In mathematics, a prime number is| the product of two prime numbers. The following table shows how fractions can be expressed by division with different denominators. / The prime number is the number between 1 and 10. / The prime number is the number between 1 and 10. / The prime number is the product of the two numbers. / The prime number is the product of the two numbers. / Division by the square of two numbers / Division by the square of two terms / Division by the square of two numbers / Division by the square of two numbers / Division by the square of two numbers / Since the number
+   >> Plants need sunlight because| they need it to grow and produce food. The sun is not a perfect medium, so a plant needs sunlight. Plants also need water and light. Plants need sunlight to photosynthesis and to store carbon and nutrients in their tissues. Plants prefer bright light, but not direct sunlight. Plants need a dark-green foliage due to their deep roots. / Plants make their own food. Plants have to find and absorb all of their food and water needs. Plants get the nutrients by being surrounded by a water-soluble nutrient. Plants absorb only about half of the nutrients they need. Plants use only
+step  65500 loss 3.3083 lr 8.70e-05 gn 0.87 109,154 tok/s mem 52.2GB rate 0.000 [0.00]
+step  66000 loss 3.2445 lr 8.46e-05 gn 0.89 109,532 tok/s mem 52.2GB rate 0.000 [0.00]
+step  66500 loss 3.2635 lr 8.23e-05 gn 0.91 109,030 tok/s mem 52.2GB rate 0.000 [0.00]
+step  67000 loss 3.2495 lr 8.01e-05 gn 0.89 110,416 tok/s mem 52.2GB rate 0.000 [0.00]
+step  67500 loss 3.1851 lr 7.80e-05 gn 0.90 110,603 tok/s mem 52.2GB rate 0.000 [0.00]
+step  68000 loss 3.2032 lr 7.60e-05 gn 0.88 109,071 tok/s mem 52.2GB rate 0.000 [0.00]
+step  68500 loss 3.1702 lr 7.42e-05 gn 0.90 108,622 tok/s mem 52.2GB rate 0.000 [0.00]
+step  69000 loss 3.2595 lr 7.24e-05 gn 0.91 109,082 tok/s mem 52.2GB rate 0.000 [0.00]
+step  69500 loss 3.3420 lr 7.08e-05 gn 0.87 109,225 tok/s mem 52.2GB rate 0.000 [0.00]
+step  70000 loss 3.1766 lr 6.93e-05 gn 0.91 109,196 tok/s mem 52.2GB rate 0.000 [0.00]
+== eval step 70000 val_loss 3.2461 (EMA weights 3.2131)
+   >> The history of the city| of Chivim is more than two thousand years. The city is located in the middle of the Arabian Sea, and is a major site of the Arabian Sea. The ruins of Chivim, the oldest city in the Arabian peninsula, are located in the city’s center. The remains of the city date back to the 4th century B.C.E. The city was called “the city of the sun” in the Bible. The city is also famous for its many lakes, which were developed during the Middle Ages. The city of Chivim is a popular
+   >> In mathematics, a prime number is| a positive integer, and the root of the number is a 3rd power. The factors are 1, 2, 3, 4, and 6, and the total number is 6. You can see the answers to all the questions on the page. / - Ask your child to put a number on the number line in the bottom right corner of a deck of playing cards. / - You can also use the number line to show the number of steps your child may take during the run. / - Start at the top, and work your way up to the bottom, where you can take the number
+   >> Plants need sunlight because| sunlight helps to regulate how they respond to light, and sunlight is able to regulate how the leaves respond to light. / Plants need light to grow and provide food for their roots and stems. When the sun is part of the day, plants need a period of daylight (about 8 hours) to get this period of sunlight. / The sun is an important part of the plant world that regulates the sun’s activity. Plants need light to produce photosynthesis, which is the production of the light that food allows plants to grow. Plants need this light to survive. / Plant roots absorb
+step  70500 loss 3.1650 lr 6.79e-05 gn 0.87 109,313 tok/s mem 52.2GB rate 0.000 [0.00]
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+resumed from step 70000
+params 169.52M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+step  70500 loss 3.1623 lr 6.79e-05 gn 0.88 109,069 tok/s mem 51.6GB rate 0.000 [0.00]
+step  71000 loss 3.2151 lr 6.66e-05 gn 0.89 109,227 tok/s mem 51.6GB rate 0.000 [0.00]
+step  71500 loss 3.1591 lr 6.54e-05 gn 0.90 109,227 tok/s mem 51.6GB rate 0.000 [0.00]
+step  72000 loss 3.2064 lr 6.43e-05 gn 0.94 109,198 tok/s mem 51.6GB rate 0.000 [0.00]
+step  72500 loss 3.1575 lr 6.34e-05 gn 0.88 109,227 tok/s mem 51.6GB rate 0.000 [0.00]
+step  73000 loss 3.1984 lr 6.26e-05 gn 0.90 109,210 tok/s mem 51.6GB rate 0.000 [0.00]
+step  73500 loss 3.1553 lr 6.18e-05 gn 0.89 109,226 tok/s mem 51.6GB rate 0.000 [0.00]
+step  74000 loss 3.1067 lr 6.12e-05 gn 0.89 109,210 tok/s mem 51.6GB rate 0.000 [0.00]
+step  74500 loss 3.2430 lr 6.08e-05 gn 0.95 109,226 tok/s mem 51.6GB rate 0.000 [0.00]
+step  75000 loss 3.2780 lr 6.04e-05 gn 0.89 109,225 tok/s mem 51.6GB rate 0.000 [0.00]
+== eval step 75000 val_loss 3.2335 (EMA weights 3.2040)
+   >> The history of the city| of Chorlitz in Belgium is very rich, as is the history of the Jews of Belgium in the last four centuries. Their houses are situated in the city centre and in the suburbs. Their buildings are found in the city center, but for the most part, the houses have been built with concrete. / The history of the Jews in Belgium is as follows: / - The name of their city is found in the town history on the walls of the walls. It is the Jewish name of the city, which is known in the city history as the House of God. / - The name
+   >> In mathematics, a prime number is| a unique number. Therefore, a prime number is a number that can be divided by another number. / The divisor of a prime number is its divisor. For example, in your favorite algorithm, the factorization of a factorization is 1: 1. If you multiply the divisor by 4, you get a factorization of 4:6. / One of the advantages of a prime number is that it is a number that is greater than the sum of its two sides. Therefore, it cannot be divided by more than 2. / It is the product of the sum
+   >> Plants need sunlight because| they need it to survive. A good place for a plant to grow is in a place with good growing conditions, such as a place with good sunlight and a moist soil. / How to Care for Your Plant? / Watering your plant is important to keep it healthy and happy, so you need to make sure you don’t overwater it. Watering your plant too much can really stress the plant, and overwatering can cause leaves to drop and start to wilt, ultimately resulting in death of the plant. / Watering your plant is not only important to your environment,
+step  75500 loss 3.1794 lr 6.02e-05 gn 0.95 109,327 tok/s mem 51.6GB rate 0.000 [0.00]
+step  76000 loss 3.2292 lr 6.00e-05 gn 0.90 109,225 tok/s mem 51.6GB rate 0.000 [0.00]
+== eval step 76300 val_loss 3.2318 (EMA weights 3.2020)
+   >> The history of the city| of Londonderry can be traced on the history of the city of Leinster. / Londonderry was first settled in the 13th Century. Its area was almost 4,800 km2. It was founded in 969 by the Saxons. The city was under the control of the Anglo-Saxons from the 8th Century. It became a village around 1170. / The town was the residence of the Mayor of the town of Leinster for almost 20 years. It was then the seat of the town council. / The town of Londonderry is
+   >> In mathematics, a prime number is| equivalent to a prime number in that the prime number is not equal to a prime number in that the prime number is not equal to the same prime number in that it is not equal to the prime number in that it is not equal to the prime number in that it cannot be written in the form , so the polynomial in is / The word polynomial is from Latin polynus, meaning number, number of, number of, number of, power of, number of, power of, power of, number of, power of, number of, number of, number of, power
+   >> Plants need sunlight because| they require a lot of energy to synthesize its own food. Plants need water to grow, but water is needed only for photosynthesis, which requires oxygen. In order to grow, plants need lots of nitrogen in order to survive. Plants need water because this element is necessary to support their metabolic processes. Plants need oxygen to function properly, and oxygen is needed to remove carbon dioxide from the atmosphere. For plant bodies to survive and thrive, it needs nutrients that are needed for growth. / Plants also need oxygen to survive, and oxygen to live. The oxygen in a well-lit environment allows
