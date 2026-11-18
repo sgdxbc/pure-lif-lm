@@ -16,7 +16,16 @@ the differences are paired. From the repository root:
   V16p               as V16, but the integer bits cover the 99.99th percentile of |V| in the calibration instead of
                      its maximum (a few neurons drift thousands of thresholds away); values beyond saturate.
   B12 / B16          the leak factor beta (every step, after the sigmoid: a lookup table in hardware) and the reset
-                     fraction gamma, with 12 or 16 fractional bits.
+                     fraction gamma, with 12 or 16 fractional bits (and the plastic synapses' decay lambda and their
+                     key and query neurons' leak).
+Networks with plastic synapses (mem_heads; docs/experiments.md 5.44): their key and query neurons' potentials as V,
+their bus input, value channels and normalised read-out as A (8-bit integers per channel), and
+  S12 / S16 / S24    the synapses S in fixed point; the integer bits from the calibrated maximum of |S| (fewer than 0
+                     when it stays below 1/2, leaving more fractional bits).
+  The read-out's normalisation r / sqrt(mean(r^2) + eps) is computed exactly (a lookup table or a few iterations in
+  hardware) and rounded with A. Coded input (in_groups) and the two-level readout (out_classes) use their own forward
+  pass with the rounded weights. A network trained with low-precision weights (wbits) keeps its trained integers:
+  the W settings are left out.
 "fp32" runs the same step-by-step code without rounding; "model" is the network's own forward pass (bfloat16, fused
 kernel) on the same windows, as a check that the step-by-step code is the same network.
 """
@@ -74,19 +83,107 @@ def qfrac(p, bits):
     return torch.round(p * 2 ** bits) / 2 ** bits
 
 
+def fire(I, beta, gam, Vb, intb, hard, rec=None, key=None):
+    """LIF neurons over the sequence, threshold folded in (fire at 1). I: (B, L, D) current already divided by the
+    threshold; beta: (D) or (B, L, D); gam: (D) (hard reset) or None (soft reset, V -= 1 on a spike). Vb > 0: the
+    potentials in Vb-bit fixed point with intb integer bits, rounded after the update and after the reset."""
+    frac = Vb - 1 - intb if Vb else 0
+    v = I.new_zeros(I.size(0), I.size(-1))
+    vmax, vsamp, out = 0.0, [], []
+    for t in range(I.size(1)):
+        xt = (beta[:, t] if beta.dim() == 3 else beta) * v + I[:, t]
+        if Vb:
+            xt = qfix(xt, frac, intb)
+        st = (xt >= 1).float()
+        v = xt * (1 - gam * st) if hard else xt - st
+        if Vb:
+            v = qfix(v, frac, intb)
+        if rec is not None:
+            vmax = max(vmax, xt.abs().max().item())
+            if t % 8 == 0:
+                vsamp.append(xt.abs().flatten())
+        out.append(st)
+    if rec is not None:
+        vs = torch.cat(vsamp)
+        rec.setdefault(key + "vmax", []).append(vmax)
+        rec.setdefault(key + "vp9999", []).append(vs.kthvalue(max(1, int(0.9999 * vs.numel()))).values.item())
+    return torch.stack(out, 1)
+
+
+def vint(cal, key, i, q):
+    return cal[key + ("v_int_p" if q.get("vp") else "v_int")][i] if q.get("v") else 0
+
+
+@torch.no_grad()
+def plastic(mem, bus, q, cal, rec, j, A, Bb):
+    """The plastic synapses in front of a population (model.PlasticSynapses), step by step: key and query neurons
+    (soft reset), S[t] = lam S[t-1] + k[t] v[t]^T, r[t] = S[t]^T q[t], normalised per group, times the gain, into the
+    bus through W_o. With "s" bits, S in fixed point (integer bits from the calibrated maximum of |S|)."""
+    c = mem.cfg
+    h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
+    w, g_, Sb = q.get("w", 0), q.get("group", 0), q.get("s", 0)
+    f32 = lambda t: t.float()
+    B, L, _ = bus.shape
+    xin = qa(bus, cal["mem_bus"][j], A) if A else bus
+    th = mem.kq_log_theta.exp().float()
+    I = F.linear(xin, qw(f32(mem.kq_in.weight), w, g_), f32(mem.kq_in.bias)) / th
+    kb = torch.sigmoid(f32(mem.kq_beta_logit))
+    lam = torch.sigmoid(f32(mem.decay_beta_logit))                                       # (h,)
+    if Bb:
+        kb, lam = qfrac(kb, Bb), qfrac(lam, Bb)
+    s = fire(I, kb, None, q.get("v", 0), vint(cal, "kq_", j, q), False, rec, "kq_")
+    k = s[..., :h * m].reshape(B, L, h, m)
+    qq = s[..., h * m:].reshape(B, L, h, m)
+    Wv = f32(mem.v_in.weight)
+    if c.mem_write_avg:   # (1 - lambda) per group, folded into W_v
+        Wv = Wv * (1 - torch.sigmoid(f32(mem.decay_beta_logit))).repeat_interleave(dv).unsqueeze(1)
+    val = F.linear(xin, qw(Wv, w, g_)).view(B, L, h, dv)
+    if A:
+        val = qa(val.reshape(B, L, h * dv), cal["mem_v"][j], A).view(B, L, h, dv)
+    if Sb:
+        intb = cal["mem_S_int"][j]
+        frac = Sb - 1 - intb
+    S = bus.new_zeros(B, h, m, dv)
+    smax, r = 0.0, []
+    for t in range(L):
+        S = lam.view(1, h, 1, 1) * S + k[:, t].unsqueeze(-1) * val[:, t].unsqueeze(-2)
+        if Sb:
+            S = qfix(S, frac, intb)
+        if rec is not None:
+            smax = max(smax, S.abs().max().item())
+        r.append((qq[:, t].unsqueeze(-1) * S).sum(-2))                                   # (B, h, dv)
+    r = torch.stack(r, 1)                                                                # (B, L, h, dv)
+    r = (r * torch.rsqrt(r.pow(2).mean(-1, keepdim=True) + c.mem_eps)).reshape(B, L, h * dv) * f32(mem.gain)
+    if rec is not None:
+        rec.setdefault("mem_bus", []).append(bus.abs().amax((0, 1)))
+        rec.setdefault("mem_v", []).append(val.reshape(B, L, h * dv).abs().amax((0, 1)))
+        rec.setdefault("mem_r", []).append(r.abs().amax((0, 1)))
+        rec.setdefault("mem_Smax", []).append(smax)
+    if A:
+        r = qa(r, cal["mem_r"][j], A)
+    return F.linear(r, qw(f32(mem.w_out.weight), w, g_))
+
+
 @torch.no_grad()
 def run(model, x, q, cal=None, rec=None):
     """Step-by-step forward pass with the rounding in q. rec: dict that collects the calibration maxima."""
+    from torch.func import functional_call
     c = model.cfg
-    assert not c.mem_heads, "not implemented for the plastic synapses"
     T, w, g_ = c.steps_per_token, q.get("w", 0), q.get("group", 0)
     A, Vb, Bb = q.get("a", 0), q.get("v", 0), q.get("b", 0)
     f32 = lambda t: t.float()
-    bus = qw(f32(model.embed.weight), w, g_)[x]
+    if c.in_groups > 1:   # coded input: the sum of the rows of the input neurons that fire
+        bus = functional_call(model.embed, {"weight": qw(f32(model.embed.weight), w, g_)}, (x,))
+    else:
+        bus = qw(f32(model.embed.weight), w, g_)[x]
     if T > 1:
         bus = bus.repeat_interleave(T, dim=1)
     B, LT, _ = bus.shape
+    mem_layers = getattr(model, "mem_layers", [])
     for li, layer in enumerate(model.layers):
+        if li in mem_layers:
+            j = mem_layers.index(li)
+            bus = bus + plastic(model.mems[str(li)], bus, q, cal, rec, j, A, Bb)
         xin = qa(bus, cal["bus"][li], A) if A else bus
         th = layer.theta().float()
         I = F.linear(xin, qw(f32(layer.w_in.weight), w, g_), f32(layer.w_in.bias)) / th   # threshold folded in: fire at 1
@@ -100,33 +197,11 @@ def run(model, x, q, cal=None, rec=None):
         gam = layer.gamma().float()
         if Bb:
             beta, gam = qfrac(beta, Bb), qfrac(gam, Bb)
-        if Vb:
-            intb = cal["v_int_p" if q.get("vp") else "v_int"][li]
-            frac = Vb - 1 - intb
-        v = bus.new_zeros(B, I.size(-1))
-        vmax, vsamp = 0.0, []
-        out = []
-        for t in range(LT):
-            xt = (beta[:, t] if beta.dim() == 3 else beta) * v + I[:, t]
-            if Vb:
-                xt = qfix(xt, frac, intb)
-            s = (xt >= 1).float()
-            v = xt * (1 - gam * s) if c.hard_reset else xt - s
-            if Vb:
-                v = qfix(v, frac, intb)
-            if rec is not None:
-                vmax = max(vmax, xt.abs().max().item())
-                if t % 8 == 0:
-                    vsamp.append(xt.abs().flatten())
-            out.append(s)
-        S = torch.stack(out, 1)
+        S = fire(I, beta, gam, Vb, vint(cal, "", li, q), c.hard_reset, rec, "")
         if rec is not None:
             rec.setdefault("bus", []).append(bus.abs().amax((0, 1)))
             if c.leak_rank:
                 rec.setdefault("m", []).append(m.abs().amax((0, 1)))
-            rec.setdefault("vmax", []).append(vmax)
-            vs = torch.cat(vsamp)
-            rec.setdefault("vp9999", []).append(vs.kthvalue(max(1, int(0.9999 * vs.numel()))).values.item())
             rec.setdefault("rate", []).append(S.mean().item())
         bus = bus + F.linear(S, qw(f32(layer.w_out.weight), w, g_))
     if T > 1:
@@ -134,7 +209,39 @@ def run(model, x, q, cal=None, rec=None):
     if rec is not None:
         rec["head"] = bus.abs().amax((0, 1))
     hin = qa(bus, cal["head"], A) if A else bus
+    if c.out_classes > 0:   # two-level readout: log P(w) for every word
+        return functional_call(model.head, {"w_cls": qw(f32(model.head.w_cls), w, g_),
+                                            "w_word": qw(f32(model.head.w_word), w, g_)}, (hin,))
     return F.linear(hin, qw(f32(model.head.weight), w, g_))
+
+
+def calibrate(rec):
+    """Ranges from an unrounded run (rec): per-channel maxima for the 8-bit integers; integer bits of the fixed-point
+    potentials (the maximum, or its 99.99th percentile, with 25% headroom; at least 0) and of the plastic synapses
+    (the maximum with 25% headroom; negative when they stay below 1, leaving more fractional bits)."""
+    ib = lambda vm: max(0, math.ceil(math.log2(max(vm, 1.0) * 1.25)))
+    cal = {"bus": rec["bus"], "m": rec.get("m"), "head": rec["head"],
+           "v_int": [ib(vm) for vm in rec["vmax"]], "v_int_p": [ib(vm) for vm in rec["vp9999"]]}
+    if "mem_bus" in rec:
+        cal.update(mem_bus=rec["mem_bus"], mem_v=rec["mem_v"], mem_r=rec["mem_r"],
+                   kq_v_int=[ib(vm) for vm in rec["kq_vmax"]], kq_v_int_p=[ib(vm) for vm in rec["kq_vp9999"]],
+                   mem_S_int=[math.ceil(math.log2(max(sm, 1e-6) * 1.25)) for sm in rec["mem_Smax"]])
+    return cal
+
+
+def configs_for(cfg):
+    """The settings for this network. A network trained with low-precision weights (wbits) is loaded with its
+    weights already rounded as trained (sample.load), so the W settings are left out (rounding them again to another
+    grid would only add error). With plastic synapses: their values S in fixed point, S24 / S16 / S12."""
+    out = [(n, q) for n, q in CONFIGS if not (cfg.wbits and q.get("w"))]
+    full = dict(a=8, v=24, b=16) if cfg.wbits else dict(w=8, a=8, v=24, b=16)
+    if cfg.wbits:
+        out.append(("A8 V24 B16", full))
+    if cfg.mem_heads:
+        out += [("S24", dict(s=24)), ("S16", dict(s=16)), ("S12", dict(s=12))]
+        tag = "A8 V24 B16" if cfg.wbits else "W8 A8 V24 B16"
+        out += [(tag + " S16", dict(full, s=16)), (tag + " S12", dict(full, s=12))]
+    return out
 
 
 def windows(n, seq, offset, dev, data="data"):
@@ -164,9 +271,7 @@ def main():
     rec = {}
     xc, _ = windows(16, seq, seq // 2, dev, data)
     run(model, xc, {}, rec=rec)
-    cal = {"bus": rec["bus"], "m": rec.get("m"), "head": rec["head"],
-           "v_int": [max(0, math.ceil(math.log2(max(vm, 1.0) * 1.25))) for vm in rec["vmax"]],
-           "v_int_p": [max(0, math.ceil(math.log2(max(vm, 1.0) * 1.25))) for vm in rec["vp9999"]]}
+    cal = calibrate(rec)
     x, y = windows(a.windows, seq, 0, dev, data)
 
     def loss_of(fn):
@@ -177,8 +282,10 @@ def main():
                                    reduction="sum").item()
         return tot / y.numel()
 
-    def own(xb):
-        with torch.autocast(dev.type, dtype=torch.bfloat16):
+    bf16 = dev.type == "cpu" or torch.cuda.get_device_capability(dev)[0] >= 8   # Ampere and later
+
+    def own(xb):   # older GPUs without bfloat16 (the cluster's nv partition): float32
+        with torch.autocast(dev.type, dtype=torch.bfloat16, enabled=bf16):
             return model(xb)[0]
 
     res = {"ema": has_ema, "windows": a.windows, "tokens": y.numel(), "v_int_bits": cal["v_int"],
@@ -187,7 +294,9 @@ def main():
     res["loss"]["model"] = loss_of(own)
     print(f"{'model (bf16, fused kernel)':22s} {res['loss']['model']:.4f}", flush=True)
     keep = set(s.strip() for s in a.configs.split(",") if s.strip())
-    for name, q in CONFIGS:
+    if model.cfg.mem_heads:
+        res.update(kq_v_int_bits=cal["kq_v_int"], mem_S_int_bits=cal["mem_S_int"], calibration_mem_Smax=rec["mem_Smax"])
+    for name, q in configs_for(model.cfg):
         if keep and name not in keep and name != "fp32":
             continue
         res["loss"][name] = loss_of(lambda xb: run(model, xb, q, cal))
