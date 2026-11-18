@@ -85,7 +85,7 @@ def b16(x):
 
 
 @torch.no_grad()
-def export(model, cal, out, v_bits=24, s_bits=16, a_bits=8):
+def export(model, cal, out, v_bits=24, s_bits=20, a_bits=12):
     global A_BITS
     A_BITS = a_bits
     c = model.cfg
@@ -213,8 +213,10 @@ def main():
     p.add_argument("--device", default="cpu")
     p.add_argument("--out", default="")
     p.add_argument("--v_bits", type=int, default=24)
-    p.add_argument("--s_bits", type=int, default=16, help="plastic synapses S (at most 24)")
-    p.add_argument("--a_bits", type=int, default=8, help="activations, the matrices' inputs (at most 15)")
+    # defaults from quant_sim on g29_hw (docs 5.44): 12-bit activations with group scales and 20-bit plastic
+    # synapses lose nothing (-0.0005); 8 / 16 bits lost 0.025, 10 / 18 bits 0.005
+    p.add_argument("--s_bits", type=int, default=20, help="plastic synapses S (at most 24)")
+    p.add_argument("--a_bits", type=int, default=12, help="activations, the matrices' inputs (at most 15)")
     p.add_argument("--windows", type=int, default=0, help="also write OUT/windows.bin: quant_sim.py's N validation "
                    "windows of 256 tokens (int32, N x 257: each window and its last target), for hw_ref")
     a = p.parse_args()
