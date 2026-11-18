@@ -92,8 +92,9 @@ def snn_cost(model, f):
             mem_adds += float(sum(f["rate"][i - 1] * H * (2 * h * m + h * dv) for i in spk))
         mem_state = M * (h * m * dv + 2 * h * m) * 3
         dense_w += mem_w
+    norm_macs = (T * L + M + 1) * 2 * d if getattr(c, "bus_norm", False) else 0   # bus_norm: squares and scaling
     out = {"arch": "snn", "params": model.num_params(), "steps_per_token": T,
-           "dense_macs": T * L * dense_step + head_shared + head_own + mem_macs,
+           "dense_macs": T * L * dense_step + head_shared + head_own + mem_macs + norm_macs,
            "sparse_adds": float(sum(f["rate"][l] * H * T * d for l in range(L))) + mem_adds,
            "state_bytes": L * H * 3 + mem_state,
            "dense_weights": dense_w, "per_stream_weights": own, "plastic_layers": M,

@@ -11,7 +11,14 @@ or a RetNet whose decay depends on the input):
 q, k, v pass a causal depthwise convolution over the last 4 positions and SiLU; o is normalised per head (RMSNorm) and
 multiplied by a SiLU gate of the input before the output projection. No position embedding (the decay and the
 convolution give the order; nothing grows with the text). The spiking network's plastic synapses are the same rule with
-a fixed decay per group and 0/1 keys and queries (model.py)."""
+a fixed decay per group and 0/1 keys and queries (model.py).
+
+mlp = "spike" (docs/experiments.md 5.49): the MLP's hidden units are 0/1 instead of GELU, h = W1 RMSNorm(x),
+s = [h >= theta] (theta learned per unit, positive), x += W2 s; trained with the spiking network's surrogate gradient
+(the fast sigmoid of lif.py, ds/dh = 1 / (theta (1 + alpha |z|)^2), z = (h - theta) / theta, alpha = 4). These units
+have no membrane (no memory, no reset): only the 0/1 output is taken from the spiking network, with everything else
+(normalisation, attention, the rest of the block) kept, so it measures what 0/1 hidden units cost in an otherwise
+ordinary network."""
 import math
 from dataclasses import dataclass
 
@@ -29,6 +36,27 @@ class TFConfig:
     max_len: int = 1024
     rope: bool = False        # rotary position embedding on queries and keys instead of learned absolute positions
     attn: str = "softmax"     # "linear": gated linear attention instead of softmax attention (module docstring)
+    mlp: str = "gelu"         # "spike": 0/1 hidden units with a surrogate gradient (module docstring)
+
+
+class _Step(torch.autograd.Function):
+    """s = [h >= theta]; backward: the fast-sigmoid surrogate of the spiking network (lif.py, sg "fast_sigmoid"),
+    in float32. h: (..., H); theta: (H,) float32."""
+
+    @staticmethod
+    def forward(ctx, h, theta, alpha):
+        ctx.save_for_backward(h, theta)
+        ctx.alpha = alpha
+        return (h >= theta).to(h.dtype)
+
+    @staticmethod
+    def backward(ctx, g):
+        h, theta = ctx.saved_tensors
+        hf = h.float()
+        d = 1.0 / (theta * (1 + ctx.alpha * ((hf - theta) / theta).abs()) ** 2)    # ds/dh
+        gh = g.float() * d
+        gth = -(gh * hf / theta).reshape(-1, h.size(-1)).sum(0)                      # ds/dtheta = -ds/dh h / theta
+        return gh.to(h.dtype), gth, None
 
 
 def rotary(x, base=10000.0):
@@ -115,18 +143,31 @@ class Block(nn.Module):
         self.fc = nn.Linear(c.d_model, 4 * c.d_model, bias=False)
         self.fc2 = nn.Linear(4 * c.d_model, c.d_model, bias=False)
         self.h = c.n_heads
+        assert c.mlp in ("gelu", "spike")
+        self.spike = c.mlp == "spike"
+        if self.spike:   # threshold at one standard deviation of h at initialisation (W1 entries 0.02): ~16% fire
+            self.log_theta = nn.Parameter(torch.full((4 * c.d_model,), math.log(0.02 * math.sqrt(c.d_model))))
+        self.rate = None
+
+    def ff(self, x):
+        h = self.fc(self.n2(x))
+        if not self.spike:
+            return self.fc2(F.gelu(h))
+        s = _Step.apply(h, self.log_theta.exp().float(), 4.0)
+        self.rate = s.detach().float().mean()
+        return self.fc2(s)
 
     def forward(self, x):
         B, L, D = x.shape
         if self.la is not None:
             x = x + self.la(self.n1(x))
-            return x + self.fc2(F.gelu(self.fc(self.n2(x))))
+            return x + self.ff(x)
         q, k, v = self.qkv(self.n1(x)).view(B, L, 3, self.h, D // self.h).permute(2, 0, 3, 1, 4)
         if self.rope:
             q, k = rotary(q), rotary(k)
         a = F.scaled_dot_product_attention(q, k, v, is_causal=True)
         x = x + self.proj(a.transpose(1, 2).reshape(B, L, D))
-        return x + self.fc2(F.gelu(self.fc(self.n2(x))))
+        return x + self.ff(x)
 
 
 class GPT(nn.Module):
@@ -159,7 +200,8 @@ class GPT(nn.Module):
         loss = None
         if targets is not None:
             loss = F.cross_entropy(logits.float().view(-1, logits.size(-1)), targets.view(-1))
-        return logits, loss, xs if hidden else None, torch.zeros(1, device=idx.device)
+        rates = torch.stack([b.rate for b in self.blocks]) if self.cfg.mlp == "spike" else torch.zeros(1, device=idx.device)
+        return logits, loss, xs if hidden else None, rates
 
     @torch.no_grad()
     def generate(self, idx, max_new_tokens, temperature=0.8, top_k=None, eos_id=None, generator=None):

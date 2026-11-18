@@ -21,7 +21,7 @@ other only with binary spikes through linear synapses. Concretely:
                logits[t] = W_head bus_L[t]
            (a linear function of the spikes of every layer plus the input spike).
            The next-token distribution is softmax(logits).
-No attention, no normalisation layers.
+No attention, no normalisation layers (by default; see bus_norm below).
 Optional (leak_rank > 0): leak-modulating synapses. Besides the ordinary synapses that inject current,
            a second set of synapses from the same presynaptic spikes changes how fast the membrane leaks
            (as conductance-based synapses do in real neurons):
@@ -85,6 +85,12 @@ Optional (spike_soft = rho > 0, docs/experiments.md 5.48): every LIF neuron (the
            non-spiking twin of the network with exact gradients (a diagnostic: what the 0/1 signals and the surrogate
            gradient cost); train.py --soft_hold/--soft_end lower rho to 0 during training, so the trained network
            spikes (soft-to-hard training). Not a hardware network while rho > 0.
+Optional (bus_norm, docs/experiments.md 5.49): every reader of the bus (each population's W_in and leak synapses, the
+           plastic synapses' key, query and value synapses, the readout) reads it divided by its RMS over the d_model
+           channels of the token, as a Transformer's pre-norm does (no gain: the reader's own synapses can scale it).
+           The bus itself is unchanged. A deviation: one division per reader and token (a divisive gain control), but
+           the neurons still exchange only spikes. At initialisation the bus has about unit RMS, so this changes
+           little at first; it makes what the readers see independent of how large the bus grows during training.
 Low-precision weights (wbits, docs/experiments.md 5.38): every weight matrix (the 2-D parameters: input rows, W_in, W_out,
            leak synapses, plastic-synapse inputs and outputs, readout) is meant to be stored as symmetric wbits-bit
            integers with one scale per group of wgroup inputs (quantize_weight). The forward pass does not round:
@@ -158,6 +164,7 @@ class Config:
     mem_src: str = "bus"      # "spikes": key, query and value synapses read the previous population's spikes
     spike_soft: float = 0.0   # >0: neurons output (1 - rho) * spike + rho * a smooth function (module docstring);
                               # train.py --soft_hold/--soft_end lower it during training
+    bus_norm: bool = False    # every reader of the bus sees it scaled to unit RMS per token (module docstring)
     wbits: int = 0            # >0: the weight matrices are used rounded to this many bits (module docstring)
     wgroup: int = 128         # one scale per this many inputs of a weight matrix (per row if it does not divide)
     wbits8: str = ""          # with wbits: comma-separated regular expressions; matrices whose names match get 8 bits
@@ -498,6 +505,14 @@ class SpikingLM(nn.Module):
         self.keep_bus = False   # training only (train.py --hint_weight): keep the bus after each layer in last_bus
         self.last_bus = None
 
+    def read_bus(self, bus):
+        """What a population, a set of plastic synapses or the readout reads: the bus, or with bus_norm the bus divided
+        by its RMS over the d_model channels of each token (one sum of squares and one reciprocal square root per
+        reader and token)."""
+        if not self.cfg.bus_norm:
+            return bus
+        return bus * torch.rsqrt(bus.float().pow(2).mean(-1, keepdim=True) + 1e-6).to(bus.dtype)
+
     def forward(self, idx, targets=None, state=None, return_spikes=False):
         """idx: (B, L) token ids. state: per-layer (membrane potentials, last spikes) or None (at rest); with plastic
         synapses followed by one more entry, the list of their states.
@@ -516,12 +531,12 @@ class SpikingLM(nn.Module):
             if i in self.mem_layers:
                 j = self.mem_layers.index(i)
                 src = s if self.cfg.mem_src == "spikes" and i > 0 else None
-                cur, sk, ms = self.mems[str(i)](bus, None if state is None else state[-1][j], src)
+                cur, sk, ms = self.mems[str(i)](self.read_bus(bus), None if state is None else state[-1][j], src)
                 bus = bus + cur
                 mem_state.append(ms)
                 if return_spikes:
                     mem_spikes.append(sk.detach())
-            out, s, layer_state = layer(bus, None if state is None else state[i])
+            out, s, layer_state = layer(self.read_bus(bus), None if state is None else state[i])
             bus = bus + out
             if self.keep_bus:
                 buses.append(bus)
@@ -533,7 +548,7 @@ class SpikingLM(nn.Module):
             bus = bus.view(bus.size(0), -1, T, bus.size(-1)).mean(2)
         if self.keep_bus:
             self.last_bus = [b.view(b.size(0), -1, T, b.size(-1)).mean(2) if T > 1 else b for b in buses]
-        logits = self.head(bus)
+        logits = self.head(self.read_bus(bus))
         loss = None
         if targets is not None:
             loss = F.cross_entropy(logits.float().view(-1, logits.size(-1)), targets.view(-1))
