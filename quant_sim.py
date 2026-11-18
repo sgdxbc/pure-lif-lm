@@ -307,9 +307,9 @@ def main():
                                    reduction="sum").item()
         return tot / y.numel()
 
-    bf16 = dev.type == "cpu" or torch.cuda.get_device_capability(dev)[0] >= 8   # Ampere and later
+    bf16 = dev.type == "cuda" and torch.cuda.get_device_capability(dev)[0] >= 8   # Ampere and later
 
-    def own(xb):   # older GPUs without bfloat16 (the cluster's nv partition): float32
+    def own(xb):   # float32 on CPUs (bfloat16 there can be very slow) and on GPUs without bfloat16
         with torch.autocast(dev.type, dtype=torch.bfloat16, enabled=bf16):
             return model(xb)[0]
 
