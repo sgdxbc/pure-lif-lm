@@ -1,0 +1,26 @@
+queued the next part of runs/g29_hw_fp_b75000: job 1160301
+xgpi9 NVIDIA H100 NVL | runs/g29_hw_fp_b75000 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 75000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --schedule wsd --decay_steps 15000 --min_lr_frac 0 --init_ckpt runs/g29_hw/ckpt_step60000.pt --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --accum 2 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy
+params 120.97M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 62500 val_loss 3.8741 (EMA weights 3.7991)
+== eval step 65000 val_loss 3.8243 (EMA weights 3.7742)
+== eval step 67500 val_loss 3.7878 (EMA weights 3.7537)
+== eval step 70000 val_loss 3.7582 (EMA weights 3.7393)
+== eval step 72500 val_loss 3.7360 (EMA weights 3.7281)
+== eval step 75000 val_loss 3.7234 (EMA weights 3.7227)
+hellaswag        acc 0.2690  acc_norm 0.2731
+lambada_openai   perplexity 3190.9794  acc 0.0681
+piqa             acc 0.5822  acc_norm 0.5642
+arc_easy         acc 0.4465  acc_norm 0.4003
+arc_challenge    acc 0.1834  acc_norm 0.2355
+winogrande       acc 0.5185
+hellaswag        acc 0.2680  acc_norm 0.2741
+lambada_openai   perplexity 3198.5759  acc 0.0666
+piqa             acc 0.5838  acc_norm 0.5675
+arc_easy         acc 0.4415  acc_norm 0.3998
+arc_challenge    acc 0.1860  acc_norm 0.2304
+winogrande       acc 0.5091
+ "val_loss": 3.733762983829012,
+g29_hw_fp_b75000         snn  121.0M  8-bit  121.0 MB  dense MACs   58.6M + sparse adds  1.24M  state 1327.1 KB  MB/token 8-bit: 1 stream   59.4, 16 streams   4.5  (rate 0.041)
+  weights rounded to 8 bits: "val_loss": 3.734349555451627,
+  weights rounded to 4 bits: "val_loss": 3.937659774385717,
+done Wed Nov 18 11:46:25 AM +08 2026
