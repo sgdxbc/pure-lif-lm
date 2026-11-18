@@ -1,0 +1,9 @@
+$ python3 hw_export.py runs/g29_hw --ema --windows 256
+W1118 11:56:06.533000 1620509 torch/utils/cpp_extension.py:140] No CUDA runtime is found, using CUDA_HOME='/usr'
+wrote runs/g29_hw/hw/manifest.txt, tables.bin (126.1 MB); bus fractional bits 23
+exit 0
+$ g++ -O3 -march=native -fopenmp -ffp-contract=off -o hw_ref hw_ref.cpp
+exit 0
+$ ./hw_ref runs/g29_hw/hw runs/g29_hw/hw/windows.bin 256 256 runs/g29_hw/hw/logp.bin
+windows 256 x 256 tokens: loss 3.871849
+exit 0

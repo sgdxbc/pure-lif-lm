@@ -1,0 +1,394 @@
+param d 768
+param H 3072
+param L 12
+param vocab 50304
+param BF 23
+param V_BITS 24
+param S_BITS 16
+param BETA_BITS 16
+param SIG_STEP 10
+param SIG_RANGE 16
+param G 128
+param hard_reset 1
+param leak_rank 96
+param mem_heads 8
+param mem_keys 64
+param mem_dv 64
+param mem_eps 1.0
+param out_classes 225
+param out_short 8192
+param in_groups 2
+param mem_layers 0,1,2,3,4,5,6,7,8,9,10,11
+tensor emb_w int8 2 2489 768 0
+tensor emb_sc float32 2 2489 6 1911552
+tensor code int32 2 50304 2 1971288
+tensor sig int32 1 32769 2373720
+tensor m0_ain float32 1 6 2504796
+tensor m0_kq_w int8 2 1024 768 2504820
+tensor m0_kq_comb float32 2 1024 6 3291252
+tensor m0_kq_b float32 1 1024 3315828
+tensor m0_kq_beta int32 1 1024 3319924
+param m0_kq_vint 13
+tensor m0_lam int32 1 8 3324020
+tensor m0_v_w int8 2 512 768 3324052
+tensor m0_v_comb float32 2 512 6 3717268
+tensor m0_v_ain float32 1 4 3729556
+param m0_S_int 0
+tensor m0_v_toS float32 1 4 3729572
+tensor m0_gain float32 1 512 3729588
+tensor m0_r_ain float32 1 4 3731636
+tensor m0_o_w int8 2 768 512 3731652
+tensor m0_o_comb float32 2 768 4 4124868
+tensor p0_ain float32 1 6 4137156
+tensor p0_in_w int8 2 3072 768 4137180
+tensor p0_in_comb float32 2 3072 6 6496476
+tensor p0_in_b float32 1 3072 6570204
+tensor p0_li_w int8 2 96 768 6582492
+tensor p0_li_comb float32 2 96 6 6656220
+tensor p0_m_ain float32 1 1 6658524
+tensor p0_lo_w int8 2 3072 96 6658528
+tensor p0_lo_comb float32 2 3072 1 6953440
+tensor p0_blogit float32 1 3072 6965728
+tensor p0_g1 int32 1 3072 6978016
+param p0_vint 10
+tensor p0_out_w int8 2 768 3072 6990304
+tensor p0_out_comb float32 2 768 24 9349600
+tensor m1_ain float32 1 6 9423328
+tensor m1_kq_w int8 2 1024 768 9423352
+tensor m1_kq_comb float32 2 1024 6 10209784
+tensor m1_kq_b float32 1 1024 10234360
+tensor m1_kq_beta int32 1 1024 10238456
+param m1_kq_vint 18
+tensor m1_lam int32 1 8 10242552
+tensor m1_v_w int8 2 512 768 10242584
+tensor m1_v_comb float32 2 512 6 10635800
+tensor m1_v_ain float32 1 4 10648088
+param m1_S_int 3
+tensor m1_v_toS float32 1 4 10648104
+tensor m1_gain float32 1 512 10648120
+tensor m1_r_ain float32 1 4 10650168
+tensor m1_o_w int8 2 768 512 10650184
+tensor m1_o_comb float32 2 768 4 11043400
+tensor p1_ain float32 1 6 11055688
+tensor p1_in_w int8 2 3072 768 11055712
+tensor p1_in_comb float32 2 3072 6 13415008
+tensor p1_in_b float32 1 3072 13488736
+tensor p1_li_w int8 2 96 768 13501024
+tensor p1_li_comb float32 2 96 6 13574752
+tensor p1_m_ain float32 1 1 13577056
+tensor p1_lo_w int8 2 3072 96 13577060
+tensor p1_lo_comb float32 2 3072 1 13871972
+tensor p1_blogit float32 1 3072 13884260
+tensor p1_g1 int32 1 3072 13896548
+param p1_vint 15
+tensor p1_out_w int8 2 768 3072 13908836
+tensor p1_out_comb float32 2 768 24 16268132
+tensor m2_ain float32 1 6 16341860
+tensor m2_kq_w int8 2 1024 768 16341884
+tensor m2_kq_comb float32 2 1024 6 17128316
+tensor m2_kq_b float32 1 1024 17152892
+tensor m2_kq_beta int32 1 1024 17156988
+param m2_kq_vint 20
+tensor m2_lam int32 1 8 17161084
+tensor m2_v_w int8 2 512 768 17161116
+tensor m2_v_comb float32 2 512 6 17554332
+tensor m2_v_ain float32 1 4 17566620
+param m2_S_int 4
+tensor m2_v_toS float32 1 4 17566636
+tensor m2_gain float32 1 512 17566652
+tensor m2_r_ain float32 1 4 17568700
+tensor m2_o_w int8 2 768 512 17568716
+tensor m2_o_comb float32 2 768 4 17961932
+tensor p2_ain float32 1 6 17974220
+tensor p2_in_w int8 2 3072 768 17974244
+tensor p2_in_comb float32 2 3072 6 20333540
+tensor p2_in_b float32 1 3072 20407268
+tensor p2_li_w int8 2 96 768 20419556
+tensor p2_li_comb float32 2 96 6 20493284
+tensor p2_m_ain float32 1 1 20495588
+tensor p2_lo_w int8 2 3072 96 20495592
+tensor p2_lo_comb float32 2 3072 1 20790504
+tensor p2_blogit float32 1 3072 20802792
+tensor p2_g1 int32 1 3072 20815080
+param p2_vint 14
+tensor p2_out_w int8 2 768 3072 20827368
+tensor p2_out_comb float32 2 768 24 23186664
+tensor m3_ain float32 1 6 23260392
+tensor m3_kq_w int8 2 1024 768 23260416
+tensor m3_kq_comb float32 2 1024 6 24046848
+tensor m3_kq_b float32 1 1024 24071424
+tensor m3_kq_beta int32 1 1024 24075520
+param m3_kq_vint 19
+tensor m3_lam int32 1 8 24079616
+tensor m3_v_w int8 2 512 768 24079648
+tensor m3_v_comb float32 2 512 6 24472864
+tensor m3_v_ain float32 1 4 24485152
+param m3_S_int 4
+tensor m3_v_toS float32 1 4 24485168
+tensor m3_gain float32 1 512 24485184
+tensor m3_r_ain float32 1 4 24487232
+tensor m3_o_w int8 2 768 512 24487248
+tensor m3_o_comb float32 2 768 4 24880464
+tensor p3_ain float32 1 6 24892752
+tensor p3_in_w int8 2 3072 768 24892776
+tensor p3_in_comb float32 2 3072 6 27252072
+tensor p3_in_b float32 1 3072 27325800
+tensor p3_li_w int8 2 96 768 27338088
+tensor p3_li_comb float32 2 96 6 27411816
+tensor p3_m_ain float32 1 1 27414120
+tensor p3_lo_w int8 2 3072 96 27414124
+tensor p3_lo_comb float32 2 3072 1 27709036
+tensor p3_blogit float32 1 3072 27721324
+tensor p3_g1 int32 1 3072 27733612
+param p3_vint 13
+tensor p3_out_w int8 2 768 3072 27745900
+tensor p3_out_comb float32 2 768 24 30105196
+tensor m4_ain float32 1 6 30178924
+tensor m4_kq_w int8 2 1024 768 30178948
+tensor m4_kq_comb float32 2 1024 6 30965380
+tensor m4_kq_b float32 1 1024 30989956
+tensor m4_kq_beta int32 1 1024 30994052
+param m4_kq_vint 20
+tensor m4_lam int32 1 8 30998148
+tensor m4_v_w int8 2 512 768 30998180
+tensor m4_v_comb float32 2 512 6 31391396
+tensor m4_v_ain float32 1 4 31403684
+param m4_S_int 6
+tensor m4_v_toS float32 1 4 31403700
+tensor m4_gain float32 1 512 31403716
+tensor m4_r_ain float32 1 4 31405764
+tensor m4_o_w int8 2 768 512 31405780
+tensor m4_o_comb float32 2 768 4 31798996
+tensor p4_ain float32 1 6 31811284
+tensor p4_in_w int8 2 3072 768 31811308
+tensor p4_in_comb float32 2 3072 6 34170604
+tensor p4_in_b float32 1 3072 34244332
+tensor p4_li_w int8 2 96 768 34256620
+tensor p4_li_comb float32 2 96 6 34330348
+tensor p4_m_ain float32 1 1 34332652
+tensor p4_lo_w int8 2 3072 96 34332656
+tensor p4_lo_comb float32 2 3072 1 34627568
+tensor p4_blogit float32 1 3072 34639856
+tensor p4_g1 int32 1 3072 34652144
+param p4_vint 13
+tensor p4_out_w int8 2 768 3072 34664432
+tensor p4_out_comb float32 2 768 24 37023728
+tensor m5_ain float32 1 6 37097456
+tensor m5_kq_w int8 2 1024 768 37097480
+tensor m5_kq_comb float32 2 1024 6 37883912
+tensor m5_kq_b float32 1 1024 37908488
+tensor m5_kq_beta int32 1 1024 37912584
+param m5_kq_vint 20
+tensor m5_lam int32 1 8 37916680
+tensor m5_v_w int8 2 512 768 37916712
+tensor m5_v_comb float32 2 512 6 38309928
+tensor m5_v_ain float32 1 4 38322216
+param m5_S_int 5
+tensor m5_v_toS float32 1 4 38322232
+tensor m5_gain float32 1 512 38322248
+tensor m5_r_ain float32 1 4 38324296
+tensor m5_o_w int8 2 768 512 38324312
+tensor m5_o_comb float32 2 768 4 38717528
+tensor p5_ain float32 1 6 38729816
+tensor p5_in_w int8 2 3072 768 38729840
+tensor p5_in_comb float32 2 3072 6 41089136
+tensor p5_in_b float32 1 3072 41162864
+tensor p5_li_w int8 2 96 768 41175152
+tensor p5_li_comb float32 2 96 6 41248880
+tensor p5_m_ain float32 1 1 41251184
+tensor p5_lo_w int8 2 3072 96 41251188
+tensor p5_lo_comb float32 2 3072 1 41546100
+tensor p5_blogit float32 1 3072 41558388
+tensor p5_g1 int32 1 3072 41570676
+param p5_vint 12
+tensor p5_out_w int8 2 768 3072 41582964
+tensor p5_out_comb float32 2 768 24 43942260
+tensor m6_ain float32 1 6 44015988
+tensor m6_kq_w int8 2 1024 768 44016012
+tensor m6_kq_comb float32 2 1024 6 44802444
+tensor m6_kq_b float32 1 1024 44827020
+tensor m6_kq_beta int32 1 1024 44831116
+param m6_kq_vint 19
+tensor m6_lam int32 1 8 44835212
+tensor m6_v_w int8 2 512 768 44835244
+tensor m6_v_comb float32 2 512 6 45228460
+tensor m6_v_ain float32 1 4 45240748
+param m6_S_int 5
+tensor m6_v_toS float32 1 4 45240764
+tensor m6_gain float32 1 512 45240780
+tensor m6_r_ain float32 1 4 45242828
+tensor m6_o_w int8 2 768 512 45242844
+tensor m6_o_comb float32 2 768 4 45636060
+tensor p6_ain float32 1 6 45648348
+tensor p6_in_w int8 2 3072 768 45648372
+tensor p6_in_comb float32 2 3072 6 48007668
+tensor p6_in_b float32 1 3072 48081396
+tensor p6_li_w int8 2 96 768 48093684
+tensor p6_li_comb float32 2 96 6 48167412
+tensor p6_m_ain float32 1 1 48169716
+tensor p6_lo_w int8 2 3072 96 48169720
+tensor p6_lo_comb float32 2 3072 1 48464632
+tensor p6_blogit float32 1 3072 48476920
+tensor p6_g1 int32 1 3072 48489208
+param p6_vint 12
+tensor p6_out_w int8 2 768 3072 48501496
+tensor p6_out_comb float32 2 768 24 50860792
+tensor m7_ain float32 1 6 50934520
+tensor m7_kq_w int8 2 1024 768 50934544
+tensor m7_kq_comb float32 2 1024 6 51720976
+tensor m7_kq_b float32 1 1024 51745552
+tensor m7_kq_beta int32 1 1024 51749648
+param m7_kq_vint 19
+tensor m7_lam int32 1 8 51753744
+tensor m7_v_w int8 2 512 768 51753776
+tensor m7_v_comb float32 2 512 6 52146992
+tensor m7_v_ain float32 1 4 52159280
+param m7_S_int 6
+tensor m7_v_toS float32 1 4 52159296
+tensor m7_gain float32 1 512 52159312
+tensor m7_r_ain float32 1 4 52161360
+tensor m7_o_w int8 2 768 512 52161376
+tensor m7_o_comb float32 2 768 4 52554592
+tensor p7_ain float32 1 6 52566880
+tensor p7_in_w int8 2 3072 768 52566904
+tensor p7_in_comb float32 2 3072 6 54926200
+tensor p7_in_b float32 1 3072 54999928
+tensor p7_li_w int8 2 96 768 55012216
+tensor p7_li_comb float32 2 96 6 55085944
+tensor p7_m_ain float32 1 1 55088248
+tensor p7_lo_w int8 2 3072 96 55088252
+tensor p7_lo_comb float32 2 3072 1 55383164
+tensor p7_blogit float32 1 3072 55395452
+tensor p7_g1 int32 1 3072 55407740
+param p7_vint 11
+tensor p7_out_w int8 2 768 3072 55420028
+tensor p7_out_comb float32 2 768 24 57779324
+tensor m8_ain float32 1 6 57853052
+tensor m8_kq_w int8 2 1024 768 57853076
+tensor m8_kq_comb float32 2 1024 6 58639508
+tensor m8_kq_b float32 1 1024 58664084
+tensor m8_kq_beta int32 1 1024 58668180
+param m8_kq_vint 20
+tensor m8_lam int32 1 8 58672276
+tensor m8_v_w int8 2 512 768 58672308
+tensor m8_v_comb float32 2 512 6 59065524
+tensor m8_v_ain float32 1 4 59077812
+param m8_S_int 6
+tensor m8_v_toS float32 1 4 59077828
+tensor m8_gain float32 1 512 59077844
+tensor m8_r_ain float32 1 4 59079892
+tensor m8_o_w int8 2 768 512 59079908
+tensor m8_o_comb float32 2 768 4 59473124
+tensor p8_ain float32 1 6 59485412
+tensor p8_in_w int8 2 3072 768 59485436
+tensor p8_in_comb float32 2 3072 6 61844732
+tensor p8_in_b float32 1 3072 61918460
+tensor p8_li_w int8 2 96 768 61930748
+tensor p8_li_comb float32 2 96 6 62004476
+tensor p8_m_ain float32 1 1 62006780
+tensor p8_lo_w int8 2 3072 96 62006784
+tensor p8_lo_comb float32 2 3072 1 62301696
+tensor p8_blogit float32 1 3072 62313984
+tensor p8_g1 int32 1 3072 62326272
+param p8_vint 12
+tensor p8_out_w int8 2 768 3072 62338560
+tensor p8_out_comb float32 2 768 24 64697856
+tensor m9_ain float32 1 6 64771584
+tensor m9_kq_w int8 2 1024 768 64771608
+tensor m9_kq_comb float32 2 1024 6 65558040
+tensor m9_kq_b float32 1 1024 65582616
+tensor m9_kq_beta int32 1 1024 65586712
+param m9_kq_vint 20
+tensor m9_lam int32 1 8 65590808
+tensor m9_v_w int8 2 512 768 65590840
+tensor m9_v_comb float32 2 512 6 65984056
+tensor m9_v_ain float32 1 4 65996344
+param m9_S_int 6
+tensor m9_v_toS float32 1 4 65996360
+tensor m9_gain float32 1 512 65996376
+tensor m9_r_ain float32 1 4 65998424
+tensor m9_o_w int8 2 768 512 65998440
+tensor m9_o_comb float32 2 768 4 66391656
+tensor p9_ain float32 1 6 66403944
+tensor p9_in_w int8 2 3072 768 66403968
+tensor p9_in_comb float32 2 3072 6 68763264
+tensor p9_in_b float32 1 3072 68836992
+tensor p9_li_w int8 2 96 768 68849280
+tensor p9_li_comb float32 2 96 6 68923008
+tensor p9_m_ain float32 1 1 68925312
+tensor p9_lo_w int8 2 3072 96 68925316
+tensor p9_lo_comb float32 2 3072 1 69220228
+tensor p9_blogit float32 1 3072 69232516
+tensor p9_g1 int32 1 3072 69244804
+param p9_vint 11
+tensor p9_out_w int8 2 768 3072 69257092
+tensor p9_out_comb float32 2 768 24 71616388
+tensor m10_ain float32 1 6 71690116
+tensor m10_kq_w int8 2 1024 768 71690140
+tensor m10_kq_comb float32 2 1024 6 72476572
+tensor m10_kq_b float32 1 1024 72501148
+tensor m10_kq_beta int32 1 1024 72505244
+param m10_kq_vint 21
+tensor m10_lam int32 1 8 72509340
+tensor m10_v_w int8 2 512 768 72509372
+tensor m10_v_comb float32 2 512 6 72902588
+tensor m10_v_ain float32 1 4 72914876
+param m10_S_int 8
+tensor m10_v_toS float32 1 4 72914892
+tensor m10_gain float32 1 512 72914908
+tensor m10_r_ain float32 1 4 72916956
+tensor m10_o_w int8 2 768 512 72916972
+tensor m10_o_comb float32 2 768 4 73310188
+tensor p10_ain float32 1 6 73322476
+tensor p10_in_w int8 2 3072 768 73322500
+tensor p10_in_comb float32 2 3072 6 75681796
+tensor p10_in_b float32 1 3072 75755524
+tensor p10_li_w int8 2 96 768 75767812
+tensor p10_li_comb float32 2 96 6 75841540
+tensor p10_m_ain float32 1 1 75843844
+tensor p10_lo_w int8 2 3072 96 75843848
+tensor p10_lo_comb float32 2 3072 1 76138760
+tensor p10_blogit float32 1 3072 76151048
+tensor p10_g1 int32 1 3072 76163336
+param p10_vint 12
+tensor p10_out_w int8 2 768 3072 76175624
+tensor p10_out_comb float32 2 768 24 78534920
+tensor m11_ain float32 1 6 78608648
+tensor m11_kq_w int8 2 1024 768 78608672
+tensor m11_kq_comb float32 2 1024 6 79395104
+tensor m11_kq_b float32 1 1024 79419680
+tensor m11_kq_beta int32 1 1024 79423776
+param m11_kq_vint 20
+tensor m11_lam int32 1 8 79427872
+tensor m11_v_w int8 2 512 768 79427904
+tensor m11_v_comb float32 2 512 6 79821120
+tensor m11_v_ain float32 1 4 79833408
+param m11_S_int 8
+tensor m11_v_toS float32 1 4 79833424
+tensor m11_gain float32 1 512 79833440
+tensor m11_r_ain float32 1 4 79835488
+tensor m11_o_w int8 2 768 512 79835504
+tensor m11_o_comb float32 2 768 4 80228720
+tensor p11_ain float32 1 6 80241008
+tensor p11_in_w int8 2 3072 768 80241032
+tensor p11_in_comb float32 2 3072 6 82600328
+tensor p11_in_b float32 1 3072 82674056
+tensor p11_li_w int8 2 96 768 82686344
+tensor p11_li_comb float32 2 96 6 82760072
+tensor p11_m_ain float32 1 1 82762376
+tensor p11_lo_w int8 2 3072 96 82762380
+tensor p11_lo_comb float32 2 3072 1 83057292
+tensor p11_blogit float32 1 3072 83069580
+tensor p11_g1 int32 1 3072 83081868
+param p11_vint 13
+tensor p11_out_w int8 2 768 3072 83094156
+tensor p11_out_comb float32 2 768 24 85453452
+tensor h_ain float32 1 6 85527180
+tensor h_cls_w int8 2 8417 768 85527204
+tensor h_cls_comb float32 2 8417 6 91991460
+tensor h_word_w int8 2 42300 768 92193468
+tensor h_word_comb float32 2 42300 6 124679868
+tensor word_cls int32 1 50304 125695068
+tensor slot int32 1 50304 125896284
+tensor used uint8 1 42300 126097500
+param class_m 188
