@@ -79,6 +79,12 @@ Optional (mem_src = "spikes", 5.46): the key, query and value synapses of the pl
            l > 0 read the spikes of population l - 1 (d_hidden binary inputs firing at a few percent) instead of the
            bus: additions of the synapse rows of the neurons that fired instead of dense multiply-adds (the first
            population's still read the bus). W_o, the readout of S into the bus, is unchanged.
+Optional (spike_soft = rho > 0, docs/experiments.md 5.48): every LIF neuron (the populations' and the key and query
+           neurons) outputs (1 - rho) [V >= theta] + rho f((V - theta) / theta) instead of a 0/1 spike, and the reset
+           uses that output; f rises smoothly from 0 to 1 around the threshold (lif.py soft_fn). rho = 1 is a
+           non-spiking twin of the network with exact gradients (a diagnostic: what the 0/1 signals and the surrogate
+           gradient cost); train.py --soft_hold/--soft_end lower rho to 0 during training, so the trained network
+           spikes (soft-to-hard training). Not a hardware network while rho > 0.
 Low-precision weights (wbits, docs/experiments.md 5.38): every weight matrix (the 2-D parameters: input rows, W_in, W_out,
            leak synapses, plastic-synapse inputs and outputs, readout) is meant to be stored as symmetric wbits-bit
            integers with one scale per group of wgroup inputs (quantize_weight). The forward pass does not round:
@@ -150,6 +156,8 @@ class Config:
     mem_eps: float = 1.0      # read-out scaling r / sqrt(mean(r^2) + mem_eps) (see module docstring)
     mem_write_avg: bool = False   # write (1 - lambda) v: S is a running average, not a sum (module docstring)
     mem_src: str = "bus"      # "spikes": key, query and value synapses read the previous population's spikes
+    spike_soft: float = 0.0   # >0: neurons output (1 - rho) * spike + rho * a smooth function (module docstring);
+                              # train.py --soft_hold/--soft_end lower it during training
     wbits: int = 0            # >0: the weight matrices are used rounded to this many bits (module docstring)
     wgroup: int = 128         # one scale per this many inputs of a weight matrix (per row if it does not divide)
     wbits8: str = ""          # with wbits: comma-separated regular expressions; matrices whose names match get 8 bits
@@ -258,7 +266,7 @@ class LIFPopulation(nn.Module):
         c = self.cfg
         v0 = None if state is None else state[0]
         I = self.w_in(self.w_in_low(bus)) if c.in_rank > 0 else self.w_in(bus)
-        kw = dict(hard_reset=c.hard_reset, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg)
+        kw = dict(hard_reset=c.hard_reset, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg, soft=c.spike_soft)
         if c.leak_rank > 0:   # leak changes per step; beta = sigmoid(beta_logit + M) is formed in the kernel
             M = self.leak_out(self.leak_in(bus))
             s, v_last = lif_leak(I, self.beta_logit, M, self.theta(), self.gamma(), v0, **kw)
@@ -346,7 +354,7 @@ class PlasticSynapses(nn.Module):
         S0, v0 = (None, None) if state is None else state
         x = bus if src is None else src.to(bus.dtype)
         s, v_last = lif(self.kq_in(x), torch.sigmoid(self.kq_beta_logit), self.kq_log_theta.exp(), None, v0,
-                        hard_reset=False, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg)
+                        hard_reset=False, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg, soft=c.spike_soft)
         k = s[..., :h * m].reshape(B, L, h, m).transpose(1, 2)
         q = s[..., h * m:].reshape(B, L, h, m).transpose(1, 2)
         val = self.v_in(x).view(B, L, h, dv).transpose(1, 2)

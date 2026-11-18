@@ -133,6 +133,11 @@ python3 train.py --device cuda --out runs/my_snn \
 - `--in_rank r`（5.46 节，试验中）：各层神经元群通过秩 r 的 W_in 读总线（先乘 r × d_model，再乘 d_hidden × r），
   每步的稠密乘加从 d_model·d_hidden 降到 r·(d_model + d_hidden)。
   这两个选项 `hw_cost.py` 已计入；`quant_sim.py`、`hw_export.py` 不支持（会直接报错）。
+- `--spike_soft ρ`（5.48 节，诊断和训练方法）：每个 LIF 神经元（各层神经元群和可塑突触的键、查询神经元）输出
+  (1 − ρ)·[V ≥ θ] + ρ·f((V − θ)/θ)，f 是阈值附近从 0 平滑升到 1 的函数（`lif.py` 的 `soft_fn`，它的导数和替代梯度同形），复位也用这个输出。
+  ρ = 1 是不发放脉冲的"孪生网络"（输出是实数、梯度是精确的）；`--soft_hold a --soft_end b` 让 ρ 在第 a 步以后线性降到第 b 步的 0，
+  之后就是普通的脉冲网络（先软后硬的训练）。只有 GPU 内核（Triton）实现了它，CPU 上 ρ > 0 退回到很慢的参考实现；
+  `test_lif_gpu.py` 也检查 ρ = 0.4、1 时的输出和梯度。ρ > 0 时不是硬件网络，`quant_sim.py`、`hw_export.py` 会直接报错。
 
 **已删除的选项**：试过、没有带来改善的结构选项已从代码里删掉，以免每次改动都要照顾它们：同层连接 `--rec_rank`（5.2 节）、
 带延迟的突触 `--delay_k`（5.9 节）、脉冲化总线 `--spike_bus`（5.23 节）、输入电流按 (1 − β) 缩放 `--leak_gate`（5.26 节）；

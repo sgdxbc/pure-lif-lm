@@ -181,6 +181,7 @@ def run(model, x, q, cal=None, rec=None):
     from torch.func import functional_call
     c = model.cfg
     assert not getattr(c, "in_rank", 0) and getattr(c, "mem_src", "bus") == "bus", "in_rank / mem_src: not simulated"
+    assert not getattr(c, "spike_soft", 0.0), "spike_soft > 0: not a spiking network"
     T, w, g_ = c.steps_per_token, q.get("w", 0), q.get("group", 0)
     A, Vb, Bb, ag = q.get("a", 0), q.get("v", 0), q.get("b", 0), q.get("ag", 0)
     f32 = lambda t: t.float()

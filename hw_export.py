@@ -91,6 +91,7 @@ def export(model, cal, out, v_bits=24, s_bits=20, a_bits=12):
     c = model.cfg
     assert c.steps_per_token == 1, "one step per token"
     assert not getattr(c, "in_rank", 0) and getattr(c, "mem_src", "bus") == "bus", "in_rank / mem_src: not exported"
+    assert not getattr(c, "spike_soft", 0.0), "spike_soft > 0: not a spiking network"
     os.makedirs(out, exist_ok=True)
     W = Writer(out)
     pats = [re.compile(x) for x in c.wbits8.split(",") if x]
