@@ -16,7 +16,9 @@
 #   tf50   d 384,  6 blocks, 6 heads   49.6M
 #   tf77   d 512,  8 blocks, 8 heads   77.2M (the shape of g13_tf77: 3.535 without distillation, cosine, 2.50B tokens)
 # Learning rate 1e-3 (Pythia-70M's; small Transformers take a higher one than GPT-2 124M's 6e-4), moving average of the
-# weights as for the spiking networks. GPU=... picks the card (default h100-47; each needs well under 40 GB).
+# weights as for the spiking networks. GPU=... picks the card (default h100-47), ACCUM=n the split of each batch
+# (default 1; the student's and the teacher's logits over the vocabulary are ~6.6 GB each at 32 x 1,024 tokens, so tf77
+# ran out of memory on a 47 GB card at 1 and needs ACCUM=2 there).
 # bench: the three shapes (and GPT-2 124M's, as a check against the real GPT-2 measured in 5.25) with random weights on
 # an H100 NVL, as the earlier measurements; only the shape matters for time and energy.
 set -e
@@ -29,7 +31,7 @@ if [ "$1" = "bench" ]; then
   exit 0
 fi
 [ -s runs/g13_tf163/ckpt.pt ] || { echo "runs/g13_tf163/ckpt.pt missing"; exit 1; }
-gpu=${GPU:-h100-47}; only=$1
+gpu=${GPU:-h100-47}; acc=${ACCUM:-1}; only=$1
 case "$only" in ""|tf31|tf50|tf77) ;; *) echo "NAME is tf31, tf50 or tf77 (or bench)"; exit 1 ;; esac
 DATA="--data data/fineweb --tokenizer gpt2.json --vocab 50304"
 LEN="--batch 32 --seq 1024 --steps 75000 --warmup 1000 --eval_every 5000 --eval_batches 40 --log_every 500"
@@ -40,6 +42,6 @@ for s in "tf31 256 6 4" "tf50 384 6 6" "tf77 512 8 8"; do
   set -- $s; name=g33_$1
   [ -n "$only" ] && [ "$only" != "$1" ] && continue
   j=$(sbatch --parsable -p gpu -J $name --gres=gpu:$gpu:1 --export=ALL,RELAY=$gpu slurm/train.sbatch runs/$name \
-      $DATA $LEN $WSD $KD $TF --d_model $2 --n_layers $3 --n_heads $4)
-  echo "$j $name ($gpu): d $2, $3 blocks, $4 heads"
+      $DATA $LEN $WSD $KD $TF --d_model $2 --n_layers $3 --n_heads $4 --accum $acc)
+  echo "$j $name ($gpu, accum $acc): d $2, $3 blocks, $4 heads"
 done
