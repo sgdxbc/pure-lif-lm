@@ -1,0 +1,38 @@
+NVIDIA H100 NVL, 400.00 W
+cached decoding vs GPT.forward, 3 streams x 20 positions: max |logit difference| 2.68e-07
+NVIDIA H100 NVL lean 256,6,4 streams     1 context  128:        3,987 tok/s (0.251 ms/token per stream),   25.676 mJ/token (above idle 2.660), 102 W
+NVIDIA H100 NVL lean 256,6,4 streams    16 context  128:       51,883 tok/s (0.308 ms/token per stream),    2.456 mJ/token (above idle 0.687), 127 W
+NVIDIA H100 NVL lean 256,6,4 streams   256 context  128:      551,936 tok/s (0.464 ms/token per stream),    0.469 mJ/token (above idle 0.303), 259 W
+NVIDIA H100 NVL lean 256,6,4 streams  1024 context  128:    1,035,313 tok/s (0.989 ms/token per stream),    0.380 mJ/token (above idle 0.292), 394 W
+NVIDIA H100 NVL lean 256,6,4 streams  4096 context  128:    1,155,106 tok/s (3.546 ms/token per stream),    0.344 mJ/token (above idle 0.264), 397 W
+NVIDIA H100 NVL lean 256,6,4 streams     1 context  896:        3,771 tok/s (0.265 ms/token per stream),   30.337 mJ/token (above idle 6.003), 114 W
+NVIDIA H100 NVL lean 256,6,4 streams    16 context  896:       47,652 tok/s (0.336 ms/token per stream),    3.298 mJ/token (above idle 1.372), 157 W
+NVIDIA H100 NVL lean 256,6,4 streams   256 context  896:      320,419 tok/s (0.799 ms/token per stream),    1.204 mJ/token (above idle 0.917), 386 W
+NVIDIA H100 NVL lean 256,6,4 streams  1024 context  896:      412,745 tok/s (2.481 ms/token per stream),    0.956 mJ/token (above idle 0.733), 394 W
+NVIDIA H100 NVL lean 256,6,4 streams  4096 context  896:      434,467 tok/s (9.428 ms/token per stream),    0.923 mJ/token (above idle 0.712), 401 W
+wrote /home/s/sung/pure-lif-lm/runs/bench_gpu/NVIDIA_H100_NVL_lean_d256_l6_h4.json (idle 92 W)
+256,6,4: exit 0 Wed Nov 18 07:02:11 PM +08 2026
+NVIDIA H100 NVL lean 384,6,6 streams     1 context  128:        3,302 tok/s (0.303 ms/token per stream),   40.275 mJ/token (above idle 9.356), 133 W
+NVIDIA H100 NVL lean 384,6,6 streams    16 context  128:       48,792 tok/s (0.328 ms/token per stream),    3.085 mJ/token (above idle 0.992), 151 W
+NVIDIA H100 NVL lean 384,6,6 streams   256 context  128:      465,250 tok/s (0.550 ms/token per stream),    0.664 mJ/token (above idle 0.444), 309 W
+NVIDIA H100 NVL lean 384,6,6 streams  1024 context  128:      726,794 tok/s (1.409 ms/token per stream),    0.546 mJ/token (above idle 0.405), 397 W
+NVIDIA H100 NVL lean 384,6,6 streams  4096 context  128:      801,210 tok/s (5.112 ms/token per stream),    0.495 mJ/token (above idle 0.368), 397 W
+NVIDIA H100 NVL lean 384,6,6 streams     1 context  896:        3,253 tok/s (0.307 ms/token per stream),   43.029 mJ/token (above idle 11.644), 140 W
+NVIDIA H100 NVL lean 384,6,6 streams    16 context  896:       43,865 tok/s (0.365 ms/token per stream),    4.177 mJ/token (above idle 1.849), 183 W
+NVIDIA H100 NVL lean 384,6,6 streams   256 context  896:      235,754 tok/s (1.086 ms/token per stream),    1.668 mJ/token (above idle 1.235), 393 W
+NVIDIA H100 NVL lean 384,6,6 streams  1024 context  896:      282,781 tok/s (3.621 ms/token per stream),    1.403 mJ/token (above idle 1.042), 397 W
+NVIDIA H100 NVL lean 384,6,6 streams  4096 context  896:      288,251 tok/s (14.210 ms/token per stream),    1.387 mJ/token (above idle 1.032), 400 W
+wrote /home/s/sung/pure-lif-lm/runs/bench_gpu/NVIDIA_H100_NVL_lean_d384_l6_h6.json (idle 102 W)
+384,6,6: exit 0 Wed Nov 18 07:04:10 PM +08 2026
+NVIDIA H100 NVL lean 512,8,8 streams     1 context  128:        2,431 tok/s (0.411 ms/token per stream),   59.533 mJ/token (above idle 15.971), 145 W
+NVIDIA H100 NVL lean 512,8,8 streams    16 context  128:       36,511 tok/s (0.438 ms/token per stream),    4.592 mJ/token (above idle 1.692), 168 W
+NVIDIA H100 NVL lean 512,8,8 streams   256 context  128:      309,793 tok/s (0.826 ms/token per stream),    1.134 mJ/token (above idle 0.792), 351 W
+NVIDIA H100 NVL lean 512,8,8 streams  1024 context  128:      433,824 tok/s (2.360 ms/token per stream),    0.916 mJ/token (above idle 0.672), 397 W
+NVIDIA H100 NVL lean 512,8,8 streams  4096 context  128:      471,800 tok/s (8.682 ms/token per stream),    0.842 mJ/token (above idle 0.617), 397 W
+NVIDIA H100 NVL lean 512,8,8 streams     1 context  896:        2,408 tok/s (0.415 ms/token per stream),   64.135 mJ/token (above idle 20.161), 154 W
+NVIDIA H100 NVL lean 512,8,8 streams    16 context  896:       32,091 tok/s (0.499 ms/token per stream),    6.407 mJ/token (above idle 3.108), 206 W
+NVIDIA H100 NVL lean 512,8,8 streams   256 context  896:      139,718 tok/s (1.832 ms/token per stream),    2.860 mJ/token (above idle 2.102), 400 W
+NVIDIA H100 NVL lean 512,8,8 streams  1024 context  896:      161,330 tok/s (6.347 ms/token per stream),    2.461 mJ/token (above idle 1.805), 397 W
+NVIDIA H100 NVL lean 512,8,8 streams  4096 context  896:      161,693 tok/s (25.332 ms/token per stream),    2.464 mJ/token (above idle 1.809), 398 W
+wrote /home/s/sung/pure-lif-lm/runs/bench_gpu/NVIDIA_H100_NVL_lean_d512_l8_h8.json (idle 106 W)
+512,8,8: exit 0 Wed Nov 18 07:06:17 PM +08 2026

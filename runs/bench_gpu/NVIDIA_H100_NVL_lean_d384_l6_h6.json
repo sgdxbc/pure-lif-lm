@@ -1,0 +1,130 @@
+{
+ "shape": "384,6,6",
+ "gpu": "NVIDIA H100 NVL",
+ "idle_W": 102.10284365330357,
+ "vocab": 50304,
+ "chunk": 8,
+ "rows": [
+  {
+   "streams": 1,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 3302.3178566582706,
+   "decode_tok_s_per_stream": 3302.3178566582706,
+   "ms_per_token": 0.30281760975363364,
+   "decode_J_per_token": 0.040274744643195595,
+   "decode_avg_W": 133.00000840757684,
+   "decode_J_per_token_above_idle": 0.009356205579053247,
+   "calls": 257
+  },
+  {
+   "streams": 16,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 48791.72049617673,
+   "decode_tok_s_per_stream": 3049.4825310110455,
+   "ms_per_token": 0.32792448877169117,
+   "decode_J_per_token": 0.003084708591179625,
+   "decode_avg_W": 150.50823939299136,
+   "decode_J_per_token_above_idle": 0.000992082165733032,
+   "calls": 238
+  },
+  {
+   "streams": 256,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 465249.50255008176,
+   "decode_tok_s_per_stream": 1817.3808693362569,
+   "ms_per_token": 0.5502423938055535,
+   "decode_J_per_token": 0.0006638252365724249,
+   "decode_avg_W": 308.84436109551103,
+   "decode_J_per_token_above_idle": 0.0004443669822515345,
+   "calls": 142
+  },
+  {
+   "streams": 1024,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 726793.9357167324,
+   "decode_tok_s_per_stream": 709.7597028483715,
+   "ms_per_token": 1.4089275510949002,
+   "decode_J_per_token": 0.0005457914921224297,
+   "decode_avg_W": 396.67794664036865,
+   "decode_J_per_token_above_idle": 0.00040530759615731794,
+   "calls": 57
+  },
+  {
+   "streams": 4096,
+   "context": 128,
+   "gen": 128,
+   "decode_tok_s": 801210.4023222371,
+   "decode_tok_s_per_stream": 195.60800837945243,
+   "ms_per_token": 5.1122651280214395,
+   "decode_J_per_token": 0.0004954947153237299,
+   "decode_avg_W": 396.99552021306795,
+   "decode_J_per_token_above_idle": 0.00036805897140756565,
+   "calls": 15
+  },
+  {
+   "streams": 1,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 3253.302771055265,
+   "decode_tok_s_per_stream": 3253.302771055265,
+   "ms_per_token": 0.3073799367513626,
+   "decode_J_per_token": 0.04302870783777464,
+   "decode_avg_W": 139.98541444355965,
+   "decode_J_per_token_above_idle": 0.011644342213487927,
+   "calls": 252
+  },
+  {
+   "streams": 16,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 43865.47832712845,
+   "decode_tok_s_per_stream": 2741.592395445528,
+   "ms_per_token": 0.3647515223857677,
+   "decode_J_per_token": 0.00417663003796729,
+   "decode_avg_W": 183.20987441088783,
+   "decode_J_per_token_above_idle": 0.0018489945590636338,
+   "calls": 214
+  },
+  {
+   "streams": 256,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 235754.32562661028,
+   "decode_tok_s_per_stream": 920.9153344789464,
+   "ms_per_token": 1.0858761523021,
+   "decode_J_per_token": 0.0016684185708346713,
+   "decode_avg_W": 393.33689503004086,
+   "decode_J_per_token_above_idle": 0.0012353285590950144,
+   "calls": 73
+  },
+  {
+   "streams": 1024,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 282781.0779819056,
+   "decode_tok_s_per_stream": 276.1533964667047,
+   "ms_per_token": 3.6211758131338727,
+   "decode_J_per_token": 0.0014034630910914746,
+   "decode_avg_W": 396.87280580666453,
+   "decode_J_per_token_above_idle": 0.0010423963451056033,
+   "calls": 21
+  },
+  {
+   "streams": 4096,
+   "context": 896,
+   "gen": 128,
+   "decode_tok_s": 288251.05947596434,
+   "decode_tok_s_per_stream": 70.37379381737411,
+   "ms_per_token": 14.20983502175659,
+   "decode_J_per_token": 0.0013865207673006807,
+   "decode_avg_W": 399.66608015984826,
+   "decode_J_per_token_above_idle": 0.0010323057859614106,
+   "calls": 5
+  }
+ ],
+ "torch": "2.14.0+cu130"
+}
