@@ -7,6 +7,8 @@ the differences are paired. From the repository root:
 
   W8 / W4 / W4g128   weights as symmetric integers with one scale per output row, or per group of 128 inputs
                      (a matrix whose input width is not a multiple of 128 keeps one scale per row)
+  A8g128 / A8t       as A8 with one scale per group of 128 channels / per vector (for weights trained as integers,
+                     where a per-channel scale cannot be folded in; the group's scale multiplies its integer sum)
   A8                 8-bit integers, one scale per channel, for the bus (the input of W_in, of the leak synapses and of
                      the readout) and for the rank-r intermediate of the leak synapses. Scales are calibrated on
                      separate windows; a per-channel scale folds into the next weights, so it costs nothing in hardware.
@@ -65,9 +67,16 @@ def qw(w, bits, group=0):
     return torch.round(w / s).clamp(-qmax, qmax) * s
 
 
-def qa(x, amax, bits):
-    """Symmetric integers with one scale per channel (last dimension); amax from the calibration."""
+def qa(x, amax, bits, group=0):
+    """Symmetric integers with one scale per channel (last dimension); amax per channel from the calibration.
+    group > 0: one scale per group of that many channels (the largest amax of the group; one for all channels when
+    it does not divide their number); group < 0: one scale for all channels."""
     qmax = 2 ** (bits - 1) - 1
+    n = amax.numel()
+    if group < 0 or (group and n % group):
+        amax = amax.max().expand(n)
+    elif group:
+        amax = amax.view(-1, group).amax(-1, keepdim=True).expand(-1, group).reshape(n)
     s = amax.clamp(min=1e-12) / qmax
     return torch.round(x / s).clamp(-qmax, qmax) * s
 
@@ -121,10 +130,10 @@ def plastic(mem, bus, q, cal, rec, j, A, Bb):
     bus through W_o. With "s" bits, S in fixed point (integer bits from the calibrated maximum of |S|)."""
     c = mem.cfg
     h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
-    w, g_, Sb = q.get("w", 0), q.get("group", 0), q.get("s", 0)
+    w, g_, Sb, ag = q.get("w", 0), q.get("group", 0), q.get("s", 0), q.get("ag", 0)
     f32 = lambda t: t.float()
     B, L, _ = bus.shape
-    xin = qa(bus, cal["mem_bus"][j], A) if A else bus
+    xin = qa(bus, cal["mem_bus"][j], A, ag) if A else bus
     th = mem.kq_log_theta.exp().float()
     I = F.linear(xin, qw(f32(mem.kq_in.weight), w, g_), f32(mem.kq_in.bias)) / th
     kb = torch.sigmoid(f32(mem.kq_beta_logit))
@@ -139,7 +148,7 @@ def plastic(mem, bus, q, cal, rec, j, A, Bb):
         Wv = Wv * (1 - torch.sigmoid(f32(mem.decay_beta_logit))).repeat_interleave(dv).unsqueeze(1)
     val = F.linear(xin, qw(Wv, w, g_)).view(B, L, h, dv)
     if A:
-        val = qa(val.reshape(B, L, h * dv), cal["mem_v"][j], A).view(B, L, h, dv)
+        val = qa(val.reshape(B, L, h * dv), cal["mem_v"][j], A, ag).view(B, L, h, dv)
     if Sb:
         intb = cal["mem_S_int"][j]
         frac = Sb - 1 - intb
@@ -160,7 +169,7 @@ def plastic(mem, bus, q, cal, rec, j, A, Bb):
         rec.setdefault("mem_r", []).append(r.abs().amax((0, 1)))
         rec.setdefault("mem_Smax", []).append(smax)
     if A:
-        r = qa(r, cal["mem_r"][j], A)
+        r = qa(r, cal["mem_r"][j], A, ag)
     return F.linear(r, qw(f32(mem.w_out.weight), w, g_))
 
 
@@ -170,7 +179,7 @@ def run(model, x, q, cal=None, rec=None):
     from torch.func import functional_call
     c = model.cfg
     T, w, g_ = c.steps_per_token, q.get("w", 0), q.get("group", 0)
-    A, Vb, Bb = q.get("a", 0), q.get("v", 0), q.get("b", 0)
+    A, Vb, Bb, ag = q.get("a", 0), q.get("v", 0), q.get("b", 0), q.get("ag", 0)
     f32 = lambda t: t.float()
     if c.in_groups > 1:   # coded input: the sum of the rows of the input neurons that fire
         bus = functional_call(model.embed, {"weight": qw(f32(model.embed.weight), w, g_)}, (x,))
@@ -184,13 +193,13 @@ def run(model, x, q, cal=None, rec=None):
         if li in mem_layers:
             j = mem_layers.index(li)
             bus = bus + plastic(model.mems[str(li)], bus, q, cal, rec, j, A, Bb)
-        xin = qa(bus, cal["bus"][li], A) if A else bus
+        xin = qa(bus, cal["bus"][li], A, ag) if A else bus
         th = layer.theta().float()
         I = F.linear(xin, qw(f32(layer.w_in.weight), w, g_), f32(layer.w_in.bias)) / th   # threshold folded in: fire at 1
         if c.leak_rank:
             m = F.linear(xin, qw(f32(layer.leak_in.weight), w, g_))
             if A:
-                m = qa(m, cal["m"][li], A)
+                m = qa(m, cal["m"][li], A, ag)
             beta = torch.sigmoid(f32(layer.beta_logit) + F.linear(m, qw(f32(layer.leak_out.weight), w, g_)))
         else:
             beta = layer.beta().float()
@@ -208,7 +217,7 @@ def run(model, x, q, cal=None, rec=None):
         bus = bus.view(B, -1, T, bus.size(-1)).mean(2)
     if rec is not None:
         rec["head"] = bus.abs().amax((0, 1))
-    hin = qa(bus, cal["head"], A) if A else bus
+    hin = qa(bus, cal["head"], A, ag) if A else bus
     if c.out_classes > 0:   # two-level readout: log P(w) for every word
         return functional_call(model.head, {"w_cls": qw(f32(model.head.w_cls), w, g_),
                                             "w_word": qw(f32(model.head.w_word), w, g_)}, (hin,))
@@ -235,12 +244,18 @@ def configs_for(cfg):
     grid would only add error). With plastic synapses: their values S in fixed point, S24 / S16 / S12."""
     out = [(n, q) for n, q in CONFIGS if not (cfg.wbits and q.get("w"))]
     full = dict(a=8, v=24, b=16) if cfg.wbits else dict(w=8, a=8, v=24, b=16)
+    tag = "A8 V24 B16" if cfg.wbits else "W8 A8 V24 B16"
     if cfg.wbits:
-        out.append(("A8 V24 B16", full))
+        # the per-channel scales of A8 cannot be folded into weights trained as 4-bit integers without rounding
+        # them again; one scale per group of 128 channels (as the weights' groups) or per vector factors out of
+        # each group's integer sum instead
+        out += [("A8 V24 B16", full), ("A8g128", dict(a=8, ag=128)), ("A8t", dict(a=8, ag=-1)),
+                ("A8g128 V24 B16", dict(full, ag=128))]
     if cfg.mem_heads:
         out += [("S24", dict(s=24)), ("S16", dict(s=16)), ("S12", dict(s=12))]
-        tag = "A8 V24 B16" if cfg.wbits else "W8 A8 V24 B16"
         out += [(tag + " S16", dict(full, s=16)), (tag + " S12", dict(full, s=12))]
+        if cfg.wbits:
+            out.append(("A8g128 V24 B16 S16", dict(full, ag=128, s=16)))
     return out
 
 
