@@ -1,0 +1,30 @@
+queued the next part of runs/g35_base: job 1163282
+xgpi7 NVIDIA H100 NVL | runs/g35_base | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --accum 1
+params 120.97M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.5206 (EMA weights 4.4301)
+== eval step 5000 val_loss 4.2548 (EMA weights 4.1553)
+== eval step 7500 val_loss 4.1369 (EMA weights 4.0420)
+== eval step 10000 val_loss 4.0515 (EMA weights 3.9743)
+== eval step 12500 val_loss 3.9818 (EMA weights 3.9247)
+== eval step 15000 val_loss 3.9229 (EMA weights 3.8887)
+== eval step 17500 val_loss 3.8823 (EMA weights 3.8660)
+== eval step 20000 val_loss 3.8632 (EMA weights 3.8522)
+hellaswag        acc 0.2663  acc_norm 0.2713
+lambada_openai   perplexity 6801.6270  acc 0.0406
+piqa             acc 0.5740  acc_norm 0.5577
+arc_easy         acc 0.4398  acc_norm 0.3847
+arc_challenge    acc 0.1911  acc_norm 0.2244
+winogrande       acc 0.5146
+hellaswag        acc 0.2668  acc_norm 0.2685
+lambada_openai   perplexity 6503.1430  acc 0.0406
+piqa             acc 0.5756  acc_norm 0.5609
+arc_easy         acc 0.4331  acc_norm 0.3918
+arc_challenge    acc 0.1852  acc_norm 0.2270
+winogrande       acc 0.5406
+ "val_loss": 3.874166418476954,
+   " need to be sure you choose a meal that is fresh with your child every two minutes. You need to make sure that your child has enough fiber.\n2. Fruits and vegetables are more nutritious than the recommended amount of fiber.\n3. They are more easily digestible.\n4. Fruits and vegetables are more convenient to eat.\nProtein is one of the best foods.\nIf you have children with diabetes a healthy diet, you can make them eat more fruits and vegetables.\n5. Fruits and vegetables in the form of a banana or a banana \u2013 the most important thing to do is to have a healthy diet.\n6. Fruits and vegetables are good for your body\u2019s energy balance.\n6. Fruits and vegetables are good for your body.\n7. Fizzy and vegetables are excellent for health.\n8. Fruits and vegetables are good for your health.\n9. Fructose and food items are better for your body.\n10. Fruits are better for weight loss.\n11. Fructose and other foods are good for your health.\n12. Fructose and other nutrients are good for your body.\n12. Fructose and fruit are good for"
+g35_base                 snn  121.0M  8-bit  121.0 MB  dense MACs   58.6M + sparse adds  1.61M  state 1327.1 KB  MB/token 8-bit: 1 stream   59.8, 16 streams   4.7  (rate 0.054)
+  weights rounded to 8 bits: "val_loss": 3.862927937788409,
+  weights rounded to 4 bits: "val_loss": 3.9916901678777754,
+done Wed Nov 18 11:29:33 PM +08 2026
