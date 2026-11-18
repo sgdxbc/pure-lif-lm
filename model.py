@@ -72,6 +72,13 @@ Optional (mem_heads > 0): plastic synapses (a fast Hebbian memory) in front of t
            S is a fixed-size state per stream, like the membrane potentials (no history that grows with the text).
            W_o starts at zero, so the model starts as the network without them. Training computes all positions at
            once, in chunks of mem_chunk (plastic_scan).
+Optional (in_rank = r > 0, docs/experiments.md 5.46): each population reads the bus through a rank-r W_in = A_l B_l
+           (B_l: r x d_model, A_l: d_hidden x r), r (d_model + d_hidden) dense multiply-adds per step instead of
+           d_model d_hidden: a cheaper reading of the dense, real-valued bus.
+Optional (mem_src = "spikes", 5.46): the key, query and value synapses of the plastic synapses in front of population
+           l > 0 read the spikes of population l - 1 (d_hidden binary inputs firing at a few percent) instead of the
+           bus: additions of the synapse rows of the neurons that fired instead of dense multiply-adds (the first
+           population's still read the bus). W_o, the readout of S into the bus, is unchanged.
 Low-precision weights (wbits, docs/experiments.md 5.38): every weight matrix (the 2-D parameters: input rows, W_in, W_out,
            leak synapses, plastic-synapse inputs and outputs, readout) is meant to be stored as symmetric wbits-bit
            integers with one scale per group of wgroup inputs (quantize_weight). The forward pass does not round:
@@ -130,6 +137,7 @@ class Config:
     gamma_init: float = 0.9   # (only with hard_reset=True; gamma = 1 is the classic reset-to-zero)
     gamma_init_min: float = -1.0  # >=0: initialise gamma uniformly in [gamma_init_min, gamma_init] instead
     leak_rank: int = 0        # >0: low-rank leak-modulating synapses (see module docstring)
+    in_rank: int = 0          # >0: each population reads the bus through a rank-in_rank W_in (module docstring)
     steps_per_token: int = 1  # >1: simulation steps per token (see module docstring)
     mem_heads: int = 0        # >0: plastic synapses with this many groups (see module docstring)
     mem_keys: int = 64        # key neurons (and query neurons) per group
@@ -141,6 +149,7 @@ class Config:
     mem_chunk: int = 128      # training: positions per chunk of plastic_scan
     mem_eps: float = 1.0      # read-out scaling r / sqrt(mean(r^2) + mem_eps) (see module docstring)
     mem_write_avg: bool = False   # write (1 - lambda) v: S is a running average, not a sum (module docstring)
+    mem_src: str = "bus"      # "spikes": key, query and value synapses read the previous population's spikes
     wbits: int = 0            # >0: the weight matrices are used rounded to this many bits (module docstring)
     wgroup: int = 128         # one scale per this many inputs of a weight matrix (per row if it does not divide)
     wbits8: str = ""          # with wbits: comma-separated regular expressions; matrices whose names match get 8 bits
@@ -198,7 +207,10 @@ class LIFPopulation(nn.Module):
         super().__init__()
         self.cfg = cfg
         H, d = cfg.d_hidden, cfg.d_model
-        self.w_in = nn.Linear(d, H, bias=True)
+        assert cfg.in_rank == 0 or cfg.in_norm != "weight", "in_rank with in_norm 'weight' is not implemented"
+        if cfg.in_rank > 0:   # W_in = w_in . w_in_low, rank in_rank
+            self.w_in_low = nn.Linear(d, cfg.in_rank, bias=False)
+        self.w_in = nn.Linear(cfg.in_rank or d, H, bias=True)
         self.w_out = nn.Linear(H, d, bias=False)
         T = cfg.steps_per_token   # tau_min / tau_max are in tokens; beta is per simulation step
         log_tau = torch.empty(H).uniform_(math.log(cfg.tau_min * T), math.log(cfg.tau_max * T))
@@ -209,7 +221,9 @@ class LIFPopulation(nn.Module):
             theta0 = 1.0 / torch.sqrt(1 - beta ** 2)
         self.log_theta = nn.Parameter(theta0.log(), requires_grad=cfg.learn_theta)
         with torch.no_grad():
-            nn.init.normal_(self.w_in.weight, std=1.0 / math.sqrt(d))
+            nn.init.normal_(self.w_in.weight, std=1.0 / math.sqrt(cfg.in_rank or d))
+            if cfg.in_rank > 0:   # the same variance of the current at initialisation as the full-rank W_in
+                nn.init.normal_(self.w_in_low.weight, std=1.0 / math.sqrt(d))
             if cfg.in_norm == "weight":
                 self.w_in.weight.mul_(torch.sqrt(1 - beta ** 2).unsqueeze(1))
             nn.init.zeros_(self.w_in.bias)
@@ -243,7 +257,7 @@ class LIFPopulation(nn.Module):
         carried along but not used (they were the input of the removed same-layer synapses)."""
         c = self.cfg
         v0 = None if state is None else state[0]
-        I = self.w_in(bus)
+        I = self.w_in(self.w_in_low(bus)) if c.in_rank > 0 else self.w_in(bus)
         kw = dict(hard_reset=c.hard_reset, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg)
         if c.leak_rank > 0:   # leak changes per step; beta = sigmoid(beta_logit + M) is formed in the kernel
             M = self.leak_out(self.leak_in(bus))
@@ -297,12 +311,18 @@ def plastic_scan(q, k, v, log_lam, S0=None, chunk=128):
 class PlasticSynapses(nn.Module):
     """Key and query neurons and the plastic synapses between them and the value channels (module docstring)."""
 
-    def __init__(self, cfg: Config):
+    def __init__(self, cfg: Config, src_dim=0):
+        """src_dim > 0: the key, query and value synapses read spikes of that many neurons (mem_src "spikes": the
+        previous population) instead of the bus."""
         super().__init__()
         self.cfg = cfg
         h, m, dv, d = cfg.mem_heads, cfg.mem_keys, cfg.mem_dv, cfg.d_model
-        self.kq_in = nn.Linear(d, 2 * h * m, bias=True)    # input synapses of the key and the query neurons
-        self.v_in = nn.Linear(d, h * dv, bias=False)       # value channels
+        n_in = src_dim or d
+        # spikes are 0/1 at a rate of a few percent: scale the initial synapses so that the input current has about
+        # the variance it has from the bus (unit-variance entries), assuming 5% firing
+        std_in = 1.0 / math.sqrt(0.05 * src_dim) if src_dim else 1.0 / math.sqrt(d)
+        self.kq_in = nn.Linear(n_in, 2 * h * m, bias=True)    # input synapses of the key and the query neurons
+        self.v_in = nn.Linear(n_in, h * dv, bias=False)       # value channels
         self.w_out = nn.Linear(h * dv, d, bias=False)      # readout into the bus (starts at zero)
         self.gain = nn.Parameter(torch.ones(h * dv))
         tau = torch.exp(torch.linspace(math.log(cfg.mem_tau_min), math.log(cfg.mem_tau_max), h))
@@ -311,23 +331,25 @@ class PlasticSynapses(nn.Module):
         self.kq_beta_logit = nn.Parameter(torch.logit(torch.exp(-1.0 / kq_tau)))
         self.kq_log_theta = nn.Parameter(torch.full((2 * h * m,), math.log(cfg.mem_theta)))
         with torch.no_grad():
-            nn.init.normal_(self.kq_in.weight, std=1.0 / math.sqrt(d))
+            nn.init.normal_(self.kq_in.weight, std=std_in)
             nn.init.zeros_(self.kq_in.bias)
-            nn.init.normal_(self.v_in.weight, std=1.0 / math.sqrt(d))
+            nn.init.normal_(self.v_in.weight, std=std_in)
             nn.init.zeros_(self.w_out.weight)
 
-    def forward(self, bus, state=None):
-        """state: (synapses S (B, h, m, dv), key and query potentials (B, 2hm)) or None. Returns the current into the
-        bus, the key and query spikes (B, L, 2hm) and the new state."""
+    def forward(self, bus, state=None, src=None):
+        """state: (synapses S (B, h, m, dv), key and query potentials (B, 2hm)) or None; src: the spikes the key, query
+        and value synapses read (B, L, src_dim), or None for the bus. Returns the current into the bus, the key and
+        query spikes (B, L, 2hm) and the new state."""
         c = self.cfg
         B, L, _ = bus.shape
         h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
         S0, v0 = (None, None) if state is None else state
-        s, v_last = lif(self.kq_in(bus), torch.sigmoid(self.kq_beta_logit), self.kq_log_theta.exp(), None, v0,
+        x = bus if src is None else src.to(bus.dtype)
+        s, v_last = lif(self.kq_in(x), torch.sigmoid(self.kq_beta_logit), self.kq_log_theta.exp(), None, v0,
                         hard_reset=False, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg)
         k = s[..., :h * m].reshape(B, L, h, m).transpose(1, 2)
         q = s[..., h * m:].reshape(B, L, h, m).transpose(1, 2)
-        val = self.v_in(bus).view(B, L, h, dv).transpose(1, 2)
+        val = self.v_in(x).view(B, L, h, dv).transpose(1, 2)
         if c.mem_write_avg:   # (1 - lambda) = sigmoid(-decay_beta_logit), per group
             val = val * torch.sigmoid(-self.decay_beta_logit).to(val.dtype).view(1, h, 1, 1)
         r, S = plastic_scan(q.to(val.dtype), k.to(val.dtype), val, F.logsigmoid(self.decay_beta_logit), S0, c.mem_chunk)
@@ -455,7 +477,11 @@ class SpikingLM(nn.Module):
         self.layers = nn.ModuleList([LIFPopulation(cfg) for _ in range(cfg.n_layers)])
         self.mem_layers = [i for i in range(cfg.n_layers) if cfg.mem_heads and (i + 1) % cfg.mem_every == 0]
         if self.mem_layers:   # plastic synapses in front of these populations
-            self.mems = nn.ModuleDict({str(i): PlasticSynapses(cfg) for i in self.mem_layers})
+            assert cfg.mem_src in ("bus", "spikes")
+            # mem_src "spikes": in front of population i > 0 they read population i - 1's spikes (in front of the
+            # first population, which has none before it, the bus)
+            src_dim = lambda i: cfg.d_hidden if cfg.mem_src == "spikes" and i > 0 else 0
+            self.mems = nn.ModuleDict({str(i): PlasticSynapses(cfg, src_dim(i)) for i in self.mem_layers})
         if cfg.out_classes > 0:
             self.head = ClassReadout(cfg.vocab, cfg.d_model, cfg.out_classes, cfg.head_init, cfg.out_short)
         else:
@@ -477,10 +503,12 @@ class SpikingLM(nn.Module):
         if T > 1:   # each token is shown for T steps: its input neuron fires at every one of them
             bus = bus.repeat_interleave(T, dim=1)
         new_state, rates, spikes, buses = [], [], [], []
+        s = None   # the previous population's spikes
         for i, layer in enumerate(self.layers):
             if i in self.mem_layers:
                 j = self.mem_layers.index(i)
-                cur, sk, ms = self.mems[str(i)](bus, None if state is None else state[-1][j])
+                src = s if self.cfg.mem_src == "spikes" and i > 0 else None
+                cur, sk, ms = self.mems[str(i)](bus, None if state is None else state[-1][j], src)
                 bus = bus + cur
                 mem_state.append(ms)
                 if return_spikes:

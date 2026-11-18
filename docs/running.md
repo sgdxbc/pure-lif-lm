@@ -128,6 +128,11 @@ python3 train.py --device cuda --out runs/my_snn \
   - **硬件代价**：键、查询、值的突触和 W_o 是稠密乘加（和 W_in 同类）；写入和读出是加法（每个发放的键或查询神经元 dv 次）；
     每步 S 整体衰减一次（每个突触一次乘法）；状态多出 h·m·dv 个数（每层），固定大小。`hw_cost.py`、`fpga_est.py`、`scaling.py` 都已计入，
     `quant_sim.py` 还不支持。
+  - `--mem_src spikes`（5.46 节，试验中）：第 l > 0 层前面的可塑突触，键、查询、值的突触读第 l − 1 层神经元群的脉冲，而不是总线。
+    只对发放了的神经元加上它们那一行突触，稠密乘加变成加法；代价是这些突触从 d_model 行变成 d_hidden 行。第 0 层的仍读总线。
+- `--in_rank r`（5.46 节，试验中）：各层神经元群通过秩 r 的 W_in 读总线（先乘 r × d_model，再乘 d_hidden × r），
+  每步的稠密乘加从 d_model·d_hidden 降到 r·(d_model + d_hidden)。
+  这两个选项 `hw_cost.py` 已计入；`quant_sim.py`、`hw_export.py` 不支持（会直接报错）。
 
 **已删除的选项**：试过、没有带来改善的结构选项已从代码里删掉，以免每次改动都要照顾它们：同层连接 `--rec_rank`（5.2 节）、
 带延迟的突触 `--delay_k`（5.9 节）、脉冲化总线 `--spike_bus`（5.23 节）、输入电流按 (1 − β) 缩放 `--leak_gate`（5.26 节）；
