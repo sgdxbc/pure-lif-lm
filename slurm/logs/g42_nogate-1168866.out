@@ -1,0 +1,27 @@
+queued the next part of runs/g42_nogate: job 1169327
+xgpi1 NVIDIA H100 NVL | runs/g42_nogate | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --bus_norm true --mem_kind gla --mem_heads 12 --mem_gla_ablate nogate --accum 2
+params 130.60M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.3717 (EMA weights 4.3293)
+== eval step 5000 val_loss 4.0369 (EMA weights 3.9828)
+== eval step 7500 val_loss 3.8965 (EMA weights 3.8456)
+== eval step 10000 val_loss 3.8086 (EMA weights 3.7671)
+== eval step 12500 val_loss 3.7440 (EMA weights 3.7142)
+== eval step 15000 val_loss 3.6959 (EMA weights 3.6795)
+params 130.60M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 17500 val_loss 3.6668 (EMA weights 3.6576)
+== eval step 20000 val_loss 3.6510 (EMA weights 3.6440)
+hellaswag        acc 0.2695  acc_norm 0.2721
+lambada_openai   perplexity 2139.8544  acc 0.0955
+piqa             acc 0.5734  acc_norm 0.5653
+arc_easy         acc 0.4423  acc_norm 0.4003
+arc_challenge    acc 0.1775  acc_norm 0.2261
+winogrande       acc 0.5075
+hellaswag        acc 0.2680  acc_norm 0.2726
+lambada_openai   perplexity 2209.7599  acc 0.0943
+piqa             acc 0.5860  acc_norm 0.5740
+arc_easy         acc 0.4461  acc_norm 0.3981
+arc_challenge    acc 0.1869  acc_norm 0.2270
+winogrande       acc 0.4862
+ "val_loss": 3.661381102365161,
+done Fri Nov 20 05:03:53 AM +08 2026
