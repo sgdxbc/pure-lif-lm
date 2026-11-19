@@ -112,6 +112,12 @@ def get_args():
                    help="tf with --attn linear: LIF relay neurons in front of every matrix (docs 5.51; model_tf.py)")
     p.add_argument("--relay_levels", type=int, default=1,
                    help="--relay quant: up to this many spikes per channel and token (docs 5.52; model_tf.py)")
+    p.add_argument("--relay_target", type=float, default=0.0,
+                   help="hold the relays' spikes per channel and token, weighted by the columns of the matrices they "
+                        "feed (model_tf.GPT.relay_spikes; 0.5: half the dense multiply-adds), to this on average: "
+                        "the loss gets lam x those spikes, lam raised by --relay_eta x (spikes - target) after every "
+                        "step and never below 0 (a Lagrange multiplier; docs 5.52). 0: off")
+    p.add_argument("--relay_eta", type=float, default=0.01, help="--relay_target: the multiplier's step")
     p.add_argument("--wq", default="none", choices=["none", "ternary"],
                    help="tf: the blocks' matrices with ternary weights (BitNet b1.58 rounding; docs 5.51)")
     p.add_argument("--mlp", default="gelu", choices=["gelu", "spike", "lif"],
@@ -321,7 +327,11 @@ def main():
                        max_len=max(1024, a.seq), rope=a.rope, attn=a.attn, mlp=a.mlp, relay=a.relay,
                        relay_levels=a.relay_levels, wq=a.wq)
         model = GPT(cfg)
+        assert a.relay_target == 0 or model.relays(), "--relay_target needs --relay"
+        for r in model.relays() if a.relay_target > 0 else []:
+            r.keep_count = True
     else:
+        assert a.relay_target == 0, "--relay_target: --arch tf only"
         cfg = Config(**{f.name: getattr(a, f.name) for f in fields(Config)})
         model = SpikingLM(cfg)
         if a.class_file:   # (a checkpoint loaded below brings back its own classes)
@@ -389,6 +399,7 @@ def main():
         opt = Optimizers([opt, Muon(muon, lr=a.lr, momentum=a.muon_momentum, weight_decay=a.wd)])
         print(f"Muon for {len(muon)} matrices ({sum(p.numel() for p in muon) / 1e6:.1f}M weights), AdamW for the rest")
     step = 0
+    lam = torch.zeros((), device=dev)   # --relay_target's multiplier
     ckpt_path = os.path.join(a.out, "ckpt.pt")
     keep_steps = {int(x) for x in a.keep_ckpt.split(",") if x}
     assert all(k % a.eval_every == 0 for k in keep_steps), "--keep_ckpt steps must be multiples of --eval_every"
@@ -399,6 +410,7 @@ def main():
         model.load_state_dict(ck["model"]); opt.load_state_dict(ck["opt"]); step = ck["step"]
         if hint is not None:
             hint.load_state_dict(ck["hint"])
+        lam = torch.tensor(float(ck.get("relay_lam", 0.0)), device=dev)
         print(f"resumed from step {step}" + (f" of {init_path}" if init_path != ckpt_path else ""))
     ema = None
     if a.ema > 0:
@@ -478,14 +490,19 @@ def main():
                 hl = hl / len(hint_pairs)
                 model.last_bus = None
                 loss = loss + a.hint_weight * hl
+            sp = None
+            if a.relay_target > 0:
+                sp = model.relay_spikes()
+                loss = loss + lam * sp
             (loss / a.accum).backward()
-            logged.append((ce.detach(), None if kd is None else kd.detach(), hl, rates))
+            logged.append((ce.detach(), None if kd is None else kd.detach(), hl, rates, None if sp is None else sp.detach()))
             logits = loss = t_out = t_logits = None   # free this micro-batch's outputs before the next one
         if saved is not None:
             restore_weights_(model, saved); saved = None
         ce = torch.stack([v[0] for v in logged]).mean()
         kd = None if kd is None else torch.stack([v[1] for v in logged]).mean()
         rates = torch.stack([v[3] for v in logged]).mean(0)
+        sp = torch.stack([v[4] for v in logged]).mean() if a.relay_target > 0 else None
         gn = torch.nn.utils.clip_grad_norm_(model.parameters(), a.clip).item()
         med = float(np.median(gn_hist)) if len(gn_hist) >= 50 else None
         spike = med is not None and a.spike_log > 0 and gn > a.spike_log * med
@@ -511,6 +528,8 @@ def main():
             opt.step()
             if ema is not None:
                 ema.update(model, step)
+        if sp is not None:
+            lam = (lam + a.relay_eta * (sp - a.relay_target)).clamp(min=0)
         step += 1
         tokens_seen += a.batch * a.seq
         if step % a.log_every == 0 or step == 1:
@@ -523,12 +542,15 @@ def main():
                 rec["distill_kl"] = kd.item()
             if hl is not None:
                 rec["hint_mse"] = hl.item()
+            if sp is not None:
+                rec["relay_spikes"], rec["relay_lam"] = sp.item(), lam.item()
             mem = ""
             if dev.type == "cuda":
                 rec["gpu_mem_gb"] = torch.cuda.max_memory_allocated(dev) / 2**30
                 mem = f" mem {rec['gpu_mem_gb']:.1f}GB"
             print(f"step {step:6d} loss {ce.item():.4f}" + (f" kl {kd.item():.4f}" if kd is not None else "") +
                   (f" hint {hl.item():.4f}" if hl is not None else "") +
+                  (f" relay spikes {sp.item():.3f} lam {lam.item():.3f}" if sp is not None else "") +
                   f" lr {lr:.2e} gn {gn:.2f} {tps:,.0f} tok/s{mem} "
                   f"rate {rates.float().mean().item():.3f} [{' '.join(f'{r:.2f}' for r in rates.float().tolist())}]",
                   flush=True)
@@ -558,6 +580,8 @@ def main():
                 ck["ema"] = ema.shadow
             if hint is not None:
                 ck["hint"] = hint.state_dict()
+            if a.relay_target > 0:
+                ck["relay_lam"] = lam.item()
             torch.save(ck, ckpt_path)
             if step in keep_steps:
                 torch.save(ck, os.path.join(a.out, f"ckpt_step{step}.pt"))

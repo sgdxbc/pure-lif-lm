@@ -7,6 +7,8 @@
 #                                        NICE=n to let the next parts of runs already in flight go first
 #   q2   g40_laspk with relays of up to 2 spikes per channel and token (5 values), no membrane
 #   q4   the same with up to 4 spikes (9 values)
+#   q4t  q4 held to 0.5 spikes per channel and token, weighted by the columns of the matrices the relays feed, that is
+#        half the block matrices' dense multiply-adds (train.py --relay_target 0.5; q4 met the quality bar with 1.43)
 # (K = 1 is g40_quant.)
 set -e
 cd "$(dirname "$0")/.."   # the repository root
@@ -16,13 +18,13 @@ DATA="--data data/fineweb --tokenizer gpt2.json --vocab 50304"
 SHORT="--batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500"
 S77="--arch tf --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999"
 only=$1
-case "$only" in ""|q2|q4) ;; *) echo "NAME is q2 or q4"; exit 1 ;; esac
-for s in "q2 a100-80 2" "q4 a100-40 4"; do
-  set -- $s; name=$1; gpu=${GPU:-$2}; K=$3
+case "$only" in ""|q2|q4|q4t) ;; *) echo "NAME is q2, q4 or q4t"; exit 1 ;; esac
+for s in "q2 a100-80 2" "q4 a100-40 4" "q4t a100-40 4 0.5"; do
+  set -- $s; name=$1; gpu=${GPU:-$2}; K=$3; T=${4:-}
   [ -n "$only" ] && [ "$only" != "$name" ] && continue
   case $gpu in h100-96|h200-141) acc=1 ;; a100-80) acc=2 ;; *) acc=4 ;; esac
   acc=${ACCUM:-$acc}
-  X="--attn linear --mlp spike --relay quant --relay_levels $K"
+  X="--attn linear --mlp spike --relay quant --relay_levels $K${T:+ --relay_target $T}"
   j=$(sbatch --parsable -p gpu -J g41_$name --gres=gpu:$gpu:1 ${NICE:+--nice=$NICE} \
       --export=ALL,RELAY=$gpu,PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True slurm/train.sbatch \
       runs/g41_$name $DATA $SHORT $S77 $X --accum $acc)
