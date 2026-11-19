@@ -1,0 +1,36 @@
+queued the next part of runs/g36_la163kd: job 1165847
+xgpi10 NVIDIA H100 NVL | runs/g36_la163kd | --vocab 50304 --d_model 768 --d_hidden 1536 --n_layers 12 --tau_min 0.5 --tau_max 200.0 --hard_reset false --detach_reset true --sg sigmoid --alpha 4.0 --in_norm theta --out_init 0.02 --head_init 0.02 --in_groups 0 --in_short 0 --out_classes 0 --out_short 0 --learn_beta true --learn_theta true --reset_learn false --gamma_init 0.9 --gamma_init_min -1.0 --leak_rank 0 --in_rank 0 --steps_per_token 1 --mem_heads 0 --mem_keys 64 --mem_dv 64 --mem_every 1 --mem_tau_min 8.0 --mem_tau_max 1024.0 --mem_theta 1.5 --mem_chunk 128 --mem_eps 1.0 --mem_write_avg false --mem_src bus --spike_soft 0.0 --wbits 0 --wgroup 128 --arch tf --n_heads 12 --batch 32 --accum 2 --seq 1024 --steps 76300 --lr 0.0006 --min_lr_frac 0.1 --schedule cosine --decay_steps 0 --soft_hold 0 --soft_end 0 --wbits_from 0 --log_file log.live.jsonl --warmup 1000 --wd 0.1 --embed_wd -1.0 --neuron_lr_mult 1.0 --clip 1.0 --spike_log 5.0 --spike_skip 0.0 --eval_every 5000 --eval_batches 40 --log_every 500 --seed 0 --sample_every 0 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1.0 --ema 0.999 --data data/fineweb --tokenizer gpt2.json --attn linear --optim adamw --muon_momentum 0.95 --hint_weight 0.0 --hint_layers 0
+params 169.52M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 10000 val_loss 3.5444 (EMA weights 3.4689)
+== eval step 15000 val_loss 3.4876 (EMA weights 3.4119)
+params 169.52M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 20000 val_loss 3.4528 (EMA weights 3.3818)
+params 169.52M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 25000 val_loss 3.4290 (EMA weights 3.3623)
+== eval step 30000 val_loss 3.4090 (EMA weights 3.3486)
+== eval step 35000 val_loss 3.3904 (EMA weights 3.3365)
+== eval step 40000 val_loss 3.3739 (EMA weights 3.3273)
+params 169.52M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 45000 val_loss 3.3585 (EMA weights 3.3192)
+== eval step 50000 val_loss 3.3445 (EMA weights 3.3116)
+== eval step 55000 val_loss 3.3312 (EMA weights 3.3056)
+== eval step 60000 val_loss 3.3196 (EMA weights 3.3006)
+params 169.52M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 65000 val_loss 3.3104 (EMA weights 3.2967)
+== eval step 70000 val_loss 3.3047 (EMA weights 3.2938)
+== eval step 75000 val_loss 3.3020 (EMA weights 3.2915)
+== eval step 76300 val_loss 3.3009 (EMA weights 3.2910)
+hellaswag        acc 0.2809  acc_norm 0.2919
+lambada_openai   perplexity 432.4506  acc 0.1770
+piqa             acc 0.6115  acc_norm 0.5996
+arc_easy         acc 0.4891  acc_norm 0.4331
+arc_challenge    acc 0.1954  acc_norm 0.2483
+winogrande       acc 0.5193
+hellaswag        acc 0.2810  acc_norm 0.2931
+lambada_openai   perplexity 420.0921  acc 0.1764
+piqa             acc 0.6115  acc_norm 0.6039
+arc_easy         acc 0.4907  acc_norm 0.4306
+arc_challenge    acc 0.1920  acc_norm 0.2500
+winogrande       acc 0.5272
+ "val_loss": 3.311177620885315,
+done Thu Nov 19 03:42:25 PM +08 2026

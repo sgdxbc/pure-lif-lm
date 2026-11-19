@@ -1,0 +1,8 @@
+queued the next part of runs/g36_la163kd: job 1164334
+xgpi11 NVIDIA H100 NVL | runs/g36_la163kd | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 76300 --warmup 1000 --eval_every 5000 --eval_batches 40 --log_every 500 --arch tf --attn linear --d_model 768 --n_layers 12 --n_heads 12 --lr 6e-4 --ema 0.999 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --accum 2
+params 169.52M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 5000 val_loss 3.7004 (EMA weights 3.6239)
+Traceback (most recent call last):
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 3.07 GiB. GPU 0 has a total capacity of 46.38 GiB of which 2.43 GiB is free. Process 3935569 has 17.09 GiB memory in use. Including non-PyTorch memory, this process has 43.90 GiB memory in use. Of the allocated memory 39.19 GiB is allocated by PyTorch, and 4.28 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+train.py failed with exit code 1 (job 1163453)
