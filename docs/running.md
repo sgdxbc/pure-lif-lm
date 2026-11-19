@@ -129,16 +129,6 @@ python3 train.py --device cuda --out runs/my_snn \
   - **硬件代价**：键、查询、值的突触和 W_o 是稠密乘加（和 W_in 同类）；写入和读出是加法（每个发放的键或查询神经元 dv 次）；
     每步 S 整体衰减一次（每个突触一次乘法）；状态多出 h·m·dv 个数（每层），固定大小。`hw_cost.py`、`fpga_est.py`、`scaling.py`、
     `quant_sim.py`（5.44 节起）都已计入。训练时按 `--mem_chunk` 个位置一块并行计算（默认 128，只影响速度）。
-  - `--mem_src spikes`（5.46 节，试验中）：第 l > 0 层前面的可塑突触，键、查询、值的突触读第 l − 1 层神经元群的脉冲，而不是总线。
-    只对发放了的神经元加上它们那一行突触，稠密乘加变成加法；代价是这些突触从 d_model 行变成 d_hidden 行。第 0 层的仍读总线。
-- `--in_rank r`（5.46 节，试验中）：各层神经元群通过秩 r 的 W_in 读总线（先乘 r × d_model，再乘 d_hidden × r），
-  每步的稠密乘加从 d_model·d_hidden 降到 r·(d_model + d_hidden)。
-  这两个选项 `hw_cost.py` 已计入；`quant_sim.py`、`hw_export.py` 不支持（会直接报错）。
-- `--spike_soft ρ`（5.48 节，诊断和训练方法）：每个 LIF 神经元（各层神经元群和可塑突触的键、查询神经元）输出
-  (1 − ρ)·[V ≥ θ] + ρ·f((V − θ)/θ)，f 是阈值附近从 0 平滑升到 1 的函数（`lif.py` 的 `soft_fn`，它的导数和替代梯度同形），复位也用这个输出。
-  ρ = 1 是不发放脉冲的"孪生网络"（输出是实数、梯度是精确的）；`--soft_hold a --soft_end b` 让 ρ 在第 a 步以后线性降到第 b 步的 0，
-  之后就是普通的脉冲网络（先软后硬的训练）。只有 GPU 内核（Triton）实现了它，CPU 上 ρ > 0 退回到很慢的参考实现；
-  `test_lif_gpu.py` 也检查 ρ = 0.4、1 时的输出和梯度。ρ > 0 时不是硬件网络：`hw_cost.py` 跳过它，`quant_sim.py`、`hw_export.py` 会直接报错。
 - `--bus_norm true`（5.49 节，试验中）：各层神经元群（W_in 和调节漏电的突触）、可塑突触（键、查询、值的突触）和读出读总线时，
   先把每个 token 的总线除以它在 d_model 个通道上的均方根（像 Transformer 的 pre-norm，没有增益）；总线本身不变。
   每个读者每个 token 多一次平方和与一次开方倒数，`hw_cost.py` 已计入；`quant_sim.py`、`hw_export.py` 还不支持（会直接报错）。
@@ -148,7 +138,9 @@ python3 train.py --device cuda --out runs/my_snn \
 
 **已删除的选项**：试过、没有带来改善的结构选项已从代码里删掉，以免每次改动都要照顾它们：同层连接 `--rec_rank`（5.2 节）、
 带延迟的突触 `--delay_k`（5.9 节）、脉冲化总线 `--spike_bus`（5.23 节）、输入电流按 (1 − β) 缩放 `--leak_gate`（5.26 节）；
-可塑突触的纠错式写入 `--mem_rule delta`（5.32 节，代码在提交 c138343）；按位置写入的可塑突触 `--mem_clock`（5.33 节，代码在提交 c0868f9）；按写入次数归一化的读出 `--mem_count_norm`（5.34 节，代码在提交 bf7fed7）。
+可塑突触的纠错式写入 `--mem_rule delta`（5.32 节，代码在提交 c138343）；按位置写入的可塑突触 `--mem_clock`（5.33 节，代码在提交 c0868f9）；按写入次数归一化的读出 `--mem_count_norm`（5.34 节，代码在提交 bf7fed7）；
+低秩的 W_in `--in_rank`、可塑突触读上一层的脉冲 `--mem_src spikes`（5.46 节）、输出实数的神经元 `--spike_soft` 和先软后硬的
+`--soft_hold`/`--soft_end`（5.48 节；LIF 内核里的 soft 参数一起删了），代码在提交 5fcacfd。
 要重复用到前四个的实验，请检出提交 490e9e6（那里的代码和文档都还在）。
 
 **训练方法**（不改变网络结构，默认都关闭）：

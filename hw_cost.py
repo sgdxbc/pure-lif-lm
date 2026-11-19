@@ -67,9 +67,7 @@ def firing(model, windows, seq=256, dev=torch.device("cpu"), data="data"):
 def snn_cost(model, f):
     c = model.cfg
     V, d, H, L, r, T = c.vocab, c.d_model, c.d_hidden, c.n_layers, c.leak_rank, c.steps_per_token
-    ir = getattr(c, "in_rank", 0)
-    into = (ir * (d + H) if ir else d * H) + (d * r if r else 0)   # W_in (or its two factors) and the leak synapses'
-    #                                                                first factor: read the bus
+    into = d * H + (d * r if r else 0)   # W_in and the leak synapses' first factor: read the bus
     leak2 = r * H if r else 0                                # second factor of the leak synapses: dense (rank-r input)
     # readout: all vocab neurons, or with out_classes the S short-list and C class neurons (shared by all streams) and
     # the m word neurons of the class each stream draws (its own); input: one synapse row per word, or in_groups rows
@@ -85,11 +83,6 @@ def snn_cost(model, f):
         mem_w = M * d * (2 * h * m + 2 * h * dv)                       # key/query, value synapses and W_o: dense
         mem_macs = mem_w + M * (h * m * dv + 3 * h * dv)                # + decay of S, RMS scaling and gain
         mem_adds = float(sum((f["mem_key_rate"][l] + f["mem_query_rate"][l]) * h * m * dv for l in range(M)))
-        if getattr(c, "mem_src", "bus") == "spikes":   # key/query/value synapses of layers > 0 read the previous
-            spk = [i for i in model.mem_layers if i > 0]   # population's spikes: additions of the rows that fired
-            mem_w += len(spk) * (H - d) * (2 * h * m + h * dv)
-            mem_macs -= len(spk) * d * (2 * h * m + h * dv)
-            mem_adds += float(sum(f["rate"][i - 1] * H * (2 * h * m + h * dv) for i in spk))
         mem_state = M * (h * m * dv + 2 * h * m) * 3
         dense_w += mem_w
     norm_macs = (T * L + M + 1) * 2 * d if getattr(c, "bus_norm", False) else 0   # bus_norm: squares and scaling
@@ -173,8 +166,8 @@ def main():
         model, _ = load(os.path.join(run, "ckpt.pt"), ema=has_ema, device=dev)
         if isinstance(model, SpikingLM):
             c = model.cfg   # options that make it not a spiking network: skipped, so the other runs still go through
-            if getattr(c, "spike_soft", 0.0) or getattr(c, "mem_kind", "plastic") != "plastic":
-                print(f"{run}: spike_soft / mem_kind gla, not a spiking network: no hardware cost", flush=True)
+            if getattr(c, "mem_kind", "plastic") != "plastic":
+                print(f"{run}: mem_kind gla, not a spiking network: no hardware cost", flush=True)
                 continue
             o = snn_cost(model, firing(model, a.windows, dev=dev, data=args.get("data", "data")))
         else:

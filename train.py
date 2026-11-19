@@ -69,9 +69,6 @@ def get_args():
                    "(experiments/word_classes.py); default: by word number")
     p.add_argument("--in_class_file", default="", help="with --in_groups 2: .npy of a class for every word; a word "
                    "then fires its class's neuron and the neuron of its position in the class")
-    p.add_argument("--soft_hold", type=int, default=0, help="with --spike_soft rho: keep rho until this step, then "
-                   "lower it linearly to 0 at --soft_end (0 = keep rho throughout)")
-    p.add_argument("--soft_end", type=int, default=0)
     p.add_argument("--init_ckpt", default="", help="start from this checkpoint (weights, optimizer, step, EMA) when "
                    "the run directory has none yet: a decay branch of a wsd run")
     p.add_argument("--wbits_from", type=int, default=0, help="with --wbits: train with the weight matrices rounded "
@@ -255,11 +252,6 @@ class Optimizers:
             o.load_state_dict(s_)
 
 
-def soft_at(step, a):
-    """spike_soft at this step: a.spike_soft until --soft_hold, then linearly to 0 at --soft_end (if set)."""
-    if a.soft_end <= 0 or step < a.soft_hold:
-        return a.spike_soft
-    return a.spike_soft * max(0.0, (a.soft_end - step) / max(1, a.soft_end - a.soft_hold))
 
 
 def lr_at(step, a):
@@ -438,8 +430,6 @@ def main():
         logf.write(json.dumps({"step": 0, "teacher_val_loss": tot / a.eval_batches}) + "\n"); logf.flush()
     while step < a.steps:
         lr = lr_at(step, a)
-        if a.arch == "snn":
-            cfg.spike_soft = soft_at(step, a)   # every module reads it from the shared cfg
         for g in opt.param_groups:
             g["lr"] = lr * g.get("lr_mult", 1.0)
         if a.carry_state:

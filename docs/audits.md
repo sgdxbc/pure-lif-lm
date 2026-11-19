@@ -54,4 +54,6 @@
   CLAUDE.md 加了愿景、工作约定和定期审计。
 - 计划（5.51 节）：同一块 FPGA 上估算 Transformer 和线性注意力网络；在已有模型上测 4–8k token 的长文本；等第三十七到三十九批训完再下结论；
   补一次换种子的重复实验；方向上让"超轻量 recurrent + 非线性"承担主要的工作，并和三值权重比较；最后做趋势网格。
-- 等相关训练结束后再做：删掉不采用的选项 `--in_rank`、`--mem_src spikes`（`g35_r256mspk` 还在用）和 `--spike_soft`。
+- 已删（2026-11-19，相关训练结束以后）：不采用的选项 `--in_rank`、`--mem_src spikes`、`--spike_soft`（连同 `--soft_hold`/`--soft_end` 和
+  LIF 内核里的 soft 参数），代码在提交 5fcacfd。删除前后，三种脉冲网络配置的损失、参数、梯度，以及 Triton 内核 12 种设置的输出和梯度逐位相同；
+  `test_lif.py`、`test_lif_gpu.py`（Triton 解释器）通过。

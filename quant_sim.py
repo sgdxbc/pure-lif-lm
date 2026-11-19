@@ -178,8 +178,9 @@ def plastic(mem, bus, q, cal, rec, j, A, Bb):
 def supported(a):
     """Whether this simulation covers a run, from its args.json (dict) or its model config (as a dict): a spiking
     network without the options it does not model (slurm/train.sbatch and slurm/hw.sbatch ask this)."""
-    return (a.get("arch", "snn") == "snn" and not (a.get("spike_bus") or a.get("rec_rank") or a.get("delay_k"))
-            and not a.get("in_rank", 0) and a.get("mem_src", "bus") == "bus" and not (a.get("spike_soft", 0.0) and not a.get("soft_end", 0))
+    from model import REMOVED   # options removed from the code: such runs no longer load
+    removed_on = any(k in a and off is not None and a[k] != off for k, off in REMOVED.items())
+    return (a.get("arch", "snn") == "snn" and not removed_on
             and not a.get("bus_norm", False) and a.get("mem_kind", "plastic") == "plastic")
 
 
@@ -188,8 +189,6 @@ def run(model, x, q, cal=None, rec=None):
     """Step-by-step forward pass with the rounding in q. rec: dict that collects the calibration maxima."""
     from torch.func import functional_call
     c = model.cfg
-    assert not getattr(c, "in_rank", 0) and getattr(c, "mem_src", "bus") == "bus", "in_rank / mem_src: not simulated"
-    assert not getattr(c, "spike_soft", 0.0), "spike_soft > 0: not a spiking network"
     assert not getattr(c, "bus_norm", False), "bus_norm: not implemented here"
     assert getattr(c, "mem_kind", "plastic") == "plastic", "mem_kind gla: not a spiking network"
     T, w, g_ = c.steps_per_token, q.get("w", 0), q.get("group", 0)

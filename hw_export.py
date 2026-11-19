@@ -90,8 +90,6 @@ def export(model, cal, out, v_bits=24, s_bits=20, a_bits=12):
     A_BITS = a_bits
     c = model.cfg
     assert c.steps_per_token == 1, "one step per token"
-    assert not getattr(c, "in_rank", 0) and getattr(c, "mem_src", "bus") == "bus", "in_rank / mem_src: not exported"
-    assert not getattr(c, "spike_soft", 0.0), "spike_soft > 0: not a spiking network"
     assert not getattr(c, "bus_norm", False), "bus_norm: not implemented here"
     assert getattr(c, "mem_kind", "plastic") == "plastic", "mem_kind gla: not a spiking network"
     os.makedirs(out, exist_ok=True)

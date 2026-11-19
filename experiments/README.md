@@ -7,7 +7,8 @@
   里面"等上一个脚本结束"的 `pgrep` 写的是当时的启动方式（`./phase6.sh`），现在重跑的话需要相应修改。
 - `gpuN.sh` 在 GPU 集群的登录节点上运行，提交第 N 批 SLURM 作业（每个运行一个 `slurm/train.sbatch` 作业，结果写到 `runs/gN_*`）。
 - 用到已删除选项（`--rec_rank`、`--delay_k`、`--spike_bus`、`--leak_gate`）的脚本（`phase1*.sh`、`phase5.sh`、`gpu10.sh`、`gpu12.sh` 等）
-  要在提交 490e9e6 上运行。
+  要在提交 490e9e6 上运行；`gpu35.sh` 里用到 `--in_rank`、`--mem_src spikes` 的运行和 `gpu37.sh`（`--spike_soft`、`--soft_hold`、`--soft_end`）
+  要在提交 5fcacfd 上运行。
 
 | 脚本 | 内容 | 结果 |
 |---|---|---|
