@@ -1,0 +1,120 @@
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+params 143.39M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3008
+step      1 loss 10.2489 kl 6.7615 lr 6.00e-07 gn 3.56 3,399 tok/s mem 24.5GB rate 0.116 [0.07 0.08 0.08 0.09 0.11 0.11 0.12 0.13 0.14 0.15 0.15 0.17]
+gradient spike at step 481: gn 7.32 (median 1.01), loss 5.8622; layers.6.w_in_low.weight 3.30, layers.6.w_in.weight 2.36, layers.7.w_in_low.weight 2.26, head.w_cls 1.90
+step    500 loss 5.8675 kl 2.4300 lr 3.00e-04 gn 0.83 15,895 tok/s mem 26.1GB rate 0.127 [0.06 0.07 0.08 0.09 0.10 0.11 0.13 0.15 0.16 0.18 0.19 0.19]
+gradient spike at step 738: gn 4.53 (median 0.85), loss 5.5956; layers.7.w_in_low.weight 2.69, layers.7.w_in.weight 1.87, layers.6.w_out.weight 1.08, head.w_cls 0.97
+step   1000 loss 5.2899 kl 1.9008 lr 6.00e-04 gn 0.71 15,861 tok/s mem 26.1GB rate 0.087 [0.05 0.06 0.07 0.07 0.08 0.08 0.09 0.09 0.10 0.11 0.13 0.12]
+step   1500 loss 4.9056 kl 1.5211 lr 5.99e-04 gn 0.45 15,860 tok/s mem 26.1GB rate 0.067 [0.05 0.05 0.06 0.06 0.06 0.07 0.06 0.06 0.07 0.08 0.09 0.09]
+step   2000 loss 4.8255 kl 1.4355 lr 5.96e-04 gn 0.41 15,858 tok/s mem 26.1GB rate 0.059 [0.05 0.05 0.05 0.05 0.05 0.06 0.05 0.06 0.06 0.07 0.08 0.08]
+step   2500 loss 4.6445 kl 1.3126 lr 5.92e-04 gn 0.32 15,848 tok/s mem 26.1GB rate 0.056 [0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.05 0.06 0.07 0.08]
+== eval step 2500 val_loss 4.6784 (EMA weights 4.5885)
+   >> The history of the city|’s history and history. This country was founded by Thomas P. Johnson, the first modern-day writer, whose father, who was a very well-known and influential man, in his own. He was the chief chief of the present and was a man of considerable importance. His father and mother was a major collector, who was a man of the wealthy family, and his brother Henry I of England. / These were the first things the American kings had been born, and the first man who was the man who was ever a slave, had been a great king of the time and
+   >> In mathematics, a prime number is| also considered to be a more specific aspect. Such a situation is a more severe challenge. / If you would like to see a good friend or someone you would like to know about any change you have, here’s the key! / What Is That Time? / The problem is that your problem is because it is an issue that has been wrong, that has no evidence that is actually the case of a future event. It is not the case when a person has a bad reputation, or that we have the possibility of this to take back to you. So that is true of the problem
+   >> Plants need sunlight because| they are not the only ones. / With a similar amount of sunscreens the plants have a chance to experience a plant and in different parts of the plant, their roots at all time can lead to the same. / A tree can be affected by various factors. Each plant will have some of the same for its distinctive effects, not just in many other areas, where the plants have a lot of good. A plant is one of the very few plants that grow and mature growing in the plant. / While a plant is an old plant in our plant, we need to look at the plant
+step   3000 loss 4.6243 kl 1.2600 lr 5.85e-04 gn 0.35 15,806 tok/s mem 26.9GB rate 0.053 [0.05 0.05 0.05 0.04 0.05 0.05 0.05 0.05 0.05 0.06 0.06 0.07]
+step   3500 loss 4.4330 kl 1.1858 lr 5.77e-04 gn 0.30 15,808 tok/s mem 26.9GB rate 0.052 [0.04 0.05 0.05 0.05 0.04 0.05 0.05 0.05 0.05 0.06 0.06 0.07]
+step   4000 loss 4.4368 kl 1.0979 lr 5.67e-04 gn 0.28 15,805 tok/s mem 26.9GB rate 0.051 [0.04 0.05 0.05 0.04 0.05 0.05 0.04 0.05 0.05 0.06 0.06 0.07]
+step   4500 loss 4.3015 kl 1.1330 lr 5.56e-04 gn 0.42 15,802 tok/s mem 26.9GB rate 0.050 [0.04 0.05 0.05 0.04 0.04 0.05 0.05 0.05 0.05 0.06 0.06 0.07]
+gradient spike at step 4501: gn 1.61 (median 0.31), loss 4.4753; layers.0.w_in.weight 1.07, layers.0.w_in_low.weight 0.99, mems.0.w_out.weight 0.46, head.w_cls 0.37
+step   5000 loss 4.1707 kl 0.9817 lr 5.43e-04 gn 0.31 15,805 tok/s mem 26.9GB rate 0.051 [0.04 0.04 0.05 0.04 0.04 0.05 0.05 0.05 0.05 0.06 0.06 0.08]
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/train.py", line 556, in <module>
+    main()
+  File "/home/s/sung/pure-lif-lm/train.py", line 525, in main
+    vl, vr = evaluate(model, val, a)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/train.py", line 273, in evaluate
+    _, loss, _, r = model(x, y)
+                    ^^^^^^^^^^^
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/model.py", line 528, in forward
+    logits = self.head(bus)
+             ^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/model.py", line 461, in forward
+    lw = (F.log_softmax(lw.view(*lw.shape[:-1], self.C, self.m), -1) + lc.unsqueeze(-1)).flatten(-2)  # per slot
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 5.16 GiB. GPU 0 has a total capacity of 39.25 GiB of which 3.11 GiB is free. Including non-PyTorch memory, this process has 36.03 GiB memory in use. Process 517980 has 18.43 GiB memory in use. Of the allocated memory 21.74 GiB is allocated by PyTorch, and 14.06 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 2500
+params 143.39M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step   3000 loss 4.5161 kl 1.2365 lr 5.85e-04 gn 0.32 15,780 tok/s mem 22.4GB rate 0.053 [0.04 0.05 0.05 0.04 0.05 0.05 0.05 0.05 0.05 0.06 0.06 0.07]
+step   3500 loss 4.3992 kl 1.1442 lr 5.77e-04 gn 0.34 15,795 tok/s mem 22.4GB rate 0.052 [0.04 0.05 0.05 0.04 0.04 0.05 0.04 0.05 0.05 0.06 0.06 0.08]
+step   4000 loss 4.5488 kl 1.1670 lr 5.67e-04 gn 0.26 15,794 tok/s mem 22.4GB rate 0.051 [0.04 0.05 0.05 0.04 0.04 0.05 0.05 0.05 0.05 0.06 0.06 0.07]
+step   4500 loss 4.4113 kl 1.1221 lr 5.56e-04 gn 0.36 15,799 tok/s mem 22.4GB rate 0.049 [0.04 0.04 0.05 0.04 0.04 0.05 0.04 0.05 0.04 0.06 0.06 0.07]
+step   5000 loss 4.3288 kl 1.0532 lr 5.43e-04 gn 0.32 15,798 tok/s mem 22.4GB rate 0.051 [0.04 0.04 0.05 0.04 0.04 0.05 0.04 0.05 0.05 0.06 0.06 0.07]
+== eval step 5000 val_loss 4.4003 (EMA weights 4.2971)
+   >> The history of the city| is still the greatest of the city. / The city of Philadelphia is the capital of the city of Yarnia, and it is the city's capital. / The city is surrounded by a series of mountains, rivers, and beaches. The city is also famous for its strategic name and its inhabitants. The city is also the largest urban area in the world and is also the most important city in the city. / The city’s ancient city is the city of the city. The city is the largest city of the city. / The city is the largest city of the city of the
+   >> In mathematics, a prime number is| a person of human nature, not a good thing, or an absolute person. / The personification of a person's existence is by way of a person. An individual's own life is a person's self-absorption, by their own self-esteem, and their own self-esteem. The person with an individual's self is the one who is self-confidence and a person's self-control. / The person must develop their self-consciousness, self-esteem, self-esteem, and self-esteem. A person who is self-denial, self-esteem is
+   >> Plants need sunlight because| they are so used to produce a certain amount of water. Although they make up the soil with the plants, they don’t need to worry about the amount of nitrogen left within the soil. / The first thing you need to know about the fertilizer can be a very effective method. The first thing you need to do is do is know the soil in the soil. A lot of soil is in the soil and you need to make sure that it gives the fertilizer. So, you need to plan in the proper soil to create the soil type. / After you’ve made this choice
+step   5500 loss 4.3234 kl 1.0027 lr 5.29e-04 gn 0.27 15,798 tok/s mem 23.2GB rate 0.050 [0.04 0.04 0.05 0.04 0.04 0.05 0.04 0.05 0.05 0.06 0.06 0.08]
+gradient spike at step 5745: gn 1.75 (median 0.30), loss 4.1253; layers.0.w_in.weight 1.14, layers.0.w_in_low.weight 1.09, mems.0.w_out.weight 0.47, head.w_cls 0.38
+step   6000 loss 4.3448 kl 1.0299 lr 5.13e-04 gn 0.30 15,800 tok/s mem 23.2GB rate 0.048 [0.04 0.04 0.04 0.04 0.04 0.05 0.04 0.05 0.05 0.06 0.06 0.07]
+step   6500 loss 4.3848 kl 0.9907 lr 4.96e-04 gn 0.29 15,800 tok/s mem 23.2GB rate 0.049 [0.04 0.04 0.04 0.04 0.04 0.05 0.04 0.05 0.05 0.06 0.06 0.07]
+step   7000 loss 4.1695 kl 1.0121 lr 4.78e-04 gn 0.32 15,798 tok/s mem 23.2GB rate 0.049 [0.04 0.04 0.04 0.04 0.04 0.05 0.04 0.05 0.05 0.06 0.06 0.07]
+step   7500 loss 4.2240 kl 0.9287 lr 4.59e-04 gn 0.29 15,802 tok/s mem 23.2GB rate 0.049 [0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.05 0.05 0.06 0.06 0.07]
+== eval step 7500 val_loss 4.2643 (EMA weights 4.1695)
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 7500
+params 143.39M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step   8000 loss 4.1231 kl 0.8919 lr 4.38e-04 gn 0.31 15,777 tok/s mem 22.4GB rate 0.050 [0.04 0.04 0.04 0.04 0.04 0.05 0.04 0.05 0.05 0.06 0.06 0.08]
+step   8500 loss 4.2246 kl 0.8960 lr 4.18e-04 gn 0.27 15,803 tok/s mem 22.4GB rate 0.050 [0.04 0.04 0.04 0.04 0.04 0.05 0.04 0.05 0.05 0.06 0.06 0.08]
+step   9000 loss 4.1198 kl 0.8713 lr 3.96e-04 gn 0.26 15,799 tok/s mem 22.4GB rate 0.051 [0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.05 0.05 0.06 0.06 0.08]
+step   9500 loss 4.1756 kl 0.9161 lr 3.74e-04 gn 0.28 15,800 tok/s mem 22.4GB rate 0.051 [0.04 0.04 0.04 0.04 0.04 0.05 0.04 0.05 0.05 0.06 0.06 0.08]
+step  10000 loss 4.0978 kl 0.8607 lr 3.52e-04 gn 0.28 15,796 tok/s mem 22.4GB rate 0.051 [0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.05 0.05 0.06 0.06 0.08]
+== eval step 10000 val_loss 4.1710 (EMA weights 4.0923)
+   >> The history of the city| is a source of personal interest, but it is important to note that it is not a national or national issue, as it is not so complicated. / In 2003, the state Department of State (PED) established the National Institute of Standards, the Department of State and the State of the State (EC of the National Assembly, as well as the national government) as well as the Department of State (PECB) and the Department of State. / The Department of State has its responsibility for the preservation of the National Register of State Papers. The State of California was founded on March 28
+   >> In mathematics, a prime number is| used to denote a set of values, and a new set of values as a function of a number. / A set of numbers means a set of values, for example, for the set of values as an array, and for a set of values which are set in the set of values. / From these figures, you can discover the following values: / P = set a set of values; / P = set the set of values; / P = set a set of values; / P = set values, / P = a set of values, / P = set values; / P
+   >> Plants need sunlight because| they grow in the sun or the high wind speed will make the soil less fertile. It is not a natural area, but it is an excellent opportunity to grow. / 2. The Cornelia / Prairie, which is native to the east coast of Australia, is also a good place to grow wildflowers. It is easy to grow, it will grow in the soil and grow quickly. / The soil is better than the soil for the plant. This is very versatile. / Pale is good for the soil you need to grow it. If you have to keep it out of
+gradient spike at step 10358: gn 1.64 (median 0.28), loss 4.2694; head.w_cls 0.92, layers.9.w_in_low.weight 0.82, layers.9.w_in.weight 0.79, mems.3.w_out.weight 0.26
+step  10500 loss 4.0639 kl 0.7971 lr 3.30e-04 gn 0.31 15,800 tok/s mem 23.2GB rate 0.052 [0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.05 0.06 0.06 0.08]
+step  11000 loss 4.0436 kl 0.8400 lr 3.08e-04 gn 0.30 15,794 tok/s mem 23.2GB rate 0.053 [0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.05 0.07 0.07 0.08]
+step  11500 loss 4.0913 kl 0.8152 lr 2.86e-04 gn 0.28 15,798 tok/s mem 23.2GB rate 0.053 [0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.05 0.07 0.07 0.08]
+step  12000 loss 4.0485 kl 0.8056 lr 2.64e-04 gn 0.29 15,797 tok/s mem 23.2GB rate 0.054 [0.04 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.05 0.07 0.07 0.08]
+step  12500 loss 4.1363 kl 0.8632 lr 2.42e-04 gn 0.31 15,801 tok/s mem 23.2GB rate 0.054 [0.05 0.04 0.04 0.04 0.04 0.05 0.05 0.06 0.05 0.07 0.07 0.08]
+== eval step 12500 val_loss 4.0978 (EMA weights 4.0376)
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 12500
+params 143.39M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step  13000 loss 4.0729 kl 0.7940 lr 2.22e-04 gn 0.31 15,779 tok/s mem 22.4GB rate 0.055 [0.04 0.04 0.04 0.04 0.05 0.05 0.05 0.06 0.06 0.07 0.07 0.09]
+step  13500 loss 3.9480 kl 0.7353 lr 2.02e-04 gn 0.27 15,794 tok/s mem 22.4GB rate 0.056 [0.05 0.05 0.05 0.04 0.05 0.05 0.05 0.06 0.06 0.07 0.07 0.09]
+step  14000 loss 4.0457 kl 0.7776 lr 1.82e-04 gn 0.27 15,791 tok/s mem 22.4GB rate 0.056 [0.04 0.04 0.05 0.04 0.05 0.05 0.05 0.06 0.05 0.07 0.07 0.09]
+step  14500 loss 4.0453 kl 0.7484 lr 1.64e-04 gn 0.30 15,795 tok/s mem 22.4GB rate 0.057 [0.04 0.04 0.05 0.04 0.05 0.05 0.05 0.06 0.06 0.07 0.07 0.09]
+step  15000 loss 4.0704 kl 0.7704 lr 1.47e-04 gn 0.29 15,794 tok/s mem 22.4GB rate 0.058 [0.05 0.05 0.05 0.04 0.05 0.06 0.05 0.06 0.06 0.07 0.07 0.09]
+== eval step 15000 val_loss 4.0371 (EMA weights 4.0016)
+   >> The history of the city|, including the original, is well documented. / The history of the city itself dates back to the present, when it was founded on a hilltop and a large industrial network. During the 1920s, a significant part of the city’s population was gradually becoming a poor, and a major source of income was taken by the city’s business. / The industrial revolution, however, was a part of the economic development of the city: the industrial development and development of the city. The rapid expansion of the city’s urban and industrial development, which led to the decline in
+   >> In mathematics, a prime number is| a prime number of numbers. / An operator used for some form of number means that a number can be added only once when a factor is used. It is possible to use a number of degrees and a number. This is a way to get a number that is not used in a number. / A number is one of the number numbers that it contains. It is useful to store data in a number. This is a common number for most of the business applications. / A number is a number that is not an odd number because it is not a number which is not a number. / A
+   >> Plants need sunlight because| it helps to grow faster with minimal water. / There is a great deal more to use as a growing medium in growing and growing conditions, and an increased need for a grower will require more of a growing variety. / The benefits of growing in a greenhouse / The first step in growing in a greenhouse is to grow your vegetables. If you do not grow in a greenhouse, start growing in the ground or other area where the roots are growing. You can grow more often from your plants at the base of the soil. / Plants grow in containers where they grow most often. For example,
+step  15500 loss 3.9132 kl 0.7110 lr 1.31e-04 gn 0.29 15,841 tok/s mem 23.2GB rate 0.059 [0.05 0.05 0.05 0.04 0.05 0.06 0.05 0.06 0.06 0.08 0.08 0.09]
+step  16000 loss 4.0346 kl 0.7889 lr 1.17e-04 gn 0.37 15,820 tok/s mem 23.2GB rate 0.059 [0.05 0.05 0.05 0.04 0.05 0.06 0.05 0.06 0.06 0.07 0.07 0.09]
+step  16500 loss 4.0161 kl 0.7216 lr 1.04e-04 gn 0.28 15,846 tok/s mem 23.2GB rate 0.060 [0.05 0.05 0.05 0.05 0.05 0.06 0.06 0.07 0.06 0.08 0.08 0.10]
+step  17000 loss 4.0291 kl 0.6986 lr 9.26e-05 gn 0.29 15,809 tok/s mem 23.2GB rate 0.060 [0.05 0.05 0.05 0.04 0.05 0.06 0.06 0.07 0.06 0.08 0.08 0.10]
+step  17500 loss 3.9858 kl 0.7390 lr 8.28e-05 gn 0.33 15,812 tok/s mem 23.2GB rate 0.061 [0.05 0.05 0.05 0.04 0.05 0.06 0.06 0.07 0.06 0.08 0.08 0.10]
+== eval step 17500 val_loss 3.9983 (EMA weights 3.9781)
+distilling from runs/g13_tf163/ckpt.pt (weight 0.9, temperature 1.0)
+resumed from step 17500
+params 143.39M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+step  18000 loss 3.9403 kl 0.6896 lr 7.46e-05 gn 0.31 15,827 tok/s mem 22.4GB rate 0.062 [0.05 0.05 0.05 0.05 0.05 0.06 0.06 0.07 0.06 0.08 0.08 0.10]
+step  18500 loss 3.8955 kl 0.6950 lr 6.83e-05 gn 0.31 15,838 tok/s mem 22.4GB rate 0.063 [0.05 0.05 0.05 0.05 0.05 0.06 0.06 0.07 0.06 0.08 0.08 0.10]
+step  19000 loss 4.0521 kl 0.6618 lr 6.37e-05 gn 0.28 15,825 tok/s mem 22.4GB rate 0.063 [0.05 0.05 0.05 0.05 0.05 0.06 0.06 0.07 0.06 0.08 0.08 0.10]
+step  19500 loss 3.9564 kl 0.6609 lr 6.09e-05 gn 0.32 15,830 tok/s mem 22.4GB rate 0.064 [0.05 0.05 0.05 0.05 0.05 0.06 0.06 0.07 0.06 0.08 0.08 0.10]
+step  20000 loss 3.9850 kl 0.6915 lr 6.00e-05 gn 0.30 15,838 tok/s mem 22.4GB rate 0.064 [0.05 0.05 0.05 0.05 0.05 0.06 0.06 0.07 0.06 0.08 0.08 0.10]
+== eval step 20000 val_loss 3.9789 (EMA weights 3.9644)
+   >> The history of the city| and its surrounding structures is the greatest mystery of what is now known as the city of Constantinople. It is still a city that is also known as the “State of the City” or “the city.” / The city of Toledo is divided into two parts: the one in the top and the second in the top. In the top the city is the uppermost part of the city. The city’s name is “Romeo,” which is not the city at the top of the city. It is also the lowest city in the city.
+   >> In mathematics, a prime number is| set on the basis of the form 1 in the form 1 and in the form A, which is the type, is a form of algebra, with two sets of numbers, which are represented by the form (1); and an element is represented by that form. The form, which is the form (1) and (2), is the form of the form, which is its form on the form, which is the form, which is the form, which is a form of the form, which is the form, which has been drawn into the form, and where is shown as a form
+   >> Plants need sunlight because| they are able to form a seed. This is because it has the ability to grow a little bit faster than any other plant. / You’ll see this after the plant has sprouts. So make sure to water it regularly as well as grow the plant in its heat position. / There are two kinds of plants to grow to grow, that you’ll need a lot more than the number of roots you’re growing. / A few plants that are growing in the center of the plant are the ones that are the size of the plant. You can grow in your greenhouse

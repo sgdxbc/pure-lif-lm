@@ -1,0 +1,1 @@
+g35_r256mspk             snn  143.4M  8-bit  143.4 MB  dense MACs   29.1M + sparse adds  4.94M  state 1327.1 KB  MB/token 8-bit: 1 stream   82.4, 16 streams   6.2  (rate 0.063)
