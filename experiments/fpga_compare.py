@@ -54,21 +54,21 @@ def main():
     nets.append(("snn g29_hw", loss("g29_hw"), hw, args("g29_hw")))
     for r in ("g33_tf31", "g33_tf50"):
         ar = args(r)
-        nets.append((f"tf {r}", loss(r), fpga_est.tf_hw(ar, ctx=a.ctx), ar))
-        nets.append((f"tf {r} + 2-level readout", None, fpga_est.tf_hw(ar, readout=(8192, 225), ctx=a.ctx), ar))
+        nets.append((f"tf {r}", loss(r), fpga_est.tf_hw(ar, ctx=a.ctx, bits=a.bits), ar))
+        nets.append((f"tf {r} + 2-level readout", None, fpga_est.tf_hw(ar, readout=(8192, 225), ctx=a.ctx, bits=a.bits), ar))
         la = dict(copy.deepcopy(ar), attn="linear")
-        nets.append((f"la {r} shape", None, fpga_est.tf_hw(la), la))
-        nets.append((f"la {r} shape + 2-level readout", None, fpga_est.tf_hw(la, readout=(8192, 225)), la))
+        nets.append((f"la {r} shape", None, fpga_est.tf_hw(la, bits=a.bits), la))
+        nets.append((f"la {r} shape + 2-level readout", None, fpga_est.tf_hw(la, readout=(8192, 225), bits=a.bits), la))
     la = args("g36_la163")
-    nets.append(("la g36_la163", loss("g36_la163"), fpga_est.tf_hw(la), la))
+    nets.append(("la g36_la163", loss("g36_la163"), fpga_est.tf_hw(la, bits=a.bits), la))
     rs = rates_of("g38_laspk")
     spk = dict(la, mlp="spike")
     nets.append((f"la163 + 0/1 MLP units (rate {'measured' if rs else a.spike_rate})", None,
-                 fpga_est.tf_hw(spk, rates=rs or [a.spike_rate] * la["n_layers"]), spk))
+                 fpga_est.tf_hw(spk, rates=rs or [a.spike_rate] * la["n_layers"], bits=a.bits), spk))
     nets.append(("la163 + 0/1 MLP units + 2-level readout", None,
-                 fpga_est.tf_hw(spk, rates=rs or [a.spike_rate] * la["n_layers"], readout=(8192, 225)), spk))
+                 fpga_est.tf_hw(spk, rates=rs or [a.spike_rate] * la["n_layers"], readout=(8192, 225), bits=a.bits), spk))
     tf = args("g26_tf163")
-    nets.append(("tf g26_tf163", loss("g26_tf163"), fpga_est.tf_hw(tf, ctx=a.ctx), tf))
+    nets.append(("tf g26_tf163", loss("g26_tf163"), fpga_est.tf_hw(tf, ctx=a.ctx, bits=a.bits), tf))
 
     out = []
     head = "| network | loss | params | dense MACs | adds | " + " | ".join(
@@ -81,7 +81,7 @@ def main():
                "sparse_adds": t["sparse_adds"], "devices": {}}
         for d, n in DEVS:
             dev = dict(fpga_est.DEVICES[d], name=d, cards=n, eff=0.6)
-            rows = fpga_est.estimate(t, ar, a.bits, dev) if name.startswith("snn") else fpga_est.estimate_tf(t, a.bits, dev)
+            rows = fpga_est.estimate(t, ar, a.bits, dev) if name.startswith("snn") else fpga_est.estimate_tf(t, dev)
             rec["devices"][f"{d}x{n}"] = rows
             sel = [r for r in rows if r["streams"] in SHOW]
             cells.append(" / ".join(f"{r['ms_per_token']:.3f}, {r['mJ_per_token']:.2f}" for r in sel))

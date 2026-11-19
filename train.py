@@ -111,6 +111,10 @@ def get_args():
     p.add_argument("--rope", action="store_true", help="tf: rotary position embedding instead of learned positions")
     p.add_argument("--attn", default="softmax", choices=["softmax", "linear"],
                    help="tf: linear = gated linear attention, a fixed-size state (model_tf.py; docs 5.47)")
+    p.add_argument("--relay", default="none", choices=["none", "lif", "quant"],
+                   help="tf with --attn linear: LIF relay neurons in front of every matrix (docs 5.51; model_tf.py)")
+    p.add_argument("--wq", default="none", choices=["none", "ternary"],
+                   help="tf: the blocks' matrices with ternary weights (BitNet b1.58 rounding; docs 5.51)")
     p.add_argument("--mlp", default="gelu", choices=["gelu", "spike", "lif"],
                    help="tf: spike = 0/1 hidden units in the MLP, surrogate gradient (docs 5.49); lif = LIF neurons "
                         "(docs 5.50) (model_tf.py)")
@@ -320,7 +324,7 @@ def main():
     if a.arch == "tf":
         from model_tf import GPT, TFConfig
         cfg = TFConfig(vocab=a.vocab, d_model=a.d_model, n_layers=a.n_layers, n_heads=a.n_heads,
-                       max_len=max(1024, a.seq), rope=a.rope, attn=a.attn, mlp=a.mlp)
+                       max_len=max(1024, a.seq), rope=a.rope, attn=a.attn, mlp=a.mlp, relay=a.relay, wq=a.wq)
         model = GPT(cfg)
     else:
         cfg = Config(**{f.name: getattr(a, f.name) for f in fields(Config)})

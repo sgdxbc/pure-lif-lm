@@ -78,51 +78,74 @@ def estimate(hw, args, bits, dev):
     return rows
 
 
-def tf_hw(args, rates=None, readout=None, ctx=1024):
+def tf_hw(args, rates=None, readout=None, ctx=1024, bits=4):
     """The figures hw_cost.py gives for a spiking network, for a Transformer or a linear-attention network
-    (model_tf.py), from its shape alone (args.json). Per token and stream:
+    (model_tf.py), from its shape (args.json) and, where it has 0/1 units or relays, their measured rates (the
+    val_rates its training log records: model_tf.GPT.rates). Per token and stream:
       attn softmax  every weight once, plus attention over the key/value cache of ctx earlier tokens (2 L d ctx
                     multiply-adds); the cache (8-bit, 2 L d ctx bytes) is the per-stream state and is read every step
       attn linear   every weight once, plus the decay, write and read of each head's hd x hd state (3 L d hd); the
                     state (24-bit, like the spiking network's potentials, with the convolution's last 3 inputs) is
                     fixed in size
-      mlp spike/lif the MLP's second matrix reads 0/1 units: additions of the rows of the units that are 1 (rates:
-                    the share per block, measured), the rest of the network as above; lif adds a 24-bit potential per
-                    unit to the state
+      mlp spike/lif the MLP's second matrix reads 0/1 units: additions of the rows of the units that are 1; lif adds a
+                    24-bit potential per unit to the state
+      relay lif/quant every block matrix reads 3-valued spikes: additions or subtractions of the rows of the input
+                    channels that fired (the q/k/v/gate/decay matrices together, the output projection, the MLP's
+                    first matrix); lif adds two 24-bit potentials per channel and relay to the state
+      wq ternary    the block matrices' weights take 2 bits (values -1, 0, +1) instead of `bits`
     The input rows (and learned positions) are word tables: one row per token, read from HBM. readout (S, C): a
     hypothetical two-level readout like the spiking network's (S own words, C classes; its quality cost is not
-    included), else the full readout, read every step."""
+    included), else the full readout, read every step. Byte counts at `bits` per weight."""
     V, d, L, h = args["vocab"], args["d_model"], args["n_layers"], args.get("n_heads") or 12
     hd, lin, mlp = d // h, args.get("attn") == "linear", args.get("mlp") or "gelu"
-    att = 5 * d * d + d * h + 12 * d if lin else 4 * d * d          # q, k, v, (gate,) out (+ decay, conv)
-    sparse = mlp != "gelu"
-    rates = list(rates) if rates is not None else [0.0] * L
+    relay, tern = args.get("relay") or "none", (args.get("wq") or "none") == "ternary"
+    b, bm = bits / 8, (2 / 8 if tern else bits / 8)                 # bytes per weight: others, block matrices
+    r = list(rates) if rates is not None else []
+    mlp_r = r[:L] if mlp != "gelu" else []
+    rel = r[len(mlp_r):len(mlp_r) + 3 * L] if relay != "none" else []
+    if mlp != "gelu" and len(mlp_r) < L:
+        mlp_r = [0.03] * L                                           # no measurement: 3% (g38_laspk ended at 3.5%)
+    if relay != "none" and len(rel) < 3 * L:
+        rel = [0.3] * (3 * L)                                        # no measurement: 30%, about their rate at start
+    in_cols = 3 * d + d + h if lin else 3 * d                        # what the stream feeds: q, k, v (gate, decay)
+    out_cols, small = d, (12 * d if lin else 0)                      # output projection; the convolution
     if readout:
         S, C = readout
         m = math.ceil((V - S) / C)
         head_shared, head_own, head_table = d * (S + C), d * m, d * C * m
     else:
         head_shared, head_own, head_table = d * V, 0, 0
-    dense_w = L * (att + 4 * d * d + (0 if sparse else 4 * d * d)) + head_shared
+    block_dense = L * ((0 if relay != "none" else d * (in_cols + out_cols + 4 * d))
+                       + (0 if mlp != "gelu" else 4 * d * d))        # block matrices read densely
+    sparse = []                                                     # (rate, input rows, bytes per row)
+    for l in range(L):
+        if relay != "none":
+            ri, ro, rm = rel[3 * l:3 * l + 3]
+            sparse += [(ri, d, in_cols * bm), (ro, d, out_cols * bm), (rm, d, 4 * d * bm)]
+        if mlp != "gelu":
+            sparse.append((mlp_r[l], 4 * d, d * bm))
+    block_all = L * d * (in_cols + out_cols + 8 * d)
     table = V * d + (0 if lin else args.get("seq", 1024) * d) + head_table
+    params = block_all + L * small + table + head_shared + head_own * 0 + L * 2 * d + d
     state_vals = L * (h * hd * hd + 9 * d) if lin else 0
     state_vals += L * 4 * d if mlp == "lif" else 0
+    state_vals += L * 3 * 2 * d if relay == "lif" else 0
     kv = 0 if lin else 2 * L * d * ctx
-    return {"arch": "la" if lin else "tf", "mlp": mlp, "ctx": None if lin else ctx, "readout": readout,
-            "params": dense_w + (L * 4 * d * d if sparse else 0) + table + L * 2 * d + d,
-            "dense_macs": dense_w + head_own + (3 * L * d * hd if lin else 2 * L * d * ctx),
-            "sparse_adds": sum(r * 4 * d * d for r in rates) if sparse else 0.0,
-            "dense_weights": dense_w, "sparse_layers": [(r, 4 * d, d) for r in rates] if sparse else [],
-            "table_weights": table, "per_stream_weights": head_own + d,
-            "state_bytes": 3 * state_vals, "kv_bytes": kv}
+    return {"arch": "la" if lin else "tf", "mlp": mlp, "relay": relay, "wq": "ternary" if tern else "none",
+            "ctx": None if lin else ctx, "readout": readout, "bits": bits, "params": params,
+            "dense_macs": block_dense + L * small + head_shared + head_own + (3 * L * d * hd if lin else 2 * L * d * ctx),
+            "sparse_adds": sum(rt * rows * (rb / bm) for rt, rows, rb in sparse),
+            "weight_bytes_onchip": block_all * bm + (L * small + head_shared + L * 2 * d + d) * b,
+            "dense_bytes": block_dense * bm + (L * small + head_shared) * b,
+            "sparse_layers": sparse, "per_stream_bytes": (head_own + d) * b,
+            "table_weights": table, "state_bytes": 3 * state_vals, "kv_bytes": kv}
 
 
-def estimate_tf(t, bits, dev):
-    """estimate() for tf_hw's figures, with the same assumptions; the key/value cache counts against the on-chip
-    memory like the state, and is read (not written back) from HBM when it does not fit. The share of 0/1 units that
-    are 1 in any of B streams is 1 - (1 - rate)^B (independent streams)."""
-    b = bits / 8
-    weights = (t["params"] - t["table_weights"]) * b
+def estimate_tf(t, dev):
+    """estimate() for tf_hw's figures (bytes at the bits given to tf_hw), with the same assumptions; the key/value
+    cache counts against the on-chip memory like the state, and is read (not written back) from HBM when it does not
+    fit. The share of a sparse layer's inputs that fire in any of B streams is 1 - (1 - rate)^B (independent
+    streams)."""
     ops = t["dense_macs"] + t["sparse_adds"]
     n = dev["cards"]
     rate = n * dev["dsp"] * dev["macs_per_dsp"] * dev["clock_mhz"] * 1e6 * dev["eff"]
@@ -131,11 +154,11 @@ def estimate_tf(t, bits, dev):
     rows = []
     for B in STREAMS:
         state, kv = B * t["state_bytes"], B * t["kv_bytes"]
-        own = B * t["per_stream_weights"] * b
-        if weights + state + kv <= budget:
+        own = B * t["per_stream_bytes"]
+        if t["weight_bytes_onchip"] + state + kv <= budget:
             read, where = own, "weights on chip, word tables in HBM"
         else:
-            read = (t["dense_weights"] + sum((1 - (1 - r) ** B) * H * dd for r, H, dd in t["sparse_layers"])) * b + own
+            read = t["dense_bytes"] + sum((1 - (1 - r) ** B) * n_in * rb for r, n_in, rb in t["sparse_layers"]) + own
             where = "weights in HBM"
             if state + kv > budget:
                 read += 2 * state + kv
