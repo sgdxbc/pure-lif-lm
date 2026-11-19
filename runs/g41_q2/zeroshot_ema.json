@@ -1,0 +1,47 @@
+{
+ "limit": 0,
+ "tasks": {
+  "hellaswag": {
+   "acc": 0.26538538139812784,
+   "acc_stderr_stderr": 0.004406358190678682,
+   "acc_norm": 0.2698665604461263,
+   "acc_norm_stderr_stderr": 0.0044298311529146
+  },
+  "lambada_openai": {
+   "perplexity": 5081.9451817198,
+   "perplexity_stderr_stderr": 284.9428416601302,
+   "acc": 0.06442848825926645,
+   "acc_stderr_stderr": 0.003420499552612167
+  },
+  "piqa": {
+   "acc": 0.5799782372143635,
+   "acc_stderr_stderr": 0.011515615810587429,
+   "acc_norm": 0.5636561479869423,
+   "acc_norm_stderr_stderr": 0.011570895640553759
+  },
+  "arc_easy": {
+   "acc": 0.4292929292929293,
+   "acc_stderr_stderr": 0.01015667807591118,
+   "acc_norm": 0.3998316498316498,
+   "acc_norm_stderr_stderr": 0.010051788039412915
+  },
+  "arc_challenge": {
+   "acc": 0.18430034129692832,
+   "acc_stderr_stderr": 0.01133051793303744,
+   "acc_norm": 0.22866894197952217,
+   "acc_norm_stderr_stderr": 0.012272853582540892
+  },
+  "winogrande": {
+   "acc": 0.4940805051302289,
+   "acc_stderr_stderr": 0.014051500838485925
+  }
+ },
+ "versions": {
+  "arc_challenge": "1.0",
+  "arc_easy": "1.0",
+  "hellaswag": "1.0",
+  "lambada_openai": "1.0",
+  "piqa": "1.0",
+  "winogrande": "1.0"
+ }
+}
