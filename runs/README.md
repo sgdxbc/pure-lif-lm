@@ -31,6 +31,7 @@
 | `g36_*` | 第三十六批：线性注意力的对照组 | FineWeb-Edu | 5.47 |
 | `g37_*` | 第三十七批：实数输出的孪生网络、先软后硬 | FineWeb-Edu | 5.48 |
 | `g38_*`、`g39_*` | 第三十八、三十九批：总线归一化，以及线性注意力和脉冲网络之间的"梯子" | FineWeb-Edu | 5.49、5.50 |
+| `g40_*` | 第四十批：小规模排名（77M 的形状） | FineWeb-Edu | 5.51 |
 | `classes/` | 两级读出和组合输入用的词的分类（`experiments/word_classes.py`） | FineWeb-Edu | 5.36 |
 | `ref_*` | 参考模型（GPT-2、Pythia）的零样本基准 | | 5.24 |
 | `bench_gpu/` | Transformer 在 GPU 上的推理实测（vLLM） | | 5.25 |
