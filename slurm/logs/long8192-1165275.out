@@ -1,0 +1,16 @@
+g26_snn212: 102 books of >= 8192 tokens, mean 3.4639  0-64 3.771  64-128 3.302  128-256 3.327  256-512 3.321  512-1024 3.428  1024-2048 3.487  2048-4096 3.466  4096-8192 3.472
+runs/g26_snn212 exit 0 51s
+g29_hw: 102 books of >= 8192 tokens, mean 3.8608  0-64 4.117  64-128 3.660  128-256 3.657  256-512 3.667  512-1024 3.764  1024-2048 3.826  2048-4096 3.824  4096-8192 3.917
+runs/g29_hw exit 0 92s
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+g36_la163: 102 books of >= 8192 tokens, mean 3.2255  0-64 3.466  64-128 3.042  128-256 3.085  256-512 3.078  512-1024 3.196  1024-2048 3.255  2048-4096 3.232  4096-8192 3.232
+runs/g36_la163 exit 0 118s
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+g38_la: 102 books of >= 8192 tokens, mean 3.4224  0-64 3.731  64-128 3.287  128-256 3.300  256-512 3.293  512-1024 3.397  1024-2048 3.448  2048-4096 3.423  4096-8192 3.428
+runs/g38_la exit 0 145s
+g26_tf163: 102 books of >= 8192 tokens, mean 3.1599  0-64 3.495  64-128 3.024  128-256 3.046  256-512 3.027  512-1024 3.129  1024-2048 3.192  2048-4096 3.163  4096-8192 3.163
+g26_tf163 exit 0 199s
+g13_tf163: 102 books of >= 8192 tokens, mean 3.3163  0-64 3.663  64-128 3.189  128-256 3.206  256-512 3.186  512-1024 3.284  1024-2048 3.347  2048-4096 3.321  4096-8192 3.318
+g13_tf163 exit 0 253s
