@@ -1,6 +1,9 @@
 """The spiking hardware network, Transformers and linear-attention networks estimated on the same FPGAs, with the
 same assumptions (fpga_est.py; docs/experiments.md 5.51). From the repository root:
   python3 experiments/fpga_compare.py [--bits 4] [--ctx 1024]     (prints a table, writes runs/fpga_compare.json)
+  python3 experiments/fpga_compare.py --runs g40_la g40_laspk g40_relay ...   only these runs (model_tf.py networks),
+      each from its shape and the rates of its last evaluation, with its final loss (EMA where there is one) or, while
+      it trains, the last evaluation's (marked with the step)
 
 Rows (validation loss on FineWeb-Edu where the network was trained; "-" for a shape that was not trained):
   snn  g29_hw                the hardware network (4-bit weights, coded input, two-level readout), from its
@@ -42,14 +45,32 @@ def rates_of(run):
     return ev[-1]["val_rates"] if ev else None
 
 
+def last_eval(run):
+    """(loss, step) of the last evaluation in a run's log (EMA where there is one), or (None, None)."""
+    p = os.path.join(HERE, "runs", run, "log.jsonl")
+    ev = [json.loads(x) for x in open(p) if '"val_loss"' in x] if os.path.exists(p) else []
+    if not ev:
+        return None, None
+    return ev[-1].get("val_loss_ema", ev[-1]["val_loss"]), ev[-1]["step"]
+
+
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("--bits", type=int, default=4)
     p.add_argument("--ctx", type=int, default=1024)
     p.add_argument("--spike_rate", type=float, default=0.03, help="0/1 MLP units' rate if g38_laspk's log is absent")
+    p.add_argument("--runs", nargs="*", default=None, help="only these model_tf.py runs, with their measured rates")
     a = p.parse_args()
     args = lambda r: json.load(open(os.path.join(HERE, "runs", r, "args.json")))
     nets = []
+    if a.runs:
+        for r in a.runs:
+            ar, lo, note = args(r), loss(r), ""
+            if lo is None:
+                lo, st = last_eval(r)
+                note = f" (step {st})" if st is not None else ""
+            nets.append((f"{r}{note}", lo, fpga_est.tf_hw(ar, rates=rates_of(r), ctx=a.ctx, bits=a.bits), ar))
+        return table(nets, a, None)
     hw = json.load(open(os.path.join(HERE, "runs/g29_hw/hw_cost.json")))
     nets.append(("snn g29_hw", loss("g29_hw"), hw, args("g29_hw")))
     for r in ("g33_tf31", "g33_tf50"):
@@ -69,7 +90,11 @@ def main():
                  fpga_est.tf_hw(spk, rates=rs or [a.spike_rate] * la["n_layers"], readout=(8192, 225), bits=a.bits), spk))
     tf = args("g26_tf163")
     nets.append(("tf g26_tf163", loss("g26_tf163"), fpga_est.tf_hw(tf, ctx=a.ctx, bits=a.bits), tf))
+    table(nets, a, os.path.join(HERE, "runs/fpga_compare.json"))
 
+
+def table(nets, a, path):
+    """Print the table of nets [(name, loss, figures, args)]; write it to path (JSON) unless path is None."""
     out = []
     head = "| network | loss | params | dense MACs | adds | " + " | ".join(
         f"{d} x{n} ms/mJ at {', '.join(map(str, SHOW))} streams" for d, n in DEVS) + " |"
@@ -88,7 +113,8 @@ def main():
         out.append(rec)
         print(f"| {name} | {'-' if lo is None else f'{lo:.3f}'} | {t['params'] / 1e6:.1f}M | {t['dense_macs'] / 1e6:.1f}M | "
               f"{t['sparse_adds'] / 1e6:.2f}M | " + " | ".join(cells) + " |")
-    json.dump({"bits": a.bits, "ctx": a.ctx, "rows": out}, open(os.path.join(HERE, "runs/fpga_compare.json"), "w"), indent=1)
+    if path:
+        json.dump({"bits": a.bits, "ctx": a.ctx, "rows": out}, open(path, "w"), indent=1)
 
 
 if __name__ == "__main__":
