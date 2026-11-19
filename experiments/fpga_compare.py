@@ -60,6 +60,8 @@ def main():
     p.add_argument("--ctx", type=int, default=1024)
     p.add_argument("--spike_rate", type=float, default=0.03, help="0/1 MLP units' rate if g38_laspk's log is absent")
     p.add_argument("--runs", nargs="*", default=None, help="only these model_tf.py runs, with their measured rates")
+    p.add_argument("--add_cost", type=float, default=1.0, help="an addition's cost in multiply-adds (fpga_est.estimate_tf; "
+                   "below 1 is a sensitivity check: additions in LUTs are not designed or modelled)")
     a = p.parse_args()
     args = lambda r: json.load(open(os.path.join(HERE, "runs", r, "args.json")))
     nets = []
@@ -102,19 +104,20 @@ def table(nets, a, path):
     print("|" + "---|" * (5 + len(DEVS)))
     for name, lo, t, ar in nets:
         cells = []
-        rec = {"network": name, "loss": lo, "params": t["params"], "dense_macs": t["dense_macs"],
-               "sparse_adds": t["sparse_adds"], "devices": {}}
+        adds = t["sparse_adds"] + t.get("dense_adds", 0)
+        rec = {"network": name, "loss": lo, "params": t["params"], "dense_macs": t["dense_macs"], "adds": adds,
+               "devices": {}}
         for d, n in DEVS:
-            dev = dict(fpga_est.DEVICES[d], name=d, cards=n, eff=0.6)
+            dev = dict(fpga_est.DEVICES[d], name=d, cards=n, eff=0.6, add_cost=a.add_cost)
             rows = fpga_est.estimate(t, ar, a.bits, dev) if name.startswith("snn") else fpga_est.estimate_tf(t, dev)
             rec["devices"][f"{d}x{n}"] = rows
             sel = [r for r in rows if r["streams"] in SHOW]
             cells.append(" / ".join(f"{r['ms_per_token']:.3f}, {r['mJ_per_token']:.2f}" for r in sel))
         out.append(rec)
         print(f"| {name} | {'-' if lo is None else f'{lo:.3f}'} | {t['params'] / 1e6:.1f}M | {t['dense_macs'] / 1e6:.1f}M | "
-              f"{t['sparse_adds'] / 1e6:.2f}M | " + " | ".join(cells) + " |")
+              f"{adds / 1e6:.2f}M | " + " | ".join(cells) + " |")
     if path:
-        json.dump({"bits": a.bits, "ctx": a.ctx, "rows": out}, open(path, "w"), indent=1)
+        json.dump({"bits": a.bits, "ctx": a.ctx, "add_cost": a.add_cost, "rows": out}, open(path, "w"), indent=1)
 
 
 if __name__ == "__main__":

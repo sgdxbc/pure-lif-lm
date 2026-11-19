@@ -50,7 +50,7 @@ def estimate(hw, args, bits, dev):
     if hw.get("weights_bytes_trained") and bits == hw.get("wbits"):   # the bits it was trained for, scales included
         weights, table = hw["weights_bytes_trained"], hw["table_bytes_trained"]
         own *= table / (hw["table_weights"] * b) if hw.get("table_weights") else 1.0
-    ops = hw["dense_macs"] + hw["sparse_adds"]                               # per token and stream
+    ops = hw["dense_macs"] + dev.get("add_cost", 1.0) * hw["sparse_adds"]    # per token and stream (add_cost: below)
     n = dev["cards"]
     rate = n * dev["dsp"] * dev["macs_per_dsp"] * dev["clock_mhz"] * 1e6 * dev["eff"]   # MAC/s reached
     bw = n * dev["bw_gbs"] * 1e9 * dev["eff"]
@@ -94,7 +94,8 @@ def tf_hw(args, rates=None, readout=None, ctx=1024, bits=4):
                     first matrix); lif adds two 24-bit potentials per channel and relay to the state. With
                     relay_levels > 1 the rate is spikes per channel, and each spike adds its row once (and is
                     counted as reading it once: conservative, a channel with several spikes reads its row once)
-      wq ternary    the block matrices' weights take 2 bits (values -1, 0, +1) instead of `bits`
+      wq ternary    the block matrices' weights take 2 bits (values -1, 0, +1) instead of `bits`, and each of their
+                    weights costs an addition (dense_adds) instead of a multiply-add
     The input rows (and learned positions) are word tables: one row per token, read from HBM. readout (S, C): a
     hypothetical two-level readout like the spiking network's (S own words, C classes; its quality cost is not
     included), else the full readout, read every step. Byte counts at `bits` per weight."""
@@ -135,7 +136,9 @@ def tf_hw(args, rates=None, readout=None, ctx=1024, bits=4):
     kv = 0 if lin else 2 * L * d * ctx
     return {"arch": "la" if lin else "tf", "mlp": mlp, "relay": relay, "wq": "ternary" if tern else "none",
             "ctx": None if lin else ctx, "readout": readout, "bits": bits, "params": params,
-            "dense_macs": block_dense + L * small + head_shared + head_own + (3 * L * d * hd if lin else 2 * L * d * ctx),
+            "dense_macs": (0 if tern else block_dense) + L * small + head_shared + head_own
+                          + (3 * L * d * hd if lin else 2 * L * d * ctx),
+            "dense_adds": block_dense if tern else 0,
             "sparse_adds": sum(rt * rows * (rb / bm) for rt, rows, rb in sparse),
             "weight_bytes_onchip": block_all * bm + (L * small + head_shared + L * 2 * d + d) * b,
             "dense_bytes": block_dense * bm + (L * small + head_shared) * b,
@@ -147,8 +150,11 @@ def estimate_tf(t, dev):
     """estimate() for tf_hw's figures (bytes at the bits given to tf_hw), with the same assumptions; the key/value
     cache counts against the on-chip memory like the state, and is read (not written back) from HBM when it does not
     fit. The share of a sparse layer's inputs that fire in any of B streams is 1 - (1 - rate)^B (independent
-    streams)."""
-    ops = t["dense_macs"] + t["sparse_adds"]
+    streams). dev["add_cost"] (default 1): the cost of an addition (a spike's row, a ternary weight) in multiply-adds'
+    time; 1 counts both on the DSPs, as every figure in docs/experiments.md before 5.52 does. Additions can instead
+    go to the LUTs, which would make them cheaper, but this is not designed or modelled: values below 1 are a
+    sensitivity check, not an estimate."""
+    ops = t["dense_macs"] + dev.get("add_cost", 1.0) * (t["sparse_adds"] + t.get("dense_adds", 0))
     n = dev["cards"]
     rate = n * dev["dsp"] * dev["macs_per_dsp"] * dev["clock_mhz"] * 1e6 * dev["eff"]
     bw = n * dev["bw_gbs"] * 1e9 * dev["eff"]
