@@ -1,0 +1,53 @@
+queued the next part of runs/g35_base_s1: job 1167663
+xgpi20 NVIDIA H100 NVL | runs/g35_base_s1 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --seed 1 --accum 4
+params 120.97M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.5133 (EMA weights 4.4290)
+== eval step 5000 val_loss 4.2589 (EMA weights 4.1568)
+== eval step 7500 val_loss 4.1411 (EMA weights 4.0430)
+== eval step 10000 val_loss 4.0522 (EMA weights 3.9751)
+params 120.97M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 3.9794 (EMA weights 3.9264)
+== eval step 15000 val_loss 3.9230 (EMA weights 3.8904)
+== eval step 17500 val_loss 3.8850 (EMA weights 3.8676)
+== eval step 20000 val_loss 3.8656 (EMA weights 3.8535)
+params 120.97M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+hellaswag        acc 0.2671  acc_norm 0.2713
+lambada_openai   perplexity 6790.1187  acc 0.0363
+piqa             acc 0.5675  acc_norm 0.5637
+arc_easy         acc 0.4377  acc_norm 0.3902
+arc_challenge    acc 0.1809  acc_norm 0.2227
+winogrande       acc 0.5020
+hellaswag        acc 0.2666  acc_norm 0.2684
+lambada_openai   perplexity 6455.7698  acc 0.0386
+piqa             acc 0.5680  acc_norm 0.5550
+arc_easy         acc 0.4386  acc_norm 0.3935
+arc_challenge    acc 0.1800  acc_norm 0.2278
+winogrande       acc 0.4996
+ "val_loss": 3.877194951658547,
+g35_base_s1              snn  121.0M  8-bit  121.0 MB  dense MACs   58.6M + sparse adds  1.62M  state 1327.1 KB  MB/token 8-bit: 1 stream   59.8, 16 streams   4.7  (rate 0.055)
+  weights rounded to 8 bits: "val_loss": 3.86517243602614,
+  weights rounded to 4 bits: "val_loss": 3.9876749827809292,
+model (bf16, fused kernel) 3.9454
+fp32                   3.9462  (+0.0000 vs fp32)
+W8                     3.9452  (-0.0010 vs fp32)
+W4                     4.1732  (+0.2270 vs fp32)
+W4g128                 4.0701  (+0.1239 vs fp32)
+A8                     3.9469  (+0.0006 vs fp32)
+V24                    3.9458  (-0.0004 vs fp32)
+V16                    4.2307  (+0.2844 vs fp32)
+B16                    3.9462  (-0.0000 vs fp32)
+B12                    3.9445  (-0.0017 vs fp32)
+W8 A8 V24 B16          3.9463  (+0.0001 vs fp32)
+W8 A8 V16 B12          4.2331  (+0.2868 vs fp32)
+W4g128 A8 V24 B16      4.0703  (+0.1241 vs fp32)
+W4g128 A8 V16 B12      4.3587  (+0.4125 vs fp32)
+V16p                   4.2150  (+0.2687 vs fp32)
+W8 A8 V16p B12         4.2156  (+0.2693 vs fp32)
+S24                    3.9466  (+0.0004 vs fp32)
+S16                    3.9462  (+0.0000 vs fp32)
+S12                    3.9807  (+0.0345 vs fp32)
+W8 A8 V24 B16 S16      3.9476  (+0.0014 vs fp32)
+W8 A8 V24 B16 S12      3.9840  (+0.0378 vs fp32)
+B16 T10                3.9449  (-0.0013 vs fp32)
+done Thu Nov 19 06:40:57 PM +08 2026

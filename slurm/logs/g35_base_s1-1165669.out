@@ -1,0 +1,14 @@
+queued the next part of runs/g35_base_s1: job 1166380
+xgpi11 NVIDIA H100 NVL | runs/g35_base_s1 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --seed 1 --accum 4
+params 120.97M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.5133 (EMA weights 4.4290)
+== eval step 5000 val_loss 4.2589 (EMA weights 4.1568)
+== eval step 7500 val_loss 4.1411 (EMA weights 4.0430)
+== eval step 10000 val_loss 4.0522 (EMA weights 3.9751)
+params 120.97M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 3.9794 (EMA weights 3.9264)
+== eval step 15000 val_loss 3.9230 (EMA weights 3.8904)
+== eval step 17500 val_loss 3.8850 (EMA weights 3.8676)
+== eval step 20000 val_loss 3.8656 (EMA weights 3.8535)
+[2026-11-19T18:26:21.003] error: *** JOB 1165669 ON xgpi11 CANCELLED AT 2026-11-19T18:26:21 DUE TO TIME LIMIT ***
