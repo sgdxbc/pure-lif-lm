@@ -1,0 +1,27 @@
+queued the next part of runs/g37_soft: job 1164947
+xgph0 NVIDIA A100 80GB PCIe | runs/g37_soft | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --spike_soft 1 --accum 2
+params 120.97M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3008
+== eval step 2500 val_loss 4.6255 (EMA weights 4.5321)
+== eval step 5000 val_loss 4.3588 (EMA weights 4.2392)
+== eval step 7500 val_loss 4.2524 (EMA weights 4.1390)
+== eval step 10000 val_loss 4.1735 (EMA weights 4.0769)
+params 120.97M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 4.0888 (EMA weights 4.0220)
+== eval step 15000 val_loss 4.0128 (EMA weights 3.9768)
+== eval step 17500 val_loss 3.9614 (EMA weights 3.9431)
+== eval step 20000 val_loss 3.9336 (EMA weights 3.9207)
+hellaswag        acc 0.2664  acc_norm 0.2639
+lambada_openai   perplexity 11462.9725  acc 0.0243
+piqa             acc 0.5680  acc_norm 0.5588
+arc_easy         acc 0.4331  acc_norm 0.3830
+arc_challenge    acc 0.1758  acc_norm 0.2235
+winogrande       acc 0.4957
+hellaswag        acc 0.2667  acc_norm 0.2638
+lambada_openai   perplexity 11354.6870  acc 0.0264
+piqa             acc 0.5707  acc_norm 0.5506
+arc_easy         acc 0.4289  acc_norm 0.3834
+arc_challenge    acc 0.1783  acc_norm 0.2167
+winogrande       acc 0.4830
+ "val_loss": 3.944577452078027,
+done Thu Nov 19 09:34:57 AM +08 2026
