@@ -85,6 +85,8 @@ Diagnostic (mem_kind "gla", docs/experiments.md 5.50): in place of each set of p
            memory costs, with the populations unchanged; it is not a spiking network and has no hardware path. Its
            state (the matrix S per head and the convolution's last 3 inputs) is carried between calls like the
            plastic synapses'.
+           mem_gla_ablate (docs/experiments.md 5.53): a comma-separated subset of fixdecay, noconv, nogate, spkkq,
+           each removing one of its features (model_tf.LinearAttention).
 Low-precision weights (wbits, docs/experiments.md 5.38): every weight matrix (the 2-D parameters: input rows, W_in, W_out,
            leak synapses, plastic-synapse inputs and outputs, readout) is meant to be stored as symmetric wbits-bit
            integers with one scale per group of wgroup inputs (quantize_weight). The forward pass does not round:
@@ -159,6 +161,7 @@ class Config:
     mem_write_avg: bool = False   # write (1 - lambda) v: S is a running average, not a sum (module docstring)
     mem_kind: str = "plastic" # "gla": gated linear attention (model_tf.py) in place of the plastic synapses, a
                               # diagnostic, not a spiking component (module docstring)
+    mem_gla_ablate: str = ""  # mem_kind gla: features removed (model_tf.LinearAttention: fixdecay,noconv,nogate,spkkq)
     bus_norm: bool = False    # every reader of the bus sees it scaled to unit RMS per token (module docstring)
     wbits: int = 0            # >0: the weight matrices are used rounded to this many bits (module docstring)
     wgroup: int = 128         # one scale per this many inputs of a weight matrix (per row if it does not divide)
@@ -480,8 +483,9 @@ class SpikingLM(nn.Module):
             if cfg.mem_kind == "gla":
                 from types import SimpleNamespace
                 from model_tf import LinearAttention
-                self.mems = nn.ModuleDict({str(i): LinearAttention(SimpleNamespace(d_model=cfg.d_model,
-                                           n_heads=cfg.mem_heads)) for i in self.mem_layers})
+                ns = SimpleNamespace(d_model=cfg.d_model, n_heads=cfg.mem_heads, ablate=cfg.mem_gla_ablate,
+                                     alpha=cfg.alpha)
+                self.mems = nn.ModuleDict({str(i): LinearAttention(ns) for i in self.mem_layers})
                 for n, p in self.mems.named_parameters():   # as model_tf.GPT initialises them
                     if p.dim() == 2:
                         std = 0.02 / math.sqrt(2 * cfg.n_layers) if n.endswith("proj.weight") else 0.02

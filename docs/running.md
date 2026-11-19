@@ -133,6 +133,7 @@ python3 train.py --device cuda --out runs/my_snn \
   先把每个 token 的总线除以它在 d_model 个通道上的均方根（像 Transformer 的 pre-norm，没有增益）；总线本身不变。
   每个读者每个 token 多一次平方和与一次开方倒数，`hw_cost.py` 已计入；`quant_sim.py`、`hw_export.py` 还不支持（会直接报错）。
 - `--mem_kind gla`（5.50 节，诊断用）：每一组可塑突触换成 `model_tf.py` 的门控线性注意力（`--mem_heads` 个头），神经元群不变。
+  `--mem_gla_ablate fixdecay,noconv,nogate,spkkq`（5.53 节，任选几项）：去掉它的特点：随输入变化的衰减、短卷积、输出门（换成常数增益）、实数的键和查询（换成 0/1）。
   不是脉冲网络，没有硬件路径（`hw_cost.py` 跳过它，`quant_sim.py`、`hw_export.py` 会报错）；状态（每个头的矩阵 S 和短卷积的最后 3 个输入）
   和可塑突触一样在两次调用之间带着走，所以逐段的评测和生成都照常。
 

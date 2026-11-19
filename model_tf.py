@@ -197,17 +197,35 @@ def gla_scan(q, k, v, log_a, chunk=64, S0=None):
 
 
 class LinearAttention(nn.Module):
-    """Gated linear attention (module docstring), in place of a block's softmax attention."""
+    """Gated linear attention (module docstring), in place of a block's softmax attention.
+    c.ablate (model.py --mem_gla_ablate, docs 5.53; a comma-separated subset), each removing one of its features:
+      fixdecay  the decay per head is a learned constant, not a function of the input
+      noconv    no short convolution in front of q, k, v
+      nogate    no output gate: the normalised read times a learned gain per channel, 0.3 at initialisation (the
+                gate's RMS there in model.py's network), so only its dependence on the input is removed
+      spkkq     q and k are 0/1: [silu(conv) >= theta], a threshold per channel (learned; at initialisation about
+                one standard deviation of silu(conv), 0.16, or of silu(qkv(x)) with noconv, 0.29, as measured in
+                model.py's network), the spiking network's fast-sigmoid surrogate (alpha c.alpha); v stays real"""
 
     def __init__(self, c):
         super().__init__()
         d, h = c.d_model, c.n_heads
         self.h, self.hd = h, d // h
+        ab = set(filter(None, getattr(c, "ablate", "").split(",")))
+        assert ab <= {"fixdecay", "noconv", "nogate", "spkkq"}, f"unknown ablation: {ab}"
+        self.ab, self.alpha = ab, getattr(c, "alpha", 4.0)
         self.qkv = QLinear(d, 3 * d, bias=False)
-        self.conv = nn.Conv1d(3 * d, 3 * d, kernel_size=4, groups=3 * d, padding=3, bias=False)   # causal: first L
-        self.decay = nn.Linear(d, h, bias=True)
+        self.conv = None if "noconv" in ab else nn.Conv1d(3 * d, 3 * d, kernel_size=4, groups=3 * d, padding=3,
+                                                          bias=False)   # causal: its first L outputs
+        self.decay = nn.Linear(d, h, bias=True)                      # fixdecay: only its bias is used
+        if "fixdecay" in ab:
+            self.decay.weight.requires_grad_(False)
         self.A_log = nn.Parameter(torch.log(torch.linspace(1.0, 16.0, h)))
-        self.gate = QLinear(d, d, bias=False)
+        self.gate = None if "nogate" in ab else QLinear(d, d, bias=False)
+        if "nogate" in ab:
+            self.out_gain = nn.Parameter(torch.full((d,), 0.3))
+        if "spkkq" in ab:
+            self.kq_log_theta = nn.Parameter(torch.full((2 * d,), math.log(0.29 if "noconv" in ab else 0.16)))
         self.onorm = nn.RMSNorm(self.hd)
         self.proj = QLinear(d, d, bias=False)
         relay = getattr(c, "relay", "none")
@@ -226,16 +244,25 @@ class LinearAttention(nn.Module):
         if self.r_in is not None:
             x = self.r_in(x)
         u = self.qkv(x).transpose(1, 2)                                             # (B, 3d, L): the conv's input
-        if state is None:
-            S0, c = None, self.conv(u)[..., :L]
+        S0, prev = (None, None) if state is None else state
+        if self.conv is None:
+            c = u
+        elif state is None:
+            c = self.conv(u)[..., :L]
         else:
-            S0, prev = state
             c = F.conv1d(torch.cat([prev.to(u.dtype), u], -1), self.conv.weight.to(u.dtype), groups=3 * D)
         qkv = F.silu(c).transpose(1, 2)
+        if "spkkq" in self.ab:
+            kq = _Step.apply(qkv[..., :2 * D].contiguous(), self.kq_log_theta.exp().float(), self.alpha)
+            qkv = torch.cat([kq, qkv[..., 2 * D:]], -1)
         q, k, v = qkv.reshape(B, L, 3, self.h, self.hd).permute(2, 0, 3, 1, 4)    # (B, h, L, hd) each
-        log_a = -F.softplus(self.decay(x).float()) * self.A_log.exp()           # (B, L, h)
+        if "fixdecay" in self.ab:
+            log_a = (-F.softplus(self.decay.bias.float()) * self.A_log.exp()).expand(B, L, self.h)
+        else:
+            log_a = -F.softplus(self.decay(x).float()) * self.A_log.exp()       # (B, L, h)
         o, S = gla_scan(q * self.hd ** -0.5, k, v, log_a.transpose(1, 2), S0=S0)
-        o = self.onorm(o).transpose(1, 2).reshape(B, L, D) * F.silu(self.gate(x))
+        o = self.onorm(o).transpose(1, 2).reshape(B, L, D)
+        o = o * (F.silu(self.gate(x)) if self.gate is not None else self.out_gain.to(o.dtype))
         if self.r_out is not None:
             o = self.r_out(o)
         if not return_state:
