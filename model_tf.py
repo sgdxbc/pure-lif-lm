@@ -205,7 +205,10 @@ class LinearAttention(nn.Module):
                 gate's RMS there in model.py's network), so only its dependence on the input is removed
       spkkq     q and k are 0/1: [silu(conv) >= theta], a threshold per channel (learned; at initialisation about
                 one standard deviation of silu(conv), 0.16, or of silu(qkv(x)) with noconv, 0.29, as measured in
-                model.py's network), the spiking network's fast-sigmoid surrogate (alpha c.alpha); v stays real"""
+                model.py's network), the spiking network's fast-sigmoid surrogate (alpha c.alpha); v stays real.
+                The read's normalisation then uses eps 1, like the plastic synapses' (model.py mem_eps): with 0/1
+                queries and keys a read is often exactly 0 (no spike in common), where an RMS norm with a tiny eps
+                has huge gradients (without the output gate, which damps them, training blew up: docs 5.53)"""
 
     def __init__(self, c):
         super().__init__()
@@ -226,7 +229,7 @@ class LinearAttention(nn.Module):
             self.out_gain = nn.Parameter(torch.full((d,), 0.3))
         if "spkkq" in ab:
             self.kq_log_theta = nn.Parameter(torch.full((2 * d,), math.log(0.29 if "noconv" in ab else 0.16)))
-        self.onorm = nn.RMSNorm(self.hd)
+        self.onorm = nn.RMSNorm(self.hd, eps=1.0 if "spkkq" in ab else None)   # spkkq: as mem_eps
         self.proj = QLinear(d, d, bias=False)
         relay = getattr(c, "relay", "none")
         K = getattr(c, "relay_levels", 1)
