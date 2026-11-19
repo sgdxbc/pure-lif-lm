@@ -9,8 +9,8 @@ source slurm/env.sh
 python3 hw_cost.py --device cuda --ema "$@"
 echo "hw_cost exit $? $(date)"
 for out in "$@"; do
-  # quant_sim.py covers spiking runs without the spiking bus, same-layer synapses or delays
-  if python3 -c "import json, sys; a = json.load(open('$out/args.json')); sys.exit(0 if a.get('arch', 'snn') == 'snn' and not (a.get('spike_bus') or a.get('rec_rank') or a.get('delay_k')) else 1)"; then
+  # quant_sim.py where it covers the run (quant_sim.supported)
+  if python3 -c "import json, sys, quant_sim; sys.exit(0 if quant_sim.supported(json.load(open('$out/args.json'))) else 1)"; then
     python3 quant_sim.py --device cuda --ema "$out" > "$out/quant.log" 2>&1
     echo "$out: quant_sim exit $? $(date)"
     cat "$out/quant.log"

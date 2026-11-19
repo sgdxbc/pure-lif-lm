@@ -33,7 +33,7 @@ Assumptions (all can be changed by options):
   - time per step = the larger of reading time and compute time (the two overlap). Per stream, a token takes one
     step: that is the latency. The membrane potentials make the cost independent of the context length.
 """
-import argparse, json, math, os
+import argparse, json, os
 
 STREAMS = (1, 4, 16, 64, 256)
 DEVICES = {"v80": dict(bw_gbs=820.0, onchip_mb=84.0, dsp=10848, macs_per_dsp=3, clock_mhz=400.0, watts=190.0),

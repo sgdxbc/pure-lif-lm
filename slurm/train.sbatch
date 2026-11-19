@@ -85,7 +85,8 @@ if [ "${HW:-0}" = "1" ]; then
       grep -h '"val_loss"' "$out/final_eval${e:+_ema}_w$b.json" | sed "s/^/  weights rounded to $b bits:/"
     done
   fi
-  if python3 -c "import json, sys; a = json.load(open('$out/args.json')); sys.exit(0 if a.get('arch', 'snn') == 'snn' and not (a.get('spike_bus') or a.get('rec_rank') or a.get('delay_k') or a.get('mem_heads')) else 1)"; then
+  # the low-precision simulation where it covers the run (quant_sim.supported)
+  if python3 -c "import json, sys, quant_sim; sys.exit(0 if quant_sim.supported(json.load(open('$out/args.json'))) else 1)"; then
     python3 quant_sim.py --device cuda --ema "$out" > "$out/quant.log" 2>&1; cat "$out/quant.log"
   fi
 fi

@@ -98,8 +98,9 @@ python3 train.py --device cuda --out runs/my_snn \
 **网络结构**（`model.py` 开头有每一项的完整说明）：
 - 大小：`--d_model`（总线宽度）、`--d_hidden`（每层神经元数）、`--n_layers`、`--vocab`。
 - 神经元：`--hard_reset`（发放后清零，否则减去阈值）、`--reset_learn true --gamma_init a --gamma_init_min b`（乘法复位
-  `V ← V·(1 − γ·s)`，γ 每个神经元可学习）、`--sg fast_sigmoid|sigmoid --alpha`（代理梯度的形状和宽度）、`--detach_reset`（复位处是否截断梯度）、
+  `V ← V·(1 − γ·s)`，γ 每个神经元可学习）、`--sg fast_sigmoid|sigmoid|triangle --alpha`（代理梯度的形状和宽度）、`--detach_reset`（复位处是否截断梯度）、
   `--tau_min/--tau_max`（时间常数的初始范围，单位 token）、`--in_norm`（慢神经元的初始化方式）、`--learn_beta/--learn_theta`。
+- 初始化：`--out_init`（W_out 的初始标准差，默认 0.02）、`--head_init`（读出的初始标准差，默认 0.02）。
 - `--leak_rank r`：调节漏电的突触（秩 r）。同一批脉冲除了注入电流，还通过另一组突触改变神经元漏电的快慢，
   `β[t] = sigmoid(β_logit + U·总线[t])`，网络可以按读到的内容决定一个神经元"保持"还是"清空"。现在的标准设置都用它（5.8 节起）。
 - `--steps_per_token T`：每个 token 模拟 T 个时间步（5.21 节）。
@@ -112,10 +113,10 @@ python3 train.py --device cuda --out runs/my_snn \
   注入它们的突触之和。默认按编号的 k 位数字；k = 2 时 `--in_class_file` 按类分配（第一群是类，第二群是类里的序号；用
   `word_classes.py --rows embed` 对训练好的网络的输入行聚类）。加 `--in_short S`：短名单里的 S 个词（类号 −1）各有自己的一个输入神经元，
   其余的词照常用 k 个脉冲；此时 n = ⌈(词表 − S)^(1/k)⌉，分类时类数和每类的词数都不能超过 n。
-- `--mem_heads h [--mem_keys m --mem_dv dv --mem_every k]`：**可塑突触**（5.28 节）。每隔 k 层（默认每层），在神经元群之前加 h 组
+- `--mem_heads h [--mem_keys m --mem_dv dv --mem_every k]`：**可塑突触**（5.32 节）。每隔 k 层（默认每层），在神经元群之前加 h 组
   键神经元和查询神经元（每组各 m 个，时间常数短，减法复位）和一个 m × dv 的突触矩阵 S：
   `S[t] = λ·S[t-1] + k[t]·v[t]ᵀ`（k 是键神经元的脉冲，v = W_v·总线，λ 每组一个、可学习，初始时间常数在
-  `--mem_tau_min` 到 `--mem_tau_max` 个 token 之间按对数均匀分布），读出 `r[t] = S[t]ᵀ·q[t]`（q 是查询神经元的脉冲），
+  `--mem_tau_min` 到 `--mem_tau_max` 个 token 之间按对数均匀分布；键和查询神经元的初始阈值 `--mem_theta`，默认 1.5），读出 `r[t] = S[t]ᵀ·q[t]`（q 是查询神经元的脉冲），
   每组按 `r / sqrt(mean(r²) + 1)` 缩放（读出强时均方根约为 1，读出弱时近似原样）后经 W_o 加回总线。W_o 初始为 0，所以初始化时和不加时是同一个网络。
   - 缩放式里的常数（`--mem_eps`，默认 1）原来是 1e-6，CPU 上的小规模试训发现训练会发散：初始化时约三分之一的位置没有查询神经元碰上
     写过的键，r 正好是 0，这时缩放把梯度放大约 1000 倍，经替代梯度传到键和查询神经元的输入突触上，梯度范数几步之内涨到 10⁴–10⁵。
@@ -126,8 +127,8 @@ python3 train.py --device cuda --out runs/my_snn \
   - **为什么偏离纯 LIF**：膜电位是每个神经元一个数，它能记住"最近大致发生了什么"，但很难把几十、几百个 token 之前的某个具体的词
     原样找回来（5.5、5.6 节，5.30 节的诊断）；突触可塑性是神经形态硬件里常见的机制，这里用它做一个联想记忆。
   - **硬件代价**：键、查询、值的突触和 W_o 是稠密乘加（和 W_in 同类）；写入和读出是加法（每个发放的键或查询神经元 dv 次）；
-    每步 S 整体衰减一次（每个突触一次乘法）；状态多出 h·m·dv 个数（每层），固定大小。`hw_cost.py`、`fpga_est.py`、`scaling.py` 都已计入，
-    `quant_sim.py` 还不支持。
+    每步 S 整体衰减一次（每个突触一次乘法）；状态多出 h·m·dv 个数（每层），固定大小。`hw_cost.py`、`fpga_est.py`、`scaling.py`、
+    `quant_sim.py`（5.44 节起）都已计入。训练时按 `--mem_chunk` 个位置一块并行计算（默认 128，只影响速度）。
   - `--mem_src spikes`（5.46 节，试验中）：第 l > 0 层前面的可塑突触，键、查询、值的突触读第 l − 1 层神经元群的脉冲，而不是总线。
     只对发放了的神经元加上它们那一行突触，稠密乘加变成加法；代价是这些突触从 d_model 行变成 d_hidden 行。第 0 层的仍读总线。
 - `--in_rank r`（5.46 节，试验中）：各层神经元群通过秩 r 的 W_in 读总线（先乘 r × d_model，再乘 d_hidden × r），
@@ -137,12 +138,13 @@ python3 train.py --device cuda --out runs/my_snn \
   (1 − ρ)·[V ≥ θ] + ρ·f((V − θ)/θ)，f 是阈值附近从 0 平滑升到 1 的函数（`lif.py` 的 `soft_fn`，它的导数和替代梯度同形），复位也用这个输出。
   ρ = 1 是不发放脉冲的"孪生网络"（输出是实数、梯度是精确的）；`--soft_hold a --soft_end b` 让 ρ 在第 a 步以后线性降到第 b 步的 0，
   之后就是普通的脉冲网络（先软后硬的训练）。只有 GPU 内核（Triton）实现了它，CPU 上 ρ > 0 退回到很慢的参考实现；
-  `test_lif_gpu.py` 也检查 ρ = 0.4、1 时的输出和梯度。ρ > 0 时不是硬件网络，`quant_sim.py`、`hw_export.py` 会直接报错。
+  `test_lif_gpu.py` 也检查 ρ = 0.4、1 时的输出和梯度。ρ > 0 时不是硬件网络：`hw_cost.py` 跳过它，`quant_sim.py`、`hw_export.py` 会直接报错。
 - `--bus_norm true`（5.49 节，试验中）：各层神经元群（W_in 和调节漏电的突触）、可塑突触（键、查询、值的突触）和读出读总线时，
   先把每个 token 的总线除以它在 d_model 个通道上的均方根（像 Transformer 的 pre-norm，没有增益）；总线本身不变。
   每个读者每个 token 多一次平方和与一次开方倒数，`hw_cost.py` 已计入；`quant_sim.py`、`hw_export.py` 还不支持（会直接报错）。
 - `--mem_kind gla`（5.50 节，诊断用）：每一组可塑突触换成 `model_tf.py` 的门控线性注意力（`--mem_heads` 个头），神经元群不变。
-  不是脉冲网络，没有硬件路径；生成时不带状态，每一步重新计算整段。
+  不是脉冲网络，没有硬件路径（`hw_cost.py` 跳过它，`quant_sim.py`、`hw_export.py` 会报错）；状态（每个头的矩阵 S 和短卷积的最后 3 个输入）
+  和可塑突触一样在两次调用之间带着走，所以逐段的评测和生成都照常。
 
 **已删除的选项**：试过、没有带来改善的结构选项已从代码里删掉，以免每次改动都要照顾它们：同层连接 `--rec_rank`（5.2 节）、
 带延迟的突触 `--delay_k`（5.9 节）、脉冲化总线 `--spike_bus`（5.23 节）、输入电流按 (1 − β) 缩放 `--leak_gate`（5.26 节）；
@@ -181,6 +183,8 @@ python3 train.py --device cuda --out runs/my_snn \
   `evaluate.py --wbits 4` 和 `eval_lm.py --wbits 4` 可以把任何检查点按 4 位取整后评估（`--wbits 0` 不取整）。
   `--wbits8 '^head\.,^embed\.'`：名字和其中某个正则表达式匹配的矩阵改用 8 位（混合精度；用 `experiments/wbits_sens.py` 找最敏感的几类）。
   `hw_cost.py` 按训练时的位数（含每组 16 位的系数）算权重的存储量，`fpga_est.py` 用它判断能否整个放在片上。
+- `--threads n`：CPU 上的线程数（默认 4）；`--sample_every n`：每隔几次评估生成一次样例（0 = 每次）；
+  `--log_file`：训练日志的文件名（默认 `log.jsonl`；`slurm/train.sbatch` 先写到不受 git 管的文件，再复制过来）。
 - `--accum n`：把每个批次分成 n 份依次计算、梯度相加（显存约降为 1/n，结果和不分时相同，只是慢一些）。不能和 `--carry_state` 同用。
 
 **数据**：`--data 目录 --tokenizer 文件`（见上面的表）。Transformer 另有 `--rope`（旋转位置编码），最长长度取 1024 和 `--seq` 中较大的一个。

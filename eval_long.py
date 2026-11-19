@@ -91,7 +91,8 @@ def main():
         use = use[:a.max_books]
     snn = isinstance(model, SpikingLM)
     if not snn and not a.window:
-        assert model.cfg.rope or a.length <= model.cfg.max_len, "learned positions end at max_len: use --window"
+        assert (model.cfg.rope or getattr(model.cfg, "attn", "softmax") == "linear"
+                or a.length <= model.cfg.max_len), "learned positions end at max_len: use --window"
     tot = torch.zeros(a.length)
     for i in range(0, len(use), a.batch):
         x = torch.from_numpy(np.stack([arr[s:s + a.length + 1] for s in use[i:i + a.batch]]).astype(np.int64))

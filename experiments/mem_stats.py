@@ -4,7 +4,7 @@ how strongly the layer's memory feeds the bus (the size of W_o times the read-ou
 own output synapses W_out). Runs on the CPU from the repository root:
   python3 experiments/mem_stats.py runs/g17_mem138 runs/g17_kdmem138 ...     (moving-average weights when present)
 """
-import json, math, os, sys
+import json, os, sys
 import torch
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from sample import load

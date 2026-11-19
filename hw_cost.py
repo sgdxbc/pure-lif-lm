@@ -34,7 +34,7 @@ STREAMS = 16
 
 
 @torch.no_grad()
-def firing(model, windows, seq=256, dev="cpu", data="data"):
+def firing(model, windows, seq=256, dev=torch.device("cpu"), data="data"):
     """Per layer: firing rate per step ("rate"), share of neurons that fire at least once in a token in one stream
     ("token") and in any of STREAMS streams ("token_any"); with plastic synapses also the key and query neurons'
     firing rates."""
@@ -66,7 +66,6 @@ def firing(model, windows, seq=256, dev="cpu", data="data"):
 
 def snn_cost(model, f):
     c = model.cfg
-    assert getattr(c, "mem_kind", "plastic") == "plastic", "mem_kind gla: not a spiking network"
     V, d, H, L, r, T = c.vocab, c.d_model, c.d_hidden, c.n_layers, c.leak_rank, c.steps_per_token
     ir = getattr(c, "in_rank", 0)
     into = (ir * (d + H) if ir else d * H) + (d * r if r else 0)   # W_in (or its two factors) and the leak synapses'
@@ -173,6 +172,10 @@ def main():
         has_ema = bool(a.ema and args.get("ema", 0))
         model, _ = load(os.path.join(run, "ckpt.pt"), ema=has_ema, device=dev)
         if isinstance(model, SpikingLM):
+            c = model.cfg   # options that make it not a spiking network: skipped, so the other runs still go through
+            if getattr(c, "spike_soft", 0.0) or getattr(c, "mem_kind", "plastic") != "plastic":
+                print(f"{run}: spike_soft / mem_kind gla, not a spiking network: no hardware cost", flush=True)
+                continue
             o = snn_cost(model, firing(model, a.windows, dev=dev, data=args.get("data", "data")))
         else:
             o = tf_cost(model)

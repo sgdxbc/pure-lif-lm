@@ -175,6 +175,14 @@ def plastic(mem, bus, q, cal, rec, j, A, Bb):
     return F.linear(r, qw(f32(mem.w_out.weight), w, g_))
 
 
+def supported(a):
+    """Whether this simulation covers a run, from its args.json (dict) or its model config (as a dict): a spiking
+    network without the options it does not model (slurm/train.sbatch and slurm/hw.sbatch ask this)."""
+    return (a.get("arch", "snn") == "snn" and not (a.get("spike_bus") or a.get("rec_rank") or a.get("delay_k"))
+            and not a.get("in_rank", 0) and a.get("mem_src", "bus") == "bus" and not (a.get("spike_soft", 0.0) and not a.get("soft_end", 0))
+            and not a.get("bus_norm", False) and a.get("mem_kind", "plastic") == "plastic")
+
+
 @torch.no_grad()
 def run(model, x, q, cal=None, rec=None):
     """Step-by-step forward pass with the rounding in q. rec: dict that collects the calibration maxima."""

@@ -95,8 +95,9 @@ Diagnostic (mem_kind "gla", docs/experiments.md 5.50): in place of each set of p
            attention of model_tf.py (real-valued keys and queries, a decay per head that depends on the input, the
            short convolution, the output's normalisation and gate; mem_heads heads), reading the bus as the plastic
            synapses do and adding its output to it. Initialised as in model_tf.GPT. It shows what the form of the
-           memory costs, with the populations unchanged; it is not a spiking network, carries no state between calls
-           (generate runs the whole text again at each step) and has no hardware path.
+           memory costs, with the populations unchanged; it is not a spiking network and has no hardware path. Its
+           state (the matrix S per head and the convolution's last 3 inputs) is carried between calls like the
+           plastic synapses'.
 Low-precision weights (wbits, docs/experiments.md 5.38): every weight matrix (the 2-D parameters: input rows, W_in, W_out,
            leak synapses, plastic-synapse inputs and outputs, readout) is meant to be stored as symmetric wbits-bit
            integers with one scale per group of wgroup inputs (quantize_weight). The forward pass does not round:
@@ -114,7 +115,7 @@ Removed options (tried, did not help, deleted to keep the code small; the code i
 """
 import math
 import re
-from dataclasses import dataclass, asdict, fields
+from dataclasses import dataclass, fields
 
 import torch
 import torch.nn as nn
@@ -551,9 +552,10 @@ class SpikingLM(nn.Module):
             if i in self.mem_layers:
                 j = self.mem_layers.index(i)
                 src = s if self.cfg.mem_src == "spikes" and i > 0 else None
-                if self.cfg.mem_kind == "gla":   # no state carried (generate runs the whole text again)
-                    assert state is None, "mem_kind gla carries no state between calls"
-                    cur, sk, ms = self.mems[str(i)](self.read_bus(bus)), None, None
+                if self.cfg.mem_kind == "gla":
+                    cur, ms = self.mems[str(i)](self.read_bus(bus), None if state is None else state[-1][j],
+                                                return_state=True)
+                    sk = None
                 else:
                     cur, sk, ms = self.mems[str(i)](self.read_bus(bus), None if state is None else state[-1][j], src)
                 bus = bus + cur
@@ -584,21 +586,7 @@ class SpikingLM(nn.Module):
     @torch.no_grad()
     def generate(self, idx, max_new_tokens, temperature=0.8, top_k=None, eos_id=None, generator=None):
         """Streaming generation: the prompt is run once, then one simulation step per new token.
-        Carried from step to step: every neuron's membrane potential (and the plastic synapses, when used).
-        mem_kind "gla" carries no state: the whole text (its last 1,024 tokens) is run again at each step."""
-        if self.cfg.mem_kind == "gla":
-            out = []
-            for _ in range(max_new_tokens):
-                l = self(idx[:, -1024:])[0][:, -1].float() / max(temperature, 1e-5)
-                if top_k:
-                    v, _ = torch.topk(l, top_k)
-                    l[l < v[:, [-1]]] = -float("inf")
-                nxt = torch.multinomial(F.softmax(l, -1), 1, generator=generator)
-                out.append(nxt)
-                idx = torch.cat([idx, nxt], 1)
-                if eos_id is not None and idx.size(0) == 1 and nxt.item() == eos_id:
-                    break
-            return torch.cat(out, 1)
+        Carried from step to step: every neuron's membrane potential (and the plastic synapses, when used)."""
         logits, _, state, _ = self(idx)
         out = []
         for _ in range(max_new_tokens):

@@ -126,14 +126,25 @@ class LinearAttention(nn.Module):
             dt0 = torch.exp(torch.empty(h).uniform_(math.log(1e-3), math.log(1e-1)))
             self.decay.bias.copy_(dt0 + torch.log(-torch.expm1(-dt0)))   # inverse of softplus
 
-    def forward(self, x):
+    def forward(self, x, state=None, return_state=False):
+        """state: (S (B, h, hd, hd) float32, the last 3 inputs of the convolution (B, 3d, 3)) from the previous call,
+        or None (nothing before). return_state: also return the state after the last position."""
         B, L, D = x.shape
-        qkv = F.silu(self.conv(self.qkv(x).transpose(1, 2))[..., :L]).transpose(1, 2)
+        u = self.qkv(x).transpose(1, 2)                                             # (B, 3d, L): the conv's input
+        if state is None:
+            S0, c = None, self.conv(u)[..., :L]
+        else:
+            S0, prev = state
+            c = F.conv1d(torch.cat([prev.to(u.dtype), u], -1), self.conv.weight.to(u.dtype), groups=3 * D)
+        qkv = F.silu(c).transpose(1, 2)
         q, k, v = qkv.reshape(B, L, 3, self.h, self.hd).permute(2, 0, 3, 1, 4)    # (B, h, L, hd) each
         log_a = -F.softplus(self.decay(x).float()) * self.A_log.exp()           # (B, L, h)
-        o, _ = gla_scan(q * self.hd ** -0.5, k, v, log_a.transpose(1, 2))
+        o, S = gla_scan(q * self.hd ** -0.5, k, v, log_a.transpose(1, 2), S0=S0)
         o = self.onorm(o).transpose(1, 2).reshape(B, L, D) * F.silu(self.gate(x))
-        return self.proj(o)
+        if not return_state:
+            return self.proj(o)
+        last = (F.pad(u, (3, 0)) if state is None else torch.cat([prev.to(u.dtype), u], -1))[..., -3:]
+        return self.proj(o), (S.detach(), last.detach())
 
 
 class Block(nn.Module):

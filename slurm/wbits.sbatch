@@ -3,8 +3,8 @@
 #SBATCH --exclude=xgpj0  # numpy C extensions fail to import on this node (g2_tf105, g3_d10)
 # Validation loss (full validation set, evaluate.py) of each spiking run given, with its weight matrices rounded after
 # training to 8 and to 4 bits (one scale per 128 inputs; model.py quantize_weight; docs/experiments.md 5.38), with the
-# moving-average weights where the run has them. Unlike quant_sim.py it also covers the plastic synapses, the coded
-# input and the two-level readout; it rounds only the weights (8-bit bus and 24-bit potentials cost nothing, 5.20).
+# moving-average weights where the run has them. It rounds only the weights; quant_sim.py also rounds the bus, the
+# potentials and the plastic synapses (5.20, 5.44), but covers fewer options (quant_sim.supported).
 # Writes runs/X/final_eval[_ema]_w8.json and _w4.json. From the repository root:
 #   sbatch -J wbits --gres=gpu:a100-40:1 slurm/wbits.sbatch runs/A runs/B ...
 source slurm/env.sh

@@ -13,8 +13,25 @@
 | `tf_full/` | 和第二、三阶段同样 1.15 亿 token 的 Transformer 对照 | TinyStories | 5.7 |
 | `g1_*` … `g10_*` | GPU 上的第 1–10 批 | TinyStories | 5.11–5.19、5.21、5.23（对照见 `experiments/README.md`） |
 | `g11_*` | 第十一批：长文本 | PG-19 | 5.22 |
-| `g12_*`、`g14_*`、`g15_*`、`g16_*` | 第十二、十四、十五、十六批：在 TinyStories 上快速筛选的改动 | TinyStories | 5.26、5.27、5.29、5.24 |
-| `g13_*`、`g17_*` | 第十三、十七批：通用文本 | FineWeb-Edu | 5.28、5.30、5.24 |
+| `g12_*`、`g14_*`、`g15_*`、`g16_*` | 第十二、十四、十五、十六批：在 TinyStories 上快速筛选的改动 | TinyStories | 5.26、5.27、5.29、5.31 |
+| `g13_*`、`g17_*` | 第十三、十七批：通用文本 | FineWeb-Edu | 5.28、5.30、5.32 |
+| `g18_*` | 第十八批：记忆的大小、学习率、更强的老师 | FineWeb-Edu | 5.33 |
+| `g19_*`、`g20_*` | 第十九、二十批：记忆的容量，放在哪几层 | FineWeb-Edu | 5.35 |
+| `g21_*`、`g22_*`、`g23_*` | 第二十一到二十三批：梯度尖峰、按 (1 − λ) 缩放写入、长训练前的检查 | FineWeb-Edu | 5.34、5.35 |
+| `g24_*` | 第二十四批：wsd 学习率表 | FineWeb-Edu | 5.24 |
+| `g25_*`、`g27_*` | 第二十五、二十七批：词的组合输入和两级读出 | FineWeb-Edu | 5.36 |
+| `g26_*` | 第二十六批：长训练（98 亿 token）和它的分支，以及同样训练的 Transformer | FineWeb-Edu | 5.37 |
+| `g28_*`、`g28x_*` | 第二十八批：按 4 位权重训练 | FineWeb-Edu | 5.38 |
+| `g29_*` | 第二十九批：硬件网络 | FineWeb-Edu | 5.39 |
+| `g30_*` | 第三十批：输入行不做权重衰减 | FineWeb-Edu | 5.40 |
+| `g31_*` | 第三十一批：Transformer 的平均权重 | FineWeb-Edu | 5.41 |
+| `g32_*`、`g34_*` | 第三十二、三十四批：长训练后期换老师（GPT-2 XL、Medium） | FineWeb-Edu | 5.42、5.45 |
+| `g33_*` | 第三十三批：和硬件网络质量相当的 Transformer | FineWeb-Edu | 5.43 |
+| `g35_*` | 第三十五批：少做稠密乘加（`--in_rank`、`--mem_src spikes`） | FineWeb-Edu | 5.46 |
+| `g36_*` | 第三十六批：线性注意力的对照组 | FineWeb-Edu | 5.47 |
+| `g37_*` | 第三十七批：实数输出的孪生网络、先软后硬 | FineWeb-Edu | 5.48 |
+| `g38_*`、`g39_*` | 第三十八、三十九批：总线归一化，以及线性注意力和脉冲网络之间的"梯子" | FineWeb-Edu | 5.49、5.50 |
+| `classes/` | 两级读出和组合输入用的词的分类（`experiments/word_classes.py`） | FineWeb-Edu | 5.36 |
 | `ref_*` | 参考模型（GPT-2、Pythia）的零样本基准 | | 5.24 |
 | `bench_gpu/` | Transformer 在 GPU 上的推理实测（vLLM） | | 5.25 |
 

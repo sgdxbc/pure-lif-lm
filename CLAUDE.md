@@ -1,6 +1,16 @@
 # Project notes for Claude
 
 ## Goal and principle (set by the project owner)
+- Vision (owner, 2026-11-19; README section 0 has it in full): show that deploying on FPGAs / dataflow hardware is a
+  strong competitor to GPUs in some scenario (no unacceptable weakness, a clear highlight), so that someone deploying
+  from scratch seriously considers it, especially when GPUs are scarce. Language models because of their influence.
+  Spiking networks because mainstream networks favour GPUs, and because the LIF neuron offers an ultra-light
+  recurrence + nonlinearity (memory = its own potential, one decay and one addition per step, no recurrent matrix;
+  nonlinearity = a threshold, 0/1 output, so reading it takes only additions). Change the public image of spiking
+  networks (small, ultra-sparse, neuromorphic chips): define their own scaling behaviour and make powerful hardware
+  their home ground. Compute is limited, so establish trends clearly for better-resourced researchers.
+  Judge every candidate by quality and target-hardware cost together, against an equal-quality Transformer on its
+  best hardware; sparsity is a result, not a goal.
 - Stage goals (revised by the owner on 2026-11-15, README section 0):
   1. Quality: match classic small language models (GPT-2 124M-355M, Pythia 160M-410M class) on general text, and be
      basically usable on some tasks.
@@ -59,8 +69,8 @@
   first with experiments/recall_toy.py (synthetic key-value recall) or experiments/lag_toy.py (copy the token k
   positions back), then on TinyStories: the toys show whether a mechanism can work, not whether it helps on text.
   Old diagnostics (neuron_drift.py, leak_stats.py, leak_ablate.py, analyze.py) are not maintained.
-- main is kept equal to the working branch: after pushing exp/reset-recurrence-scale, also `git push origin HEAD:main`
-  (a fast-forward; nobody commits to main directly).
+- Commit and push straight to main (owner, 2026-11-17). exp/reset-recurrence-scale is frozen at d6f5356: do not push
+  to it or delete it.
 
 ## Working conventions
 - Early experiments ran on a 4-core CPU with the C++/OpenMP kernels in lif_kernel.cpp (queue scripts
@@ -115,3 +125,29 @@
   "xlogin1-memoized-panda") a message. `claude remote-control -c` does not work here. If the cluster goes quiet for
   much longer than a wave should take, check the session with get_session (connection_status) and ask the owner
   to restart it.
+
+## Working rules (from the 2026-11-19 self-audit, docs/audits.md)
+- Everything the owner reads is in Chinese, one-line status notes included, in plain words (no run names, EMA, KL or
+  accum unless explained). While the owner is away, message only for a decision or a notable result; otherwise keep
+  the notes in docs/experiments.md and give one plain summary when the owner returns.
+- Results: decide on final numbers, or once a paired difference has been stable over at least three evaluations;
+  mark single evaluations as 初步 and keep them out of bold headlines. There is no FineWeb seed replicate yet, so treat
+  differences under about 0.02 as possibly noise. Trend claims only from paired runs with the same teacher and
+  settings. When the owner states a hope or a vision, list the evidence for it and against it separately.
+- Before asking the owner to do anything, check that it can work with a probe that needs nothing from them.
+- Waiting: the Bash tool's run_in_background has a 30-minute default limit, so always pass timeout >= the alarm's
+  minutes + 5 (in ms). A container restart kills every background task: re-arm the alarm. Scheduled wake-ups
+  (send_later) are refused for this session and the cluster session cannot message it: only the alarm wakes it.
+  Keep the expected finish time of every running job; if one is over 30 minutes late with no report, read the
+  cluster session's history (list_events) and ask it.
+- At most one commit per wake cycle (commits are also the cluster's wake-up signal). Before a wave, give each run a
+  dry run that includes one evaluation on its card type, and keep a next job queued behind every slot.
+
+## Periodic self-audits (owner, 2026-11-19)
+- After about every 24 hours of work or every 3 waves, whichever comes first, start three fresh subagents in
+  parallel: (1) code and repository (recent diffs for bugs; docs, indexes and scripts against the code), (2) research
+  (conclusions against the evidence and against the vision in README section 0; confounds, overclaims, where GPU
+  time goes, what is neglected), (3) process (the session transcript under /root/.claude/projects/: communication,
+  delays, mistakes, the rules above). Brief them with the files to read, not with your own conclusions.
+- Check what they report before acting on it, record the findings and what was done in docs/audits.md, and give
+  the owner a Chinese summary that separates what was fixed from what needs the owner's decision.

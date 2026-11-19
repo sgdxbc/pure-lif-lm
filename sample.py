@@ -3,7 +3,7 @@
   python3 sample.py --ckpt runs/main/ckpt.pt --prompt "Once upon a time" --n 200
   python3 sample.py --ckpt runs/main/ckpt.pt -i        # interactive
 """
-import argparse, os, time
+import argparse, json, os, time
 import torch
 from tokenizers import Tokenizer
 from model import Config, SpikingLM, round_weights_
@@ -56,10 +56,13 @@ def main():
     p.add_argument("-i", "--interactive", action="store_true")
     p.add_argument("--ema", action="store_true", help="use the moving-average weights (train.py --ema)")
     p.add_argument("--device", default="cpu")
+    p.add_argument("--tokenizer", default="", help="tokenizer file; default: the run's (args.json next to the checkpoint)")
     a = p.parse_args()
     torch.set_num_threads(4)
     model, step = load(a.ckpt, ema=a.ema, device=a.device)
-    tok = Tokenizer.from_file(os.path.join(HERE, "data", "tok4096.json"))
+    args_path = os.path.join(os.path.dirname(os.path.abspath(a.ckpt)), "args.json")   # the run's data and tokenizer
+    ra = json.load(open(args_path)) if os.path.exists(args_path) else {}
+    tok = Tokenizer.from_file(a.tokenizer or os.path.join(HERE, ra.get("data", "data"), ra.get("tokenizer", "tok4096.json")))
     print(f"[loaded step {step}, {model.num_params()/1e6:.1f}M params, {model.num_neurons():,} LIF neurons]")
     if a.interactive:
         while True:

@@ -149,7 +149,7 @@ def export(model, cal, out, v_bits=24, s_bits=20, a_bits=12):
         if li in mem_layers:
             j = mem_layers.index(li)
             mem = model.mems[str(li)]
-            h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
+            h, dv = c.mem_heads, c.mem_dv
             pre = f"m{li}"
             sa, ga = act_scale(cal["mem_bus"][j], d)
             ainv(pre + "_ain", sa * two)                                   # bus (fixed point) -> int8
