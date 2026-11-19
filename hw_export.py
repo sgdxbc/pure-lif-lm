@@ -92,6 +92,8 @@ def export(model, cal, out, v_bits=24, s_bits=20, a_bits=12):
     assert c.steps_per_token == 1, "one step per token"
     assert not getattr(c, "bus_norm", False), "bus_norm: not implemented here"
     assert getattr(c, "mem_kind", "plastic") == "plastic", "mem_kind gla: not a spiking network"
+    assert (getattr(c, "mem_kq_levels", 1) <= 1 and getattr(c, "mem_delays", 0) <= 1
+            and not getattr(c, "mem_gate", "")), "mem_kq_levels / mem_delays / mem_gate: not implemented here"
     os.makedirs(out, exist_ok=True)
     W = Writer(out)
     pats = [re.compile(x) for x in c.wbits8.split(",") if x]

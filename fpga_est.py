@@ -15,7 +15,10 @@ Devices (--device; the figures below can each be changed by an option):
         each two INT8 multiply-accumulates per cycle (two weights packed against one shared input), at 300 MHz (the
         Vitis platforms' default kernel clock): 5.4 TMAC/s peak; 150 W total card load (thermal design power 115 W).
   --cards N: N boards as one pipeline (layers split between them, only d_model values per token and stream pass from
-  one to the next): on-chip memory, compute, bandwidth and power all N times one board's.
+  one to the next): on-chip memory, compute, bandwidth and power all N times one board's. With fewer streams than
+  boards the pipeline is not full: B < N streams keep only B boards busy at a time, so compute and bandwidth are
+  min(B, N)/N of the N boards' (one stream on two boards is as fast as on one, at twice the power; docs 5.43 made this
+  correction by hand, and the estimates of 5.51-5.54 lacked it until the second self-audit, docs/audits.md).
 Assumptions (all can be changed by options):
   - the additions driven by spikes (W_out) are counted on the same units as the multiply-accumulates, although they
     need no multiplier;
@@ -57,6 +60,7 @@ def estimate(hw, args, bits, dev):
     budget = n * 0.9 * dev["onchip_mb"] * 1e6
     rows = []
     for B in STREAMS:
+        busy = min(B, n) / n                    # share of the pipeline's boards at work (module docstring)
         state = B * hw["state_bytes"]
         if weights - table + state <= budget:
             read, where = (B * own, "weights on chip, word tables in HBM") if table else (0.0, "weights on chip")
@@ -71,7 +75,7 @@ def estimate(hw, args, bits, dev):
             if state > budget:
                 read += 2 * state
                 where += ", potentials in HBM"
-        t = max(read / bw, B * ops / rate)
+        t = max(read / (bw * busy), B * ops / (rate * busy))
         rows.append({"streams": B, "where": where, "bytes_per_step": read, "ops_per_step": B * ops,
                      "bound": "memory" if read / bw >= B * ops / rate else "compute",
                      "tok_s": B / t, "ms_per_token": t * 1000, "mJ_per_token": n * dev["watts"] * t / B * 1000})
@@ -161,17 +165,21 @@ def estimate_tf(t, dev):
     budget = n * 0.9 * dev["onchip_mb"] * 1e6
     rows = []
     for B in STREAMS:
+        busy = min(B, n) / n                    # share of the pipeline's boards at work (module docstring)
         state, kv = B * t["state_bytes"], B * t["kv_bytes"]
         own = B * t["per_stream_bytes"]
         if t["weight_bytes_onchip"] + state + kv <= budget:
             read, where = own, "weights on chip, word tables in HBM"
         else:
-            read = t["dense_bytes"] + sum((1 - (1 - r) ** B) * n_in * rb for r, n_in, rb in t["sparse_layers"]) + own
+            # share of rows read in any of B streams; with relay_levels > 1 the rate is spikes per channel and may
+            # exceed 1, while a row is read at most once per step: the share of channels with spikes is at most min(r, 1)
+            read = (t["dense_bytes"] + sum((1 - (1 - min(r, 1.0)) ** B) * n_in * rb for r, n_in, rb in t["sparse_layers"])
+                    + own)
             where = "weights in HBM"
             if state + kv > budget:
                 read += 2 * state + kv
                 where += ", state in HBM"
-        tm = max(read / bw, B * ops / rate)
+        tm = max(read / (bw * busy), B * ops / (rate * busy))
         rows.append({"streams": B, "where": where, "bytes_per_step": read, "ops_per_step": B * ops,
                      "bound": "memory" if read / bw >= B * ops / rate else "compute",
                      "tok_s": B / tm, "ms_per_token": tm * 1000, "mJ_per_token": n * dev["watts"] * tm / B * 1000})

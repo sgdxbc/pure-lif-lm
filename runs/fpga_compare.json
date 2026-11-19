@@ -69,9 +69,9 @@
       "bytes_per_step": 148200.0,
       "ops_per_step": 59794948.863220215,
       "bound": "compute",
-      "tok_s": 108659.3453715029,
-      "ms_per_token": 0.009203074034552953,
-      "mJ_per_token": 2.760922210365886
+      "tok_s": 54329.67268575145,
+      "ms_per_token": 0.018406148069105906,
+      "mJ_per_token": 5.521844420731772
      },
      {
       "streams": 4,
@@ -234,9 +234,9 @@
       "bytes_per_step": 128.0,
       "ops_per_step": 20742144.0,
       "bound": "compute",
-      "tok_s": 313240.5213270142,
-      "ms_per_token": 0.0031924349881796692,
-      "mJ_per_token": 0.9577304964539007
+      "tok_s": 156620.2606635071,
+      "ms_per_token": 0.0063848699763593385,
+      "mJ_per_token": 1.9154609929078015
      },
      {
       "streams": 4,
@@ -399,9 +399,9 @@
       "bytes_per_step": 24192.0,
       "ops_per_step": 10067200.0,
       "bound": "compute",
-      "tok_s": 645390.9726637,
-      "ms_per_token": 0.0015494483845547675,
-      "mJ_per_token": 0.4648345153664303
+      "tok_s": 322695.48633185,
+      "ms_per_token": 0.003098896769109535,
+      "mJ_per_token": 0.9296690307328606
      },
      {
       "streams": 4,
@@ -564,9 +564,9 @@
       "bytes_per_step": 128.0,
       "ops_per_step": 18309120.0,
       "bound": "compute",
-      "tok_s": 354865.7718120805,
-      "ms_per_token": 0.002817966903073286,
-      "mJ_per_token": 0.8453900709219858
+      "tok_s": 177432.88590604026,
+      "ms_per_token": 0.005635933806146572,
+      "mJ_per_token": 1.6907801418439716
      },
      {
       "streams": 4,
@@ -729,9 +729,9 @@
       "bytes_per_step": 24192.0,
       "ops_per_step": 7634176.0,
       "bound": "compute",
-      "tok_s": 851078.0993259784,
-      "ms_per_token": 0.0011749802994483844,
-      "mJ_per_token": 0.35249408983451536
+      "tok_s": 425539.0496629892,
+      "ms_per_token": 0.002349960598896769,
+      "mJ_per_token": 0.7049881796690307
      },
      {
       "streams": 4,
@@ -894,9 +894,9 @@
       "bytes_per_step": 192.0,
       "ops_per_step": 34652160.0,
       "bound": "compute",
-      "tok_s": 187500.0,
-      "ms_per_token": 0.005333333333333334,
-      "mJ_per_token": 1.6
+      "tok_s": 93750.0,
+      "ms_per_token": 0.010666666666666668,
+      "mJ_per_token": 3.2
      },
      {
       "streams": 4,
@@ -1059,9 +1059,9 @@
       "bytes_per_step": 36288.0,
       "ops_per_step": 18639744.0,
       "bound": "compute",
-      "tok_s": 348571.3108506211,
-      "ms_per_token": 0.002868853427895981,
-      "mJ_per_token": 0.8606560283687944
+      "tok_s": 174285.65542531054,
+      "ms_per_token": 0.005737706855791962,
+      "mJ_per_token": 1.7213120567375888
      },
      {
       "streams": 4,
@@ -1224,9 +1224,9 @@
       "bytes_per_step": 192.0,
       "ops_per_step": 31302144.0,
       "bound": "compute",
-      "tok_s": 207566.61268953336,
-      "ms_per_token": 0.004817730496453901,
-      "mJ_per_token": 1.44531914893617
+      "tok_s": 103783.30634476668,
+      "ms_per_token": 0.009635460992907801,
+      "mJ_per_token": 2.89063829787234
      },
      {
       "streams": 4,
@@ -1389,9 +1389,9 @@
       "bytes_per_step": 36288.0,
       "ops_per_step": 15289728.0,
       "bound": "compute",
-      "tok_s": 424944.119346008,
-      "ms_per_token": 0.0023532505910165485,
-      "mJ_per_token": 0.7059751773049645
+      "tok_s": 212472.059673004,
+      "ms_per_token": 0.004706501182033097,
+      "mJ_per_token": 1.411950354609929
      },
      {
       "streams": 4,
@@ -1554,9 +1554,9 @@
       "bytes_per_step": 384.0,
       "ops_per_step": 132636672.0,
       "bound": "compute",
-      "tok_s": 48985.547526403556,
-      "ms_per_token": 0.02041418439716312,
-      "mJ_per_token": 6.124255319148936
+      "tok_s": 24492.773763201778,
+      "ms_per_token": 0.04082836879432624,
+      "mJ_per_token": 12.248510638297873
      },
      {
       "streams": 4,
@@ -1719,9 +1719,9 @@
       "bytes_per_step": 384.0,
       "ops_per_step": 105326398.46777344,
       "bound": "compute",
-      "tok_s": 61687.09928867418,
-      "ms_per_token": 0.016210844917838457,
-      "mJ_per_token": 4.863253475351536
+      "tok_s": 30843.54964433709,
+      "ms_per_token": 0.03242168983567691,
+      "mJ_per_token": 9.726506950703072
      },
      {
       "streams": 4,
@@ -1884,9 +1884,9 @@
       "bytes_per_step": 72576.0,
       "ops_per_step": 73301566.46777344,
       "bound": "compute",
-      "tok_s": 88637.66919437509,
-      "ms_per_token": 0.01128188510696375,
-      "mJ_per_token": 3.3845655320891255
+      "tok_s": 44318.834597187546,
+      "ms_per_token": 0.0225637702139275,
+      "mJ_per_token": 6.769131064178251
      },
      {
       "streams": 4,
@@ -2049,9 +2049,9 @@
       "bytes_per_step": 61784448.0,
       "ops_per_step": 142442496.0,
       "bound": "memory",
-      "tok_s": 8934.287152650453,
-      "ms_per_token": 0.11192834782608696,
-      "mJ_per_token": 33.57850434782609
+      "tok_s": 4467.143576325227,
+      "ms_per_token": 0.22385669565217392,
+      "mJ_per_token": 67.15700869565218
      },
      {
       "streams": 4,

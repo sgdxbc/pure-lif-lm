@@ -44,8 +44,9 @@
 - Hardware targets (agreed 2026-11-15, README section 0): FPGAs and dataflow accelerators; neuromorphic chips are
   not targeted for now (real-valued bus, far more synapses per neuron than they are built for). Long-term aim:
   parity with a Transformer of the same parameter count; claimable sooner: per-token cost with many concurrent
-  streams and long text, once quality on long text is shown. Report the hardware cost (hw_cost.py, docs/experiments.md 5.20)
-  with every wave.
+  streams and long text, once quality on long text is shown. Report the hardware cost (hw_cost.py for spiking
+  networks, docs/experiments.md 5.20; experiments/fpga_compare.py for model_tf.py networks, 5.51) with every wave, and
+  compare networks on the same FPGA at equal quality (a loss against FPGA cost plot), not one network against itself.
 - The owner has left it to the cloud session to decide how to proceed (2026-11-15): plan and launch waves without
   asking first, and report results and decisions afterwards. Confirmed again for the new stage goals: keep going on
   your own until they are reached, exploring any improvement freely. The spiking network may have more parameters
@@ -64,7 +65,8 @@
 - Python modules stay at the repo root (the slurm job scripts call them by path).
 - Keep the code small: an option that was tried and did not help is deleted rather than kept (its results stay in
   docs/experiments.md; the code stays in git history). Removed so far (2026-11-15): rec_rank, delay_k, spike_bus,
-  leak_gate (last in commit 490e9e6); 2026-11-16: mem_rule "delta" (commit c138343), mem_clock (commit c0868f9), mem_count_norm (commit bf7fed7).
+  leak_gate (last in commit 490e9e6); 2026-11-16: mem_rule "delta" (commit c138343), mem_clock (commit c0868f9), mem_count_norm (commit bf7fed7);
+  2026-11-19: in_rank, mem_src "spikes", spike_soft with soft_hold/soft_end (commit 5fcacfd).
   model.Config.from_dict still loads checkpoints that saved them switched off. Check a new memory mechanism on the CPU
   first with experiments/recall_toy.py (synthetic key-value recall) or experiments/lag_toy.py (copy the token k
   positions back), then on TinyStories: the toys show whether a mechanism can work, not whether it helps on text.
@@ -131,17 +133,24 @@
   accum unless explained). While the owner is away, message only for a decision or a notable result; otherwise keep
   the notes in docs/experiments.md and give one plain summary when the owner returns.
 - Results: decide on final numbers, or once a paired difference has been stable over at least three evaluations;
-  mark single evaluations as 初步 and keep them out of bold headlines. There is no FineWeb seed replicate yet, so treat
-  differences under about 0.02 as possibly noise. Trend claims only from paired runs with the same teacher and
-  settings. When the owner states a hope or a vision, list the evidence for it and against it separately.
+  mark single evaluations as 初步 and keep them out of bold headlines. Seed noise rests on one pair of runs
+  (g35_base, _s1) until the three seeds of g40_laspk (wave 44) finish, so treat differences under about 0.02 as
+  possibly noise. Trend claims only from paired runs with the same teacher and settings; compare variants only on the
+  same base network. When the owner states a hope or a vision, list the evidence for it and against it separately.
 - Before asking the owner to do anything, check that it can work with a probe that needs nothing from them.
 - Waiting: the Bash tool's run_in_background has a 30-minute default limit, so always pass timeout >= the alarm's
   minutes + 5 (in ms). A container restart kills every background task: re-arm the alarm. Scheduled wake-ups
   (send_later) are refused for this session and the cluster session cannot message it: only the alarm wakes it.
   Keep the expected finish time of every running job; if one is over 30 minutes late with no report, read the
-  cluster session's history (list_events) and ask it.
-- At most one commit per wake cycle (commits are also the cluster's wake-up signal). Before a wave, give each run a
-  dry run that includes one evaluation on its card type, and keep a next job queued behind every slot.
+  cluster session's history (list_events) and ask it. The tool stops background commands after 2 hours whatever the
+  timeout, so keep alarms at 115 minutes or less.
+- At most one commit per wake cycle (commits are also the cluster's wake-up signal); check every number before
+  committing, and commit judgement rules before (never together with) the results they judge. Before a wave, train
+  every new combination for a few hundred steps on a small CPU network (gradients, spikes, loss), check the launch
+  script's flags against the base run's args.json, give each run a dry run that includes one evaluation on its card
+  type (163M spiking networks: accum 2 on 80-96 GB cards, 4 on 40-47 GB; accum 1 ran out of memory), and keep a next
+  job queued behind every slot.
+- Before ending a turn, read the owner-facing text once for English sentences and run names.
 
 ## Periodic self-audits (owner, 2026-11-19)
 - After about every 24 hours of work or every 3 waves, whichever comes first, start three fresh subagents in

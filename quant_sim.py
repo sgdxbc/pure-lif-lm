@@ -181,7 +181,8 @@ def supported(a):
     from model import REMOVED   # options removed from the code: such runs no longer load
     removed_on = any(k in a and off is not None and a[k] != off for k, off in REMOVED.items())
     return (a.get("arch", "snn") == "snn" and not removed_on
-            and not a.get("bus_norm", False) and a.get("mem_kind", "plastic") == "plastic")
+            and not a.get("bus_norm", False) and a.get("mem_kind", "plastic") == "plastic"
+            and a.get("mem_kq_levels", 1) <= 1 and a.get("mem_delays", 0) <= 1 and not a.get("mem_gate", ""))
 
 
 @torch.no_grad()
@@ -191,6 +192,7 @@ def run(model, x, q, cal=None, rec=None):
     c = model.cfg
     assert not getattr(c, "bus_norm", False), "bus_norm: not implemented here"
     assert getattr(c, "mem_kind", "plastic") == "plastic", "mem_kind gla: not a spiking network"
+    assert supported(vars(c)), "options not modelled here (mem_kq_levels, mem_delays, mem_gate, ...)"
     T, w, g_ = c.steps_per_token, q.get("w", 0), q.get("group", 0)
     A, Vb, Bb, ag = q.get("a", 0), q.get("v", 0), q.get("b", 0), q.get("ag", 0)
     f32 = lambda t: t.float()

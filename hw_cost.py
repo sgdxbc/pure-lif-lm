@@ -169,8 +169,17 @@ def main():
             if getattr(c, "mem_kind", "plastic") != "plastic":
                 print(f"{run}: mem_kind gla, not a spiking network: no hardware cost", flush=True)
                 continue
+            if (getattr(c, "mem_kq_levels", 1) > 1 or getattr(c, "mem_delays", 0) > 1 or getattr(c, "mem_gate", "")):
+                print(f"{run}: mem_kq_levels / mem_delays / mem_gate: not costed here yet", flush=True)
+                continue
             o = snn_cost(model, firing(model, a.windows, dev=dev, data=args.get("data", "data")))
         else:
+            c = model.cfg   # tf_cost covers the plain Transformer only; the others: fpga_est.tf_hw (experiments/fpga_compare.py)
+            if (getattr(c, "attn", "softmax") != "softmax" or getattr(c, "mlp", "gelu") != "gelu"
+                    or getattr(c, "relay", "none") != "none" or getattr(c, "wq", "none") != "none"):
+                print(f"{run}: linear attention, 0/1 units, relays or ternary weights: use experiments/fpga_compare.py",
+                      flush=True)
+                continue
             o = tf_cost(model)
         o["ema"] = has_ema
         json.dump(o, open(os.path.join(run, "hw_cost.json"), "w"), indent=1)

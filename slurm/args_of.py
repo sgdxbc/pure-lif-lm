@@ -6,15 +6,17 @@ on the GPU with exactly the same settings:
 Leaves out where and how the run executed (out, device, threads, resume); flags given later on the command line
 win over these, since argparse keeps the last value.
 """
-import json, os, re, sys
+import ast, json, os, re, sys
 
 SKIP = {"out", "device", "threads", "resume"}
-# options removed from model.py (its REMOVED; this script must not import torch): left out when off
-REMOVED_OFF = {"rec_rank": 0, "rec_init": None, "delay_k": 0, "delay_rank": None, "leak_gate": False,
-               "spike_bus": False, "bus_tau_min": None, "bus_tau_max": None, "bus_theta": None}
+_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# options removed from model.py (its REMOVED, read from the source: this script must not import torch) and from
+# train.py (spike_soft's schedule, removed with it in 5fcacfd): left out when off
+_m = re.search(r"^REMOVED = (\{.*?\})\n", open(os.path.join(_root, "model.py")).read(), re.S | re.M)
+REMOVED_OFF = dict(ast.literal_eval(_m.group(1)), soft_hold=0, soft_end=0)
 # train.py's on/off switches (action="store_true") take no value: given when on, left out when off. Read from
 # train.py's source, so a new switch (e.g. --rope) is not missed
-_src = open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "train.py")).read()
+_src = open(os.path.join(_root, "train.py")).read()
 STORE_TRUE = set(re.findall(r'add_argument\("--(\w+)", action="store_true"', _src))
 
 a = json.load(open(os.path.join(sys.argv[1], "args.json")))
@@ -23,7 +25,7 @@ for k, v in a.items():
     if k in SKIP or v is None or v == "":
         continue
     if k in REMOVED_OFF:
-        assert REMOVED_OFF[k] is None or v == REMOVED_OFF[k], f"{k}={v}: removed from the code (commit 490e9e6 has it)"
+        assert REMOVED_OFF[k] is None or v == REMOVED_OFF[k], f"{k}={v}: removed from the code (see model.Config.from_dict for the commit that has it)"
         continue
     if k in STORE_TRUE:
         if v:

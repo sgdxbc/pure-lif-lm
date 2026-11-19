@@ -29,7 +29,7 @@ case "$only" in ""|all|spkkq|fixdecay|h16|noconv|nogate) ;; *) echo "NAME is all
 for s in "all h100-47" "spkkq h100-47" "fixdecay a100-80" "h16 a100-80" "noconv h100-96" "nogate h100-96"; do
   set -- $s; name=$1; gpu=${GPU:-$2}
   [ -n "$only" ] && [ "$only" != "$name" ] && continue
-  case $gpu in h100-96|h200-141) acc=1 ;; a100-80) acc=2 ;; *) acc=4 ;; esac
+  case $gpu in h200-141) acc=1 ;; h100-96|a100-80) acc=2 ;; *) acc=4 ;; esac   # accum 1 ran out of memory on h100-96
   acc=${ACCUM:-$acc}
   case $name in
     all) X="--mem_heads 12 --mem_gla_ablate fixdecay,noconv,nogate,spkkq" ;;

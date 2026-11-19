@@ -561,7 +561,7 @@ def main():
                    "elapsed_min": (time.time() - t0) / 60}
             msg = f"== eval step {step} val_loss {vl:.4f}"
             if ema is not None:
-                ema.swap(model); rec["val_loss_ema"] = evaluate(model, val, a)[0]
+                ema.swap(model); rec["val_loss_ema"], rec["val_rates_ema"] = evaluate(model, val, a)   # rates: fpga_compare
                 if a.wbits:   # the same weights unrounded, to see what the rounding costs
                     rec["val_loss_ema_full"] = evaluate(model, val, a, rounded=False)[0]
                 ema.swap(model)

@@ -43,8 +43,8 @@ def rates_of(run):
     p = os.path.join(HERE, "runs", run, "log.jsonl")
     if not os.path.exists(p):
         return None
-    ev = [json.loads(x) for x in open(p) if '"val_rates"' in x]
-    return ev[-1]["val_rates"] if ev else None
+    ev = [json.loads(x) for x in open(p) if '"val_rates"' in x]   # the averaged weights' where logged (since
+    return ev[-1].get("val_rates_ema", ev[-1]["val_rates"]) if ev else None   # 2026-11-20), as the loss is
 
 
 def last_eval(run):

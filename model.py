@@ -87,6 +87,21 @@ Diagnostic (mem_kind "gla", docs/experiments.md 5.50): in place of each set of p
            plastic synapses'.
            mem_gla_ablate (docs/experiments.md 5.53): a comma-separated subset of fixdecay, noconv, nogate, spkkq,
            each removing one of its features (model_tf.LinearAttention).
+Optional additions to the plastic synapses (docs/experiments.md 5.55: the features of gated linear attention that 5.53
+           found to matter, in a spiking form; all off by default):
+           mem_kq_levels K > 1: each key and each query is K LIF neurons that share its input current and time constant,
+           with thresholds initialised at theta, 2 theta, ..., K theta (each learned on its own); the key (query) is
+           their number of spikes, 0..K, like a neuron that may fire up to K spikes in a token. Writing and reading
+           stay additions (a key of 3 adds the value 3 times). 0/1 keys and queries cost 0.076 in 5.53.
+           mem_delays n > 1: the key and query neurons' input currents and the value channels each reach the plastic
+           synapses through n synapses with delays of 0..n-1 tokens and a learned weight per channel and delay
+           (a causal filter; gated linear attention's short convolution, worth 0.048 in 5.53). Parametrised as the
+           undelayed synapse (weight 1 at delay 0) plus learned changes that start at 0 and decay towards 0, so the
+           network starts as without them. The last n-1 currents are part of the state.
+           mem_gate "channel": the normalised read is multiplied per value channel by silu(W_g bus) before W_o
+           (gated linear attention's output gate, worth 0.072 in 5.53; a d x (heads dv) matrix of multiply-adds and
+           one multiplication per channel: a deviation, like the read's normalisation); "head": one such gate per
+           group (a d x heads matrix), the cheap form.
 Low-precision weights (wbits, docs/experiments.md 5.38): every weight matrix (the 2-D parameters: input rows, W_in, W_out,
            leak synapses, plastic-synapse inputs and outputs, readout) is meant to be stored as symmetric wbits-bit
            integers with one scale per group of wgroup inputs (quantize_weight). The forward pass does not round:
@@ -162,6 +177,9 @@ class Config:
     mem_kind: str = "plastic" # "gla": gated linear attention (model_tf.py) in place of the plastic synapses, a
                               # diagnostic, not a spiking component (module docstring)
     mem_gla_ablate: str = ""  # mem_kind gla: features removed (model_tf.LinearAttention: fixdecay,noconv,nogate,spkkq)
+    mem_kq_levels: int = 1    # >1: each key and query is this many LIF neurons with graded thresholds (module docstring)
+    mem_delays: int = 0       # >1: key, query and value currents through synapses with delays 0..mem_delays-1 tokens
+    mem_gate: str = ""        # "channel" / "head": the read is scaled by a gate from the bus (module docstring)
     bus_norm: bool = False    # every reader of the bus sees it scaled to unit RMS per token (module docstring)
     wbits: int = 0            # >0: the weight matrices are used rounded to this many bits (module docstring)
     wgroup: int = 128         # one scale per this many inputs of a weight matrix (per row if it does not divide)
@@ -333,32 +351,65 @@ class PlasticSynapses(nn.Module):
         self.decay_beta_logit = nn.Parameter(torch.logit(torch.exp(-1.0 / tau)))
         kq_tau = torch.exp(torch.empty(2 * h * m).uniform_(math.log(0.5), math.log(2.0)))   # short: mostly this token
         self.kq_beta_logit = nn.Parameter(torch.logit(torch.exp(-1.0 / kq_tau)))
-        self.kq_log_theta = nn.Parameter(torch.full((2 * h * m,), math.log(cfg.mem_theta)))
+        K = max(1, cfg.mem_kq_levels)   # neurons per key / query, thresholds theta, 2 theta, ... K theta
+        self.kq_log_theta = nn.Parameter(torch.log(cfg.mem_theta * torch.arange(1, K + 1, dtype=torch.float32))
+                                         .repeat(2 * h * m)) if K > 1 else \
+            nn.Parameter(torch.full((2 * h * m,), math.log(cfg.mem_theta)))
+        n = cfg.mem_delays
+        if n > 1:   # changes to the delay synapses' weights (C, 1, n), delay n-1-j at j; the undelayed one is added
+            self.delay_dw = nn.Parameter(torch.zeros(2 * h * m + h * dv, 1, n))
+        assert cfg.mem_gate in ("", "channel", "head"), cfg.mem_gate
+        self.gate = nn.Linear(d, h * dv if cfg.mem_gate == "channel" else h, bias=False) if cfg.mem_gate else None
         with torch.no_grad():
             nn.init.normal_(self.kq_in.weight, std=std_in)
             nn.init.zeros_(self.kq_in.bias)
             nn.init.normal_(self.v_in.weight, std=std_in)
             nn.init.zeros_(self.w_out.weight)
+            if self.gate is not None:
+                nn.init.normal_(self.gate.weight, std=std_in)
 
     def forward(self, bus, state=None):
-        """state: (synapses S (B, h, m, dv), key and query potentials (B, 2hm)) or None. Returns the current into the
-        bus, the key and query spikes (B, L, 2hm) and the new state."""
+        """state: (synapses S (B, h, m, dv), key and query potentials (B, 2hm K), with mem_delays n > 1 the last n-1
+        currents (B, 2hm + h dv, n-1)) or None. Returns the current into the bus, the key and query spikes (B, L, 2hm;
+        with mem_kq_levels K, spike counts 0..K) and the new state."""
         c = self.cfg
         B, L, _ = bus.shape
         h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
-        S0, v0 = (None, None) if state is None else state
-        s, v_last = lif(self.kq_in(bus), torch.sigmoid(self.kq_beta_logit), self.kq_log_theta.exp(), None, v0,
+        K, n = max(1, c.mem_kq_levels), c.mem_delays
+        S0, v0 = (None, None) if state is None else state[:2]
+        I, val = self.kq_in(bus), self.v_in(bus)
+        prev = None
+        if n > 1:   # delay synapses: a causal filter per channel over the last n tokens' currents
+            u = torch.cat([I, val], -1).transpose(1, 2)                                  # (B, C, L)
+            p0 = state[2].to(u.dtype) if state is not None else u.new_zeros(B, u.size(1), n - 1)
+            up = torch.cat([p0, u], -1)
+            w = self.delay_dw.clone()
+            w[..., -1] += 1.0                                                            # the undelayed synapse
+            out = F.conv1d(up, w.to(u.dtype), groups=u.size(1))
+            prev = up[..., -(n - 1):].detach()
+            I, val = out.transpose(1, 2).split([2 * h * m, h * dv], -1)
+        beta = torch.sigmoid(self.kq_beta_logit)
+        if K > 1:   # K neurons per key and query, same current and time constant, graded thresholds
+            I = I.unsqueeze(-1).expand(B, L, 2 * h * m, K).reshape(B, L, 2 * h * m * K)
+            beta = beta.repeat_interleave(K)
+        s, v_last = lif(I.contiguous(), beta, self.kq_log_theta.exp(), None, v0,
                         hard_reset=False, alpha=c.alpha, detach_reset=c.detach_reset, sg=c.sg)
+        if K > 1:
+            s = s.view(B, L, 2 * h * m, K).sum(-1)
         k = s[..., :h * m].reshape(B, L, h, m).transpose(1, 2)
         q = s[..., h * m:].reshape(B, L, h, m).transpose(1, 2)
-        val = self.v_in(bus).view(B, L, h, dv).transpose(1, 2)
+        val = val.reshape(B, L, h, dv).transpose(1, 2)
         if c.mem_write_avg:   # (1 - lambda) = sigmoid(-decay_beta_logit), per group
             val = val * torch.sigmoid(-self.decay_beta_logit).to(val.dtype).view(1, h, 1, 1)
         r, S = plastic_scan(q.to(val.dtype), k.to(val.dtype), val, F.logsigmoid(self.decay_beta_logit), S0, c.mem_chunk)
         r = r.float()
         r = (r * torch.rsqrt(r.pow(2).mean(-1, keepdim=True) + c.mem_eps)).to(val.dtype)
-        r = r.transpose(1, 2).reshape(B, L, h * dv) * self.gain.to(val.dtype)
-        return self.w_out(r), s, (S.detach(), v_last.detach())
+        r = r.transpose(1, 2)                                                            # (B, L, h, dv)
+        if self.gate is not None:   # "channel": (B, L, h, dv); "head": (B, L, h, 1)
+            r = r * F.silu(self.gate(bus)).view(B, L, h, -1).to(r.dtype)
+        r = r.reshape(B, L, h * dv) * self.gain.to(val.dtype)
+        st = (S.detach(), v_last.detach()) + ((prev,) if n > 1 else ())
+        return self.w_out(r), s, st
 
 
 class CodedInput(nn.Module):

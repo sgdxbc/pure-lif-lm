@@ -288,8 +288,8 @@ class Block(nn.Module):
         self.n1 = nn.RMSNorm(c.d_model)
         self.la = LinearAttention(c) if c.attn == "linear" else None
         if self.la is None:
-            self.qkv = nn.Linear(c.d_model, 3 * c.d_model, bias=False)
-            self.proj = nn.Linear(c.d_model, c.d_model, bias=False)
+            self.qkv = QLinear(c.d_model, 3 * c.d_model, bias=False)   # QLinear: ternary with --wq ternary, like the
+            self.proj = QLinear(c.d_model, c.d_model, bias=False)      # other block matrices (fpga_est.tf_hw counts them so)
         self.n2 = nn.RMSNorm(c.d_model)
         self.fc = QLinear(c.d_model, 4 * c.d_model, bias=False)
         self.fc2 = QLinear(4 * c.d_model, c.d_model, bias=False)
@@ -378,8 +378,9 @@ class GPT(nn.Module):
 
     def rates(self, device):
         """Share of 1s of the 0/1 MLP units per block, then with relays their spikes per channel and token (with one
-        spike at most: the share of nonzero outputs) in front of q/k/v, of the output projection and of the MLP, per
-        block (4 x n_layers values); zeros(1) if none."""
+        spike at most: the share of nonzero outputs; with relay_levels > 1 it can exceed 1) in front of q/k/v, of the
+        output projection and of the MLP, per block (n_layers values for the MLP units, then 3 x n_layers for the
+        relays); zeros(1) if none."""
         z = torch.zeros((), device=device)
         r = [b.rate if b.rate is not None else z for b in self.blocks] if self.cfg.mlp != "gelu" else []
         if getattr(self.cfg, "relay", "none") != "none":
