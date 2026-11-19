@@ -19,7 +19,9 @@
 # of wave 43 are distilled while their 77M counterparts were not, so "cost against size" mixes the two:
 #   laspk_s1, laspk_s2   g40_laspk with seeds 1 and 2
 #   kd_laspk77, kd_q4t77, kd_tern77   g40_laspk, g41_q4t and g43_tern77 distilled as the 163M runs are (from
-#                                     g13_tf163, weight 0.9); the learning rate stays the 77M one (1e-3)
+#                                     g13_tf163, weight 0.9); the learning rate stays the 77M one (1e-3). Not in the
+#                                     default list: dropped when the owner put scaling trends aside (2026-11-20);
+#                                     still launchable by name
 # From the repository root:
 #   bash experiments/gpu44.sh [NAME]     every run, or only NAME; GPU=... / ACCUM=n to override;
 #                                        NICE=n to let the next parts of runs already in flight go first
@@ -45,6 +47,7 @@ for s in "laspk_s1 a100-40" "laspk_s2 a100-40" "kd_laspk77 a100-40" "kd_q4t77 a1
          "laspk10 a100-40" "lalif10 a100-40" "gate h100-47" "gateh h100-47" "all3 h100-96" "kq4 a100-80" "dl4 h100-47"; do
   set -- $s; name=$1; gpu=${GPU:-$2}
   [ -n "$only" ] && [ "$only" != "$name" ] && continue
+  [ -z "$only" ] && case $name in kd_*) continue ;; esac   # dropped from the default list (header)
   case $gpu in h100-96|h200-141|a100-80) acc=2 ;; *) acc=4 ;; esac   # g38_norm 24.8 GB at accum 4; accum 1 ran
                                                                       # out of memory on h100-96 (g42_noconv)
   acc=${ACCUM:-$acc}

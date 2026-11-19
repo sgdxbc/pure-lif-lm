@@ -11,6 +11,9 @@
   their home ground. Compute is limited, so establish trends clearly for better-resourced researchers.
   Judge every candidate by quality and target-hardware cost together, against an equal-quality Transformer on its
   best hardware; sparsity is a result, not a goal.
+- Priorities (owner, 2026-11-20, after the second self-audit): scaling laws are not urgent; first find a competitive
+  structure. Stay with spiking networks and keep looking for structures where the spikes themselves give an
+  advantage (on the same FPGA at equal quality), rather than settling for "a small fixed-state network on an FPGA".
 - Stage goals (revised by the owner on 2026-11-15, README section 0):
   1. Quality: match classic small language models (GPT-2 124M-355M, Pythia 160M-410M class) on general text, and be
      basically usable on some tasks.
