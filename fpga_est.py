@@ -1,5 +1,6 @@
 """Estimated inference cost of a trained spiking network on an FPGA (README section 0, stage goal 3), to set against
-the Transformer measured on a GPU (bench_gpu.py). An estimate from the network's measured firing (hw_cost.py ->
+the Transformer measured on a GPU (bench_gpu.py). tf_hw / estimate_tf give the same estimate for a Transformer or a
+linear-attention network on the same FPGA (experiments/fpga_compare.py; docs/experiments.md 5.51). An estimate from the network's measured firing (hw_cost.py ->
 hw_cost.json) and the device's published figures, with the assumptions below, until a prototype exists.
 From the repository root:
   python3 fpga_est.py runs/X [--bits 8] [--device u55c --cards 2] [--compare runs/bench_gpu/NVIDIA_H100_NVL_gpt2.json]
@@ -33,7 +34,7 @@ Assumptions (all can be changed by options):
   - time per step = the larger of reading time and compute time (the two overlap). Per stream, a token takes one
     step: that is the latency. The membrane potentials make the cost independent of the context length.
 """
-import argparse, json, os
+import argparse, json, math, os
 
 STREAMS = (1, 4, 16, 64, 256)
 DEVICES = {"v80": dict(bw_gbs=820.0, onchip_mb=84.0, dsp=10848, macs_per_dsp=3, clock_mhz=400.0, watts=190.0),
@@ -74,6 +75,75 @@ def estimate(hw, args, bits, dev):
         rows.append({"streams": B, "where": where, "bytes_per_step": read, "ops_per_step": B * ops,
                      "bound": "memory" if read / bw >= B * ops / rate else "compute",
                      "tok_s": B / t, "ms_per_token": t * 1000, "mJ_per_token": n * dev["watts"] * t / B * 1000})
+    return rows
+
+
+def tf_hw(args, rates=None, readout=None, ctx=1024):
+    """The figures hw_cost.py gives for a spiking network, for a Transformer or a linear-attention network
+    (model_tf.py), from its shape alone (args.json). Per token and stream:
+      attn softmax  every weight once, plus attention over the key/value cache of ctx earlier tokens (2 L d ctx
+                    multiply-adds); the cache (8-bit, 2 L d ctx bytes) is the per-stream state and is read every step
+      attn linear   every weight once, plus the decay, write and read of each head's hd x hd state (3 L d hd); the
+                    state (24-bit, like the spiking network's potentials, with the convolution's last 3 inputs) is
+                    fixed in size
+      mlp spike/lif the MLP's second matrix reads 0/1 units: additions of the rows of the units that are 1 (rates:
+                    the share per block, measured), the rest of the network as above; lif adds a 24-bit potential per
+                    unit to the state
+    The input rows (and learned positions) are word tables: one row per token, read from HBM. readout (S, C): a
+    hypothetical two-level readout like the spiking network's (S own words, C classes; its quality cost is not
+    included), else the full readout, read every step."""
+    V, d, L, h = args["vocab"], args["d_model"], args["n_layers"], args.get("n_heads") or 12
+    hd, lin, mlp = d // h, args.get("attn") == "linear", args.get("mlp") or "gelu"
+    att = 5 * d * d + d * h + 12 * d if lin else 4 * d * d          # q, k, v, (gate,) out (+ decay, conv)
+    sparse = mlp != "gelu"
+    rates = list(rates) if rates is not None else [0.0] * L
+    if readout:
+        S, C = readout
+        m = math.ceil((V - S) / C)
+        head_shared, head_own, head_table = d * (S + C), d * m, d * C * m
+    else:
+        head_shared, head_own, head_table = d * V, 0, 0
+    dense_w = L * (att + 4 * d * d + (0 if sparse else 4 * d * d)) + head_shared
+    table = V * d + (0 if lin else args.get("seq", 1024) * d) + head_table
+    state_vals = L * (h * hd * hd + 9 * d) if lin else 0
+    state_vals += L * 4 * d if mlp == "lif" else 0
+    kv = 0 if lin else 2 * L * d * ctx
+    return {"arch": "la" if lin else "tf", "mlp": mlp, "ctx": None if lin else ctx, "readout": readout,
+            "params": dense_w + (L * 4 * d * d if sparse else 0) + table + L * 2 * d + d,
+            "dense_macs": dense_w + head_own + (3 * L * d * hd if lin else 2 * L * d * ctx),
+            "sparse_adds": sum(r * 4 * d * d for r in rates) if sparse else 0.0,
+            "dense_weights": dense_w, "sparse_layers": [(r, 4 * d, d) for r in rates] if sparse else [],
+            "table_weights": table, "per_stream_weights": head_own + d,
+            "state_bytes": 3 * state_vals, "kv_bytes": kv}
+
+
+def estimate_tf(t, bits, dev):
+    """estimate() for tf_hw's figures, with the same assumptions; the key/value cache counts against the on-chip
+    memory like the state, and is read (not written back) from HBM when it does not fit. The share of 0/1 units that
+    are 1 in any of B streams is 1 - (1 - rate)^B (independent streams)."""
+    b = bits / 8
+    weights = (t["params"] - t["table_weights"]) * b
+    ops = t["dense_macs"] + t["sparse_adds"]
+    n = dev["cards"]
+    rate = n * dev["dsp"] * dev["macs_per_dsp"] * dev["clock_mhz"] * 1e6 * dev["eff"]
+    bw = n * dev["bw_gbs"] * 1e9 * dev["eff"]
+    budget = n * 0.9 * dev["onchip_mb"] * 1e6
+    rows = []
+    for B in STREAMS:
+        state, kv = B * t["state_bytes"], B * t["kv_bytes"]
+        own = B * t["per_stream_weights"] * b
+        if weights + state + kv <= budget:
+            read, where = own, "weights on chip, word tables in HBM"
+        else:
+            read = (t["dense_weights"] + sum((1 - (1 - r) ** B) * H * dd for r, H, dd in t["sparse_layers"])) * b + own
+            where = "weights in HBM"
+            if state + kv > budget:
+                read += 2 * state + kv
+                where += ", state in HBM"
+        tm = max(read / bw, B * ops / rate)
+        rows.append({"streams": B, "where": where, "bytes_per_step": read, "ops_per_step": B * ops,
+                     "bound": "memory" if read / bw >= B * ops / rate else "compute",
+                     "tok_s": B / tm, "ms_per_token": tm * 1000, "mJ_per_token": n * dev["watts"] * tm / B * 1000})
     return rows
 
 

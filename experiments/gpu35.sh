@@ -1,6 +1,6 @@
 #!/bin/bash
 # GPU wave 35: less dense arithmetic per token at the same quality (docs/experiments.md 5.46). From the repository root:
-#   bash experiments/gpu35.sh [NAME]     all four short runs, or only NAME (base, r256, mspk, r256mspk);
+#   bash experiments/gpu35.sh [NAME]     all four short runs, or only NAME (base, r256, mspk, r256mspk, base_s1);
 #                                        GPU=... puts them on another card type, ACCUM=n overrides the batch split
 # Against a Transformer of equal quality on a GPU (5.43), the hardware network's FPGA advantage holds only at a few
 # streams: it needs 58.6M dense multiply-adds per token against the Transformer's 18-30M, and at many streams the GPU
@@ -17,6 +17,8 @@
 #   mspk       --mem_src spikes (45.7M dense + the spike-driven additions)
 #   r256mspk   both (29.1M)
 # HW=1: hw_cost.py and the 8- and 4-bit rounding evaluations after training.
+# base_s1 (added 2026-11-19, docs/experiments.md 5.51): base with --seed 1 (other initial weights and batches), the
+# run-to-run noise of this recipe, against which the differences of waves 35-39 are judged.
 set -e
 cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
@@ -31,8 +33,8 @@ KD="--teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1"
 MEM="--mem_heads 8 --mem_write_avg true"
 IO="--out_classes 225 --out_short 8192 --class_file $H8 --in_groups 2 --in_short 2048 --in_class_file $E2"
 only=$1
-case "$only" in ""|base|r256|mspk|r256mspk) ;; *) echo "NAME is base, r256, mspk or r256mspk"; exit 1 ;; esac
-for s in "base h100-96" "r256 h100-47" "mspk a100-40" "r256mspk a100-40"; do
+case "$only" in ""|base|r256|mspk|r256mspk|base_s1) ;; *) echo "NAME is base, r256, mspk, r256mspk or base_s1"; exit 1 ;; esac
+for s in "base h100-96" "r256 h100-47" "mspk a100-40" "r256mspk a100-40" "base_s1 h100-47"; do
   set -- $s; name=$1; gpu=${GPU:-$2}
   [ -n "$only" ] && [ "$only" != "$name" ] && continue
   case $gpu in h100-96|h200-141) acc=1 ;; a100-80) acc=2 ;; *) acc=4 ;; esac
@@ -42,6 +44,7 @@ for s in "base h100-96" "r256 h100-47" "mspk a100-40" "r256mspk a100-40"; do
     r256) X="--in_rank 256" ;;
     mspk) X="--mem_src spikes" ;;
     r256mspk) X="--in_rank 256 --mem_src spikes" ;;
+    base_s1) X="--seed 1" ;;
   esac
   j=$(sbatch --parsable -p gpu -J g35_$name --gres=gpu:$gpu:1 --export=ALL,RELAY=$gpu,HW=1 slurm/train.sbatch \
       runs/g35_$name $DATA $SPREAD $SHORT $N138 $SNN $KD $MEM $IO $X --accum $acc)
