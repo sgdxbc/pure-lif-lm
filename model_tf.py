@@ -18,7 +18,13 @@ s = [h >= theta] (theta learned per unit, positive), x += W2 s; trained with the
 (the fast sigmoid of lif.py, ds/dh = 1 / (theta (1 + alpha |z|)^2), z = (h - theta) / theta, alpha = 4). These units
 have no membrane (no memory, no reset): only the 0/1 output is taken from the spiking network, with everything else
 (normalisation, attention, the rest of the block) kept, so it measures what 0/1 hidden units cost in an otherwise
-ordinary network."""
+ordinary network.
+
+mlp = "lif" (5.50): the MLP's hidden units are the spiking network's LIF neurons, V[t] = beta V[t-1] + h[t],
+s[t] = [V[t] >= theta], reset V <- V (1 - gamma s) (beta, theta, gamma learned per unit; time constants log-uniform in
+0.5-200 tokens, gamma uniform in 0.05-0.999, theta one standard deviation of V at initialisation, as the spiking
+network's populations are initialised). The next rung after "spike": the same 0/1 units with a membrane, i.e. memory
+and reset."""
 import math
 from dataclasses import dataclass
 
@@ -36,7 +42,7 @@ class TFConfig:
     max_len: int = 1024
     rope: bool = False        # rotary position embedding on queries and keys instead of learned absolute positions
     attn: str = "softmax"     # "linear": gated linear attention instead of softmax attention (module docstring)
-    mlp: str = "gelu"         # "spike": 0/1 hidden units with a surrogate gradient (module docstring)
+    mlp: str = "gelu"         # "spike": 0/1 hidden units with a surrogate gradient; "lif": LIF neurons (module docstring)
 
 
 class _Step(torch.autograd.Function):
@@ -143,17 +149,29 @@ class Block(nn.Module):
         self.fc = nn.Linear(c.d_model, 4 * c.d_model, bias=False)
         self.fc2 = nn.Linear(4 * c.d_model, c.d_model, bias=False)
         self.h = c.n_heads
-        assert c.mlp in ("gelu", "spike")
-        self.spike = c.mlp == "spike"
-        if self.spike:   # threshold at one standard deviation of h at initialisation (W1 entries 0.02): ~16% fire
-            self.log_theta = nn.Parameter(torch.full((4 * c.d_model,), math.log(0.02 * math.sqrt(c.d_model))))
+        assert c.mlp in ("gelu", "spike", "lif")
+        self.mlp = c.mlp
+        H, sd = 4 * c.d_model, 0.02 * math.sqrt(c.d_model)   # sd: standard deviation of h at initialisation
+        if c.mlp == "spike":   # threshold at one standard deviation of h: ~16% fire
+            self.log_theta = nn.Parameter(torch.full((H,), math.log(sd)))
+        if c.mlp == "lif":     # as model.LIFPopulation with hard_reset, reset_learn and in_norm "theta"
+            beta = torch.exp(-1.0 / torch.exp(torch.empty(H).uniform_(math.log(0.5), math.log(200.0))))
+            self.beta_logit = nn.Parameter(torch.logit(beta))
+            self.log_theta = nn.Parameter(torch.log(sd / torch.sqrt(1 - beta ** 2)))
+            self.gamma_logit = nn.Parameter(torch.logit(torch.empty(H).uniform_(0.05, 0.999)))
         self.rate = None
 
     def ff(self, x):
         h = self.fc(self.n2(x))
-        if not self.spike:
+        if self.mlp == "gelu":
             return self.fc2(F.gelu(h))
-        s = _Step.apply(h, self.log_theta.exp().float(), 4.0)
+        if self.mlp == "spike":
+            s = _Step.apply(h, self.log_theta.exp().float(), 4.0)
+        else:
+            from lif import lif
+            s, _ = lif(h, torch.sigmoid(self.beta_logit), self.log_theta.exp(), torch.sigmoid(self.gamma_logit), None,
+                       hard_reset=True, alpha=4.0, detach_reset=False, sg="fast_sigmoid")
+            s = s.to(h.dtype)
         self.rate = s.detach().float().mean()
         return self.fc2(s)
 
@@ -200,7 +218,7 @@ class GPT(nn.Module):
         loss = None
         if targets is not None:
             loss = F.cross_entropy(logits.float().view(-1, logits.size(-1)), targets.view(-1))
-        rates = torch.stack([b.rate for b in self.blocks]) if self.cfg.mlp == "spike" else torch.zeros(1, device=idx.device)
+        rates = torch.stack([b.rate for b in self.blocks]) if self.cfg.mlp != "gelu" else torch.zeros(1, device=idx.device)
         return logits, loss, xs if hidden else None, rates
 
     @torch.no_grad()

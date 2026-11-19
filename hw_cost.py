@@ -66,6 +66,7 @@ def firing(model, windows, seq=256, dev="cpu", data="data"):
 
 def snn_cost(model, f):
     c = model.cfg
+    assert getattr(c, "mem_kind", "plastic") == "plastic", "mem_kind gla: not a spiking network"
     V, d, H, L, r, T = c.vocab, c.d_model, c.d_hidden, c.n_layers, c.leak_rank, c.steps_per_token
     ir = getattr(c, "in_rank", 0)
     into = (ir * (d + H) if ir else d * H) + (d * r if r else 0)   # W_in (or its two factors) and the leak synapses'

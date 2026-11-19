@@ -91,6 +91,12 @@ Optional (bus_norm, docs/experiments.md 5.49): every reader of the bus (each pop
            The bus itself is unchanged. A deviation: one division per reader and token (a divisive gain control), but
            the neurons still exchange only spikes. At initialisation the bus has about unit RMS, so this changes
            little at first; it makes what the readers see independent of how large the bus grows during training.
+Diagnostic (mem_kind "gla", docs/experiments.md 5.50): in place of each set of plastic synapses, the gated linear
+           attention of model_tf.py (real-valued keys and queries, a decay per head that depends on the input, the
+           short convolution, the output's normalisation and gate; mem_heads heads), reading the bus as the plastic
+           synapses do and adding its output to it. Initialised as in model_tf.GPT. It shows what the form of the
+           memory costs, with the populations unchanged; it is not a spiking network, carries no state between calls
+           (generate runs the whole text again at each step) and has no hardware path.
 Low-precision weights (wbits, docs/experiments.md 5.38): every weight matrix (the 2-D parameters: input rows, W_in, W_out,
            leak synapses, plastic-synapse inputs and outputs, readout) is meant to be stored as symmetric wbits-bit
            integers with one scale per group of wgroup inputs (quantize_weight). The forward pass does not round:
@@ -162,6 +168,8 @@ class Config:
     mem_eps: float = 1.0      # read-out scaling r / sqrt(mean(r^2) + mem_eps) (see module docstring)
     mem_write_avg: bool = False   # write (1 - lambda) v: S is a running average, not a sum (module docstring)
     mem_src: str = "bus"      # "spikes": key, query and value synapses read the previous population's spikes
+    mem_kind: str = "plastic" # "gla": gated linear attention (model_tf.py) in place of the plastic synapses, a
+                              # diagnostic, not a spiking component (module docstring)
     spike_soft: float = 0.0   # >0: neurons output (1 - rho) * spike + rho * a smooth function (module docstring);
                               # train.py --soft_hold/--soft_end lower it during training
     bus_norm: bool = False    # every reader of the bus sees it scaled to unit RMS per token (module docstring)
@@ -496,7 +504,19 @@ class SpikingLM(nn.Module):
             # mem_src "spikes": in front of population i > 0 they read population i - 1's spikes (in front of the
             # first population, which has none before it, the bus)
             src_dim = lambda i: cfg.d_hidden if cfg.mem_src == "spikes" and i > 0 else 0
-            self.mems = nn.ModuleDict({str(i): PlasticSynapses(cfg, src_dim(i)) for i in self.mem_layers})
+            assert cfg.mem_kind in ("plastic", "gla")
+            if cfg.mem_kind == "gla":
+                assert cfg.mem_src == "bus"
+                from types import SimpleNamespace
+                from model_tf import LinearAttention
+                self.mems = nn.ModuleDict({str(i): LinearAttention(SimpleNamespace(d_model=cfg.d_model,
+                                           n_heads=cfg.mem_heads)) for i in self.mem_layers})
+                for n, p in self.mems.named_parameters():   # as model_tf.GPT initialises them
+                    if p.dim() == 2:
+                        std = 0.02 / math.sqrt(2 * cfg.n_layers) if n.endswith("proj.weight") else 0.02
+                        nn.init.normal_(p, std=std)
+            else:
+                self.mems = nn.ModuleDict({str(i): PlasticSynapses(cfg, src_dim(i)) for i in self.mem_layers})
         if cfg.out_classes > 0:
             self.head = ClassReadout(cfg.vocab, cfg.d_model, cfg.out_classes, cfg.head_init, cfg.out_short)
         else:
@@ -531,10 +551,14 @@ class SpikingLM(nn.Module):
             if i in self.mem_layers:
                 j = self.mem_layers.index(i)
                 src = s if self.cfg.mem_src == "spikes" and i > 0 else None
-                cur, sk, ms = self.mems[str(i)](self.read_bus(bus), None if state is None else state[-1][j], src)
+                if self.cfg.mem_kind == "gla":   # no state carried (generate runs the whole text again)
+                    assert state is None, "mem_kind gla carries no state between calls"
+                    cur, sk, ms = self.mems[str(i)](self.read_bus(bus)), None, None
+                else:
+                    cur, sk, ms = self.mems[str(i)](self.read_bus(bus), None if state is None else state[-1][j], src)
                 bus = bus + cur
                 mem_state.append(ms)
-                if return_spikes:
+                if return_spikes and sk is not None:
                     mem_spikes.append(sk.detach())
             out, s, layer_state = layer(self.read_bus(bus), None if state is None else state[i])
             bus = bus + out
@@ -560,7 +584,21 @@ class SpikingLM(nn.Module):
     @torch.no_grad()
     def generate(self, idx, max_new_tokens, temperature=0.8, top_k=None, eos_id=None, generator=None):
         """Streaming generation: the prompt is run once, then one simulation step per new token.
-        Carried from step to step: every neuron's membrane potential (and the plastic synapses, when used)."""
+        Carried from step to step: every neuron's membrane potential (and the plastic synapses, when used).
+        mem_kind "gla" carries no state: the whole text (its last 1,024 tokens) is run again at each step."""
+        if self.cfg.mem_kind == "gla":
+            out = []
+            for _ in range(max_new_tokens):
+                l = self(idx[:, -1024:])[0][:, -1].float() / max(temperature, 1e-5)
+                if top_k:
+                    v, _ = torch.topk(l, top_k)
+                    l[l < v[:, [-1]]] = -float("inf")
+                nxt = torch.multinomial(F.softmax(l, -1), 1, generator=generator)
+                out.append(nxt)
+                idx = torch.cat([idx, nxt], 1)
+                if eos_id is not None and idx.size(0) == 1 and nxt.item() == eos_id:
+                    break
+            return torch.cat(out, 1)
         logits, _, state, _ = self(idx)
         out = []
         for _ in range(max_new_tokens):

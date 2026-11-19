@@ -111,8 +111,9 @@ def get_args():
     p.add_argument("--rope", action="store_true", help="tf: rotary position embedding instead of learned positions")
     p.add_argument("--attn", default="softmax", choices=["softmax", "linear"],
                    help="tf: linear = gated linear attention, a fixed-size state (model_tf.py; docs 5.47)")
-    p.add_argument("--mlp", default="gelu", choices=["gelu", "spike"],
-                   help="tf: spike = 0/1 hidden units in the MLP, surrogate gradient (model_tf.py; docs 5.49)")
+    p.add_argument("--mlp", default="gelu", choices=["gelu", "spike", "lif"],
+                   help="tf: spike = 0/1 hidden units in the MLP, surrogate gradient (docs 5.49); lif = LIF neurons "
+                        "(docs 5.50) (model_tf.py)")
     p.add_argument("--optim", default="adamw", choices=["adamw", "muon"])
     p.add_argument("--muon_momentum", type=float, default=0.95)
     p.add_argument("--muon_skip", default="", help="with --optim muon: comma-separated name parts of 2-D weights "
