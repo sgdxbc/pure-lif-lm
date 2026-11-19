@@ -1,0 +1,27 @@
+queued the next part of runs/g40_laspk: job 1166490
+xgph11 NVIDIA A100 80GB PCIe | runs/g40_laspk | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --attn linear --mlp spike --accum 4
+params 78.88M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 2500 val_loss 4.4546 (EMA weights 4.3397)
+== eval step 5000 val_loss 4.1599 (EMA weights 4.0253)
+== eval step 7500 val_loss 4.0332 (EMA weights 3.9005)
+== eval step 10000 val_loss 3.9396 (EMA weights 3.8297)
+== eval step 12500 val_loss 3.8608 (EMA weights 3.7754)
+== eval step 15000 val_loss 3.7890 (EMA weights 3.7366)
+params 78.88M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 17500 val_loss 3.7395 (EMA weights 3.7101)
+== eval step 20000 val_loss 3.7135 (EMA weights 3.6935)
+hellaswag        acc 0.2689  acc_norm 0.2762
+lambada_openai   perplexity 2465.2199  acc 0.0885
+piqa             acc 0.5773  acc_norm 0.5675
+arc_easy         acc 0.4440  acc_norm 0.3885
+arc_challenge    acc 0.1860  acc_norm 0.2278
+winogrande       acc 0.5075
+hellaswag        acc 0.2700  acc_norm 0.2743
+lambada_openai   perplexity 2607.9704  acc 0.0897
+piqa             acc 0.5816  acc_norm 0.5778
+arc_easy         acc 0.4432  acc_norm 0.3910
+arc_challenge    acc 0.1741  acc_norm 0.2244
+winogrande       acc 0.5107
+ "val_loss": 3.7247247258883163,
+   " of the presence of oxygen, and the resulting loss of thermal power resulting in the release of CO2 from the atmosphere.\nThe results show that the loss of atmospheric CO2 and carbon dioxide are the leading cause of death in the United States.\nThe authors say that carbon dioxide releases more harmful CO2 than CO2 because of the higher concentration of CO2 and CO2.\nIn addition, the researchers say that even in warmer oceans, the loss of CO2 during the summer months has been largely due to a decrease in the amount of CO2 released during the winter.\nIt is clear that the CO2 released during the winter months will only worsen in the coldest part of the winter months.\nAnd in the summer months, it should continue to be a key driver of the rise in the number of CO2 released into the atmosphere - which is higher than most of the previous century's data.\nIn addition, the authors point out that CO2 levels in the Arctic, which are warming rapidly and have increased from one to two\u00b0F degrees, are increasing and this is likely due to the increase in CO2 levels in the environment.\nThey say that this increase in CO2 levels could cause a decrease in the temperature of",
+done Thu Nov 19 04:50:13 PM +08 2026
