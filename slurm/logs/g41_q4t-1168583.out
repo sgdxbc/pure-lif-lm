@@ -1,0 +1,3 @@
+queued the next part of runs/g41_q4t: job 1168584
+xgph12 NVIDIA A100 80GB PCIe | runs/g41_q4t | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --attn linear --mlp spike --relay quant --relay_levels 4 --relay_target 0.5 --accum 4
+[2026-11-20T02:28:52.020] error: *** JOB 1168583 ON xgph12 CANCELLED AT 2026-11-20T02:28:52 DUE TO TIME LIMIT ***
