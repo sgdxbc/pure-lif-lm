@@ -5,7 +5,7 @@
 cd "$(dirname "$0")/.."
 touch slurm/.reported
 while true; do
-  q=$(squeue -h -u $USER -o %j)
+  q=$(squeue -h -u $USER -o %j) || { sleep 60; continue; }   # squeue can time out: no queue is not an empty queue
   for g in "$@"; do
     grep -qxF "$g" slurm/.reported && continue
     if ! echo "$q" | grep -qE "^($g)"; then echo "$g" >> slurm/.reported; echo "GROUP DONE: $g"; exit 0; fi
