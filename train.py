@@ -110,6 +110,8 @@ def get_args():
                    help="tf: linear = gated linear attention, a fixed-size state (model_tf.py; docs 5.47)")
     p.add_argument("--relay", default="none", choices=["none", "lif", "quant"],
                    help="tf with --attn linear: LIF relay neurons in front of every matrix (docs 5.51; model_tf.py)")
+    p.add_argument("--relay_levels", type=int, default=1,
+                   help="--relay quant: up to this many spikes per channel and token (docs 5.52; model_tf.py)")
     p.add_argument("--wq", default="none", choices=["none", "ternary"],
                    help="tf: the blocks' matrices with ternary weights (BitNet b1.58 rounding; docs 5.51)")
     p.add_argument("--mlp", default="gelu", choices=["gelu", "spike", "lif"],
@@ -316,7 +318,8 @@ def main():
     if a.arch == "tf":
         from model_tf import GPT, TFConfig
         cfg = TFConfig(vocab=a.vocab, d_model=a.d_model, n_layers=a.n_layers, n_heads=a.n_heads,
-                       max_len=max(1024, a.seq), rope=a.rope, attn=a.attn, mlp=a.mlp, relay=a.relay, wq=a.wq)
+                       max_len=max(1024, a.seq), rope=a.rope, attn=a.attn, mlp=a.mlp, relay=a.relay,
+                       relay_levels=a.relay_levels, wq=a.wq)
         model = GPT(cfg)
     else:
         cfg = Config(**{f.name: getattr(a, f.name) for f in fields(Config)})

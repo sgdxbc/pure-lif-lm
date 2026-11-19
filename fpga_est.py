@@ -91,7 +91,9 @@ def tf_hw(args, rates=None, readout=None, ctx=1024, bits=4):
                     24-bit potential per unit to the state
       relay lif/quant every block matrix reads 3-valued spikes: additions or subtractions of the rows of the input
                     channels that fired (the q/k/v/gate/decay matrices together, the output projection, the MLP's
-                    first matrix); lif adds two 24-bit potentials per channel and relay to the state
+                    first matrix); lif adds two 24-bit potentials per channel and relay to the state. With
+                    relay_levels > 1 the rate is spikes per channel, and each spike adds its row once (and is
+                    counted as reading it once: conservative, a channel with several spikes reads its row once)
       wq ternary    the block matrices' weights take 2 bits (values -1, 0, +1) instead of `bits`
     The input rows (and learned positions) are word tables: one row per token, read from HBM. readout (S, C): a
     hypothetical two-level readout like the spiking network's (S own words, C classes; its quality cost is not

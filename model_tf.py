@@ -34,7 +34,12 @@ beta and theta are learned per channel (time constants 1-4 tokens, theta at init
 input: 1 for the normalised stream, 0.01 sqrt(d) for the gated attention output). Relays sit in front of q/k/v/gate/decay (reading the normalised stream), of the output projection
 (reading the gated attention output) and of the MLP's first matrix; with mlp spike/lif the second one already reads
 0/1 units. relay = "quant": the same 3-valued output theta * round(x / theta) in {-theta, 0, theta}, without a
-membrane (a straight-through gradient within |x| <= 1.5 theta): what the membrane adds.
+membrane (a straight-through gradient within |x| <= 1.5 theta): what the membrane adds. relay_levels K (quant only;
+5.52): up to K spikes per channel and token, theta * clip(round(x / theta), -K, K) (straight-through within
+|x| <= (K + 1/2) theta): an integrate-and-fire neuron that receives |x| + theta / 2 at the start of the token,
+fires (subtracting theta) while its potential is at least theta, at most K times, and is reset at the token's end.
+With theta still about one RMS at initialisation, the extra spikes go to the large inputs that one spike clips.
+The matrix adds the row of a channel once per spike. K = 1 is the 3-valued relay.
 wq = "ternary": the blocks' matrices use weights in {-1, 0, +1} times one scale per matrix (the mean |w|; BitNet
 b1.58's rounding, straight-through gradient), the input rows and the readout stay real: the non-spiking way to
 turn the matrices' multiplications into additions, as a control."""
@@ -57,21 +62,26 @@ class TFConfig:
     attn: str = "softmax"     # "linear": gated linear attention instead of softmax attention (module docstring)
     mlp: str = "gelu"         # "spike": 0/1 hidden units with a surrogate gradient; "lif": LIF neurons (module docstring)
     relay: str = "none"       # "lif": LIF relay neurons in front of every matrix; "quant": their output without a membrane
+    relay_levels: int = 1     # quant: up to this many spikes per channel and token (module docstring)
     wq: str = "none"          # "ternary": the blocks' matrices with weights in {-1, 0, +1} times a scale (module docstring)
 
 
 class _Tern(torch.autograd.Function):
-    """sign(x) [|x| >= 1/2]: 3-valued rounding of x (in units of theta); straight-through gradient for |x| <= 1.5."""
+    """sign(x) min(floor(|x| + 1/2), K): rounding of x (in units of theta) to the 2K + 1 values -K..K, ties away from
+    0 (K = 1: sign(x) [|x| >= 1/2], 3-valued); straight-through gradient for |x| <= K + 1/2."""
 
     @staticmethod
-    def forward(ctx, x):
+    def forward(ctx, x, K=1):
         ctx.save_for_backward(x)
-        return ((x >= 0.5).to(x.dtype) - (x <= -0.5).to(x.dtype))
+        ctx.K = K
+        if K == 1:
+            return ((x >= 0.5).to(x.dtype) - (x <= -0.5).to(x.dtype))
+        return torch.sign(x) * torch.floor(x.abs() + 0.5).clamp(max=K)
 
     @staticmethod
     def backward(ctx, g):
         x, = ctx.saved_tensors
-        return g * (x.abs() <= 1.5).to(g.dtype)
+        return g * (x.abs() <= ctx.K + 0.5).to(g.dtype), None
 
 
 class _TernW(torch.autograd.Function):
@@ -96,11 +106,13 @@ class QLinear(nn.Linear):
 
 
 class Relay(nn.Module):
-    """LIF relay neurons in front of a matrix (module docstring, relay): (..., D) real -> theta * (s+ - s-)."""
+    """LIF relay neurons in front of a matrix (module docstring, relay): (..., D) real -> theta * (s+ - s-).
+    rate: spikes per channel and token (with one spike at most: the share of nonzero outputs)."""
 
-    def __init__(self, D, kind, theta0=1.0):
+    def __init__(self, D, kind, theta0=1.0, levels=1):
         super().__init__()
-        self.D, self.kind = D, kind
+        assert levels >= 1 and (levels == 1 or kind == "quant"), "relay_levels > 1: quant only"
+        self.D, self.kind, self.levels = D, kind, levels
         self.log_theta = nn.Parameter(torch.full((D,), math.log(theta0)))          # about one RMS of the input
         if kind == "lif":
             tau = torch.exp(torch.empty(D).uniform_(0.0, math.log(4.0)))
@@ -110,14 +122,14 @@ class Relay(nn.Module):
     def forward(self, x):
         th = self.log_theta.exp()
         if self.kind == "quant":
-            u = _Tern.apply(x / th.to(x.dtype))
+            u = _Tern.apply(x / th.to(x.dtype), self.levels)
         else:
             from lif import lif
             s, _ = lif(torch.cat([x, -x], -1), torch.sigmoid(self.beta_logit).repeat(2), th.repeat(2), None, None,
                        hard_reset=False, alpha=4.0, detach_reset=False, sg="fast_sigmoid")
             s = s.to(x.dtype)
             u = s[..., :self.D] - s[..., self.D:]
-        self.rate = (u != 0).detach().float().mean()
+        self.rate = u.detach().abs().float().mean()
         return u * th.to(x.dtype)
 
 
@@ -199,9 +211,10 @@ class LinearAttention(nn.Module):
         self.onorm = nn.RMSNorm(self.hd)
         self.proj = QLinear(d, d, bias=False)
         relay = getattr(c, "relay", "none")
-        self.r_in = Relay(d, relay) if relay != "none" else None     # in front of q, k, v, gate and decay
+        K = getattr(c, "relay_levels", 1)
+        self.r_in = Relay(d, relay, levels=K) if relay != "none" else None     # in front of q, k, v, gate and decay
         # the gated output starts at about 0.01 sqrt(d) RMS (gate weights 0.02, silu(g) ~ g / 2 near 0)
-        self.r_out = Relay(d, relay, 0.01 * math.sqrt(d)) if relay != "none" else None   # in front of the output projection
+        self.r_out = Relay(d, relay, 0.01 * math.sqrt(d), K) if relay != "none" else None   # in front of the output projection
         with torch.no_grad():   # softplus(bias) log-uniform in [0.001, 0.1] (Mamba's step sizes): a from ~0.2 to ~1
             dt0 = torch.exp(torch.empty(h).uniform_(math.log(1e-3), math.log(1e-1)))
             self.decay.bias.copy_(dt0 + torch.log(-torch.expm1(-dt0)))   # inverse of softplus
@@ -246,7 +259,7 @@ class Block(nn.Module):
         self.h = c.n_heads
         relay = getattr(c, "relay", "none")
         assert relay in ("none", "lif", "quant") and (relay == "none" or c.attn == "linear"), "relays: linear attention"
-        self.r_mlp = Relay(c.d_model, relay) if relay != "none" else None   # in front of the MLP's first matrix
+        self.r_mlp = Relay(c.d_model, relay, levels=getattr(c, "relay_levels", 1)) if relay != "none" else None
         assert getattr(c, "wq", "none") in ("none", "ternary")
         if getattr(c, "wq", "none") == "ternary":
             for m in self.modules():
@@ -326,8 +339,9 @@ class GPT(nn.Module):
         return logits, loss, xs if hidden else None, rates
 
     def rates(self, device):
-        """Share of 1s of the 0/1 MLP units per block, then with relays the share of nonzero outputs of the relays in
-        front of q/k/v, of the output projection and of the MLP, per block (4 x n_layers values); zeros(1) if none."""
+        """Share of 1s of the 0/1 MLP units per block, then with relays their spikes per channel and token (with one
+        spike at most: the share of nonzero outputs) in front of q/k/v, of the output projection and of the MLP, per
+        block (4 x n_layers values); zeros(1) if none."""
         z = torch.zeros((), device=device)
         r = [b.rate if b.rate is not None else z for b in self.blocks] if self.cfg.mlp != "gelu" else []
         if getattr(self.cfg, "relay", "none") != "none":
