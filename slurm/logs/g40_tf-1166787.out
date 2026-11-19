@@ -1,0 +1,25 @@
+queued the next part of runs/g40_tf: job 1167722
+xgpi20 NVIDIA H100 NVL | runs/g40_tf | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --accum 4
+params 77.21M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 2500 val_loss 4.4949 (EMA weights 4.3628)
+== eval step 5000 val_loss 4.1726 (EMA weights 4.0227)
+== eval step 7500 val_loss 4.0347 (EMA weights 3.8939)
+== eval step 10000 val_loss 3.9333 (EMA weights 3.8148)
+== eval step 12500 val_loss 3.8460 (EMA weights 3.7618)
+== eval step 15000 val_loss 3.7715 (EMA weights 3.7145)
+== eval step 17500 val_loss 3.7166 (EMA weights 3.6852)
+== eval step 20000 val_loss 3.6908 (EMA weights 3.6666)
+hellaswag        acc 0.2700  acc_norm 0.2698
+lambada_openai   perplexity 1982.5640  acc 0.1310
+piqa             acc 0.5930  acc_norm 0.5773
+arc_easy         acc 0.4276  acc_norm 0.3826
+arc_challenge    acc 0.1758  acc_norm 0.2167
+winogrande       acc 0.4886
+hellaswag        acc 0.2693  acc_norm 0.2689
+lambada_openai   perplexity 1938.5203  acc 0.1279
+piqa             acc 0.5871  acc_norm 0.5767
+arc_easy         acc 0.4306  acc_norm 0.3965
+arc_challenge    acc 0.1817  acc_norm 0.2184
+winogrande       acc 0.4917
+ "val_loss": 3.700717593191589,
+done Thu Nov 19 07:36:41 PM +08 2026
