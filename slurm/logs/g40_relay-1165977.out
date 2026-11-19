@@ -1,0 +1,26 @@
+queued the next part of runs/g40_relay: job 1166085
+xgph0 NVIDIA A100 80GB PCIe | runs/g40_relay | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --attn linear --mlp spike --relay lif --accum 2
+params 78.91M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 2500 val_loss 4.7710 (EMA weights 4.6457)
+== eval step 5000 val_loss 4.5296 (EMA weights 4.3991)
+== eval step 7500 val_loss 4.3965 (EMA weights 4.2753)
+== eval step 10000 val_loss 4.3022 (EMA weights 4.2092)
+== eval step 12500 val_loss 4.2238 (EMA weights 4.1495)
+== eval step 15000 val_loss 4.1559 (EMA weights 4.1069)
+== eval step 17500 val_loss 4.1060 (EMA weights 4.0824)
+== eval step 20000 val_loss 4.0831 (EMA weights 4.0651)
+hellaswag        acc 0.2672  acc_norm 0.2665
+lambada_openai   perplexity 17321.6732  acc 0.0179
+piqa             acc 0.5675  acc_norm 0.5647
+arc_easy         acc 0.4116  acc_norm 0.3716
+arc_challenge    acc 0.1766  acc_norm 0.2227
+winogrande       acc 0.4996
+hellaswag        acc 0.2636  acc_norm 0.2662
+lambada_openai   perplexity 16564.1927  acc 0.0208
+piqa             acc 0.5647  acc_norm 0.5669
+arc_easy         acc 0.4074  acc_norm 0.3725
+arc_challenge    acc 0.1741  acc_norm 0.2184
+winogrande       acc 0.5201
+ "val_loss": 4.09411893723503,
+   " need the food to come up with the most important nutrients.\n- Choose foods that are important for your child. You are not likely to lose the energy you are doing, but if you can't afford that option, you will need to have some kind of food that is essential for your child.\n- Try not to lose your ability to use it.\n- Don't think of it as a recipe, instead of spending less time doing it, so you should not eat it.\n- Try to avoid being too much too.\nYou want to make your energy and focus, such as when you need to be active. Don't include your energy intake, it's going to use more of energy than you think.\n- If you eat it, you should make sure it is possible to get a strong drink.\n- Don't put your energy in the sun, and this will lead to weight loss.\n- Don't give it all your energy in the sun.\n- Don't be hungry if you are hungry.\n- Don't drink more energy than it will do.\n- Don't drink too much energy.\n- Don't store more calories than you.\n- Don't eat or don't drink."
+done Thu Nov 19 05:25:29 PM +08 2026
