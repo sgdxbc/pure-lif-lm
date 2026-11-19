@@ -4,6 +4,8 @@ same assumptions (fpga_est.py; docs/experiments.md 5.51). From the repository ro
   python3 experiments/fpga_compare.py --runs g40_la g40_laspk g40_relay ...   only these runs (model_tf.py networks),
       each from its shape and the rates of its last evaluation, with its final loss (EMA where there is one) or, while
       it trains, the last evaluation's (marked with the step)
+  ... --runs ... --readout 8192 225   the same with a hypothetical two-level readout like the spiking network's (S own
+      words + C classes; its quality cost, about 0.07-0.11 for the spiking network, not included)
 
 Rows (validation loss on FineWeb-Edu where the network was trained; "-" for a shape that was not trained):
   snn  g29_hw                the hardware network (4-bit weights, coded input, two-level readout), from its
@@ -60,6 +62,8 @@ def main():
     p.add_argument("--ctx", type=int, default=1024)
     p.add_argument("--spike_rate", type=float, default=0.03, help="0/1 MLP units' rate if g38_laspk's log is absent")
     p.add_argument("--runs", nargs="*", default=None, help="only these model_tf.py runs, with their measured rates")
+    p.add_argument("--readout", nargs=2, type=int, default=None, metavar=("S", "C"),
+                   help="with --runs: a hypothetical two-level readout (S own words, C classes) in place of the full one")
     p.add_argument("--add_cost", type=float, default=1.0, help="an addition's cost in multiply-adds (fpga_est.estimate_tf; "
                    "below 1 is a sensitivity check: additions in LUTs are not designed or modelled)")
     a = p.parse_args()
@@ -71,7 +75,9 @@ def main():
             if lo is None:
                 lo, st = last_eval(r)
                 note = f" (step {st})" if st is not None else ""
-            nets.append((f"{r}{note}", lo, fpga_est.tf_hw(ar, rates=rates_of(r), ctx=a.ctx, bits=a.bits), ar))
+            ro = tuple(a.readout) if a.readout else None
+            nets.append((f"{r}{note}{' + 2-level readout' if ro else ''}", lo,
+                         fpga_est.tf_hw(ar, rates=rates_of(r), readout=ro, ctx=a.ctx, bits=a.bits), ar))
         return table(nets, a, None)
     hw = json.load(open(os.path.join(HERE, "runs/g29_hw/hw_cost.json")))
     nets.append(("snn g29_hw", loss("g29_hw"), hw, args("g29_hw")))
