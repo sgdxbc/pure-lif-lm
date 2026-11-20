@@ -31,6 +31,17 @@ Optional training methods (all off by default; the architecture is unchanged by 
         layer (scaled to unit RMS per token); loss += w * mean squared error, averaged over the pairs. The aim is a
         denser training signal about what the teacher has gathered from the context at every position. The maps are
         not part of the model and cost nothing at inference.
+  --teacher_ema
+        use the teacher checkpoint's averaged weights (its EMA) instead of its raw weights.
+  --init_weights PATH
+        start from another run's weights (averaged if it has them), copied by name where the shape matches; new
+        parts (e.g. relays) keep their initialisation, and the optimizer and step count start fresh (docs 5.56).
+        Note: relays added to a trained network start at thresholds sized for an untrained one, so the first loss
+        is well above the source network's (audit 3, docs/audits.md).
+  --relay_target_start r0 --relay_target_steps N
+        lower the relays' spike target linearly from r0 to --relay_target over the first N updates (docs 5.56).
+  --relay_count_grad ste|smooth [--relay_count_width w]
+        the gradient of the relay spike-count penalty: straight-through (default) or a sum of sigmoids (docs 5.57).
 """
 import argparse, json, math, os, time
 from dataclasses import asdict, fields
@@ -465,7 +476,7 @@ def main():
         src = {**ck0["model"], **ck0.get("ema", {})}
         sd = model.state_dict()
         hit = [k for k in sd if k in src and src[k].shape == sd[k].shape]
-        if a.arch == "tf" and cfg.out_classes:
+        if getattr(cfg, "out_classes", 0):   # both model.py and model_tf.py use model.ClassReadout
             # A class map and its weight tables need to come from the same layout.
             head_keys = {k for k in sd if k.startswith("head.")}
             source_cfg = ck0.get("cfg", {})

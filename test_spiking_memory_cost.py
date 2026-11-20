@@ -119,6 +119,14 @@ class SpikingMemoryTest(unittest.TestCase):
                 self.assertTrue(torch.isfinite(rounded).all())
                 self.assertFalse(torch.equal(rounded, whole))
 
+    def test_several_steps_per_token(self):
+        # quant_sim.run averages the bus over the steps of each token (it once used an undefined batch size here)
+        cfg = replace(self.cfg, steps_per_token=2, mem_heads=0)   # plastic synapses need one step per token
+        model = SpikingLM(cfg).eval()
+        x = torch.randint(cfg.vocab, (2, 7))
+        whole = model(x)[0]
+        torch.testing.assert_close(run(model, x, {}), whole, rtol=1e-5, atol=2e-6)
+
     def test_stateless_off_is_the_legacy_default(self):
         x = torch.randint(self.cfg.vocab, (2, 11))
         cfg = replace(self.cfg, mem_kq_levels=4, mem_delays=4, mem_gate="channel")

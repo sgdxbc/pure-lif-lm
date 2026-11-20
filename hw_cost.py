@@ -195,9 +195,10 @@ def main():
         else:
             c = model.cfg   # tf_cost covers the plain Transformer only; the others: fpga_est.tf_hw (experiments/fpga_compare.py)
             if (getattr(c, "attn", "softmax") != "softmax" or getattr(c, "mlp", "gelu") != "gelu"
-                    or getattr(c, "relay", "none") != "none" or getattr(c, "wq", "none") != "none"):
-                print(f"{run}: linear attention, 0/1 units, relays or ternary weights: use experiments/fpga_compare.py",
-                      flush=True)
+                    or getattr(c, "relay", "none") != "none" or getattr(c, "wq", "none") != "none"
+                    or getattr(c, "out_classes", 0) or getattr(c, "mlp_mult", 4) != 4):
+                print(f"{run}: linear attention, 0/1 units, relays, ternary weights, a two-level readout or a wider MLP: "
+                      "use experiments/fpga_compare.py", flush=True)
                 continue
             o = tf_cost(model)
         o["ema"] = has_ema

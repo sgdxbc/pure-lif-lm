@@ -254,7 +254,7 @@ def run(model, x, q, cal=None, rec=None):
             rec.setdefault("rate", []).append(S.mean().item())
         bus = bus + F.linear(S, qw(f32(layer.w_out.weight), w, g_))
     if T > 1:
-        bus = bus.view(B, -1, T, bus.size(-1)).mean(2)
+        bus = bus.view(bus.size(0), -1, T, bus.size(-1)).mean(2)
     read = model.read_bus(bus)
     if rec is not None:
         rec["head"] = read.abs().amax((0, 1))

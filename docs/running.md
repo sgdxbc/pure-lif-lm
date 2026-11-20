@@ -111,7 +111,7 @@ python3 train.py --device cuda --out runs/my_snn \
   加 `--out_short S`：S 个词（一个"短名单"，`word_classes.py --short S` 取训练数据里最常见的 S 个，类号记为 −1）不分类，
   各有自己的读出单元，和 C 个类读出单元一起做一次 softmax；其余的词分成 C 类。
   GPT 用 `sample.py --temperature 1 --top_k 0` 时，先从 S + C 项抽样，抽到类时才算那一类的词。全词表的温度调整和 top-k 筛选用完整词分数。
-  精确贪心比较短名单的最高概率和各类的 P(类) × max P(词 | 类)；若一个类的 P(类) 已低于当前最高词概率，可跳过该类。
+  精确的贪心解码（还没有实现）可以比较短名单的最高概率和各类的 P(类) × max P(词 | 类)；若一个类的 P(类) 已低于当前最高词概率，可跳过该类。
 - `--in_groups k [--in_class_file f.npy]`：组合输入（5.36 节）：k 群各 n = ⌈词表^(1/k)⌉ 个输入神经元，每个词在每群里各让一个发放，
   注入它们的突触之和。默认按编号的 k 位数字；k = 2 时 `--in_class_file` 按类分配（第一群是类，第二群是类里的序号；用
   `word_classes.py --rows embed` 对训练好的网络的输入行聚类）。加 `--in_short S`：短名单里的 S 个词（类号 −1）各有自己的一个输入神经元，
@@ -134,7 +134,8 @@ python3 train.py --device cuda --out runs/my_snn \
     `quant_sim.py`（5.44 节起）都已计入。训练时按 `--mem_chunk` 个位置一块并行计算（默认 128，只影响速度）。
 - `--bus_norm true`（5.49 节，试验中）：各层神经元群（W_in 和调节漏电的突触）、可塑突触（键、查询、值的突触）和读出读总线时，
   先把每个 token 的总线除以它在 d_model 个通道上的均方根（像 Transformer 的 pre-norm，没有增益）；总线本身不变。
-  每个读者每个 token 多一次平方和与一次开方倒数。`hw_cost.py` 已计入平方和与缩放，`quant_sim.py` 用浮点算归一化再取整输入。
+  每个读者每个 token 多一次平方和与一次开方倒数。`hw_cost.py` 已计入平方和与缩放，`quant_sim.py` 用浮点算归一化再取整输入；
+  `hw_export.py` 还不支持它（会报错）。
 - `--mem_kq_levels K --mem_delays n --mem_gate channel|head`（5.55 节）：每个键和查询每词最多发 K 个脉冲，电流可带 n 个延迟权重，
   读出可用逐通道或逐组门。`hw_cost.py --ema` 分别报告每个键和查询的平均脉冲数和非零比例，`quant_sim.py` 支持这些选项。
   `--mem_kq_stateless true` 使键和查询的膜电位每个 token 从零开始，保留阈值、减法复位、可塑突触状态和延迟历史。

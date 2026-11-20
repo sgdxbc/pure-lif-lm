@@ -1,8 +1,8 @@
 #!/bin/bash
 # GPU wave 46, first part (docs/experiments.md 5.58): confirm distillation on sparse relays with a second seed, and a
 # Transformer trained on the same short recipe as the 77M spiking-relay runs (the fair side of the FPGA comparison).
-# Agreed with the GPT advisor (docs/discussions.md, 2026-11-20). The two-level-readout runs follow once model_tf.py has
-# that readout. Part 2 (the advisor's model_tf.py two-level readout, docs 5.58): the readout's own quality cost.
+# Agreed with the GPT advisor (docs/discussions.md, 2026-11-20). Part 2 (the advisor's model_tf.py two-level readout,
+# docs 5.58): the readout's own quality cost.
 #   tf31s_cls8k   tf31s with the spiking network's two-level readout (8,192 own words + 225 classes, the class map of
 #                 runs/classes/tf163_head225_s8192.npy), against tf31s
 #   kd25_cls8k    g45_kd25 with the same readout, against g45_kd25
