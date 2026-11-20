@@ -140,9 +140,9 @@
   accum unless explained). While the owner is away, message only for a decision or a notable result; otherwise keep
   the notes in docs/experiments.md and give one plain summary when the owner returns.
 - Results: decide on final numbers, or once a paired difference has been stable over at least three evaluations;
-  mark single evaluations as 初步 and keep them out of bold headlines. Seed noise rests on one pair of runs
-  (g35_base, _s1) until the three seeds of g40_laspk (wave 44) finish, so treat differences under about 0.02 as
-  possibly noise. Trend claims only from paired runs with the same teacher and settings; compare variants only on the
+  mark single evaluations as 初步 and keep them out of bold headlines. Seed noise (three seeds of g40_laspk, 77M
+  linear attention, not distilled, docs 5.55): sigma 0.004, so differences under 0.012 (3 sigma) count as the same;
+  other kinds of network (distilled, ternary) may differ, say so when using the line for them. Trend claims only from paired runs with the same teacher and settings; compare variants only on the
   same base network. When the owner states a hope or a vision, list the evidence for it and against it separately.
 - Before asking the owner to do anything, check that it can work with a probe that needs nothing from them.
 - Waiting: the Bash tool's run_in_background has a 30-minute default limit, so always pass timeout >= the alarm's
