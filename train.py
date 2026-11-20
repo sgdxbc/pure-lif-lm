@@ -160,6 +160,8 @@ def get_args():
                                               and math.isfinite(a.relay_count_width) and a.relay_count_width > 0):
         p.error("--relay_count_grad smooth needs --arch tf --relay quant, a positive --relay_target and a positive "
                 "finite --relay_count_width")
+    if a.mem_kq_stateless and (a.arch != "snn" or a.mem_kind != "plastic" or not a.mem_heads):
+        p.error("--mem_kq_stateless needs spiking plastic memory (--mem_heads > 0)")
     if a.device == "auto":
         a.device = "cuda" if torch.cuda.is_available() else "cpu"
     return a
@@ -197,10 +199,12 @@ class Data:
 
 def mask_state(state, keep):
     """Zero the carried state of the rows that start a new stream."""
-    out = []
-    for layer in state:
-        out.append(tuple(t * keep.view(-1, *([1] * (t.dim() - 1))).to(t.dtype) for t in layer))
-    return out
+    if state is None:
+        return None
+    if torch.is_tensor(state):
+        mask = keep.view(-1, *([1] * (state.dim() - 1)))
+        return state * mask.to(state.dtype)
+    return type(state)(mask_state(part, keep) for part in state)
 
 
 class EMA:

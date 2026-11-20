@@ -14,9 +14,11 @@ Spiking network, per generated token and per stream:
                neuron that fired in any stream once; divided by 16. Plus one embedding row per stream.
   state        membrane potentials, 24-bit, per stream (they stay on chip).
   Plastic synapses (model.py, mem_heads): the key, query and value synapses and W_o are dense MACs, like W_in; each
-  key neuron that fires adds the value (mem_dv additions) to its row of S, each query neuron that fires adds its row
-  to the readout (sparse adds); the decay of S is one multiplication per synapse and step; S (24-bit) and the key and
-  query potentials add to the state.
+  key event adds the value (mem_dv additions) to its row of S, each query event adds its row to the readout.
+  A multi-spike count repeats the addition. The decay of S and of the key/query potentials each cost one
+  multiplication per state value. Causal delay filters and the output gate add dense arithmetic. S, membrane
+  potentials and stored delay currents are each budgeted at 24 bits. Gate SiLU and reciprocal square root use
+  lookup tables in this model; their latency and storage are outside the operation and byte estimates.
 Transformer (analytic): MACs = weights + attention over c earlier tokens; bytes read = weights (shared by the streams)
   + each stream's key/value history of c tokens (8-bit); state = that history.
 Weights are counted at 8 and 4 bits. Firing comes from --windows validation windows of 256 tokens, each read from rest,
@@ -33,16 +35,26 @@ CTX = (256, 2048, 8192)
 STREAMS = 16
 
 
+def memory_firing(spikes):
+    """Mean event count and fraction of rows with at least one event, over tokens and streams."""
+    k, q = spikes.chunk(2, dim=-1)
+    return {"mem_key_count": k.float().mean().item(), "mem_query_count": q.float().mean().item(),
+            "mem_key_rate": (k > 0).float().mean().item(), "mem_query_rate": (q > 0).float().mean().item()}
+
+
 @torch.no_grad()
 def firing(model, windows, seq=256, dev=torch.device("cpu"), data="data"):
     """Per layer: firing rate per step ("rate"), share of neurons that fire at least once in a token in one stream
     ("token") and in any of STREAMS streams ("token_any"); with plastic synapses also the key and query neurons'
-    firing rates."""
+    active-row fractions (mem_*_rate) and mean spike counts (mem_*_count)."""
+    if windows < STREAMS:
+        raise ValueError(f"windows must be at least {STREAMS}")
     arr = np.memmap(os.path.join(HERE, data, "valid.bin"), dtype=np.uint16, mode="r")   # the run's own data
     starts = np.linspace(0, len(arr) - seq - 2, windows).astype(np.int64)
     T, L, M = model.cfg.steps_per_token, len(model.layers), len(getattr(model, "mem_layers", []))
     f = {k: np.zeros(L) for k in ("rate", "token", "token_any")}
-    f.update({k: np.zeros(M) for k in (("mem_key_rate", "mem_query_rate") if M else ())})
+    if M:
+        f.update({k: np.zeros(M) for k in ("mem_key_rate", "mem_query_rate", "mem_key_count", "mem_query_count")})
     n = 0
     for g in range(0, windows - STREAMS + 1, STREAMS):
         x = torch.from_numpy(np.stack([arr[i:i + seq] for i in starts[g:g + STREAMS]]).astype(np.int64)).to(dev)
@@ -50,9 +62,8 @@ def firing(model, windows, seq=256, dev=torch.device("cpu"), data="data"):
             _, _, _, spikes = model(x, return_spikes=True)
         if M:   # key and query spikes of the plastic synapses come last
             for l, s in enumerate(spikes[-M:]):
-                hm = s.size(-1) // 2
-                f["mem_key_rate"][l] += (s[..., :hm] > 0.5).float().mean().item()
-                f["mem_query_rate"][l] += (s[..., hm:] > 0.5).float().mean().item()
+                for k, v in memory_firing(s).items():
+                    f[k][l] += v
             spikes = spikes[:-M]
         for l, s in enumerate(spikes):
             s = (s > 0.5).view(STREAMS, seq, T, -1)
@@ -80,10 +91,20 @@ def snn_cost(model, f):
     mem_w = mem_macs = mem_adds = mem_state = 0
     if M:
         h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
-        mem_w = M * d * (2 * h * m + 2 * h * dv)                       # key/query, value synapses and W_o: dense
-        mem_macs = mem_w + M * (h * m * dv + 3 * h * dv)                # + decay of S, RMS scaling and gain
-        mem_adds = float(sum((f["mem_key_rate"][l] + f["mem_query_rate"][l]) * h * m * dv for l in range(M)))
-        mem_state = M * (h * m * dv + 2 * h * m) * 3
+        K = max(1, c.mem_kq_levels)
+        taps = c.mem_delays if c.mem_delays > 1 else 0
+        currents = h * (2 * m + dv)
+        gate_channels = {"": 0, "head": h, "channel": h * dv}[c.mem_gate]
+        potentials = 0 if c.mem_kq_stateless else 2 * h * m * K
+        mem_w = M * (d * (currents + h * dv + gate_channels) + taps * currents)
+        # State decay, membrane integration, RMS scaling, gain, and applying the gate.
+        mem_macs = mem_w + M * (h * m * dv + potentials + 3 * h * dv + bool(gate_channels) * h * dv)
+        if K > 1 and ("mem_key_count" not in f or "mem_query_count" not in f):
+            raise ValueError("multi-spike memory needs mean key and query counts")
+        keys = f["mem_key_count"] if "mem_key_count" in f else f["mem_key_rate"]
+        queries = f["mem_query_count"] if "mem_query_count" in f else f["mem_query_rate"]
+        mem_adds = float(sum((k + q) * h * m * dv for k, q in zip(keys, queries)))
+        mem_state = M * (h * m * dv + potentials + max(0, taps - 1) * currents) * 3
         dense_w += mem_w
     norm_macs = (T * L + M + 1) * 2 * d if getattr(c, "bus_norm", False) else 0   # bus_norm: squares and scaling
     out = {"arch": "snn", "params": model.num_params(), "steps_per_token": T,
@@ -91,6 +112,7 @@ def snn_cost(model, f):
            "sparse_adds": float(sum(f["rate"][l] * H * T * d for l in range(L))) + mem_adds,
            "state_bytes": L * H * 3 + mem_state,
            "dense_weights": dense_w, "per_stream_weights": own, "plastic_layers": M,
+           "memory_dense_macs": mem_macs, "memory_sparse_adds": mem_adds, "memory_state_bytes": mem_state,
            "firing": {k: v.tolist() for k, v in f.items()}}
     # word tables: rows used by one word at a time (the input rows; with out_classes the word readout neurons, of which
     # each stream uses one class's block per token), so they can stay in off-chip memory (fpga_est.py)
@@ -168,9 +190,6 @@ def main():
             c = model.cfg   # options that make it not a spiking network: skipped, so the other runs still go through
             if getattr(c, "mem_kind", "plastic") != "plastic":
                 print(f"{run}: mem_kind gla, not a spiking network: no hardware cost", flush=True)
-                continue
-            if (getattr(c, "mem_kq_levels", 1) > 1 or getattr(c, "mem_delays", 0) > 1 or getattr(c, "mem_gate", "")):
-                print(f"{run}: mem_kq_levels / mem_delays / mem_gate: not costed here yet", flush=True)
                 continue
             o = snn_cost(model, firing(model, a.windows, dev=dev, data=args.get("data", "data")))
         else:

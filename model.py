@@ -93,6 +93,8 @@ Optional additions to the plastic synapses (docs/experiments.md 5.55: the featur
            with thresholds initialised at theta, 2 theta, ..., K theta (each learned on its own); the key (query) is
            their number of spikes, 0..K, like a neuron that may fire up to K spikes in a token. Writing and reading
            stay additions (a key of 3 adds the value 3 times). 0/1 keys and queries cost 0.076 in 5.53.
+           mem_kq_stateless: start the key and query membranes from zero at every token. The thresholds and
+           subtractive reset are unchanged. The associative state and the delay history still carry across tokens.
            mem_delays n > 1: the key and query neurons' input currents and the value channels each reach the plastic
            synapses through n synapses with delays of 0..n-1 tokens and a learned weight per channel and delay
            (a causal filter; gated linear attention's short convolution, worth 0.048 in 5.53). Parametrised as the
@@ -178,6 +180,7 @@ class Config:
                               # diagnostic, not a spiking component (module docstring)
     mem_gla_ablate: str = ""  # mem_kind gla: features removed (model_tf.LinearAttention: fixdecay,noconv,nogate,spkkq)
     mem_kq_levels: int = 1    # >1: each key and query is this many LIF neurons with graded thresholds (module docstring)
+    mem_kq_stateless: bool = False  # key and query membranes reset to zero at the start of every token
     mem_delays: int = 0       # >1: key, query and value currents through synapses with delays 0..mem_delays-1 tokens
     mem_gate: str = ""        # "channel" / "head": the read is scaled by a gate from the bus (module docstring)
     bus_norm: bool = False    # every reader of the bus sees it scaled to unit RMS per token (module docstring)
@@ -335,6 +338,17 @@ def plastic_scan(q, k, v, log_lam, S0=None, chunk=128):
     return out.reshape(B, h, nc * C, dv)[:, :, :L], S
 
 
+def delay_currents(currents, delta, history=None):
+    """Filter (B, channels, tokens) currents and return the history needed for the next chunk."""
+    n = delta.size(-1)
+    prev = currents.new_zeros(currents.size(0), currents.size(1), n - 1) if history is None else history.to(currents.dtype)
+    unrolled = torch.cat([prev, currents], -1)
+    weight = delta.clone()
+    weight[..., -1] += 1.0
+    filtered = F.conv1d(unrolled, weight.to(currents.dtype), groups=currents.size(1))
+    return filtered, unrolled[..., -(n - 1):].detach()
+
+
 class PlasticSynapses(nn.Module):
     """Key and query neurons and the plastic synapses between them and the value channels (module docstring)."""
 
@@ -350,7 +364,7 @@ class PlasticSynapses(nn.Module):
         tau = torch.exp(torch.linspace(math.log(cfg.mem_tau_min), math.log(cfg.mem_tau_max), h))
         self.decay_beta_logit = nn.Parameter(torch.logit(torch.exp(-1.0 / tau)))
         kq_tau = torch.exp(torch.empty(2 * h * m).uniform_(math.log(0.5), math.log(2.0)))   # short: mostly this token
-        self.kq_beta_logit = nn.Parameter(torch.logit(torch.exp(-1.0 / kq_tau)))
+        self.kq_beta_logit = nn.Parameter(torch.logit(torch.exp(-1.0 / kq_tau)), requires_grad=not cfg.mem_kq_stateless)
         K = max(1, cfg.mem_kq_levels)   # neurons per key / query, thresholds theta, 2 theta, ... K theta
         self.kq_log_theta = nn.Parameter(torch.log(cfg.mem_theta * torch.arange(1, K + 1, dtype=torch.float32))
                                          .repeat(2 * h * m)) if K > 1 else \
@@ -369,9 +383,8 @@ class PlasticSynapses(nn.Module):
                 nn.init.normal_(self.gate.weight, std=std_in)
 
     def forward(self, bus, state=None):
-        """state: (synapses S (B, h, m, dv), key and query potentials (B, 2hm K), with mem_delays n > 1 the last n-1
-        currents (B, 2hm + h dv, n-1)) or None. Returns the current into the bus, the key and query spikes (B, L, 2hm;
-        with mem_kq_levels K, spike counts 0..K) and the new state."""
+        """state: (synapses S, key/query potentials or None if stateless, optional delay history), or None at rest.
+        Returns the current into the bus, key/query spike counts (B, L, 2hm) and the new state."""
         c = self.cfg
         B, L, _ = bus.shape
         h, m, dv = c.mem_heads, c.mem_keys, c.mem_dv
@@ -381,14 +394,13 @@ class PlasticSynapses(nn.Module):
         prev = None
         if n > 1:   # delay synapses: a causal filter per channel over the last n tokens' currents
             u = torch.cat([I, val], -1).transpose(1, 2)                                  # (B, C, L)
-            p0 = state[2].to(u.dtype) if state is not None else u.new_zeros(B, u.size(1), n - 1)
-            up = torch.cat([p0, u], -1)
-            w = self.delay_dw.clone()
-            w[..., -1] += 1.0                                                            # the undelayed synapse
-            out = F.conv1d(up, w.to(u.dtype), groups=u.size(1))
-            prev = up[..., -(n - 1):].detach()
+            out, prev = delay_currents(u, self.delay_dw, state[2] if state is not None else None)
             I, val = out.transpose(1, 2).split([2 * h * m, h * dv], -1)
-        beta = torch.sigmoid(self.kq_beta_logit)
+        if c.mem_kq_stateless:
+            beta = torch.zeros_like(self.kq_beta_logit)
+            v0 = None
+        else:
+            beta = torch.sigmoid(self.kq_beta_logit)
         if K > 1:   # K neurons per key and query, same current and time constant, graded thresholds
             I = I.unsqueeze(-1).expand(B, L, 2 * h * m, K).reshape(B, L, 2 * h * m * K)
             beta = beta.repeat_interleave(K)
@@ -408,7 +420,7 @@ class PlasticSynapses(nn.Module):
         if self.gate is not None:   # "channel": (B, L, h, dv); "head": (B, L, h, 1)
             r = r * F.silu(self.gate(bus)).view(B, L, h, -1).to(r.dtype)
         r = r.reshape(B, L, h * dv) * self.gain.to(val.dtype)
-        st = (S.detach(), v_last.detach()) + ((prev,) if n > 1 else ())
+        st = (S.detach(), None if c.mem_kq_stateless else v_last.detach()) + ((prev,) if n > 1 else ())
         return self.w_out(r), s, st
 
 

@@ -20,10 +20,11 @@ Devices (--device; the figures below can each be changed by an option):
   min(B, N)/N of the N boards' (one stream on two boards is as fast as on one, at twice the power; docs 5.43 made this
   correction by hand, and the estimates of 5.51-5.54 lacked it until the second self-audit, docs/audits.md).
 Assumptions (all can be changed by options):
-  - the additions driven by spikes (W_out) are counted on the same units as the multiply-accumulates, although they
-    need no multiplier;
+  - the additions driven by spikes (W_out and plastic-memory reads and writes) are counted on the same units as the
+    multiply-accumulates, although they need no multiplier. Plastic-memory state includes any carried delay currents
+    and key/query potentials; the dense filters and gates are included in the figures from hw_cost.py;
   - 60% of the peak bandwidth and of the peak compute are reached;
-  - the board draws its full 190 W whenever it runs (no credit for lighter load; the GPU is credited with its
+  - the board draws its full configured power whenever it runs (no credit for lighter load; the GPU is credited with its
     measured power instead, so this side is the conservative one);
   - weights stay on chip when they and the streams' membrane potentials fit in 90% of the on-chip memory; otherwise
     weights are read from HBM every step, and the potentials stay on chip if they fit, else are read and written
@@ -62,7 +63,8 @@ def estimate(hw, args, bits, dev):
     for B in STREAMS:
         busy = min(B, n) / n                    # share of the pipeline's boards at work (module docstring)
         state = B * hw["state_bytes"]
-        if weights - table + state <= budget:
+        required = weights - table + state
+        if required <= budget:
             read, where = (B * own, "weights on chip, word tables in HBM") if table else (0.0, "weights on chip")
         else:
             def share(l):
@@ -71,12 +73,13 @@ def estimate(hw, args, bits, dev):
                 q = 1 - (1 - f["token_any"][l]) ** (1 / 16)
                 return 1 - (1 - q) ** B
             read = (dense_w + sum(share(l) * H * d for l in range(L))) * b + B * own
-            where = "weights in HBM"
+            where = "weights in HBM, state on chip"
             if state > budget:
                 read += 2 * state
-                where += ", potentials in HBM"
+                where = "weights in HBM, state in HBM"
         t = max(read / (bw * busy), B * ops / (rate * busy))
         rows.append({"streams": B, "where": where, "bytes_per_step": read, "ops_per_step": B * ops,
+                     "state_bytes": state, "required_onchip_bytes": required, "onchip_budget_bytes": budget,
                      "bound": "memory" if read / bw >= B * ops / rate else "compute",
                      "tok_s": B / t, "ms_per_token": t * 1000, "mJ_per_token": n * dev["watts"] * t / B * 1000})
     return rows
@@ -221,7 +224,8 @@ def main():
           f"{a.device} (any context length):")
     for r in rows:
         print(f"  streams {r['streams']:4d}: {r['tok_s']:10,.0f} tok/s, {r['ms_per_token']:6.3f} ms/token, "
-              f"{r['mJ_per_token']:7.2f} mJ/token  ({r['bound']}-bound, {r['where']})")
+              f"{r['mJ_per_token']:7.2f} mJ/token  ({r['bound']}-bound, {r['where']}; "
+              f"{r['required_onchip_bytes'] / 1e6:.2f}/{r['onchip_budget_bytes'] / 1e6:.2f} MB for weights and state)")
     for c in a.compare:
         g = json.load(open(c))
         print(f"{g['model']} on {g['gpu']} (measured, vLLM):")

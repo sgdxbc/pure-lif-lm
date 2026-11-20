@@ -30,6 +30,8 @@ their bus input, value channels and normalised read-out as A (8-bit integers per
   hardware) and rounded with A. Coded input (in_groups) and the two-level readout (out_classes) use their own forward
   pass with the rounded weights. A network trained with low-precision weights (wbits) keeps its trained integers:
   the W settings are left out.
+  With mem_delays the delay line stores A-bit currents when A is set. B settings also round the learned tap
+  offsets to 16-bit weights per channel. Bus RMS normalisation and the gate's SiLU are evaluated in float32.
 "fp32" runs the same step-by-step code without rounding; "model" is the network's own forward pass (bfloat16, fused
 kernel) on the same windows, as a check that the step-by-step code is the same network.
 """
@@ -37,6 +39,7 @@ import argparse, json, math, os
 import numpy as np
 import torch
 import torch.nn.functional as F
+from model import delay_currents
 from sample import load
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -135,22 +138,41 @@ def plastic(mem, bus, q, cal, rec, j, A, Bb):
     w, g_, Sb, ag = q.get("w", 0), q.get("group", 0), q.get("s", 0), q.get("ag", 0)
     f32 = lambda t: t.float()
     B, L, _ = bus.shape
+    K = max(1, c.mem_kq_levels)
     xin = qa(bus, cal["mem_bus"][j], A, ag) if A else bus
     th = mem.kq_log_theta.exp().float()
-    I = F.linear(xin, qw(f32(mem.kq_in.weight), w, g_), f32(mem.kq_in.bias)) / th
-    kb = torch.sigmoid(f32(mem.kq_beta_logit))
-    lam = torch.sigmoid(f32(mem.decay_beta_logit))                                       # (h,)
+    I = F.linear(xin, qw(f32(mem.kq_in.weight), w, g_), f32(mem.kq_in.bias))
+    decay = f32(mem.decay_beta_logit)
+    Wv = f32(mem.v_in.weight)
+    if c.mem_write_avg:   # the per-channel delay filter commutes with folding (1 - lambda) into W_v
+        Wv = Wv * torch.sigmoid(-decay).repeat_interleave(dv).unsqueeze(1)
+    val = F.linear(xin, qw(Wv, w, g_))
+    if c.mem_delays > 1:
+        currents = torch.cat([I, val], -1)
+        if rec is not None:
+            rec.setdefault("mem_delay", []).append(currents.abs().amax((0, 1)))
+        if A:
+            currents = qa(currents, cal["mem_delay"][j], A, ag)
+        taps = f32(mem.delay_dw)
+        if Bb:
+            taps = qw(taps.squeeze(1), 16).unsqueeze(1)
+        filtered, _ = delay_currents(currents.transpose(1, 2), taps)
+        I, val = filtered.transpose(1, 2).split([2 * h * m, h * dv], -1)
+    kb = torch.zeros_like(mem.kq_beta_logit) if c.mem_kq_stateless else torch.sigmoid(f32(mem.kq_beta_logit))
+    lam = torch.sigmoid(decay)
     if Bb:
         kb, lam = qfrac(kb, Bb), qfrac(lam, Bb)
-    s = fire(I, kb, None, q.get("v", 0), vint(cal, "kq_", j, q), False, rec, "kq_")
+    if K > 1:
+        I = I.repeat_interleave(K, dim=-1)
+        kb = kb.repeat_interleave(K)
+    s = fire(I / th, kb, None, q.get("v", 0), vint(cal, "kq_", j, q), False, rec, "kq_")
+    if K > 1:
+        s = s.reshape(B, L, 2 * h * m, K).sum(-1)
     k = s[..., :h * m].reshape(B, L, h, m)
     qq = s[..., h * m:].reshape(B, L, h, m)
-    Wv = f32(mem.v_in.weight)
-    if c.mem_write_avg:   # (1 - lambda) per group, folded into W_v
-        Wv = Wv * (1 - torch.sigmoid(f32(mem.decay_beta_logit))).repeat_interleave(dv).unsqueeze(1)
-    val = F.linear(xin, qw(Wv, w, g_)).view(B, L, h, dv)
     if A:
-        val = qa(val.reshape(B, L, h * dv), cal["mem_v"][j], A, ag).view(B, L, h, dv)
+        val = qa(val, cal["mem_v"][j], A, ag)
+    val = val.reshape(B, L, h, dv)
     if Sb:
         intb = cal["mem_S_int"][j]
         frac = Sb - 1 - intb
@@ -164,7 +186,11 @@ def plastic(mem, bus, q, cal, rec, j, A, Bb):
             smax = max(smax, S.abs().max().item())
         r.append((qq[:, t].unsqueeze(-1) * S).sum(-2))                                   # (B, h, dv)
     r = torch.stack(r, 1)                                                                # (B, L, h, dv)
-    r = (r * torch.rsqrt(r.pow(2).mean(-1, keepdim=True) + c.mem_eps)).reshape(B, L, h * dv) * f32(mem.gain)
+    r = r * torch.rsqrt(r.pow(2).mean(-1, keepdim=True) + c.mem_eps)
+    if mem.gate is not None:
+        gate = F.silu(F.linear(xin, qw(f32(mem.gate.weight), w, g_))).reshape(B, L, h, -1)
+        r = r * gate
+    r = r.reshape(B, L, h * dv) * f32(mem.gain)
     if rec is not None:
         rec.setdefault("mem_bus", []).append(bus.abs().amax((0, 1)))
         rec.setdefault("mem_v", []).append(val.reshape(B, L, h * dv).abs().amax((0, 1)))
@@ -180,9 +206,7 @@ def supported(a):
     network without the options it does not model (slurm/train.sbatch and slurm/hw.sbatch ask this)."""
     from model import REMOVED   # options removed from the code: such runs no longer load
     removed_on = any(k in a and off is not None and a[k] != off for k, off in REMOVED.items())
-    return (a.get("arch", "snn") == "snn" and not removed_on
-            and not a.get("bus_norm", False) and a.get("mem_kind", "plastic") == "plastic"
-            and a.get("mem_kq_levels", 1) <= 1 and a.get("mem_delays", 0) <= 1 and not a.get("mem_gate", ""))
+    return a.get("arch", "snn") == "snn" and not removed_on and a.get("mem_kind", "plastic") == "plastic"
 
 
 @torch.no_grad()
@@ -190,9 +214,7 @@ def run(model, x, q, cal=None, rec=None):
     """Step-by-step forward pass with the rounding in q. rec: dict that collects the calibration maxima."""
     from torch.func import functional_call
     c = model.cfg
-    assert not getattr(c, "bus_norm", False), "bus_norm: not implemented here"
     assert getattr(c, "mem_kind", "plastic") == "plastic", "mem_kind gla: not a spiking network"
-    assert supported(vars(c)), "options not modelled here (mem_kq_levels, mem_delays, mem_gate, ...)"
     T, w, g_ = c.steps_per_token, q.get("w", 0), q.get("group", 0)
     A, Vb, Bb, ag = q.get("a", 0), q.get("v", 0), q.get("b", 0), q.get("ag", 0)
     f32 = lambda t: t.float()
@@ -202,13 +224,13 @@ def run(model, x, q, cal=None, rec=None):
         bus = qw(f32(model.embed.weight), w, g_)[x]
     if T > 1:
         bus = bus.repeat_interleave(T, dim=1)
-    B, LT, _ = bus.shape
     mem_layers = getattr(model, "mem_layers", [])
     for li, layer in enumerate(model.layers):
         if li in mem_layers:
             j = mem_layers.index(li)
-            bus = bus + plastic(model.mems[str(li)], bus, q, cal, rec, j, A, Bb)
-        xin = qa(bus, cal["bus"][li], A, ag) if A else bus
+            bus = bus + plastic(model.mems[str(li)], model.read_bus(bus), q, cal, rec, j, A, Bb)
+        read = model.read_bus(bus)
+        xin = qa(read, cal["bus"][li], A, ag) if A else read
         th = layer.theta().float()
         I = F.linear(xin, qw(f32(layer.w_in.weight), w, g_), f32(layer.w_in.bias)) / th   # threshold folded in: fire at 1
         if c.leak_rank:
@@ -226,16 +248,17 @@ def run(model, x, q, cal=None, rec=None):
             beta, gam = qfrac(beta, Bb), qfrac(gam, Bb)
         S = fire(I, beta, gam, Vb, vint(cal, "", li, q), c.hard_reset, rec, "")
         if rec is not None:
-            rec.setdefault("bus", []).append(bus.abs().amax((0, 1)))
+            rec.setdefault("bus", []).append(read.abs().amax((0, 1)))
             if c.leak_rank:
                 rec.setdefault("m", []).append(m.abs().amax((0, 1)))
             rec.setdefault("rate", []).append(S.mean().item())
         bus = bus + F.linear(S, qw(f32(layer.w_out.weight), w, g_))
     if T > 1:
         bus = bus.view(B, -1, T, bus.size(-1)).mean(2)
+    read = model.read_bus(bus)
     if rec is not None:
-        rec["head"] = bus.abs().amax((0, 1))
-    hin = qa(bus, cal["head"], A, ag) if A else bus
+        rec["head"] = read.abs().amax((0, 1))
+    hin = qa(read, cal["head"], A, ag) if A else read
     if c.out_classes > 0:   # two-level readout: log P(w) for every word
         return functional_call(model.head, {"w_cls": qw(f32(model.head.w_cls), w, g_),
                                             "w_word": qw(f32(model.head.w_word), w, g_)}, (hin,))
@@ -253,6 +276,8 @@ def calibrate(rec):
         cal.update(mem_bus=rec["mem_bus"], mem_v=rec["mem_v"], mem_r=rec["mem_r"],
                    kq_v_int=[ib(vm) for vm in rec["kq_vmax"]], kq_v_int_p=[ib(vm) for vm in rec["kq_vp9999"]],
                    mem_S_int=[math.ceil(math.log2(max(sm, 1e-6) * 1.25)) for sm in rec["mem_Smax"]])
+    if "mem_delay" in rec:
+        cal["mem_delay"] = rec["mem_delay"]
     return cal
 
 
