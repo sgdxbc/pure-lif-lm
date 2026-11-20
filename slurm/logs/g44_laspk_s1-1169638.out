@@ -1,0 +1,27 @@
+queued the next part of runs/g44_laspk_s1: job 1170081
+xgph15 NVIDIA A100 80GB PCIe | runs/g44_laspk_s1 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --attn linear --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --mlp spike --seed 1 --accum 4
+params 78.88M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 2500 val_loss 4.4669 (EMA weights 4.3470)
+== eval step 5000 val_loss 4.1767 (EMA weights 4.0394)
+== eval step 7500 val_loss 4.0447 (EMA weights 3.9151)
+== eval step 10000 val_loss 3.9494 (EMA weights 3.8380)
+== eval step 12500 val_loss 3.8698 (EMA weights 3.7874)
+== eval step 15000 val_loss 3.8005 (EMA weights 3.7474)
+params 78.88M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 17500 val_loss 3.7482 (EMA weights 3.7204)
+== eval step 20000 val_loss 3.7224 (EMA weights 3.7022)
+hellaswag        acc 0.2708  acc_norm 0.2725
+lambada_openai   perplexity 3294.6832  acc 0.0792
+piqa             acc 0.5789  acc_norm 0.5729
+arc_easy         acc 0.4301  acc_norm 0.3851
+arc_challenge    acc 0.1843  acc_norm 0.2355
+winogrande       acc 0.4901
+hellaswag        acc 0.2702  acc_norm 0.2726
+lambada_openai   perplexity 3333.2071  acc 0.0763
+piqa             acc 0.5713  acc_norm 0.5718
+arc_easy         acc 0.4322  acc_norm 0.3872
+arc_challenge    acc 0.1800  acc_norm 0.2261
+winogrande       acc 0.4964
+ "val_loss": 3.7324977650376265,
+   " the temperatures in the river are cooler than most water ice. At higher elevations there is nothing more than water. It is not a \u201cwater problem\u201d for scientists and engineers.\n\"We believe that hydrologic processes are more complicated than we think,\" said John Haddam, an expert in water science and engineering at the University of Washington, Seattle. \"We can use our water to better understand the role that a salt plays in the ocean and the water cycle.\"\nThe study, \"The Water Cycle and its Effects on the Human Brain,\" was published online today by the journal Science.\n\"With the loss of life, there would be a high concentration of salt left by the sea ice,\" Haddam said. \"The water cycle does not mix with the water, so the salt is converted to water.\""
+done Fri Nov 20 12:02:21 PM +08 2026
