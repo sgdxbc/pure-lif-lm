@@ -1,0 +1,28 @@
+queued the next part of runs/g44_gateh: job 1172277
+xgpi11 NVIDIA H100 NVL | runs/g44_gateh | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --bus_norm true --mem_gate head --accum 4
+params 121.05M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.4824 (EMA weights 4.4195)
+== eval step 5000 val_loss 4.2065 (EMA weights 4.1309)
+== eval step 7500 val_loss 4.0833 (EMA weights 4.0143)
+== eval step 10000 val_loss 3.9994 (EMA weights 3.9438)
+params 121.05M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 3.9298 (EMA weights 3.8912)
+== eval step 15000 val_loss 3.8776 (EMA weights 3.8541)
+== eval step 17500 val_loss 3.8428 (EMA weights 3.8308)
+== eval step 20000 val_loss 3.8237 (EMA weights 3.8149)
+params 121.05M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+hellaswag        acc 0.2669  acc_norm 0.2663
+lambada_openai   perplexity 4852.6007  acc 0.0534
+piqa             acc 0.5658  acc_norm 0.5593
+arc_easy         acc 0.4369  acc_norm 0.3868
+arc_challenge    acc 0.1886  acc_norm 0.2218
+winogrande       acc 0.5178
+hellaswag        acc 0.2656  acc_norm 0.2692
+lambada_openai   perplexity 4778.0694  acc 0.0524
+piqa             acc 0.5729  acc_norm 0.5631
+arc_easy         acc 0.4343  acc_norm 0.3914
+arc_challenge    acc 0.1860  acc_norm 0.2201
+winogrande       acc 0.5288
+ "val_loss": 3.8341365090041544,
+done Fri Nov 20 10:00:50 PM +08 2026
