@@ -1,0 +1,27 @@
+queued the next part of runs/g45_t10: job 1173270
+xgph10 NVIDIA A100 80GB PCIe | runs/g45_t10 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --attn linear --mlp spike --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --relay quant --relay_levels 4 --relay_target 0.1 --accum 4
+params 78.89M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 2500 val_loss 4.6824 (EMA weights 4.5590)
+== eval step 5000 val_loss 4.4107 (EMA weights 4.2803)
+== eval step 7500 val_loss 4.3103 (EMA weights 4.1724)
+== eval step 10000 val_loss 4.2412 (EMA weights 4.1224)
+== eval step 12500 val_loss 4.1868 (EMA weights 4.0917)
+params 78.89M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 15000 val_loss 4.1335 (EMA weights 4.0733)
+== eval step 17500 val_loss 4.0963 (EMA weights 4.0612)
+== eval step 20000 val_loss 4.0794 (EMA weights 4.0699)
+hellaswag        acc 0.2641  acc_norm 0.2670
+lambada_openai   perplexity 11538.8242  acc 0.0328
+piqa             acc 0.5615  acc_norm 0.5609
+arc_easy         acc 0.4179  acc_norm 0.3716
+arc_challenge    acc 0.1937  acc_norm 0.2253
+winogrande       acc 0.5122
+hellaswag        acc 0.2652  acc_norm 0.2613
+lambada_openai   perplexity 12846.2101  acc 0.0307
+piqa             acc 0.5680  acc_norm 0.5664
+arc_easy         acc 0.4049  acc_norm 0.3641
+arc_challenge    acc 0.1903  acc_norm 0.2278
+winogrande       acc 0.4972
+ "val_loss": 4.089438927704655,
+   " is the subject of a great history of the city. With the arrival of two people, one day of the city, we can be sure that the city was once a place where everyone could be divided from each other.\nThe city of San Francisco is a modern city in New York. It is the most important city in an international community. A city of San Francisco is the only city where many of the residents of the city live a city in San Francisco. The city is responsible for the loss of residents and the loss of population.\nThe city of San Francisco is a very important city.\nThe city is one of the most common cities in the world. It has a history of the city and is a modern city in the city of San Francisco. The city of San Francisco is a city of San Francisco.\nThe city of San Francisco is a city of San Francisco. It was known as the city of San Francisco. It is located in Santa Fe and the city of San Francisco. The city is named with the city of Santa Fe. On this day, the city of San Francisco was founded.\nThe city was founded in New York on December 16, 1778. It was not the only city in the world that has"
+done Sat Nov 21 01:17:11 AM +08 2026
