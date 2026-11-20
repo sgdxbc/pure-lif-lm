@@ -1,0 +1,27 @@
+queued the next part of runs/g44_all3: job 1170349
+xgpi8 NVIDIA H100 NVL | runs/g44_all3 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --bus_norm true --mem_kq_levels 4 --mem_delays 4 --mem_gate channel --accum 2
+params 125.80M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.3786 (EMA weights 4.3201)
+== eval step 5000 val_loss 4.0636 (EMA weights 4.0044)
+== eval step 7500 val_loss 3.9269 (EMA weights 3.8706)
+== eval step 10000 val_loss 3.8419 (EMA weights 3.7965)
+== eval step 12500 val_loss 3.7784 (EMA weights 3.7459)
+== eval step 15000 val_loss 3.7338 (EMA weights 3.7119)
+== eval step 17500 val_loss 3.7005 (EMA weights 3.6908)
+params 125.80M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 20000 val_loss 3.6852 (EMA weights 3.6777)
+hellaswag        acc 0.2671  acc_norm 0.2707
+lambada_openai   perplexity 2455.6665  acc 0.0829
+piqa             acc 0.5734  acc_norm 0.5789
+arc_easy         acc 0.4411  acc_norm 0.4003
+arc_challenge    acc 0.1962  acc_norm 0.2270
+winogrande       acc 0.5075
+hellaswag        acc 0.2662  acc_norm 0.2693
+lambada_openai   perplexity 2350.6129  acc 0.0889
+piqa             acc 0.5789  acc_norm 0.5686
+arc_easy         acc 0.4457  acc_norm 0.4028
+arc_challenge    acc 0.1954  acc_norm 0.2389
+winogrande       acc 0.5201
+ "val_loss": 3.695861921076035,
+done Fri Nov 20 12:57:38 PM +08 2026
