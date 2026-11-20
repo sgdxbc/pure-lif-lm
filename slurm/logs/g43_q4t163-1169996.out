@@ -1,0 +1,14 @@
+queued the next part of runs/g43_q4t163: job 1170077
+xgpi18 NVIDIA H100 NVL | runs/g43_q4t163 | --vocab 50304 --d_model 768 --d_hidden 1536 --n_layers 12 --tau_min 0.5 --tau_max 200.0 --hard_reset false --detach_reset true --sg sigmoid --alpha 4.0 --in_norm theta --out_init 0.02 --head_init 0.02 --in_groups 0 --in_short 0 --out_classes 0 --out_short 0 --learn_beta true --learn_theta true --reset_learn false --gamma_init 0.9 --gamma_init_min -1.0 --leak_rank 0 --steps_per_token 1 --mem_heads 0 --mem_keys 64 --mem_dv 64 --mem_every 1 --mem_tau_min 8.0 --mem_tau_max 1024.0 --mem_theta 1.5 --mem_chunk 128 --mem_eps 1.0 --mem_write_avg false --mem_kind plastic --bus_norm false --wbits 0 --wgroup 128 --arch tf --n_heads 12 --batch 32 --accum 4 --seq 1024 --steps 20000 --lr 0.0006 --min_lr_frac 0.1 --schedule cosine --decay_steps 0 --wbits_from 0 --log_file log.live.jsonl --warmup 1000 --wd 0.1 --embed_wd -1.0 --neuron_lr_mult 1.0 --clip 1.0 --spike_log 5.0 --spike_skip 0.0 --eval_every 2500 --eval_batches 40 --log_every 500 --seed 0 --sample_every 0 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1.0 --ema 0.999 --data data/fineweb --tokenizer gpt2.json --attn linear --relay quant --relay_levels 4 --relay_target 0.5 --relay_eta 0.01 --wq none --mlp spike --optim adamw --muon_momentum 0.95 --hint_weight 0.0 --hint_layers 0
+params 169.59M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.1106 (EMA weights 4.0590)
+== eval step 5000 val_loss 3.8285 (EMA weights 3.7675)
+== eval step 7500 val_loss 3.7200 (EMA weights 3.6634)
+== eval step 10000 val_loss 3.6565 (EMA weights 3.6103)
+params 169.59M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 3.6049 (EMA weights 3.5751)
+== eval step 15000 val_loss 3.5729 (EMA weights 3.5535)
+== eval step 17500 val_loss 3.5516 (EMA weights 3.5406)
+== eval step 20000 val_loss 3.5413 (EMA weights 3.5340)
+[2026-11-20T13:52:01.988] error: *** JOB 1169996 ON xgpi18 CANCELLED AT 2026-11-20T13:52:01 DUE TO TIME LIMIT ***

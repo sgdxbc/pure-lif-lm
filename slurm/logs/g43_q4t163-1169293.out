@@ -1,0 +1,3 @@
+queued the next part of runs/g43_q4t163: job 1169605
+xgpi19 NVIDIA H100 NVL | runs/g43_q4t163 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --attn linear --d_model 768 --n_layers 12 --n_heads 12 --lr 6e-4 --ema 0.999 --mlp spike --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --relay quant --relay_levels 4 --relay_target 0.5 --accum 4
+[2026-11-20T10:04:27.986] error: *** JOB 1169293 ON xgpi19 CANCELLED AT 2026-11-20T10:04:27 DUE TO TIME LIMIT ***
