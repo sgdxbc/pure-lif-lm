@@ -1,0 +1,3 @@
+queued the next part of runs/g45_w16: job 1172102
+xgph0 NVIDIA A100 80GB PCIe | runs/g45_w16 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --attn linear --mlp spike --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --relay quant --relay_levels 4 --mlp_mult 16 --relay_target 0.2 --accum 4
+[2026-11-20T22:20:13.975] error: *** JOB 1170881 ON xgph0 CANCELLED AT 2026-11-20T22:20:13 DUE TO TIME LIMIT ***
