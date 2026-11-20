@@ -1,0 +1,27 @@
+queued the next part of runs/g46_kd25s1: job 1173901
+xgpi1 NVIDIA H100 NVL | runs/g46_kd25s1 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --attn linear --mlp spike --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --relay quant --relay_levels 4 --relay_target 0.25 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --seed 1 --keep_ckpt 15000 --accum 2
+params 78.89M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.3117 (EMA weights 4.2439)
+== eval step 5000 val_loss 4.0724 (EMA weights 3.9922)
+== eval step 7500 val_loss 3.9839 (EMA weights 3.9059)
+== eval step 10000 val_loss 3.9243 (EMA weights 3.8594)
+== eval step 12500 val_loss 3.8790 (EMA weights 3.8288)
+== eval step 15000 val_loss 3.8437 (EMA weights 3.8114)
+== eval step 17500 val_loss 3.8217 (EMA weights 3.8022)
+== eval step 20000 val_loss 3.8114 (EMA weights 3.7972)
+hellaswag        acc 0.2667  acc_norm 0.2658
+lambada_openai   perplexity 3733.1356  acc 0.0722
+piqa             acc 0.5756  acc_norm 0.5675
+arc_easy         acc 0.4251  acc_norm 0.3838
+arc_challenge    acc 0.1783  acc_norm 0.2423
+winogrande       acc 0.4988
+hellaswag        acc 0.2666  acc_norm 0.2702
+lambada_openai   perplexity 3714.8443  acc 0.0701
+piqa             acc 0.5805  acc_norm 0.5637
+arc_easy         acc 0.4263  acc_norm 0.3880
+arc_challenge    acc 0.1783  acc_norm 0.2304
+winogrande       acc 0.4972
+ "val_loss": 3.8220249805460207,
+   " of the presence of rain, especially in the middle of the tropics. This is the most important point in the world\u2019s history, since the oceans are always filled with carbon dioxide.\nThe Earth is already on the brink of extinction, with the total area of the world\u2019s land and sea ice being a whopping 4% of the world\u2019s land use. Over 50 million people depend on food, both by land and by forests, and by nature, the area is a lot of land. At the same time, land is a much more important part of natural resource management than land.\nThe most important question\nThe global food system is a very powerful force for the global food crisis that has led to severe shortages in the food sectors. The food shortages, which has resulted in major losses to people in developing countries, are due to global problems.\nGlobal food prices and its use in food production are dependent on global food prices, which in turn have been increasing over the years. This type of food is a large and relatively stable market for food that is being used to supply food.\nHow will food companies determine the price of food?\nFood production is controlled by the Food Committee. The food is a",
+done Sat Nov 21 04:32:42 AM +08 2026
