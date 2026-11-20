@@ -46,7 +46,9 @@ For quant relays, the count penalty can use a smooth gradient at the K threshold
 so it can act on silent and saturated inputs while the matrices and the spike budget still see hard spikes.
 wq ="ternary": the blocks' matrices use weights in {-1, 0, +1} times one scale per matrix (the mean |w|; BitNet
 b1.58's rounding, straight-through gradient), the input rows and the readout stay real: the non-spiking way to
-turn the matrices' multiplications into additions, as a control."""
+turn the matrices' multiplications into additions, as a control.
+out_classes > 0: the spiking network's two-level readout (model.ClassReadout, docs 5.36), with out_short words
+scored directly alongside the class scores. The default head is a single full-vocabulary projection."""
 import math
 from dataclasses import dataclass
 
@@ -69,6 +71,8 @@ class TFConfig:
     relay_levels: int = 1     # quant: up to this many spikes per channel and token (module docstring)
     wq: str = "none"          # "ternary": the blocks' matrices with weights in {-1, 0, +1} times a scale (module docstring)
     mlp_mult: int = 4         # the MLP's hidden units per channel (4: GPT-2's); wider with sparse units: docs 5.56
+    out_classes: int = 0      # >0: two-level readout over this many word classes
+    out_short: int = 0        # number of words scored directly in the two-level readout's shortlist
 
 
 class _Tern(torch.autograd.Function):
@@ -387,15 +391,19 @@ class GPT(nn.Module):
         self.pos = None if c.rope or c.attn == "linear" else nn.Embedding(c.max_len, c.d_model)
         self.blocks = nn.ModuleList([Block(c) for _ in range(c.n_layers)])
         self.norm = nn.RMSNorm(c.d_model)
-        self.head = nn.Linear(c.d_model, c.vocab, bias=False)
+        if c.out_classes:
+            from model import ClassReadout
+            self.head = ClassReadout(c.vocab, c.d_model, c.out_classes, 0.02, c.out_short)
+        else:
+            if c.out_short:
+                raise ValueError("out_short needs out_classes")
+            self.head = nn.Linear(c.d_model, c.vocab, bias=False)
         for n, p in self.named_parameters():
             if p.dim() == 2:
                 std = 0.02 / math.sqrt(2 * c.n_layers) if n.endswith(("proj.weight", "fc2.weight")) else 0.02
                 nn.init.normal_(p, std=std)
 
-    def forward(self, idx, targets=None, state=None, return_spikes=False, hidden=False):
-        """Returns logits, loss, None (no carried state), zeros; with hidden=True the third item is instead the list
-        of residual streams after each block (used as a teacher's hidden states, train.py --hint_weight)."""
+    def _features(self, idx):
         L = idx.size(1)
         x = self.embed(idx)
         if self.pos is not None:
@@ -404,10 +412,19 @@ class GPT(nn.Module):
         for b in self.blocks:
             x = b(x)
             xs.append(x)
-        logits = self.head(self.norm(x))
+        return self.norm(x), xs
+
+    def forward(self, idx, targets=None, state=None, return_spikes=False, hidden=False):
+        """Returns logits (word log-probabilities with the two-level head), loss, None, and firing rates.
+        With hidden=True the third item holds the residual streams after each block for hidden-state distillation."""
+        x, xs = self._features(idx)
+        logits = self.head(x)
         loss = None
         if targets is not None:
-            loss = F.cross_entropy(logits.float().view(-1, logits.size(-1)), targets.view(-1))
+            if self.cfg.out_classes:
+                loss = F.nll_loss(logits.flatten(0, 1), targets.reshape(-1))
+            else:
+                loss = F.cross_entropy(logits.float().view(-1, logits.size(-1)), targets.view(-1))
         rates = self.rates(idx.device)
         return logits, loss, xs if hidden else None, rates
 
@@ -437,19 +454,33 @@ class GPT(nn.Module):
 
     @torch.no_grad()
     def generate(self, idx, max_new_tokens, temperature=0.8, top_k=None, eos_id=None, generator=None):
+        """At temperature 1 with no top-k cutoff, the two-level head samples a shortlist word or one class.
+        Global temperature scaling and top-k filtering use full word scores."""
         out = []
         for _ in range(max_new_tokens):
-            logits, _, _, _ = self(idx[:, -self.cfg.max_len:])
-            l = logits[:, -1].float() / max(temperature, 1e-5)
-            if top_k:
-                v, _ = torch.topk(l, top_k)
-                l[l < v[:, [-1]]] = -float("inf")
-            nxt = torch.multinomial(F.softmax(l, -1), 1, generator=generator)
+            context = idx[:, -self.cfg.max_len:]
+            if self.cfg.out_classes:
+                x, _ = self._features(context)
+                if temperature == 1.0 and not top_k:
+                    nxt = self.head.sample(x[:, -1], generator=generator)
+                else:
+                    nxt = self._sample_logits(self.head(x[:, -1]), temperature, top_k, generator)
+            else:
+                logits, _, _, _ = self(context)
+                nxt = self._sample_logits(logits[:, -1], temperature, top_k, generator)
             out.append(nxt)
             idx = torch.cat([idx, nxt], 1)
             if eos_id is not None and idx.size(0) == 1 and nxt.item() == eos_id:
                 break
         return torch.cat(out, 1)
+
+    @staticmethod
+    def _sample_logits(logits, temperature, top_k, generator):
+        l = logits.float() / max(temperature, 1e-5)
+        if top_k:
+            v, _ = torch.topk(l, top_k)
+            l[l < v[:, [-1]]] = -float("inf")
+        return torch.multinomial(F.softmax(l, -1), 1, generator=generator)
 
     def num_params(self):
         return sum(p.numel() for p in self.parameters())

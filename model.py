@@ -476,6 +476,8 @@ class ClassReadout(nn.Module):
 
     def __init__(self, vocab, d, C, init, S=0):
         super().__init__()
+        if C <= 0 or not 0 <= S < vocab:
+            raise ValueError("two-level readout needs out_classes > 0 and 0 <= out_short < vocab")
         self.C, self.S, self.m, self.vocab = C, S, math.ceil((vocab - S) / C), vocab
         self.w_cls = nn.Parameter(torch.randn(S + C, d) * init)        # short-list neurons, then class neurons
         self.w_word = nn.Parameter(torch.randn(C * self.m, d) * init)  # word readout neurons, class by class
@@ -484,7 +486,13 @@ class ClassReadout(nn.Module):
         self.register_buffer("word_cls", torch.where(w < S, -1, (w - S) // self.m))
         self.register_buffer("slot", torch.zeros(vocab, dtype=torch.long))
         self.register_buffer("used", torch.zeros(C * self.m, dtype=torch.bool))
+        self.register_buffer("word_at_slot", torch.full((S + C * self.m,), -1, dtype=torch.long), persistent=False)
+        self.register_load_state_dict_post_hook(self._restore_word_at_slot)
         self.set_classes(self.word_cls.clone())
+
+    def _restore_word_at_slot(self, *_):
+        self.word_at_slot.fill_(-1)
+        self.word_at_slot.scatter_(0, self.slot, torch.arange(self.vocab, device=self.slot.device))
 
     @torch.no_grad()
     def set_classes(self, word_cls):
@@ -506,16 +514,41 @@ class ClassReadout(nn.Module):
         # index of w in [short-list neurons (S), word neurons class by class (C*m)]
         self.slot.copy_(torch.where(short, pos, self.S + word_cls.clamp(min=0) * self.m + pos))
         self.used.zero_(); self.used[self.slot[~short] - self.S] = True
+        self._restore_word_at_slot()
+
+    def _top_logits(self, x):
+        # A numeric or supplied partition can leave empty classes. Each occupied block starts at slot zero.
+        empty = F.pad(~self.used[::self.m], (self.S, 0), value=False)
+        return F.linear(x, self.w_cls).float().masked_fill_(empty, float("-inf"))
 
     def forward(self, x):
-        top = F.log_softmax(F.linear(x, self.w_cls).float(), -1)                                  # (..., S + C)
+        top = F.log_softmax(self._top_logits(x), -1)                                            # (..., S + C)
         lc = top[..., self.S:]
-        lw = F.linear(x, self.w_word).float().masked_fill(~self.used, float("-inf"))              # (..., C*m)
-        lw = (F.log_softmax(lw.view(*lw.shape[:-1], self.C, self.m), -1) + lc.unsqueeze(-1)).flatten(-2)  # per slot
+        lw = F.linear(x, self.w_word).float().unflatten(-1, (self.C, self.m))
+        # Keep one dummy slot in empty classes so their conditional normalizer is finite. Their top mass is zero.
+        used = F.pad(self.used.view(self.C, self.m)[:, 1:], (1, 0), value=True)
+        lw.masked_fill_(~used, float("-inf"))
+        lw = (F.log_softmax(lw, -1) + lc.unsqueeze(-1)).flatten(-2)                               # per slot
         if self.S:
             lw = torch.cat([top[..., :self.S], lw], -1)
         # to word order; index_select (no repeated index) rather than advanced indexing, whose backward is slow on GPUs
         return lw.index_select(-1, self.slot)
+
+    @torch.no_grad()
+    def sample(self, x, generator=None):
+        """Draw from the model distribution for x (B, d), projecting only the chosen word block per tail draw."""
+        top = torch.multinomial(self._top_logits(x).softmax(-1), 1, generator=generator)
+        slots = top.clone()
+        rows = (top[:, 0] >= self.S).nonzero(as_tuple=True)[0]
+        if rows.numel():
+            classes = top[rows, 0] - self.S
+            weights = self.w_word.unflatten(0, (self.C, self.m)).index_select(0, classes)
+            word_logits = torch.bmm(weights, x.index_select(0, rows).unsqueeze(-1)).squeeze(-1).float()
+            used = self.used.view(self.C, self.m).index_select(0, classes)
+            word_logits.masked_fill_(~used, float("-inf"))
+            pos = torch.multinomial(word_logits.softmax(-1), 1, generator=generator)
+            slots[rows] = self.S + classes[:, None] * self.m + pos
+        return self.word_at_slot[slots]
 
 
 class SpikingLM(nn.Module):

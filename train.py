@@ -364,7 +364,8 @@ def main():
         from model_tf import GPT, TFConfig
         cfg = TFConfig(vocab=a.vocab, d_model=a.d_model, n_layers=a.n_layers, n_heads=a.n_heads,
                        max_len=max(1024, a.seq), rope=a.rope, attn=a.attn, mlp=a.mlp, relay=a.relay,
-                       relay_levels=a.relay_levels, wq=a.wq, mlp_mult=a.mlp_mult)
+                       relay_levels=a.relay_levels, wq=a.wq, mlp_mult=a.mlp_mult,
+                       out_classes=a.out_classes, out_short=a.out_short)
         model = GPT(cfg)
         assert a.relay_target == 0 or model.relays(), "--relay_target needs --relay"
         assert a.relay_target_start == 0 or (a.relay_target_start > a.relay_target > 0 and a.relay_target_steps > 0), \
@@ -377,12 +378,12 @@ def main():
         assert a.relay_target == 0, "--relay_target: --arch tf only"
         cfg = Config(**{f.name: getattr(a, f.name) for f in fields(Config)})
         model = SpikingLM(cfg)
-        if a.class_file:   # (a checkpoint loaded below brings back its own classes)
-            assert cfg.out_classes > 0, "--class_file needs --out_classes"
-            model.head.set_classes(torch.from_numpy(np.load(a.class_file)).long())
         if a.in_class_file:
             assert cfg.in_groups == 2, "--in_class_file needs --in_groups 2"
             model.embed.set_classes(torch.from_numpy(np.load(a.in_class_file)).long())
+    if a.class_file:   # (a checkpoint loaded below brings back its own classes)
+        assert cfg.out_classes > 0, "--class_file needs --out_classes"
+        model.head.set_classes(torch.from_numpy(np.load(a.class_file)).long())
     model.to(dev)
     teacher = None
     if a.teacher and a.distill_weight > 0:
@@ -460,9 +461,15 @@ def main():
         src = {**ck0["model"], **ck0.get("ema", {})}
         sd = model.state_dict()
         hit = [k for k in sd if k in src and src[k].shape == sd[k].shape]
-        with torch.no_grad():
-            for k in hit:
-                sd[k].copy_(src[k].to(sd[k].dtype))
+        if a.arch == "tf" and cfg.out_classes:
+            # A class map and its weight tables need to come from the same layout.
+            head_keys = {k for k in sd if k.startswith("head.")}
+            source_cfg = ck0.get("cfg", {})
+            source_layout = (source_cfg.get("out_classes"), source_cfg.get("out_short", 0))
+            same_layout = source_layout == (cfg.out_classes, cfg.out_short)
+            if not same_layout or not head_keys.issubset(hit):
+                hit = [k for k in hit if k not in head_keys]
+        model.load_state_dict({k: src[k].to(sd[k].dtype) for k in hit}, strict=False)
         miss = [k for k in sd if k not in hit]
         print(f"weights from {a.init_weights} ({'averaged' if ck0.get('ema') else 'raw'}): {len(hit)} tensors copied, "
               f"{len(miss)} kept their initialisation: {', '.join(miss[:8])}{' ...' if len(miss) > 8 else ''}")

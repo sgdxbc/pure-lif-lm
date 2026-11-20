@@ -1,4 +1,4 @@
-"""Text completion with a trained spiking LM.
+"""Text completion with a trained language model.
 
   python3 sample.py --ckpt runs/main/ckpt.pt --prompt "Once upon a time" --n 200
   python3 sample.py --ckpt runs/main/ckpt.pt -i        # interactive
@@ -51,7 +51,8 @@ def main():
     p.add_argument("--prompt", default="Once upon a time")
     p.add_argument("--n", type=int, default=200)
     p.add_argument("--temperature", type=float, default=0.8)
-    p.add_argument("--top_k", type=int, default=50)
+    p.add_argument("--top_k", type=int, default=50,
+                   help="0 disables the cutoff; with --temperature 1, a two-level GPT reads just the sampled block")
     p.add_argument("--num", type=int, default=1)
     p.add_argument("--seed", type=int, default=None)
     p.add_argument("-i", "--interactive", action="store_true")

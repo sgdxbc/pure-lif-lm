@@ -2,7 +2,10 @@
 # GPU wave 46, first part (docs/experiments.md 5.58): confirm distillation on sparse relays with a second seed, and a
 # Transformer trained on the same short recipe as the 77M spiking-relay runs (the fair side of the FPGA comparison).
 # Agreed with the GPT advisor (docs/discussions.md, 2026-11-20). The two-level-readout runs follow once model_tf.py has
-# that readout.
+# that readout. Part 2 (the advisor's model_tf.py two-level readout, docs 5.58): the readout's own quality cost.
+#   tf31s_cls8k   tf31s with the spiking network's two-level readout (8,192 own words + 225 classes, the class map of
+#                 runs/classes/tf163_head225_s8192.npy), against tf31s
+#   kd25_cls8k    g45_kd25 with the same readout, against g45_kd25
 #   t25s1    g45_t25 (relays at 0.25, no teacher) with seed 1
 #   kd25s1   g45_kd25 (relays at 0.25, distilled from g13_tf163) with seed 1; keeps its step-15000 checkpoint for the
 #            constant-versus-tapered distillation continuations
@@ -14,17 +17,19 @@
 set -e
 cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
-for f in data/fineweb/train.bin runs/g13_tf163/ckpt.pt; do [ -s $f ] || { echo "$f missing"; exit 1; }; done
+H8=runs/classes/tf163_head225_s8192.npy
+for f in data/fineweb/train.bin runs/g13_tf163/ckpt.pt $H8; do [ -s $f ] || { echo "$f missing"; exit 1; }; done
 DATA="--data data/fineweb --tokenizer gpt2.json --vocab 50304"
 SHORT="--batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500"
 KD="--teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1"
 S77="--arch tf --attn linear --mlp spike --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999"   # g40_laspk's
 Q25="--relay quant --relay_levels 4 --relay_target 0.25"
 TF31="--arch tf --d_model 256 --n_layers 6 --n_heads 4 --lr 1e-3 --ema 0.999"                         # g33_tf31's shape
-NAMES="t25s1 kd25s1 tf31s"
+NAMES="t25s1 kd25s1 tf31s tf31s_cls8k kd25_cls8k"
+CLS="--out_classes 225 --out_short 8192 --class_file $H8"
 only=$1
 case " $NAMES " in *" ${only:-t25s1} "*) ;; *) echo "NAME is one of: $NAMES"; exit 1 ;; esac
-for s in "kd25s1 h100-96" "t25s1 a100-40" "tf31s h100-47"; do
+for s in "kd25s1 h100-96" "t25s1 a100-40" "tf31s h100-47" "tf31s_cls8k h100-47" "kd25_cls8k a100-40"; do
   set -- $s; name=$1; gpu=${GPU:-$2}
   [ -n "$only" ] && [ "$only" != "$name" ] && continue
   case $gpu in h200-141) acc=1 ;; h100-96|a100-80) acc=2 ;; *) acc=4 ;; esac
@@ -33,6 +38,8 @@ for s in "kd25s1 h100-96" "t25s1 a100-40" "tf31s h100-47"; do
     t25s1) X="$S77 $Q25 --seed 1" ;;
     kd25s1) X="$S77 $Q25 $KD --seed 1 --keep_ckpt 15000" ;;
     tf31s) X="$TF31 $KD" ;;
+    tf31s_cls8k) X="$TF31 $KD $CLS" ;;
+    kd25_cls8k) X="$S77 $Q25 $KD $CLS" ;;
   esac
   j=$(sbatch --parsable -p gpu -J g46_$name --gres=gpu:$gpu:1 ${NICE:+--nice=$NICE} \
       --export=ALL,RELAY=$gpu,HW=0,PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True slurm/train.sbatch \

@@ -100,9 +100,11 @@ def tf_hw(args, rates=None, readout=None, ctx=1024, bits=4):
                     counted as reading it once: conservative, a channel with several spikes reads its row once)
       wq ternary    the block matrices' weights take 2 bits (values -1, 0, +1) instead of `bits`, and each of their
                     weights costs an addition (dense_adds) instead of a multiply-add
-    The input rows (and learned positions) are word tables: one row per token, read from HBM. readout (S, C): a
-    hypothetical two-level readout like the spiking network's (S own words, C classes; its quality cost is not
-    included), else the full readout, read every step. Byte counts at `bits` per weight."""
+    The input rows (and learned positions) are word tables: one row per token, read from HBM. readout (S, C) models
+    unfiltered, unit-temperature sampling from a two-level head: S shortlist rows and C class rows shared across
+    streams, plus up to one word block per stream (m padded rows, none for a shortlist draw). The estimate budgets
+    a block for every draw. With readout=None, count the run's configured head, flat or two-level. Byte counts at
+    `bits` per weight cover the matrices."""
     V, d, L, h = args["vocab"], args["d_model"], args["n_layers"], args.get("n_heads") or 12
     hd, lin, mlp = d // h, args.get("attn") == "linear", args.get("mlp") or "gelu"
     H = (args.get("mlp_mult") or 4) * d                              # the MLP's hidden units
@@ -117,6 +119,8 @@ def tf_hw(args, rates=None, readout=None, ctx=1024, bits=4):
         rel = [0.3] * (3 * L)                                        # no measurement: 30%, about their rate at start
     in_cols = 3 * d + d + h if lin else 3 * d                        # what the stream feeds: q, k, v (gate, decay)
     out_cols, small = d, (12 * d if lin else 0)                      # output projection; the convolution
+    if readout is None and args.get("out_classes", 0):
+        readout = (args.get("out_short", 0), args["out_classes"])
     if readout:
         S, C = readout
         m = math.ceil((V - S) / C)
@@ -134,7 +138,7 @@ def tf_hw(args, rates=None, readout=None, ctx=1024, bits=4):
             sparse.append((mlp_r[l], H, d * bm))
     block_all = L * d * (in_cols + out_cols + 2 * H)
     table = V * d + (0 if lin else args.get("seq", 1024) * d) + head_table
-    params = block_all + L * small + table + head_shared + head_own * 0 + L * 2 * d + d
+    params = block_all + L * small + table + head_shared + L * 2 * d + d
     state_vals = L * (h * hd * hd + 9 * d) if lin else 0
     state_vals += L * H if mlp == "lif" else 0
     state_vals += L * 3 * 2 * d if relay == "lif" else 0

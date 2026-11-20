@@ -80,7 +80,7 @@ python3 train.py --device cuda --out runs/my_snn \
 | `hw_ref.cpp` | 整数参考实现（C++）：`g++ -O3 -march=native -fopenmp -ffp-contract=off -o hw_ref hw_ref.cpp`，`./hw_ref runs/X/hw runs/X/hw/windows.bin 256 256` 打印验证 loss；FPGA 程序要和它逐位一致（5.44） |
 | `experiments/wbits_sens.py runs/X` | 哪类权重矩阵取整到 4 位损失最大；把最敏感的几类留在 8 位时的损失和多用的存储（5.38） |
 | `fpga_est.py runs/X [--device u55c --cards 2]` | 脉冲网络在 FPGA 上的延迟、吞吐量和能耗估算（默认 AMD Alveo V80 的参数，5.25；U55C 和多卡流水线见 5.44） |
-| `experiments/fpga_compare.py [--runs A B ...] [--readout 8192 225] [--add_cost c]` | 同样的假设下，在同一块 FPGA 上估算 Transformer 和线性注意力网络（`model_tf.py` 的运行，含 0/1 单元、中继、三值权重；5.51–5.54）。`--runs` 只算这些运行（按它们最后一次评估的发放率），`--readout` 换成假设的两级读出（质量代价不含在内），`--add_cost` 是一次加法相对一次乘加的代价（小于 1 只是敏感性检查） |
+| `experiments/fpga_compare.py [--runs A B ...] [--readout 8192 225] [--add_cost c]` | 同样的假设下，在同一块 FPGA 上估算 Transformer 和线性注意力网络（`model_tf.py` 的运行，含 0/1 单元、中继、三值权重；5.51–5.54）。`--runs` 按训练时的读出和最后一次评估的发放率估算；`--readout` 可换成假设的两级读出（表中标的是原运行的损失）。`--add_cost` 是一次加法相对一次乘加的代价（小于 1 只是敏感性检查） |
 | `bench_gpu.py --model 名字` | Transformer 在 GPU 上用 vLLM 实测：吞吐量、每 token 延迟、每 token 能耗（5.25） |
 | `bench_gpu_lean.py --shape D,L,H` | 同样的量，但用最简的生成程序（固定大小的键值缓存、CUDA graph），给出 GPU 本身能做到多少的界限（5.43）；`--check` 在 CPU 上核对 |
 
@@ -105,11 +105,13 @@ python3 train.py --device cuda --out runs/my_snn \
 - `--leak_rank r`：调节漏电的突触（秩 r）。同一批脉冲除了注入电流，还通过另一组突触改变神经元漏电的快慢，
   `β[t] = sigmoid(β_logit + U·总线[t])`，网络可以按读到的内容决定一个神经元"保持"还是"清空"。现在的标准设置都用它（5.8 节起）。
 - `--steps_per_token T`：每个 token 模拟 T 个时间步（5.21 节）。
-- `--out_classes C [--class_file f.npy]`：两级读出（5.36 节）：C 个类读出神经元，每类最多 ⌈词表 / C⌉ 个词读出神经元；
-  P(词) = P(类) × P(词 | 类)，训练和评测照常（模型输出的是 log P(词)），生成时每个词只算 C 加一类的词读出神经元。
+- `--out_classes C [--class_file f.npy]`：两级读出（5.36 节，支持 `--arch snn` 和 `--arch tf`）：C 个类读出单元，
+  每类最多 ⌈词表 / C⌉ 个词读出单元；P(词) = P(类) × P(词 | 类)，模型输出的是 log P(词)。
   `--class_file` 是每个词所属的类（`experiments/word_classes.py` 生成：按词频，或对训练好的网络的读出行做均衡 k-means）；默认按编号分类。
   加 `--out_short S`：S 个词（一个"短名单"，`word_classes.py --short S` 取训练数据里最常见的 S 个，类号记为 −1）不分类，
-  各有自己的读出神经元，和 C 个类读出神经元一起做一次 softmax；其余的词再分成 C 类。生成时每个词算 S + C 加一类的词读出神经元。
+  各有自己的读出单元，和 C 个类读出单元一起做一次 softmax；其余的词分成 C 类。
+  GPT 用 `sample.py --temperature 1 --top_k 0` 时，先从 S + C 项抽样，抽到类时才算那一类的词。全词表的温度调整和 top-k 筛选用完整词分数。
+  精确贪心比较短名单的最高概率和各类的 P(类) × max P(词 | 类)；若一个类的 P(类) 已低于当前最高词概率，可跳过该类。
 - `--in_groups k [--in_class_file f.npy]`：组合输入（5.36 节）：k 群各 n = ⌈词表^(1/k)⌉ 个输入神经元，每个词在每群里各让一个发放，
   注入它们的突触之和。默认按编号的 k 位数字；k = 2 时 `--in_class_file` 按类分配（第一群是类，第二群是类里的序号；用
   `word_classes.py --rows embed` 对训练好的网络的输入行聚类）。加 `--in_short S`：短名单里的 S 个词（类号 −1）各有自己的一个输入神经元，
