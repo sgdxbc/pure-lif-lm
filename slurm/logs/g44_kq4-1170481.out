@@ -1,0 +1,14 @@
+queued the next part of runs/g44_kq4: job 1171485
+xgph0 NVIDIA A100 80GB PCIe | runs/g44_kq4 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --bus_norm true --mem_kq_levels 4 --accum 2
+params 121.01M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3008
+== eval step 2500 val_loss 4.5015 (EMA weights 4.4423)
+== eval step 5000 val_loss 4.2262 (EMA weights 4.1498)
+== eval step 7500 val_loss 4.1024 (EMA weights 4.0304)
+== eval step 10000 val_loss 4.0103 (EMA weights 3.9546)
+params 121.01M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 3.9374 (EMA weights 3.8987)
+== eval step 15000 val_loss 3.8838 (EMA weights 3.8599)
+== eval step 17500 val_loss 3.8474 (EMA weights 3.8347)
+== eval step 20000 val_loss 3.8278 (EMA weights 3.8190)
+[2026-11-20T19:06:36.974] error: *** JOB 1170481 ON xgph0 CANCELLED AT 2026-11-20T19:06:36 DUE TO TIME LIMIT ***
