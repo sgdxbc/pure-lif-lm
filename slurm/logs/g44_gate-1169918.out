@@ -1,0 +1,28 @@
+queued the next part of runs/g44_gate: job 1170482
+xgpi20 NVIDIA H100 NVL | runs/g44_gate | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --bus_norm true --mem_gate channel --accum 4
+params 125.69M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.4250 (EMA weights 4.3657)
+== eval step 5000 val_loss 4.1366 (EMA weights 4.0695)
+== eval step 7500 val_loss 4.0101 (EMA weights 3.9469)
+== eval step 10000 val_loss 3.9265 (EMA weights 3.8745)
+params 125.69M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 12500 val_loss 3.8587 (EMA weights 3.8223)
+== eval step 15000 val_loss 3.8084 (EMA weights 3.7861)
+== eval step 17500 val_loss 3.7732 (EMA weights 3.7623)
+== eval step 20000 val_loss 3.7556 (EMA weights 3.7477)
+hellaswag        acc 0.2669  acc_norm 0.2713
+lambada_openai   perplexity 3990.4829  acc 0.0505
+piqa             acc 0.5822  acc_norm 0.5680
+arc_easy         acc 0.4394  acc_norm 0.3973
+arc_challenge    acc 0.1920  acc_norm 0.2227
+winogrande       acc 0.5178
+hellaswag        acc 0.2663  acc_norm 0.2693
+lambada_openai   perplexity 3924.6442  acc 0.0539
+piqa             acc 0.5751  acc_norm 0.5729
+arc_easy         acc 0.4444  acc_norm 0.3969
+arc_challenge    acc 0.1937  acc_norm 0.2287
+winogrande       acc 0.5043
+ "val_loss": 3.765572297554778,
+   " of pressure.\nThis is why the U.S. Department of Agriculture is planning to explore a wide range of sources of water to help create \u201csoda-friendly places\u201d for outdoor bird lovers.\n\u201cThe climate change-induced climate change is one of the most urgent problems for bird populations in the U.S.\u201d said Paul Reus, a bird-friendly pollinator for the U.S. Department of Agriculture.\n\u201cThe lack of a good habitat on the north-eastern Coast is the reason why bird populations are so vulnerable. They are threatened because of the lack of access to food and, especially, the loss of the species of bird that have been killed by the birds that prey on them.\u201d\nThe U.S. Department of Agriculture has been doing well in protecting the U.S. Department of Agriculture and Wildlife, the United States Department of Agriculture, and the U.S. Department of Agriculture.\n\u201cOur goal is to help mitigate the effects of climate change on bird populations,\u201d said Reus. \u201cWith a huge deal of efforts to protect the U.S. bird populations, we are working to fight the extinction of the species,",
+done Fri Nov 20 03:56:52 PM +08 2026

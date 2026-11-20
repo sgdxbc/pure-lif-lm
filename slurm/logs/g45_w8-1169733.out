@@ -1,0 +1,3 @@
+queued the next part of runs/g45_w8: job 1170284
+xgpg4 NVIDIA A100-PCIE-40GB | runs/g45_w8 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --attn linear --mlp spike --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --relay quant --relay_levels 4 --mlp_mult 8 --relay_target 0.33 --accum 4
+[2026-11-20T15:03:34.007] error: *** JOB 1169733 ON xgpg4 CANCELLED AT 2026-11-20T15:03:34 DUE TO TIME LIMIT ***
