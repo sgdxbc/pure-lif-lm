@@ -1,0 +1,28 @@
+queued the next part of runs/g43_q4tt163: job 1169655
+xgpi1 NVIDIA H100 NVL | runs/g43_q4tt163 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --attn linear --d_model 768 --n_layers 12 --n_heads 12 --lr 6e-4 --ema 0.999 --mlp spike --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --relay quant --relay_levels 4 --relay_target 0.5 --wq ternary --accum 2
+params 169.59M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.2189 (EMA weights 4.1636)
+== eval step 5000 val_loss 3.9440 (EMA weights 3.8709)
+== eval step 7500 val_loss 3.8420 (EMA weights 3.7711)
+== eval step 10000 val_loss 3.7796 (EMA weights 3.7184)
+== eval step 12500 val_loss 3.7344 (EMA weights 3.6806)
+== eval step 15000 val_loss 3.6977 (EMA weights 3.6560)
+== eval step 17500 val_loss 3.6754 (EMA weights 3.6411)
+params 169.59M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 20000 val_loss 3.6642 (EMA weights 3.6319)
+hellaswag        acc 0.2711  acc_norm 0.2715
+lambada_openai   perplexity 2218.9089  acc 0.1050
+piqa             acc 0.5838  acc_norm 0.5756
+arc_easy         acc 0.4470  acc_norm 0.4028
+arc_challenge    acc 0.1886  acc_norm 0.2372
+winogrande       acc 0.5099
+hellaswag        acc 0.2695  acc_norm 0.2735
+lambada_openai   perplexity 2181.2155  acc 0.1034
+piqa             acc 0.5843  acc_norm 0.5773
+arc_easy         acc 0.4529  acc_norm 0.3969
+arc_challenge    acc 0.1843  acc_norm 0.2372
+winogrande       acc 0.5075
+ "val_loss": 3.676290462057345,
+   " they are higher sun exposure than normal soils, but you can get a little sun exposure right where you should be. However, not every day during the growing season, sun exposure has the same negative impact on the plant.\nPruning can be very damaging, however. Properly watering your plants has to be done at all times. You may be able to keep up with the temperature of the soil and take care not to have a wet or dry spot next to the plant as this will damage your plant.\nBeetles grow in the trunk and flower buds of tree roots. They are not the only problem with bark. They are difficult to dig. They are one to two percent as they have a lot of moisture in the soil and they are very vulnerable to soil loss. You may find them to go in a potting mix with lots of water but you should remember and not touch the root surface.\nWet plants are not as dangerous nor are they good for plants due to water. Because they do not absorb water and do not have a lot of moisture, they are very susceptible to a lot of waterlogging. So it is important that you have the proper watering to keep your tree healthy.\nYou can easily put",
+done Fri Nov 20 08:37:03 AM +08 2026
