@@ -26,6 +26,7 @@ def load(ckpt_path, ema=False, device="cpu", wbits=None):
         assert "ema" in ck, f"{ckpt_path} has no EMA weights"
         sd = {k: (ck["ema"][k].to(v.dtype) if k in ck["ema"] else v) for k, v in sd.items()}
     model.load_state_dict(sd)
+    assert ck.get("arch") != "tf" or not wbits, "wbits: rounding is implemented for spiking networks only (model.py)"
     if ck.get("arch") != "tf":
         bits = model.cfg.wbits if wbits is None else wbits
         if bits:
