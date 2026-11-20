@@ -1,0 +1,27 @@
+queued the next part of runs/g45_twin25: job 1173673
+xgpi11 NVIDIA H100 NVL | runs/g45_twin25 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --attn linear --mlp spike --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --relay quant --relay_levels 4 --relay_target 0.25 --teacher runs/g40_la/ckpt.pt --teacher_ema --distill_weight 0.9 --keep_ckpt 15000 --accum 4
+params 78.89M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.5898
+== eval step 2500 val_loss 4.2625 (EMA weights 4.2028)
+== eval step 5000 val_loss 4.0409 (EMA weights 3.9734)
+== eval step 7500 val_loss 3.9613 (EMA weights 3.9005)
+== eval step 10000 val_loss 3.9131 (EMA weights 3.8660)
+== eval step 12500 val_loss 3.8783 (EMA weights 3.8416)
+== eval step 15000 val_loss 3.8524 (EMA weights 3.8267)
+params 78.89M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 17500 val_loss 3.8332 (EMA weights 3.8188)
+== eval step 20000 val_loss 3.8268 (EMA weights 3.8144)
+hellaswag        acc 0.2665  acc_norm 0.2645
+lambada_openai   perplexity 4701.8195  acc 0.0654
+piqa             acc 0.5734  acc_norm 0.5473
+arc_easy         acc 0.4301  acc_norm 0.3817
+arc_challenge    acc 0.1766  acc_norm 0.2295
+winogrande       acc 0.4759
+hellaswag        acc 0.2666  acc_norm 0.2657
+lambada_openai   perplexity 4822.7786  acc 0.0637
+piqa             acc 0.5691  acc_norm 0.5468
+arc_easy         acc 0.4314  acc_norm 0.3834
+arc_challenge    acc 0.1843  acc_norm 0.2321
+winogrande       acc 0.5178
+ "val_loss": 3.8384985012575963,
+done Sat Nov 21 03:33:20 AM +08 2026
