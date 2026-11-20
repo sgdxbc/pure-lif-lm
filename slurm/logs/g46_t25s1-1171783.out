@@ -1,0 +1,3 @@
+queued the next part of runs/g46_t25s1: job 1172644
+xgph11 NVIDIA A100 80GB PCIe | runs/g46_t25s1 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --attn linear --mlp spike --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --relay quant --relay_levels 4 --relay_target 0.25 --seed 1 --accum 4
+[2026-11-21T00:15:15.011] error: *** JOB 1171783 ON xgph11 CANCELLED AT 2026-11-21T00:15:15 DUE TO TIME LIMIT ***

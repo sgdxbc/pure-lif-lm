@@ -1,0 +1,26 @@
+queued the next part of runs/g46_tf31s: job 1173574
+xgpi14 NVIDIA H100 NVL | runs/g46_tf31s | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --d_model 256 --n_layers 6 --n_heads 4 --lr 1e-3 --ema 0.999 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --accum 4
+params 30.74M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.5245 (EMA weights 4.4723)
+== eval step 5000 val_loss 4.2310 (EMA weights 4.1567)
+== eval step 7500 val_loss 4.1278 (EMA weights 4.0530)
+== eval step 10000 val_loss 4.0612 (EMA weights 3.9951)
+== eval step 12500 val_loss 4.0063 (EMA weights 3.9560)
+== eval step 15000 val_loss 3.9767 (EMA weights 3.9320)
+== eval step 17500 val_loss 4.1710 (EMA weights 5.2603)
+== eval step 20000 val_loss 4.1175 (EMA weights 4.1644)
+hellaswag        acc 0.2631  acc_norm 0.2650
+lambada_openai   perplexity 5815.6890  acc 0.0761
+piqa             acc 0.5713  acc_norm 0.5555
+arc_easy         acc 0.3704  acc_norm 0.3523
+arc_challenge    acc 0.1783  acc_norm 0.2176
+winogrande       acc 0.4822
+hellaswag        acc 0.2628  acc_norm 0.2668
+lambada_openai   perplexity 6906.2330  acc 0.0714
+piqa             acc 0.5686  acc_norm 0.5620
+arc_easy         acc 0.3805  acc_norm 0.3653
+arc_challenge    acc 0.1741  acc_norm 0.2090
+winogrande       acc 0.5028
+ "val_loss": 4.125967592394663,
+done Sat Nov 21 02:20:26 AM +08 2026
