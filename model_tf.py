@@ -42,6 +42,8 @@ With theta still about one RMS at initialisation, the extra spikes go to the lar
 The matrix adds the row of a channel once per spike. K = 1 is the 3-valued relay. GPT.relay_spikes: the spikes per
 channel and token of all relays, each weighted by the columns of the matrix it feeds (0.5: the block matrices add
 half as many rows as they would multiply densely); train.py --relay_target holds it to a target (5.52).
+For quant relays, the count penalty can use a smooth gradient at the K thresholds in each direction (docs 5.57),
+so it can act on silent and saturated inputs while the matrices and the spike budget still see hard spikes.
 wq ="ternary": the blocks' matrices use weights in {-1, 0, +1} times one scale per matrix (the mean |w|; BitNet
 b1.58's rounding, straight-through gradient), the input rows and the readout stay real: the non-spiking way to
 turn the matrices' multiplications into additions, as a control."""
@@ -87,6 +89,31 @@ class _Tern(torch.autograd.Function):
         return g * (x.abs() <= ctx.K + 0.5).to(g.dtype), None
 
 
+class _RelayCount(torch.autograd.Function):
+    """Hard mean count in forward, gradient of a sum of sigmoids at ±(k - 1/2) in backward (docs 5.57).
+    With z = x/theta and width in units of theta, each threshold t contributes sigmoid((z-t)/width) and
+    sigmoid((-z-t)/width). The tails give the count penalty a gradient for silent and saturated relays.
+    Save z once and compute the slopes in backward to avoid saving a tensor for every threshold."""
+
+    @staticmethod
+    def forward(ctx, z, count, K, width):
+        ctx.save_for_backward(z)
+        ctx.K, ctx.width = K, width
+        return count
+
+    @staticmethod
+    def backward(ctx, g):
+        z, = ctx.saved_tensors
+        slope = torch.zeros_like(z)
+        for k in range(ctx.K):
+            t = k + 0.5
+            # The sigmoid slope is even. Use its negative tail to avoid rounding the sigmoid to 1.
+            p = torch.sigmoid(-(z - t).abs() / ctx.width)
+            n = torch.sigmoid(-(z + t).abs() / ctx.width)
+            slope = slope + (p * (1 - p) - n * (1 - n))
+        return slope * (g / (ctx.width * z.numel())), None, None, None
+
+
 class _TernW(torch.autograd.Function):
     """BitNet b1.58's weight rounding: round(w / a) clipped to {-1, 0, 1}, times a = mean |w|; straight-through."""
 
@@ -119,6 +146,7 @@ class Relay(nn.Module):
         assert levels >= 1 and (levels == 1 or kind == "quant"), "relay_levels > 1: quant only"
         self.D, self.kind, self.levels = D, kind, levels
         self.fan, self.keep_count, self.count = fan, False, None
+        self.count_grad_width = 0.0   # nonzero: smooth the count gradient (quant only; train.py --relay_count_grad)
         self.log_theta = nn.Parameter(torch.full((D,), math.log(theta0)))          # about one RMS of the input
         if kind == "lif":
             tau = torch.exp(torch.empty(D).uniform_(0.0, math.log(4.0)))
@@ -136,7 +164,12 @@ class Relay(nn.Module):
             s = s.to(x.dtype)
             u = s[..., :self.D] - s[..., self.D:]
         self.rate = u.detach().abs().float().mean()
-        self.count = u.abs().float().mean() if self.keep_count and self.training else None
+        self.count = None
+        if self.keep_count and self.training:
+            if self.count_grad_width:
+                self.count = _RelayCount.apply(x.float() / th, self.rate, self.levels, self.count_grad_width)
+            else:
+                self.count = u.abs().float().mean()
         return u * th.to(x.dtype)
 
 
@@ -397,8 +430,8 @@ class GPT(nn.Module):
 
     def relay_spikes(self):
         """Spikes per channel and token of all relays, each weighted by the columns of the matrix it feeds: the block
-        matrices' additions over their multiply-adds read densely (fpga_est.tf_hw: 0.5, half as many). With its
-        gradient, from the last forward in training mode, the relays' keep_count set (train.py --relay_target)."""
+        matrices' additions over their multiply-adds read densely (fpga_est.tf_hw: 0.5, half as many). The value is the
+        hard count with the configured penalty gradient, from the last training forward with keep_count set."""
         rs = self.relays()
         return sum(r.fan * r.count for r in rs) / sum(r.fan for r in rs)
 

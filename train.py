@@ -5,6 +5,9 @@ Optional training methods (all off by default; the architecture is unchanged by 
   --teacher PATH --distill_weight a --distill_temp T
         knowledge distillation: loss = (1-a) * CE + a * T^2 * KL(teacher_T || student_T), where the teacher is a
         trained checkpoint (e.g. the Transformer baseline) run on the same batch. Validation loss is plain CE.
+  --distill_taper_steps N [--distill_weight_final b]
+        lower the logit distillation weight to b over the final N updates (docs 5.57) to test whether giving the
+        hard targets more weight late in training helps. The schedule uses the step restored by --init_ckpt.
   --ema d
         keep an exponential moving average of the weights (decay d, e.g. 0.999); evaluations report both.
   --carry_state
@@ -105,6 +108,10 @@ def get_args():
                    "(docs 5.56). Ignored when resuming")
     p.add_argument("--distill_weight", type=float, default=0.0)
     p.add_argument("--distill_temp", type=float, default=1.0)
+    p.add_argument("--distill_taper_steps", type=int, default=0,
+                   help="linearly lower --distill_weight over the last N steps of --steps (docs 5.57); 0: off")
+    p.add_argument("--distill_weight_final", type=float, default=0.0,
+                   help="logit distillation weight on the final update when tapering (default 0)")
     p.add_argument("--ema", type=float, default=0.0, help="EMA decay of the weights; 0 = off")
     p.add_argument("--carry_state", action="store_true",
                    help="continue each batch row through the text and carry the membrane potentials over")
@@ -123,6 +130,10 @@ def get_args():
                         "the loss gets lam x those spikes, lam raised by --relay_eta x (spikes - target) after every "
                         "step and never below 0 (a Lagrange multiplier; docs 5.52). 0: off")
     p.add_argument("--relay_eta", type=float, default=0.01, help="--relay_target: the multiplier's step")
+    p.add_argument("--relay_count_grad", choices=["ste", "smooth"], default="ste",
+                   help="--relay_target: smooth only the penalty gradient for quant relays (docs 5.57)")
+    p.add_argument("--relay_count_width", type=float, default=0.5,
+                   help="--relay_count_grad smooth: sigmoid width in units of the relay threshold (default 0.5)")
     p.add_argument("--relay_target_start", type=float, default=0.0,
                    help="--relay_target: start from this target and lower it linearly to --relay_target over the "
                         "first --relay_target_steps steps (a spike budget that tightens, docs 5.56); 0: off")
@@ -140,6 +151,15 @@ def get_args():
     p.add_argument("--hint_weight", type=float, default=0.0, help="hidden-state distillation weight (needs --teacher)")
     p.add_argument("--hint_layers", type=int, default=0, help="layer pairs for --hint_weight (0: one per teacher layer)")
     a = p.parse_args()
+    if a.distill_taper_steps and not 0 < a.distill_taper_steps <= a.steps:
+        p.error("--distill_taper_steps must be between 0 and --steps")
+    if a.distill_taper_steps and not (a.teacher and 0 < a.distill_weight <= 1
+                                      and 0 <= a.distill_weight_final <= a.distill_weight):
+        p.error("--distill_taper_steps needs --teacher and 0 <= final weight <= initial weight <= 1, initial > 0")
+    if a.relay_count_grad == "smooth" and not (a.arch == "tf" and a.relay == "quant" and a.relay_target > 0
+                                              and math.isfinite(a.relay_count_width) and a.relay_count_width > 0):
+        p.error("--relay_count_grad smooth needs --arch tf --relay quant, a positive --relay_target and a positive "
+                "finite --relay_count_width")
     if a.device == "auto":
         a.device = "cuda" if torch.cuda.is_available() else "cpu"
     return a
@@ -285,6 +305,15 @@ def lr_at(step, a):
     return a.lr * (a.min_lr_frac + (1 - a.min_lr_frac) * 0.5 * (1 + math.cos(math.pi * prog)))
 
 
+def distill_weight_at(step, a):
+    """Weight for the next update, with step the completed updates (also after --init_ckpt, docs 5.57).
+    The final N updates each take one linear decrement, reaching the final weight on the last update."""
+    remaining = a.steps - step - 1
+    if not a.distill_taper_steps or remaining >= a.distill_taper_steps:
+        return a.distill_weight
+    return a.distill_weight_final + (a.distill_weight - a.distill_weight_final) * (remaining / a.distill_taper_steps)
+
+
 @torch.no_grad()
 def evaluate(model, val, a, rounded=True):
     """Validation loss and firing rates; with --wbits, of the network with its weight matrices rounded unless
@@ -342,6 +371,8 @@ def main():
             "--relay_target_start needs --relay_target below it and --relay_target_steps"
         for r in model.relays() if a.relay_target > 0 else []:
             r.keep_count = True
+            if a.relay_count_grad == "smooth":
+                r.count_grad_width = a.relay_count_width
     else:
         assert a.relay_target == 0, "--relay_target: --arch tf only"
         cfg = Config(**{f.name: getattr(a, f.name) for f in fields(Config)})
@@ -469,6 +500,7 @@ def main():
         logf.write(json.dumps({"step": 0, "teacher_val_loss": tot / a.eval_batches}) + "\n"); logf.flush()
     while step < a.steps:
         lr = lr_at(step, a)
+        distill_weight = distill_weight_at(step, a)
         for g in opt.param_groups:
             g["lr"] = lr * g.get("lr_mult", 1.0)
         if a.carry_state:
@@ -502,7 +534,7 @@ def main():
                 kd = F.kl_div(F.log_softmax(logits.float().view(-1, V) / T, -1),
                               F.log_softmax(t_logits.float().view(-1, V) / T, -1),
                               log_target=True, reduction="batchmean") * T * T
-                loss = (1 - a.distill_weight) * ce + a.distill_weight * kd
+                loss = (1 - distill_weight) * ce + distill_weight * kd
             if hint is not None:   # hidden-state distillation (see the top of this file)
                 hl = 0.0
                 for (si, ti), proj in zip(hint_pairs, hint):
@@ -567,6 +599,8 @@ def main():
                    "rates": [round(r, 4) for r in rates.float().tolist()]}
             if kd is not None:
                 rec["distill_kl"] = kd.item()
+                if a.distill_taper_steps:
+                    rec["distill_weight"] = distill_weight
             if hl is not None:
                 rec["hint_mse"] = hl.item()
             if sp is not None:

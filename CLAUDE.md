@@ -168,7 +168,7 @@
   (gpt-6.2-sol, ~/.codex/config.toml; reasoning effort high, xhigh for hard analysis).
 - Two rules from the owner: every experiment or research plan goes ahead only after the two have discussed it and both
   agree; the owner does not talk to the advisor, and reports to the owner never repeat its words at length (restate
-  in this session's own words).
+  in this session's own words). The owner (2026-11-20): any topic may be discussed with the advisor at any time.
 - How it works (decided by this session): the advisor reads everything (the repository, the run files, and a copy of
   this session's transcript with the owner's e-mail removed: /home/user/advisor_ctx/refresh_transcript.sh writes
   /home/user/advisor_ctx/claude_session.jsonl); it writes only in its own clone /home/user/advisor (origin =
