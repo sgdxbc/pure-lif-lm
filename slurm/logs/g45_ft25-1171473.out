@@ -1,0 +1,20 @@
+queued the next part of runs/g45_ft25: job 1173266
+xgpi3 NVIDIA H100 NVL | runs/g45_ft25 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --attn linear --mlp spike --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --relay quant --relay_levels 4 --relay_target 0.25 --init_weights runs/g40_laspk/ckpt.pt --steps 5000 --warmup 200 --lr 3e-4 --seed 1 --accum 2
+params 78.89M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 2500 val_loss 4.0592 (EMA weights 4.0234)
+== eval step 5000 val_loss 3.9874 (EMA weights 3.9814)
+hellaswag        acc 0.2640  acc_norm 0.2672
+lambada_openai   perplexity 6607.7913  acc 0.0572
+piqa             acc 0.5675  acc_norm 0.5593
+arc_easy         acc 0.3977  acc_norm 0.3704
+arc_challenge    acc 0.1775  acc_norm 0.2184
+winogrande       acc 0.5193
+hellaswag        acc 0.2659  acc_norm 0.2690
+lambada_openai   perplexity 6993.3187  acc 0.0474
+piqa             acc 0.5680  acc_norm 0.5517
+arc_easy         acc 0.4061  acc_norm 0.3657
+arc_challenge    acc 0.1886  acc_norm 0.2150
+winogrande       acc 0.4972
+ "val_loss": 3.9983290205963806,
+   " need the food that you eat. You will need the flour, which is available directly from the body. You can also use the flour and meat from the meat that you have eaten. You can also use the flour to help you get enough food, which will help your body.\nHow long does your meal last?\nThe last meal will take more than a hundred hours, but you can take the fat of the meals. You can eat two times, at the same time, for example, you need to have a meal and be in the refrigerator for a few minutes. This will help your body start to drink more slowly.\nHow often should you take the weight back by adding a food in the meal? Try these three ways to get the food you need by adding a food in the way possible.\nYou can add a new meal to your diet using the same amount of this recipe for the weight loss. You can then add a new food in the form that you are using. This will be the most beneficial way to get to the right food.\nHow do I get the food?\nThe food in the past and the time were being given at home, like this. You need to get a meal with the proper time"
+done Sat Nov 21 12:21:17 AM +08 2026
