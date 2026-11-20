@@ -159,6 +159,29 @@
   job queued behind every slot.
 - Before ending a turn, read the owner-facing text once for English sentences and run names.
 
+## The GPT research advisor (owner, 2026-11-20)
+- The owner added GPT (OpenAI Codex CLI, logged in with the owner's ChatGPT subscription by device code; installed
+  with `npm install -g @openai/codex`) as a research advisor reporting to this session: it proposes research ideas,
+  analyses results, checks conclusions and drafts plans and code; this session is the project manager: it decides the
+  final research and experiment plans, manages the advisor and the cluster session, and reports to the owner. It may
+  propose to the owner that the advisor be dismissed, with reasons. No usage limit; prefer the Sol models
+  (gpt-6.2-sol, ~/.codex/config.toml; reasoning effort high, xhigh for hard analysis).
+- Two rules from the owner: every experiment or research plan goes ahead only after the two have discussed it and both
+  agree; the owner does not talk to the advisor, and reports to the owner never repeat its words at length (restate
+  in this session's own words).
+- How it works (decided by this session): the advisor reads everything (the repository, the run files, and a copy of
+  this session's transcript with the owner's e-mail removed: /home/user/advisor_ctx/refresh_transcript.sh writes
+  /home/user/advisor_ctx/claude_session.jsonl); it writes only in its own clone /home/user/advisor (origin =
+  /home/user/snn_lm), on branches advisor/<topic>, never pushes and never touches /home/user/snn_lm. This session
+  reviews its branches, merges what both accept, commits and pushes (one committer: commits are the cluster's wake-up
+  signal). Only this session talks to the cluster session and the owner. Its standing instructions are in
+  ~/.codex/AGENTS.md. Call it with `cd /home/user/advisor && codex exec ... < /dev/null` (stdin must be closed or it
+  waits forever), `-o FILE` for its last message, `codex exec resume <id>` to continue a discussion; run long calls in
+  the background (<= 115 minutes). Record each discussion's points and decision briefly in docs/discussions.md, in
+  this session's words.
+- The container can restart: ~/.codex (login, config) and /home/user/advisor survived so far; if the login is lost,
+  ask the owner for a new device-code login (`codex login --device-auth`), never for a password.
+
 ## Periodic self-audits (owner, 2026-11-19)
 - After about every 24 hours of work or every 3 waves, whichever comes first, start three fresh subagents in
   parallel: (1) code and repository (recent diffs for bugs; docs, indexes and scripts against the code), (2) research
