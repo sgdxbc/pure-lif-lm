@@ -1,0 +1,13 @@
+queued the next part of runs/g48_gla31: job 1174102
+xgpi11 NVIDIA H100 NVL | runs/g48_gla31 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --d_model 256 --n_layers 6 --n_heads 4 --lr 1e-3 --ema 0.999 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --attn linear --accum 4
+params 30.90M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.3517 (EMA weights 4.3036)
+== eval step 5000 val_loss 4.1075 (EMA weights 4.0364)
+== eval step 7500 val_loss 4.0202 (EMA weights 3.9487)
+== eval step 10000 val_loss 3.9606 (EMA weights 3.9012)
+== eval step 12500 val_loss 3.9160 (EMA weights 3.8699)
+== eval step 15000 val_loss 3.8787 (EMA weights 3.8496)
+== eval step 17500 val_loss 3.8559 (EMA weights 3.8383)
+== eval step 20000 val_loss 3.8433 (EMA weights 3.8321)
+[2026-11-21T06:34:27.987] error: *** JOB 1173643 ON xgpi11 CANCELLED AT 2026-11-21T06:34:27 DUE TO TIME LIMIT ***
