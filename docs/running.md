@@ -79,7 +79,7 @@ python3 train.py --device cuda --out runs/my_snn \
 | `hw_export.py runs/X --ema [--windows 256]` | 把网络导出成 FPGA 原型用的整数表格（`runs/X/hw/`，约 126 MB，不进 git），可同时写出验证片段（5.44） |
 | `hw_ref.cpp` | 整数参考实现（C++）：`g++ -O3 -march=native -fopenmp -ffp-contract=off -o hw_ref hw_ref.cpp`，`./hw_ref runs/X/hw runs/X/hw/windows.bin 256 256` 打印验证 loss；FPGA 程序要和它逐位一致（5.44） |
 | `experiments/wbits_sens.py runs/X` | 哪类权重矩阵取整到 4 位损失最大；把最敏感的几类留在 8 位时的损失和多用的存储（5.38） |
-| `fpga_est.py runs/X [--device u55c --cards 2]` | 脉冲网络在 FPGA 上的延迟、吞吐量和能耗估算（默认 AMD Alveo V80 的参数，5.25；U55C 和多卡流水线见 5.44） |
+| `fpga_est.py runs/X [--device u55c --cards 2]` | 脉冲网络在 FPGA 上的延迟、吞吐量和能耗估算（默认 AMD Alveo V80 的参数，5.25；U55C 和多卡流水线见 5.44；从 5.60 节起放不下时按"部分放置"：状态、稠密权重、KV 缓存、稀疏行按每字节省下的 HBM 读写依次留在片上，只读放不下的部分） |
 | `experiments/fpga_compare.py [--runs A B ...] [--readout 8192 225] [--add_cost c]` | 同样的假设下，在同一块 FPGA 上估算 Transformer 和线性注意力网络（`model_tf.py` 的运行，含 0/1 单元、中继、三值权重；5.51–5.54）。`--runs` 按训练时的读出和最后一次评估的发放率估算；`--readout` 可换成假设的两级读出（表中标的是原运行的损失）。`--add_cost` 是一次加法相对一次乘加的代价（小于 1 只是敏感性检查） |
 | `bench_gpu.py --model 名字` | Transformer 在 GPU 上用 vLLM 实测：吞吐量、每 token 延迟、每 token 能耗（5.25） |
 | `bench_gpu_lean.py --shape D,L,H` | 同样的量，但用最简的生成程序（固定大小的键值缓存、CUDA graph），给出 GPU 本身能做到多少的界限（5.43）；`--check` 在 CPU 上核对 |
@@ -188,7 +188,7 @@ python3 train.py --device cuda --out runs/my_snn \
   b 记在网络的配置里，`sample.load`（因此 `evaluate.py`、`eval_lm.py`、`hw_cost.py`）载入时自动取整；
   `evaluate.py --wbits 4` 和 `eval_lm.py --wbits 4` 可以把任何检查点按 4 位取整后评估（`--wbits 0` 不取整）。
   `--wbits8 '^head\.,^embed\.'`：名字和其中某个正则表达式匹配的矩阵改用 8 位（混合精度；用 `experiments/wbits_sens.py` 找最敏感的几类）。
-  `hw_cost.py` 按训练时的位数（含每组 16 位的系数）算权重的存储量，`fpga_est.py` 用它判断能否整个放在片上。
+  `hw_cost.py` 按训练时的位数（含每组 16 位的系数）算权重的存储量，`fpga_est.py` 用它分配片上空间（5.60 节）。
 - `--threads n`：CPU 上的线程数（默认 4）；`--sample_every n`：每隔几次评估生成一次样例（0 = 每次）；
   `--log_file`：训练日志的文件名（默认 `log.jsonl`；`slurm/train.sbatch` 先写到不受 git 管的文件，再复制过来）。
 - `--accum n`：把每个批次分成 n 份依次计算、梯度相加（显存约降为 1/n，结果和不分时相同，只是慢一些）。不能和 `--carry_state` 同用。

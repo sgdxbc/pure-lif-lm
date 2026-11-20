@@ -141,8 +141,10 @@
   the notes in docs/experiments.md and give one plain summary when the owner returns.
 - Results: decide on final numbers, or once a paired difference has been stable over at least three evaluations;
   mark single evaluations as 初步 and keep them out of bold headlines. Seed noise (three seeds of g40_laspk, 77M
-  linear attention, not distilled, docs 5.55): sigma 0.004, so differences under 0.012 (3 sigma) count as the same;
-  other kinds of network (distilled, ternary) may differ, say so when using the line for them. Trend claims only from paired runs with the same teacher and settings; compare variants only on the
+  linear attention, not distilled, docs 5.55): sigma 0.004 for one run, about 0.0058 for a difference of two runs, and
+  sigma itself rests on three seeds; so a difference under 0.012 (about 2 sigma of a difference) counts as the same,
+  0.012-0.020 is undecided, and above 0.020 is decision-relevant and needs a second seed before adoption (agreed with
+  the advisor, audit 3); other kinds of network (distilled, ternary) may differ, say so when using the line for them. Trend claims only from paired runs with the same teacher and settings; compare variants only on the
   same base network. When the owner states a hope or a vision, list the evidence for it and against it separately.
 - Before asking the owner to do anything, check that it can work with a probe that needs nothing from them.
 - Waiting: the Bash tool's run_in_background has a 30-minute default limit, so always pass timeout >= the alarm's
@@ -155,9 +157,16 @@
   committing, and commit judgement rules before (never together with) the results they judge. Before a wave, train
   every new combination for a few hundred steps on a small CPU network (gradients, spikes, loss), check the launch
   script's flags against the base run's args.json, give each run a dry run that includes one evaluation on its card
-  type (163M spiking networks: accum 2 on 80-96 GB cards, 4 on 40-47 GB; accum 1 ran out of memory), and keep a next
-  job queued behind every slot.
-- Before ending a turn, read the owner-facing text once for English sentences and run names.
+  type when the code path is new or the memory is within 15% of the card (otherwise the cluster's watcher reports the
+  first 1,000 steps and the first evaluation; 163M spiking networks: accum 2 on 80-96 GB cards, 4 on 40-47 GB; accum 1
+  ran out of memory), and keep a next job queued behind every slot. Slurm: a higher nice value is a LOWER priority
+  (queued training runs sit at nice 300-400), so jobs meant to wait go above that.
+- Before ending a turn, read the owner-facing text once for English sentences and run names (every text block, mid-turn
+  notes included; explain MLP, U55C and model sizes in plain words or leave them out).
+- (audit 3) Cluster messages: read every event since the last one read (by created_at, not "the last N"), keep a short
+  list of what the cluster reported or changed, and check a run's state with list_events before stating it to the
+  owner or the advisor. Before writing any comparison, diff the two runs' args.json (teacher, steps, data, schedule,
+  learning rate). Before relaying a number the advisor computed, recompute it.
 
 ## The GPT research advisor (owner, 2026-11-20)
 - The owner added GPT (OpenAI Codex CLI, logged in with the owner's ChatGPT subscription by device code; installed
@@ -183,7 +192,10 @@
   ~/.codex/AGENTS.md. Call it with `cd /home/user/advisor && codex exec ... < /dev/null` (stdin must be closed or it
   waits forever), `-o FILE` for its last message, `codex exec resume <id>` to continue a discussion; run long calls in
   the background (<= 115 minutes). Record each discussion's points and decision briefly in docs/discussions.md, in
-  this session's words.
+  this session's words, saying whether the advisor agreed explicitly. (audit 3) Before committing a wave plan, send the
+  final run list and numeric rules to the advisor for an explicit OK (medium effort); every merge of advisor code gets
+  this session's own check that default-off behaviour equals main. The transcript copy also removes the bare user part
+  of the owner's e-mail address (never search for it with a pattern that contains it).
 - The container can restart: ~/.codex (login, config) and /home/user/advisor survived so far; if the login is lost,
   ask the owner for a new device-code login (`codex login --device-auth`), never for a password.
 

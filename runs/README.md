@@ -39,6 +39,7 @@
 | `g45_*` | 第四十五批：77M 上脉冲的稀疏度、更宽更稀疏的结构、稀疏脉冲的训练方式 | FineWeb-Edu | 5.56 |
 | `g46_*` | 第四十六批：换种子确认蒸馏；同样短配方的小 Transformer；两级读出本身的质量代价 | FineWeb-Edu | 5.58 |
 | `g47_*` | 第四十七批：可塑突触三样一起的哪些部分值得它的硬件开销（0/1 键查询、隔层、键查询不带膜电位） | FineWeb-Edu | 5.59 |
+| `g48_*` | 第四十八批：稠密线性注意力对照（31M、50M 形状）；学习率降到 0 | FineWeb-Edu | 5.60 |
 | `classes/` | 两级读出和组合输入用的词的分类（`experiments/word_classes.py`） | FineWeb-Edu | 5.36 |
 | `ref_*` | 参考模型（GPT-2、Pythia）的零样本基准 | | 5.24 |
 | `bench_gpu/` | Transformer 在 GPU 上的推理实测（vLLM） | | 5.25 |

@@ -26,11 +26,11 @@ Assumptions (all can be changed by options):
   - 60% of the peak bandwidth and of the peak compute are reached;
   - the board draws its full configured power whenever it runs (no credit for lighter load; the GPU is credited with its
     measured power instead, so this side is the conservative one);
-  - weights stay on chip when they and the streams' membrane potentials fit in 90% of the on-chip memory; otherwise
-    weights are read from HBM every step, and the potentials stay on chip if they fit, else are read and written
-    back each step. The word tables (hw_cost.py table_weights: the input rows and, with the two-level readout, the
-    word readout neurons) do not count against the on-chip memory: a stream uses only a few of their rows per token
-    (the word's input rows, its class's block of word neurons), read from HBM each step;
+  - 90% of on-chip memory is available. Fill it by expected HBM traffic saved per resident byte. Stateful
+    recurrence reads and writes its spilled state, the attention KV cache reads spilled history once per stream,
+    and weight rows in HBM are read once for all streams that use them. This assumes divisible tiles, pooled
+    capacity, and uniform activity within each sparse matrix. It does not model banking or a physical layout.
+    Input word tables and the two-level head's tail tables are kept in HBM, with the required rows fetched per stream;
   - B streams are generated together, one token each per step: dense weights (W_in, leak synapses, readout) are read
     once per step for all streams, the W_out row of a neuron once if it fired in any stream. The share of neurons
     that fire in any of B streams is 1 - (1 - q)^B, with q set per layer so that it equals the measured share for 16
@@ -38,11 +38,44 @@ Assumptions (all can be changed by options):
   - time per step = the larger of reading time and compute time (the two overlap). Per stream, a token takes one
     step: that is the latency. The membrane potentials make the cost independent of the context length.
 """
-import argparse, json, math, os
+import argparse, json, math, os, re
 
 STREAMS = (1, 4, 16, 64, 256)
 DEVICES = {"v80": dict(bw_gbs=820.0, onchip_mb=84.0, dsp=10848, macs_per_dsp=3, clock_mhz=400.0, watts=190.0),
            "u55c": dict(bw_gbs=460.0, onchip_mb=42.6, dsp=9024, macs_per_dsp=2, clock_mhz=300.0, watts=150.0)}
+
+
+def place(regions, budget, table, table_reads):
+    """Allocate divisible regions (name, size, HBM bytes/step if spilled), returning the aggregate split."""
+    split = {name: dict(onchip_bytes=0.0, hbm_bytes=0.0, hbm_bytes_per_step=0.0)
+             for name in ("dense_weights", "sparse_weights", "state", "kv")}
+    fits = sum(size for _, size, _ in regions) <= budget
+    items = (row for row in regions if row[1] > 0)
+    for name, size, traffic in sorted(items, key=lambda row: row[2] / row[1], reverse=True):
+        cached = size if fits else min(size, budget)
+        budget -= cached
+        spilled = size - cached
+        part = split[name]
+        part["onchip_bytes"] += cached
+        part["hbm_bytes"] += spilled
+        part["hbm_bytes_per_step"] += traffic * (spilled / size)
+    split["word_tables"] = dict(onchip_bytes=0.0, hbm_bytes=table, hbm_bytes_per_step=table_reads)
+
+    dense, sparse = split["dense_weights"], split["sparse_weights"]
+    if not (dense["hbm_bytes"] or sparse["hbm_bytes"]):
+        where = "weights on chip"
+    elif dense["onchip_bytes"] or sparse["onchip_bytes"]:
+        where = "weights split between on chip and HBM"
+    else:
+        where = "weights in HBM"
+    if table:
+        where += ", word tables in HBM"
+    for key, label in (("state", "state"), ("kv", "KV cache")):
+        if split[key]["hbm_bytes"]:
+            suffix = " split between on chip and HBM" if split[key]["onchip_bytes"] else " in HBM"
+            where += ", " + label + suffix
+    read = sum(p["hbm_bytes_per_step"] for p in split.values())
+    return read, where, split
 
 
 def estimate(hw, args, bits, dev):
@@ -51,9 +84,19 @@ def estimate(hw, args, bits, dev):
     f = hw["firing"]
     dense_w = hw.get("dense_weights", L * (d * H + (d * r + r * H if r else 0) + H) + d * V)   # as in hw_cost.py
     weights, table, own = hw["params"] * b, hw.get("table_weights", 0) * b, hw.get("per_stream_weights", d) * b
+    sparse_sizes = [H * d * b] * L
     if hw.get("weights_bytes_trained") and bits == hw.get("wbits"):   # the bits it was trained for, scales included
         weights, table = hw["weights_bytes_trained"], hw["table_bytes_trained"]
         own *= table / (hw["table_weights"] * b) if hw.get("table_weights") else 1.0
+        bits8 = [re.compile(p) for p in hw.get("wbits8", args.get("wbits8", "")).split(",") if p]
+        group = args.get("wgroup", 128)
+        group = group if group and H % group == 0 else H
+        sparse_sizes = [H * d * (1 if any(p.search(f"layers.{l}.w_out.weight") for p in bits8) else b)
+                        + 2 * H * d / group for l in range(L)]
+        dense_size = dense_read = weights - table - sum(sparse_sizes)
+    else:
+        dense_size = weights - table - sum(sparse_sizes)
+        dense_read = dense_w * b
     ops = hw["dense_macs"] + dev.get("add_cost", 1.0) * hw["sparse_adds"]    # per token and stream (add_cost: below)
     n = dev["cards"]
     rate = n * dev["dsp"] * dev["macs_per_dsp"] * dev["clock_mhz"] * 1e6 * dev["eff"]   # MAC/s reached
@@ -64,22 +107,17 @@ def estimate(hw, args, bits, dev):
         busy = min(B, n) / n                    # share of the pipeline's boards at work (module docstring)
         state = B * hw["state_bytes"]
         required = weights - table + state
-        if required <= budget:
-            read, where = (B * own, "weights on chip, word tables in HBM") if table else (0.0, "weights on chip")
-        else:
-            def share(l):
-                if B == 1:
-                    return f["token"][l]
-                q = 1 - (1 - f["token_any"][l]) ** (1 / 16)
-                return 1 - (1 - q) ** B
-            read = (dense_w + sum(share(l) * H * d for l in range(L))) * b + B * own
-            where = "weights in HBM, state on chip"
-            if state > budget:
-                read += 2 * state
-                where = "weights in HBM, state in HBM"
+        # Legacy reports include their input table in the footprint, with no independent table size.
+        # Charge their per-stream reads to that storage as it spills, so full residency still needs no HBM.
+        legacy_reads = 0 if table else B * own
+        regions = [("state", state, 2 * state), ("dense_weights", dense_size, dense_read + legacy_reads)]
+        shares = f["token"] if B == 1 else [1 - (1 - p) ** (B / 16) for p in f["token_any"]]
+        regions.extend(("sparse_weights", size, p * size) for size, p in zip(sparse_sizes, shares))
+        read, where, split = place(regions, budget, table, B * own if table else 0)
         t = max(read / (bw * busy), B * ops / (rate * busy))
         rows.append({"streams": B, "where": where, "bytes_per_step": read, "ops_per_step": B * ops,
                      "state_bytes": state, "required_onchip_bytes": required, "onchip_budget_bytes": budget,
+                     "placement": split,
                      "bound": "memory" if read / bw >= B * ops / rate else "compute",
                      "tok_s": B / t, "ms_per_token": t * 1000, "mJ_per_token": n * dev["watts"] * t / B * 1000})
     return rows
@@ -171,24 +209,22 @@ def estimate_tf(t, dev):
     rate = n * dev["dsp"] * dev["macs_per_dsp"] * dev["clock_mhz"] * 1e6 * dev["eff"]
     bw = n * dev["bw_gbs"] * 1e9 * dev["eff"]
     budget = n * 0.9 * dev["onchip_mb"] * 1e6
+    sparse = [(r, n_in * rb) for r, n_in, rb in t["sparse_layers"]]
+    dense = t["weight_bytes_onchip"] - sum(size for _, size in sparse)
+    table = t["table_weights"] * t["bits"] / 8
     rows = []
     for B in STREAMS:
         busy = min(B, n) / n                    # share of the pipeline's boards at work (module docstring)
         state, kv = B * t["state_bytes"], B * t["kv_bytes"]
         own = B * t["per_stream_bytes"]
-        if t["weight_bytes_onchip"] + state + kv <= budget:
-            read, where = own, "weights on chip, word tables in HBM"
-        else:
-            # share of rows read in any of B streams; with relay_levels > 1 the rate is spikes per channel and may
-            # exceed 1, while a row is read at most once per step: the share of channels with spikes is at most min(r, 1)
-            read = (t["dense_bytes"] + sum((1 - (1 - min(r, 1.0)) ** B) * n_in * rb for r, n_in, rb in t["sparse_layers"])
-                    + own)
-            where = "weights in HBM"
-            if state + kv > budget:
-                read += 2 * state + kv
-                where += ", state in HBM"
+        regions = [("state", state, 2 * state), ("dense_weights", dense, t["dense_bytes"]), ("kv", kv, kv)]
+        # A multi-spike rate upper-bounds the probability of needing a row. Keep the existing independent-stream model.
+        regions.extend(("sparse_weights", size, (1 - (1 - min(r, 1.0)) ** B) * size) for r, size in sparse)
+        read, where, split = place(regions, budget, table, own)
         tm = max(read / (bw * busy), B * ops / (rate * busy))
         rows.append({"streams": B, "where": where, "bytes_per_step": read, "ops_per_step": B * ops,
+                     "state_bytes": state, "kv_bytes": kv, "required_onchip_bytes": t["weight_bytes_onchip"] + state + kv,
+                     "onchip_budget_bytes": budget, "placement": split,
                      "bound": "memory" if read / bw >= B * ops / rate else "compute",
                      "tok_s": B / tm, "ms_per_token": tm * 1000, "mJ_per_token": n * dev["watts"] * tm / B * 1000})
     return rows
