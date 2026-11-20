@@ -157,13 +157,14 @@ class Relay(nn.Module):
             self.beta_logit = nn.Parameter(torch.logit(torch.exp(-1.0 / tau)))
         self.rate = None
 
-    def forward(self, x):
+    def forward(self, x, state=None, return_state=False):
         th = self.log_theta.exp()
+        last = None
         if self.kind == "quant":
             u = _Tern.apply(x / th.to(x.dtype), self.levels)
         else:
             from lif import lif
-            s, _ = lif(torch.cat([x, -x], -1), torch.sigmoid(self.beta_logit).repeat(2), th.repeat(2), None, None,
+            s, last = lif(torch.cat([x, -x], -1), torch.sigmoid(self.beta_logit).repeat(2), th.repeat(2), None, state,
                        hard_reset=False, alpha=4.0, detach_reset=False, sg="fast_sigmoid")
             s = s.to(x.dtype)
             u = s[..., :self.D] - s[..., self.D:]
@@ -174,7 +175,8 @@ class Relay(nn.Module):
                 self.count = _RelayCount.apply(x.float() / th, self.rate, self.levels, self.count_grad_width)
             else:
                 self.count = u.abs().float().mean()
-        return u * th.to(x.dtype)
+        out = u * th.to(x.dtype)
+        return (out, last.detach() if last is not None else None) if return_state else out
 
 
 class _Step(torch.autograd.Function):
@@ -287,12 +289,16 @@ class LinearAttention(nn.Module):
 
     def forward(self, x, state=None, return_state=False):
         """state: (S (B, h, hd, hd) float32, the last 3 inputs of the convolution (B, 3d, 3)) from the previous call,
-        or None (nothing before). return_state: also return the state after the last position."""
+        followed by the two relay states when configured. None starts from rest."""
         B, L, D = x.shape
+        S0, prev = (None, None) if state is None else state[:2]
+        relay_in, relay_out = (None, None) if state is None or self.r_in is None else state[2:]
         if self.r_in is not None:
-            x = self.r_in(x)
+            if return_state:
+                x, relay_in = self.r_in(x, relay_in, return_state=True)
+            else:
+                x = self.r_in(x)
         u = self.qkv(x).transpose(1, 2)                                             # (B, 3d, L): the conv's input
-        S0, prev = (None, None) if state is None else state
         if self.conv is None:
             c = u
         elif state is None:
@@ -312,11 +318,17 @@ class LinearAttention(nn.Module):
         o = self.onorm(o).transpose(1, 2).reshape(B, L, D)
         o = o * (F.silu(self.gate(x)) if self.gate is not None else self.out_gain.to(o.dtype))
         if self.r_out is not None:
-            o = self.r_out(o)
+            if return_state:
+                o, relay_out = self.r_out(o, relay_out, return_state=True)
+            else:
+                o = self.r_out(o)
         if not return_state:
             return self.proj(o)
         last = (F.pad(u, (3, 0)) if state is None else torch.cat([prev.to(u.dtype), u], -1))[..., -3:]
-        return self.proj(o), (S.detach(), last.detach())
+        next_state = (S.detach(), last.detach())
+        if self.r_in is not None:
+            next_state += (relay_in, relay_out)
+        return self.proj(o), next_state
 
 
 class Block(nn.Module):
@@ -354,24 +366,39 @@ class Block(nn.Module):
             self.gamma_logit = nn.Parameter(torch.logit(torch.empty(H).uniform_(0.05, 0.999)))
         self.rate = None
 
-    def ff(self, x):
+    def ff(self, x, state=None, return_state=False):
         x = self.n2(x)
-        h = self.fc(self.r_mlp(x) if self.r_mlp is not None else x)
+        relay, membrane = (None, None) if state is None else state
+        if self.r_mlp is not None:
+            if return_state:
+                x, relay = self.r_mlp(x, relay, return_state=True)
+            else:
+                x = self.r_mlp(x)
+        h = self.fc(x)
         if self.mlp == "gelu":
-            return self.fc2(F.gelu(h))
-        if self.mlp == "spike":
-            s = _Step.apply(h, self.log_theta.exp().float(), 4.0)
+            out = self.fc2(F.gelu(h))
         else:
-            from lif import lif
-            s, _ = lif(h, torch.sigmoid(self.beta_logit), self.log_theta.exp(), torch.sigmoid(self.gamma_logit), None,
-                       hard_reset=True, alpha=4.0, detach_reset=False, sg="fast_sigmoid")
-            s = s.to(h.dtype)
-        self.rate = s.detach().float().mean()
-        return self.fc2(s)
+            if self.mlp == "spike":
+                s = _Step.apply(h, self.log_theta.exp().float(), 4.0)
+            else:
+                from lif import lif
+                s, membrane = lif(h, torch.sigmoid(self.beta_logit), self.log_theta.exp(),
+                                  torch.sigmoid(self.gamma_logit), membrane,
+                                  hard_reset=True, alpha=4.0, detach_reset=False, sg="fast_sigmoid")
+                s = s.to(h.dtype)
+            self.rate = s.detach().float().mean()
+            out = self.fc2(s)
+        return (out, (relay, membrane.detach() if membrane is not None else None)) if return_state else out
 
-    def forward(self, x):
+    def forward(self, x, state=None, return_state=False):
         B, L, D = x.shape
         if self.la is not None:
+            if return_state:
+                attention, ff = (None, None) if state is None else state
+                y, attention = self.la(self.n1(x), attention, return_state=True)
+                x = x + y
+                y, ff = self.ff(x, ff, return_state=True)
+                return x + y, (attention, ff)
             x = x + self.la(self.n1(x))
             return x + self.ff(x)
         q, k, v = self.qkv(self.n1(x)).view(B, L, 3, self.h, D // self.h).permute(2, 0, 3, 1, 4)
@@ -403,21 +430,33 @@ class GPT(nn.Module):
                 std = 0.02 / math.sqrt(2 * c.n_layers) if n.endswith(("proj.weight", "fc2.weight")) else 0.02
                 nn.init.normal_(p, std=std)
 
-    def _features(self, idx):
+    def _features(self, idx, state=None, return_state=False):
         L = idx.size(1)
         x = self.embed(idx)
         if self.pos is not None:
             x = x + self.pos(torch.arange(L, device=idx.device))
         xs = []
-        for b in self.blocks:
-            x = b(x)
-            xs.append(x)
+        for i, b in enumerate(self.blocks):
+            if return_state:
+                x, next_state = b(x, None if state is None else state[i], return_state=True)
+                xs.append(next_state)
+            else:
+                x = b(x)
+                xs.append(x)
         return self.norm(x), xs
 
-    def forward(self, idx, targets=None, state=None, return_spikes=False, hidden=False):
-        """Returns logits (word log-probabilities with the two-level head), loss, None, and firing rates.
-        With hidden=True the third item holds the residual streams after each block for hidden-state distillation."""
-        x, xs = self._features(idx)
+    def forward(self, idx, targets=None, state=None, return_spikes=False, hidden=False,
+                return_state=False, logit_slice=None):
+        """The third result is linear-attention state if requested, residual streams if hidden, otherwise None.
+        logit_slice selects time positions before the vocabulary projection, after the full input updates state."""
+        return_state = return_state or state is not None
+        if return_state and (self.cfg.attn != "linear" or hidden):
+            raise ValueError("carried GPT state requires linear attention and hidden=False")
+        x, xs = self._features(idx, state, return_state)
+        if logit_slice is not None:
+            x = x[:, logit_slice]
+            if targets is not None:
+                targets = targets[:, logit_slice].contiguous()
         logits = self.head(x)
         loss = None
         if targets is not None:
@@ -426,7 +465,7 @@ class GPT(nn.Module):
             else:
                 loss = F.cross_entropy(logits.float().view(-1, logits.size(-1)), targets.view(-1))
         rates = self.rates(idx.device)
-        return logits, loss, xs if hidden else None, rates
+        return logits, loss, xs if hidden or return_state else None, rates
 
     def rates(self, device):
         """Share of 1s of the 0/1 MLP units per block, then with relays their spikes per channel and token (with one

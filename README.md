@@ -294,7 +294,7 @@ CLAUDE.md            给参与本项目的 Claude 会话的工作约定（英文
   lif_triton.py      LIF 前向/反向 Triton 内核（GPU）
   train.py           训练（--arch snn|tf）
   test_lif.py, test_lif_gpu.py   内核的正确性和速度测试
-  test_spiking_memory_cost.py, test_two_level_head.py, test_train_methods.py
+  test_spiking_memory_cost.py, test_two_level_head.py, test_train_methods.py, test_partial_placement.py, test_eval_long.py
                      记忆选项的硬件计数和整数模拟、两级读出、训练方法选项的 CPU 测试
   gpu_setup.sh       GPU 机器上的一次性准备与自检
 

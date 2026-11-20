@@ -604,12 +604,12 @@ class SpikingLM(nn.Module):
             return bus
         return bus * torch.rsqrt(bus.float().pow(2).mean(-1, keepdim=True) + 1e-6).to(bus.dtype)
 
-    def forward(self, idx, targets=None, state=None, return_spikes=False):
+    def forward(self, idx, targets=None, state=None, return_spikes=False, logit_slice=None):
         """idx: (B, L) token ids. state: per-layer (membrane potentials, last spikes) or None (at rest); with plastic
         synapses followed by one more entry, the list of their states.
         Returns logits, loss, new_state, and per-layer firing rates (or spike tensors, (B, L*T, H) with
         T = steps_per_token, followed with plastic synapses by their key and query spikes, (B, L, 2 mem_heads mem_keys)
-        per such layer)."""
+        per such layer). logit_slice selects time positions for the head after updating the full input state."""
         T = self.cfg.steps_per_token
         assert T == 1 or not self.mem_layers, "plastic synapses are written once per token: not combined with T > 1"
         mem_state, mem_spikes = [], []
@@ -643,6 +643,10 @@ class SpikingLM(nn.Module):
             bus = bus.view(bus.size(0), -1, T, bus.size(-1)).mean(2)
         if self.keep_bus:
             self.last_bus = [b.view(b.size(0), -1, T, b.size(-1)).mean(2) if T > 1 else b for b in buses]
+        if logit_slice is not None:
+            bus = bus[:, logit_slice]
+            if targets is not None:
+                targets = targets[:, logit_slice].contiguous()
         logits = self.head(self.read_bus(bus))
         loss = None
         if targets is not None:

@@ -64,7 +64,7 @@ python3 train.py --device cuda --out runs/my_snn \
 | `eval_lm.py [--ema] runs/X`，`eval_lm.py --hf 名字` | 零样本基准（lm-evaluation-harness：HellaSwag、LAMBADA、PIQA、ARC、WinoGrande），也可测 Hugging Face 上的参考模型 | `zeroshot[_ema].json` |
 | `ref_loss.py 名字...` | 用 GPT-2 分词器的 Hugging Face 模型在 FineWeb-Edu 验证集上的 loss（和 `evaluate.py` 同样的算法） | `runs/ref_loss.json` |
 | `probe_lambada.py [--ema] runs/X 名字...` | LAMBADA 诊断：最后一个词读完整段 / 只读最后 16 个 token 时的 loss，按是否在前文出现过分组 | `runs/lambada_probe.json` |
-| `eval_long.py [--ema] [--length N] [--window W] runs/X` | 从书或文档的开头读起，按位置区间报告 loss；`--window` 让 Transformer 只看最近 W 个 token | `long_valid*.json` |
+| `eval_long.py [--ema] [--length N] [--window W] [--restart R] [--recall] runs/X` | 从书或文档的开头读起，按位置区间报告 loss；`--window` 让 Transformer 只看最近 W 个 token；`--restart R`（5.60 节）把同样的目标再算一遍，但状态（脉冲网络、可塑突触、线性注意力）每 R 个词从头开始，两者之差就是用到 R 个词以外的上文的多少；`--recall` 加埋入回忆测试：在普通文本里埋一句"某某的号码是 XXXX"，隔 512–8k 个词后提问，报告答案的对数概率和完全答对的比例（同样有从头开始的对照；`--max_trials` 每个距离的次数，默认 200）。集群上：`LONG_ARGS="--restart 1024 --recall" sbatch -J long_eval --gres=gpu:a100-40:1 slurm/long_eval.sbatch runs/A ...` | `long_valid*.json` |
 | `probe_memory.py`、`probe_recall.py` | TinyStories 上的两种回看测量（截断上文；重复出现的词按距离分组，docs/experiments.md 5.1） | `probe_memory*.json`、`recall*.json` |
 | `scaling.py runs/g13_*` | 验证 loss 对训练算力的图 | `runs/scaling*.png/.json` |
 | `sample.py --ckpt ... [-i]` | 文本补全（`-i` 交互） | |
