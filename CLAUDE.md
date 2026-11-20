@@ -165,7 +165,7 @@
   analyses results, checks conclusions and drafts plans and code; this session is the project manager: it decides the
   final research and experiment plans, manages the advisor and the cluster session, and reports to the owner. It may
   propose to the owner that the advisor be dismissed, with reasons. No usage limit; prefer the Sol models
-  (gpt-6.2-sol, ~/.codex/config.toml, default reasoning effort high). Set the effort per call with
+  (the model set in ~/.codex/config.toml, default reasoning effort high). Set the effort per call with
   `-c model_reasoning_effort=...` by the task: low for pings and simple checks; medium for short factual replies
   and agreeing details of a plan already discussed; high for code drafts with tests and routine reading of results;
   xhigh for designing experiments, interpreting results that decide the plan, and reviewing this session's
