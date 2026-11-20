@@ -66,6 +66,7 @@ class TFConfig:
     relay: str = "none"       # "lif": LIF relay neurons in front of every matrix; "quant": their output without a membrane
     relay_levels: int = 1     # quant: up to this many spikes per channel and token (module docstring)
     wq: str = "none"          # "ternary": the blocks' matrices with weights in {-1, 0, +1} times a scale (module docstring)
+    mlp_mult: int = 4         # the MLP's hidden units per channel (4: GPT-2's); wider with sparse units: docs 5.56
 
 
 class _Tern(torch.autograd.Function):
@@ -291,12 +292,13 @@ class Block(nn.Module):
             self.qkv = QLinear(c.d_model, 3 * c.d_model, bias=False)   # QLinear: ternary with --wq ternary, like the
             self.proj = QLinear(c.d_model, c.d_model, bias=False)      # other block matrices (fpga_est.tf_hw counts them so)
         self.n2 = nn.RMSNorm(c.d_model)
-        self.fc = QLinear(c.d_model, 4 * c.d_model, bias=False)
-        self.fc2 = QLinear(4 * c.d_model, c.d_model, bias=False)
+        hid = getattr(c, "mlp_mult", 4) * c.d_model   # the MLP's hidden units
+        self.fc = QLinear(c.d_model, hid, bias=False)
+        self.fc2 = QLinear(hid, c.d_model, bias=False)
         self.h = c.n_heads
         relay = getattr(c, "relay", "none")
         assert relay in ("none", "lif", "quant") and (relay == "none" or c.attn == "linear"), "relays: linear attention"
-        self.r_mlp = (Relay(c.d_model, relay, levels=getattr(c, "relay_levels", 1), fan=4 * c.d_model)
+        self.r_mlp = (Relay(c.d_model, relay, levels=getattr(c, "relay_levels", 1), fan=hid)
                       if relay != "none" else None)
         assert getattr(c, "wq", "none") in ("none", "ternary")
         if getattr(c, "wq", "none") == "ternary":
@@ -305,7 +307,7 @@ class Block(nn.Module):
                     m.ternary = True
         assert c.mlp in ("gelu", "spike", "lif")
         self.mlp = c.mlp
-        H, sd = 4 * c.d_model, 0.02 * math.sqrt(c.d_model)   # sd: standard deviation of h at initialisation
+        H, sd = hid, 0.02 * math.sqrt(c.d_model)   # sd: standard deviation of h at initialisation
         if c.mlp == "spike":   # threshold at one standard deviation of h: ~16% fire
             self.log_theta = nn.Parameter(torch.full((H,), math.log(sd)))
         if c.mlp == "lif":     # as model.LIFPopulation with hard_reset, reset_learn and in_norm "theta"

@@ -105,6 +105,7 @@ def tf_hw(args, rates=None, readout=None, ctx=1024, bits=4):
     included), else the full readout, read every step. Byte counts at `bits` per weight."""
     V, d, L, h = args["vocab"], args["d_model"], args["n_layers"], args.get("n_heads") or 12
     hd, lin, mlp = d // h, args.get("attn") == "linear", args.get("mlp") or "gelu"
+    H = (args.get("mlp_mult") or 4) * d                              # the MLP's hidden units
     relay, tern = args.get("relay") or "none", (args.get("wq") or "none") == "ternary"
     b, bm = bits / 8, (2 / 8 if tern else bits / 8)                 # bytes per weight: others, block matrices
     r = list(rates) if rates is not None else []
@@ -122,20 +123,20 @@ def tf_hw(args, rates=None, readout=None, ctx=1024, bits=4):
         head_shared, head_own, head_table = d * (S + C), d * m, d * C * m
     else:
         head_shared, head_own, head_table = d * V, 0, 0
-    block_dense = L * ((0 if relay != "none" else d * (in_cols + out_cols + 4 * d))
-                       + (0 if mlp != "gelu" else 4 * d * d))        # block matrices read densely
+    block_dense = L * ((0 if relay != "none" else d * (in_cols + out_cols + H))
+                       + (0 if mlp != "gelu" else H * d))            # block matrices read densely
     sparse = []                                                     # (rate, input rows, bytes per row)
     for l in range(L):
         if relay != "none":
             ri, ro, rm = rel[3 * l:3 * l + 3]
-            sparse += [(ri, d, in_cols * bm), (ro, d, out_cols * bm), (rm, d, 4 * d * bm)]
+            sparse += [(ri, d, in_cols * bm), (ro, d, out_cols * bm), (rm, d, H * bm)]
         if mlp != "gelu":
-            sparse.append((mlp_r[l], 4 * d, d * bm))
-    block_all = L * d * (in_cols + out_cols + 8 * d)
+            sparse.append((mlp_r[l], H, d * bm))
+    block_all = L * d * (in_cols + out_cols + 2 * H)
     table = V * d + (0 if lin else args.get("seq", 1024) * d) + head_table
     params = block_all + L * small + table + head_shared + head_own * 0 + L * 2 * d + d
     state_vals = L * (h * hd * hd + 9 * d) if lin else 0
-    state_vals += L * 4 * d if mlp == "lif" else 0
+    state_vals += L * H if mlp == "lif" else 0
     state_vals += L * 3 * 2 * d if relay == "lif" else 0
     kv = 0 if lin else 2 * L * d * ctx
     return {"arch": "la" if lin else "tf", "mlp": mlp, "relay": relay, "wq": "ternary" if tern else "none",

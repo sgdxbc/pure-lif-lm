@@ -14,6 +14,10 @@
 - Priorities (owner, 2026-11-20, after the second self-audit): scaling laws are not urgent; first find a competitive
   structure. Stay with spiking networks and keep looking for structures where the spikes themselves give an
   advantage (on the same FPGA at equal quality), rather than settling for "a small fixed-state network on an FPGA".
+  Besides the structure search, put real weight on improving the training method (owner, 2026-11-20). Already tried
+  (docs/experiments.md): Muon (helped the Transformer, not the spiking network, 5.27/5.31), mid-layer hints (5.29),
+  distillation (helps) and stronger teachers (did not, 5.42/5.45), soft-to-hard spikes (did not, 5.48), EMA, a 10x
+  neuron learning rate, gradient-spike skipping.
 - Stage goals (revised by the owner on 2026-11-15, README section 0):
   1. Quality: match classic small language models (GPT-2 124M-355M, Pythia 160M-410M class) on general text, and be
      basically usable on some tasks.

@@ -149,6 +149,9 @@ python3 train.py --device cuda --out runs/my_snn \
 - `--teacher 路径 --distill_weight a --distill_temp T`：知识蒸馏。损失 = (1−a)·交叉熵 + a·T²·KL(老师 ‖ 学生)，老师是已训练好的模型
   在同一个 batch 上的输出。验证 loss 仍只算交叉熵。`--teacher hf:名字` 用 Hugging Face 上的模型当老师（需要 transformers），
   例如 `hf:openai-community/gpt2-large`；老师的词表比学生小时，多出来的词概率记为 0。有老师时，训练开始前先报告老师自己的验证 loss。
+  `--teacher_ema`：老师用它平均后的权重（5.56 节）。
+- `--init_weights 路径`（5.56 节）：从另一个检查点只拿权重（有平均后的就用平均后的），名字和形状都对得上的才复制，新加的部分（如中继、
+  0/1 单元的阈值）保持初始值；优化器和步数从头开始。用于"先训普通网络，再改成脉冲网络接着训"。续跑时不起作用。
 - `--ema d`：同时保存权重的滑动平均（例如 0.999），评估时两种权重都报告；`evaluate.py --ema`、`sample.py --ema` 等使用平均后的权重。
 - `--neuron_lr_mult m`：神经元自身参数（β、θ、γ）的学习率倍数。
 - `--carry_state`：每个 batch 的每一行沿着训练文本连续往下读，上一段结束时的膜电位作为下一段的起点（梯度在段与段之间截断）。
@@ -189,6 +192,8 @@ python3 train.py --device cuda --out runs/my_snn \
 `--relay_levels K`（5.52 节，只用于 `quant`）：中继神经元一个词里最多发 K 个脉冲（输出 −K…K 倍的 θ），默认 1。
 `--relay_target r`（5.52 节）：训练时把中继的脉冲数平均压在 r（每个中继按它喂的矩阵的列数加权；0.5 就是块里矩阵的加法次数为稠密乘加的一半）。
 损失加上 λ × 脉冲数，λ 每一步按"脉冲数 − r"自动调节（步长 `--relay_eta`，默认 0.01），不小于 0，存在检查点里。默认 0（不加）。
+`--relay_target_start s --relay_target_steps n`（5.56 节）：目标从 s 开始，在前 n 步里线性降到 r（逐步收紧脉冲数）。
+`--mlp_mult m`（5.56 节）：MLP 的隐藏单元是 d 的 m 倍（默认 4，即 GPT-2 的设置）。
 `--wq ternary`（5.51 节）：块里的矩阵用三值权重（BitNet b1.58 的取整）。
 `--mlp lif`（5.50 节）：隐藏单元换成 LIF 神经元（泄漏、阈值、复位每个单元各自可学习，初始化和脉冲网络的神经元群一样）。
 

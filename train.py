@@ -98,6 +98,11 @@ def get_args():
     p.add_argument("--sample_every", type=int, default=0, help="0: sample at every eval")
     p.add_argument("--device", default="cpu", help="cpu, cuda, cuda:1, ... or auto")
     p.add_argument("--teacher", default="", help="checkpoint of a trained model to distill from")
+    p.add_argument("--teacher_ema", action="store_true", help="--teacher: use its averaged (EMA) weights")
+    p.add_argument("--init_weights", default="", help="start from this checkpoint's weights only (its averaged ones if "
+                   "it has them), copied by name where the shape matches; the rest (e.g. relays, thresholds of 0/1 "
+                   "units) keep their initialisation; new optimizer, step 0: a trained network continued with spikes "
+                   "(docs 5.56). Ignored when resuming")
     p.add_argument("--distill_weight", type=float, default=0.0)
     p.add_argument("--distill_temp", type=float, default=1.0)
     p.add_argument("--ema", type=float, default=0.0, help="EMA decay of the weights; 0 = off")
@@ -118,6 +123,11 @@ def get_args():
                         "the loss gets lam x those spikes, lam raised by --relay_eta x (spikes - target) after every "
                         "step and never below 0 (a Lagrange multiplier; docs 5.52). 0: off")
     p.add_argument("--relay_eta", type=float, default=0.01, help="--relay_target: the multiplier's step")
+    p.add_argument("--relay_target_start", type=float, default=0.0,
+                   help="--relay_target: start from this target and lower it linearly to --relay_target over the "
+                        "first --relay_target_steps steps (a spike budget that tightens, docs 5.56); 0: off")
+    p.add_argument("--relay_target_steps", type=int, default=0)
+    p.add_argument("--mlp_mult", type=int, default=4, help="tf: the MLP's hidden units per channel (docs 5.56)")
     p.add_argument("--wq", default="none", choices=["none", "ternary"],
                    help="tf: the blocks' matrices with ternary weights (BitNet b1.58 rounding; docs 5.51)")
     p.add_argument("--mlp", default="gelu", choices=["gelu", "spike", "lif"],
@@ -325,9 +335,11 @@ def main():
         from model_tf import GPT, TFConfig
         cfg = TFConfig(vocab=a.vocab, d_model=a.d_model, n_layers=a.n_layers, n_heads=a.n_heads,
                        max_len=max(1024, a.seq), rope=a.rope, attn=a.attn, mlp=a.mlp, relay=a.relay,
-                       relay_levels=a.relay_levels, wq=a.wq)
+                       relay_levels=a.relay_levels, wq=a.wq, mlp_mult=a.mlp_mult)
         model = GPT(cfg)
         assert a.relay_target == 0 or model.relays(), "--relay_target needs --relay"
+        assert a.relay_target_start == 0 or (a.relay_target_start > a.relay_target > 0 and a.relay_target_steps > 0), \
+            "--relay_target_start needs --relay_target below it and --relay_target_steps"
         for r in model.relays() if a.relay_target > 0 else []:
             r.keep_count = True
     else:
@@ -358,7 +370,7 @@ def main():
             teacher = HFTeacher(hf)
         else:
             from sample import load
-            teacher, _ = load(a.teacher)
+            teacher, _ = load(a.teacher, ema=a.teacher_ema)
         teacher.to(dev).eval()
         for p_ in teacher.parameters():
             p_.requires_grad_(False)
@@ -412,6 +424,18 @@ def main():
             hint.load_state_dict(ck["hint"])
         lam = torch.tensor(float(ck.get("relay_lam", 0.0)), device=dev)
         print(f"resumed from step {step}" + (f" of {init_path}" if init_path != ckpt_path else ""))
+    if a.init_weights and not init_path:   # weights only, by name where the shape matches (help of --init_weights)
+        ck0 = torch.load(a.init_weights, map_location="cpu")
+        src = {**ck0["model"], **ck0.get("ema", {})}
+        sd = model.state_dict()
+        hit = [k for k in sd if k in src and src[k].shape == sd[k].shape]
+        with torch.no_grad():
+            for k in hit:
+                sd[k].copy_(src[k].to(sd[k].dtype))
+        miss = [k for k in sd if k not in hit]
+        print(f"weights from {a.init_weights} ({'averaged' if ck0.get('ema') else 'raw'}): {len(hit)} tensors copied, "
+              f"{len(miss)} kept their initialisation: {', '.join(miss[:8])}{' ...' if len(miss) > 8 else ''}")
+        del ck0, src
     ema = None
     if a.ema > 0:
         ema = EMA(model, a.ema)
@@ -529,7 +553,10 @@ def main():
             if ema is not None:
                 ema.update(model, step)
         if sp is not None:
-            lam = (lam + a.relay_eta * (sp - a.relay_target)).clamp(min=0)
+            tgt = a.relay_target
+            if a.relay_target_start > 0 and step < a.relay_target_steps:   # a tightening budget (--relay_target_start)
+                tgt = a.relay_target_start + (a.relay_target - a.relay_target_start) * step / a.relay_target_steps
+            lam = (lam + a.relay_eta * (sp - tgt)).clamp(min=0)
         step += 1
         tokens_seen += a.batch * a.seq
         if step % a.log_every == 0 or step == 1:
