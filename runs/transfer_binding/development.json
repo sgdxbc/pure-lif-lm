@@ -1,0 +1,98 @@
+{
+  "name_probe": {
+    "256x2": {
+      "body": {
+        "name_log_odds": 0.0,
+        "two_choice_accuracy": 0.5
+      },
+      "spike": {
+        "name_log_odds": -0.0016554221510887146,
+        "two_choice_accuracy": 0.50390625
+      },
+      "dense": {
+        "name_log_odds": 0.00011428818106651306,
+        "two_choice_accuracy": 0.5
+      },
+      "overlap": {
+        "name_log_odds": -0.004880890250205994,
+        "two_choice_accuracy": 0.5078125
+      }
+    },
+    "256x8": {
+      "body": {
+        "name_log_odds": 0.0,
+        "two_choice_accuracy": 0.5
+      },
+      "spike": {
+        "name_log_odds": 0.0007443279027938843,
+        "two_choice_accuracy": 0.5
+      },
+      "dense": {
+        "name_log_odds": 0.0006639473140239716,
+        "two_choice_accuracy": 0.5
+      },
+      "overlap": {
+        "name_log_odds": -0.013114526867866516,
+        "two_choice_accuracy": 0.5
+      }
+    }
+  },
+  "ordinary_nll": {
+    "body": 4.048441037535667,
+    "spike": 4.082121834158897,
+    "dense": 4.092786356806755,
+    "overlap": 4.090238079428673
+  },
+  "ordinary_adapter_work": {
+    "spike": {
+      "state_bytes_per_stream": 17212,
+      "successful_writes_per_token": 0.4172566731770833,
+      "state_bytes_read_per_token": 2447.9765625,
+      "state_bytes_written_per_token": 335.9765625,
+      "macs_per_token": 110170.16666666667,
+      "adds_per_token": 567.994140625,
+      "divides_per_token": 32.0,
+      "address_checks_per_token": 513.0,
+      "reset_bytes_per_token": 44.822916666666664
+    },
+    "overlap": {
+      "state_bytes_per_stream": 32756,
+      "successful_writes_per_token": 0.4172566731770833,
+      "state_bytes_read_per_token": 1964.4967447916667,
+      "state_bytes_written_per_token": 243.42301432291666,
+      "macs_per_token": 110299.59726969402,
+      "adds_per_token": 1.0,
+      "divides_per_token": 32.0,
+      "address_checks_per_token": 592.6539306640625,
+      "reset_bytes_per_token": 85.30208333333333
+    },
+    "dense": {
+      "state_bytes_per_stream": 18700,
+      "successful_writes_per_token": 0.4484456380208333,
+      "state_bytes_read_per_token": 26140.9375,
+      "state_bytes_written_per_token": 9244.9375,
+      "macs_per_token": 116543.90104166667,
+      "adds_per_token": 1.0,
+      "divides_per_token": 32.0,
+      "address_checks_per_token": 1.0,
+      "reset_bytes_per_token": 48.697916666666664
+    }
+  },
+  "training": {
+    "spike": {
+      "name_nll": 0.8233404158672784,
+      "ordinary_nll": 4.332013832172379
+    },
+    "dense": {
+      "name_nll": 0.8320848827424925,
+      "ordinary_nll": 4.3417016204912215
+    }
+  },
+  "allow_heldout": false,
+  "development_work_gate": true,
+  "split": "development",
+  "source_step": 20000,
+  "train_documents": 2048,
+  "eval_documents_per_cell": 128,
+  "elapsed_seconds": 10.055282683111727
+}
