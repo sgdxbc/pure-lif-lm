@@ -131,5 +131,25 @@ class MemoryMapsTest(unittest.TestCase):
         self.assertEqual(maps[0].shape, (len(cases), 2, 2))
 
 
+    @torch.no_grad()
+    def test_each_arm_edits_its_own_write(self):
+        import experiments.memory_maps as mm
+        model = GPT(TFConfig(vocab=512, d_model=12, n_layers=2, n_heads=2, max_len=256)).eval()
+        cases = list(synthetic_cases(512, 128, 4, np.random.default_rng(7), 0))
+        real, seen = mm.intervene, []
+
+        def record(layer, read, selected, queries, positions, strength, teacher):
+            seen.append(positions.tolist())
+            return real(layer, read, selected, queries, positions, strength, teacher)
+        scores = {}
+        for arm, want in (("source", [c.source for c in cases]), ("sham0", [c.shams[0] for c in cases]),
+                          ("sham1", [c.shams[1] for c in cases])):
+            seen.clear()
+            with patch.object(mm, "intervene", record):
+                scores[arm], _ = measure_cases(model, cases, 1, torch.device("cpu"), 0, selected=[(0, 0), (1, 1)],
+                                               strength=1., arm=arm)
+            self.assertEqual(sorted({tuple(s) for s in seen}), sorted((w,) for w in want))
+        self.assertFalse(np.allclose(scores["source"], scores["sham0"]))
+
 if __name__ == "__main__":
     unittest.main()

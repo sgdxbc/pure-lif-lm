@@ -291,9 +291,11 @@ def measure_cases(model, cases, batch, dev, eot, selected=None, strength=1., arm
         answer = torch.tensor([c.answer for c in block], device=dev)
         callback = None
         if selected is not None:
-            positions = src if arm == "source" else torch.tensor(
+            edit_at = src if arm == "source" else torch.tensor(
                 [c.shams[int(arm[-1])] for c in block], device=dev)
-            callback = lambda layer, read: intervene(layer, read, selected, queries, positions, strength, teacher)
+            # Bind edit_at now: `positions` below is reused for the logit rows.
+            callback = lambda layer, read, edit_at=edit_at: intervene(layer, read, selected, queries, edit_at,
+                                                                      strength, teacher)
         if arm == "replace":
             x[rows, src] = x[rows, torch.tensor([c.shams[0] for c in block], device=dev)]
         scored = sorted(set(queries.tolist()))
