@@ -65,6 +65,7 @@ python3 train.py --device cuda --out runs/my_snn \
 | `ref_loss.py 名字...` | 用 GPT-2 分词器的 Hugging Face 模型在 FineWeb-Edu 验证集上的 loss（和 `evaluate.py` 同样的算法） | `runs/ref_loss.json` |
 | `probe_lambada.py [--ema] runs/X 名字...` | LAMBADA 诊断：最后一个词读完整段 / 只读最后 16 个 token 时的 loss，按是否在前文出现过分组 | `runs/lambada_probe.json` |
 | `experiments/memory_maps.py --device cuda --out runs/memory_maps --intervention-set lambada` | 记忆读出图和成对干预（5.63 节，只做推理；LAMBADA 需要 `datasets`） | `summary.json`、带符号的图 `*.npz` |
+| `experiments/plot_memory_maps.py` | 用上面保存的图画给人看的两张图（5.63 节；CPU，几秒） | `runs/memory_maps/memory_query_rows.png`、`memory_maps_matrix.png` |
 | `experiments/probe_binding.py --out runs/probe_binding_dev.json [--held-out runs/probe_binding_dev.json]` | 第一轮探索：靠"巧合"一次写入的关联（5.64 节，CPU，几秒）。不带 `--held-out` 只跑开发种子；`--held-out` 读开发结果里选定的衰减，跑留出种子，规格见 `docs/probe_binding.md` | `--out` 指定的 JSON |
 | `experiments/probe_regime.py --out runs/probe_regime_dev.json [--held-out]` | 第一轮探索：分清偶然的错误和规律的改变（5.64 节，CPU，几秒）；规格见 `docs/probe_regime.md` | `--out` 指定的 JSON |
 | `experiments/transfer_binding.py --run runs/g48_gla31 --device cuda --batch 8 --out runs/transfer_binding [--held-out]` | 第二轮探索（5.65 节）：固定 `g48_gla31`、每 128 个词清零，只训练记忆模块（脉冲的巧合写入 / 稠密 / 数字参照），在插入的两人场景上比"选对名字"的对数几率和普通文本损失；默认只用开发数据，规格见 `docs/transfer_binding.md` | `runs/transfer_binding/` |
