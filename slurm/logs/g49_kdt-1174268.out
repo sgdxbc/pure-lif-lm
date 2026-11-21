@@ -1,0 +1,19 @@
+queued the next part of runs/g49_kdt: job 1174654
+xgph3 NVIDIA A100 80GB PCIe | runs/g49_kdt | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --attn linear --mlp spike --d_model 512 --n_layers 8 --n_heads 8 --lr 1e-3 --ema 0.999 --relay quant --relay_levels 4 --relay_target 0.25 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --seed 1 --init_ckpt runs/g46_kd25s1/ckpt_step15000.pt --distill_taper_steps 5000 --distill_weight_final 0 --accum 2
+params 78.89M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+== eval step 17500 val_loss 3.8101 (EMA weights 3.7881)
+== eval step 20000 val_loss 3.8058 (EMA weights 3.7795)
+hellaswag        acc 0.2663  acc_norm 0.2693
+lambada_openai   perplexity 3341.8573  acc 0.0749
+piqa             acc 0.5854  acc_norm 0.5609
+arc_easy         acc 0.4184  acc_norm 0.3729
+arc_challenge    acc 0.1860  acc_norm 0.2363
+winogrande       acc 0.5138
+hellaswag        acc 0.2672  acc_norm 0.2702
+lambada_openai   perplexity 3499.5638  acc 0.0734
+piqa             acc 0.5800  acc_norm 0.5631
+arc_easy         acc 0.4310  acc_norm 0.3923
+arc_challenge    acc 0.1681  acc_norm 0.2278
+winogrande       acc 0.5067
+ "val_loss": 3.817835938326225,
+done Sat Nov 21 10:20:12 AM +08 2026
