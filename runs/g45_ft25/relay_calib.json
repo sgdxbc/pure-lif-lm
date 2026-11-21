@@ -1,0 +1,848 @@
+{
+  "source_checkpoint": "/home/s/sung/pure-lif-lm/runs/g40_laspk/ckpt.pt",
+  "source_ema_step": 20000,
+  "relay": "quant",
+  "relay_levels": 4,
+  "seq": 1024,
+  "microbatch": 16,
+  "sample_split": "train",
+  "sample_seed": 0,
+  "precision": "bf16 autocast",
+  "device": "cuda",
+  "first_step": {
+    "nll": 6.1015167236328125,
+    "weighted_rate": 0.601197436684339,
+    "logged_nll": 6.099462985992432,
+    "nll_minus_logged": 0.0020537376403808594,
+    "logged_weighted_rate": 0.6012042760848999
+  },
+  "first_step_offsets": [
+    5089548128,
+    9451399654,
+    1433521468,
+    9433358782,
+    3100848237,
+    4209553157,
+    8230664715,
+    4069071329,
+    5465153071,
+    274047493,
+    7492925360,
+    5351290684,
+    3278848254,
+    7840125618,
+    3014965764,
+    4509577601,
+    1332909037,
+    4008550726,
+    2023156485,
+    2608440727,
+    7461617350,
+    2788381343,
+    4824733259,
+    9752439011,
+    9562707658,
+    7207302522,
+    5381953393,
+    2753402828,
+    1597521658,
+    9644926734,
+    5131779856,
+    1152166267
+  ],
+  "calibration": {
+    "multiplier": 2.228773485191785,
+    "weighted_rate": 0.2514767050743103,
+    "target": 0.25,
+    "tolerance": 0.0025
+  },
+  "matched_calibration": {
+    "multiplier": 1.189207115002721,
+    "weighted_rate": 0.6018971800804138,
+    "target": 0.5998357534408569,
+    "tolerance": 0.0025
+  },
+  "default_calibration_rate": 0.5998357534408569,
+  "calibration_offsets": [
+    5359096675,
+    7013770575,
+    6196694900,
+    1494344425,
+    53224150,
+    2624426400,
+    9268251925,
+    9183465975,
+    6987157475,
+    6465239775,
+    2403202700,
+    3342270800,
+    5405631675,
+    1746664575,
+    788537625,
+    9222159725,
+    5905952625,
+    6816836300,
+    6196820975,
+    9385142925,
+    6845722850,
+    9756860200,
+    6333391975,
+    9392672575,
+    9192766825,
+    887839625,
+    7811465550,
+    5770702850,
+    8435366650,
+    4178812250,
+    2682667925,
+    8702312525,
+    8112588000,
+    5495139800,
+    9655221200,
+    495527025,
+    818961675,
+    4583272125,
+    3919295575,
+    7147772925,
+    5071970600,
+    9915970950,
+    9624909900,
+    4772935050,
+    5263389350,
+    1127275525,
+    5668896775,
+    2723148250,
+    146236750,
+    2802777425,
+    8831376425,
+    2173954275,
+    219774350,
+    8355822550,
+    3360103750,
+    8097362650,
+    8550984600,
+    1836119400,
+    4715465350,
+    27230150,
+    3084787725,
+    407426225,
+    8177573000,
+    4946285100
+  ],
+  "heldout_offsets": [
+    7626974775,
+    7974791100,
+    4831017700,
+    4738973725,
+    9492266700,
+    4988576600,
+    4075217550,
+    3867327050,
+    1479241050,
+    5384126150,
+    3651606575,
+    6109257275,
+    2249457825,
+    6674888150,
+    4009682125,
+    9221957800,
+    772725975,
+    4042320175,
+    8970045600,
+    7918471450,
+    5511934425,
+    98987325,
+    3146864800,
+    8599342050,
+    7249212050,
+    3894161550,
+    4379025500,
+    725364825,
+    7536984900,
+    4228394575,
+    4783529450,
+    9356402950,
+    159019525,
+    5212408925,
+    8302643500,
+    816283350,
+    82376175,
+    6682178975,
+    2301708225,
+    1235835325,
+    1388722275,
+    6255727725,
+    7000391250,
+    6467984725,
+    5704232625,
+    2664252775,
+    5283540850,
+    414497700,
+    6435463525,
+    5828365250,
+    7596942275,
+    2258798650,
+    1485018975,
+    7071488325,
+    4240329675,
+    657117250,
+    8849395925,
+    1946532400,
+    799469250,
+    7563806075,
+    2380233475,
+    6457576875,
+    8535892500,
+    4478073300,
+    2084430775,
+    9753148675,
+    8458318450,
+    1343361925,
+    8251543150,
+    8715555525,
+    3630007775,
+    7741032675,
+    9451387650,
+    4123268525,
+    3084961975,
+    5900389950,
+    9076142325,
+    517287775,
+    2246027150,
+    7303583175,
+    8683932225,
+    1247395275,
+    4205793325,
+    835428300,
+    7151842175,
+    8852668750,
+    7174283525,
+    2282906650,
+    9648744225,
+    8844832625,
+    7826719600,
+    902428450,
+    748162875,
+    9257925050,
+    8145603250,
+    7255467625,
+    1316168675,
+    7534722725,
+    8365977225,
+    5683145300,
+    162401000,
+    8936627525,
+    2646365500,
+    8583188050,
+    6211501025,
+    8279614825,
+    8086891250,
+    7253877850,
+    907656975,
+    591310200,
+    8227295750,
+    3263292500,
+    8853923350,
+    2531738725,
+    3060952375,
+    8938920450,
+    2757850650,
+    5098819450,
+    5756457400,
+    4105814825,
+    6119211050,
+    8418083100,
+    164344400,
+    7854259300,
+    8876755225,
+    4022775475,
+    606915825,
+    7813720550,
+    281602350,
+    6881448200,
+    3816772000,
+    9652750950,
+    2293454925,
+    8525759350,
+    3773872675,
+    2868041225,
+    1185672850,
+    1016567325,
+    333964475,
+    255630900,
+    1973970625,
+    3750178775,
+    2558513775,
+    9606435300,
+    7973795825,
+    3200587100,
+    8407230400,
+    8180959600,
+    9447530575,
+    9537014100,
+    6167288675,
+    6032188550,
+    3250116125,
+    5909568825,
+    7598805725,
+    7063061800,
+    3733041800,
+    2289541475,
+    9412040975,
+    2574127600,
+    8899614775,
+    6287096825,
+    9298060975,
+    1822443850,
+    2867139225,
+    1049023950,
+    4402679425,
+    5590784600,
+    2573080050,
+    4499066325,
+    4055556000,
+    4574606775,
+    5015811875,
+    6668492150,
+    1402638700,
+    9287884775,
+    9238918475,
+    2711287975,
+    2970172225,
+    5573335000,
+    6644886400,
+    9518360125,
+    9368182250,
+    6333731250,
+    8552052650,
+    9219445525,
+    1742799300,
+    7572281800,
+    1983940800,
+    6670983925,
+    9048593400,
+    7539806725,
+    5139628800,
+    483236250,
+    2310685175,
+    3815179150,
+    4890687050,
+    1446581475,
+    8587909200,
+    4970869725,
+    3476460725,
+    6308596200,
+    663158600,
+    582386550,
+    8208666375,
+    5226588775,
+    282061550,
+    781894600,
+    5007901950,
+    8663713075,
+    7605828000,
+    4203075025,
+    6003651525,
+    5223981175,
+    3673337600,
+    3423785975,
+    1142870900,
+    6534064425,
+    8135345050,
+    5509836250,
+    4052013600,
+    6229943850,
+    9400021825,
+    1479288200,
+    428255250,
+    4920974775,
+    3557822150,
+    1238561825,
+    6689546675,
+    8004582725,
+    5567639075,
+    7101557725,
+    7278985225,
+    4130563450,
+    7450858250,
+    7872369000,
+    3582995125,
+    1261066725,
+    7597540875,
+    4521034125,
+    9671684750,
+    8051708125,
+    9436125400,
+    7154629150,
+    1090733250,
+    482734000,
+    5082568075,
+    4278851225,
+    402833200,
+    6489582500,
+    367454300,
+    9895058900,
+    3985929800,
+    3630581775,
+    6329357575,
+    9910417500
+  ],
+  "heldout": {
+    "source_nll": 3.6867825239896774,
+    "default": {
+      "nll": 6.095289826393127,
+      "weighted_rate": 0.5996459994975161,
+      "relays": {
+        "blocks.0.la.r_in": {
+          "rate": 0.5405957698822021,
+          "at_top_fraction": 0.0022287368774414062,
+          "clipped_fraction": 0.0009790509939193726,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.0.la.r_out": {
+          "rate": 1.3390467166900635,
+          "at_top_fraction": 0.12160445749759674,
+          "clipped_fraction": 0.09619086235761642,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.0.r_mlp": {
+          "rate": 0.4568396806716919,
+          "at_top_fraction": 0.005343876779079437,
+          "clipped_fraction": 0.003761373460292816,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.1.la.r_in": {
+          "rate": 0.4166523814201355,
+          "at_top_fraction": 0.0007802769541740417,
+          "clipped_fraction": 1.1235475540161133e-05,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.1.la.r_out": {
+          "rate": 0.5520291328430176,
+          "at_top_fraction": 0.027863875031471252,
+          "clipped_fraction": 0.016987942159175873,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.1.r_mlp": {
+          "rate": 0.4936884939670563,
+          "at_top_fraction": 0.00909220427274704,
+          "clipped_fraction": 0.006276153028011322,
+          "silent_channel_fraction": 0.001953125
+        },
+        "blocks.2.la.r_in": {
+          "rate": 0.4823334217071533,
+          "at_top_fraction": 0.0006205439567565918,
+          "clipped_fraction": 7.450580596923828e-08,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.2.la.r_out": {
+          "rate": 0.6019209623336792,
+          "at_top_fraction": 0.031423598527908325,
+          "clipped_fraction": 0.018482550978660583,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.2.r_mlp": {
+          "rate": 0.5373702049255371,
+          "at_top_fraction": 0.009047470986843109,
+          "clipped_fraction": 0.006404407322406769,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.3.la.r_in": {
+          "rate": 0.5940321683883667,
+          "at_top_fraction": 7.941573858261108e-05,
+          "clipped_fraction": 8.642673492431641e-07,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.3.la.r_out": {
+          "rate": 0.7682918906211853,
+          "at_top_fraction": 0.05345993489027023,
+          "clipped_fraction": 0.03264029324054718,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.3.r_mlp": {
+          "rate": 0.5392550826072693,
+          "at_top_fraction": 0.007797166705131531,
+          "clipped_fraction": 0.005408734083175659,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.4.la.r_in": {
+          "rate": 0.5693538784980774,
+          "at_top_fraction": 0.00010820478200912476,
+          "clipped_fraction": 3.11434268951416e-06,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.4.la.r_out": {
+          "rate": 1.0148799419403076,
+          "at_top_fraction": 0.09564642608165741,
+          "clipped_fraction": 0.06596953421831131,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.4.r_mlp": {
+          "rate": 0.542145311832428,
+          "at_top_fraction": 0.0066265687346458435,
+          "clipped_fraction": 0.004640556871891022,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.5.la.r_in": {
+          "rate": 0.5404477119445801,
+          "at_top_fraction": 0.00014337152242660522,
+          "clipped_fraction": 1.9647181034088135e-05,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.5.la.r_out": {
+          "rate": 1.325982689857483,
+          "at_top_fraction": 0.16485842317342758,
+          "clipped_fraction": 0.12769905477762222,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.5.r_mlp": {
+          "rate": 0.5440367460250854,
+          "at_top_fraction": 0.005528092384338379,
+          "clipped_fraction": 0.0038637444376945496,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.6.la.r_in": {
+          "rate": 0.5884736776351929,
+          "at_top_fraction": 0.0025424882769584656,
+          "clipped_fraction": 0.001202307641506195,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.6.la.r_out": {
+          "rate": 1.617459774017334,
+          "at_top_fraction": 0.23748482763767242,
+          "clipped_fraction": 0.19289980083703995,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.6.r_mlp": {
+          "rate": 0.5417793393135071,
+          "at_top_fraction": 0.006370224058628082,
+          "clipped_fraction": 0.004510603845119476,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.7.la.r_in": {
+          "rate": 0.6723877191543579,
+          "at_top_fraction": 0.007101193070411682,
+          "clipped_fraction": 0.004258513450622559,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.7.la.r_out": {
+          "rate": 1.6783407926559448,
+          "at_top_fraction": 0.2535065487027168,
+          "clipped_fraction": 0.2139303982257843,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.7.r_mlp": {
+          "rate": 0.5112831592559814,
+          "at_top_fraction": 0.009541422128677368,
+          "clipped_fraction": 0.005938321352005005,
+          "silent_channel_fraction": 0.0
+        }
+      },
+      "excess_nll": 2.40850730240345
+    },
+    "calibrated": {
+      "nll": 6.168961346149445,
+      "weighted_rate": 0.25192952095054777,
+      "relays": {
+        "blocks.0.la.r_in": {
+          "rate": 0.2485973984003067,
+          "at_top_fraction": 0.0,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.0.la.r_out": {
+          "rate": 0.1450175642967224,
+          "at_top_fraction": 0.0007120519876480103,
+          "clipped_fraction": 0.0002660229802131653,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.0.r_mlp": {
+          "rate": 0.2587568163871765,
+          "at_top_fraction": 0.0,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.1.la.r_in": {
+          "rate": 0.25987541675567627,
+          "at_top_fraction": 0.0,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.1.la.r_out": {
+          "rate": 0.14361953735351562,
+          "at_top_fraction": 0.001473948359489441,
+          "clipped_fraction": 0.0006814301013946533,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.1.r_mlp": {
+          "rate": 0.26340252161026,
+          "at_top_fraction": 0.0,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.2.la.r_in": {
+          "rate": 0.2632848024368286,
+          "at_top_fraction": 0.0,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.2.la.r_out": {
+          "rate": 0.1446123719215393,
+          "at_top_fraction": 0.0013717636466026306,
+          "clipped_fraction": 0.0006084293127059937,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.2.r_mlp": {
+          "rate": 0.26548922061920166,
+          "at_top_fraction": 0.0,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.3.la.r_in": {
+          "rate": 0.26472845673561096,
+          "at_top_fraction": 7.450580596923828e-09,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.3.la.r_out": {
+          "rate": 0.1538366675376892,
+          "at_top_fraction": 0.0012862831354141235,
+          "clipped_fraction": 0.000572696328163147,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.3.r_mlp": {
+          "rate": 0.2660912275314331,
+          "at_top_fraction": 0.0,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.4.la.r_in": {
+          "rate": 0.26573696732521057,
+          "at_top_fraction": 3.725290298461914e-08,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.4.la.r_out": {
+          "rate": 0.15615876019001007,
+          "at_top_fraction": 0.0012383535504341125,
+          "clipped_fraction": 0.0005246996879577637,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.4.r_mlp": {
+          "rate": 0.2668669521808624,
+          "at_top_fraction": 7.450580596923828e-09,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.5.la.r_in": {
+          "rate": 0.2662014961242676,
+          "at_top_fraction": 7.450580596923828e-09,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.5.la.r_out": {
+          "rate": 0.17122198641300201,
+          "at_top_fraction": 0.0010443702340126038,
+          "clipped_fraction": 0.0004339665174484253,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.5.r_mlp": {
+          "rate": 0.2678537964820862,
+          "at_top_fraction": 0.0,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.6.la.r_in": {
+          "rate": 0.2669835388660431,
+          "at_top_fraction": 2.2351741790771484e-08,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.6.la.r_out": {
+          "rate": 0.16719192266464233,
+          "at_top_fraction": 0.0010743364691734314,
+          "clipped_fraction": 0.00044840574264526367,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.6.r_mlp": {
+          "rate": 0.2675987184047699,
+          "at_top_fraction": 2.9802322387695312e-08,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.7.la.r_in": {
+          "rate": 0.26666659116744995,
+          "at_top_fraction": 5.960464477539063e-08,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.7.la.r_out": {
+          "rate": 0.16024178266525269,
+          "at_top_fraction": 0.0013710632920265198,
+          "clipped_fraction": 0.0005865991115570068,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.7.r_mlp": {
+          "rate": 0.2657838761806488,
+          "at_top_fraction": 6.705522537231445e-08,
+          "clipped_fraction": 0.0,
+          "silent_channel_fraction": 0.0
+        }
+      },
+      "excess_nll": 2.482178822159767
+    },
+    "calibrated_matched": {
+      "nll": 5.550502181053162,
+      "weighted_rate": 0.6030626056176744,
+      "relays": {
+        "blocks.0.la.r_in": {
+          "rate": 0.5981950163841248,
+          "at_top_fraction": 0.00022748112678527832,
+          "clipped_fraction": 2.034008502960205e-06,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.0.la.r_out": {
+          "rate": 0.30350905656814575,
+          "at_top_fraction": 0.010093241930007935,
+          "clipped_fraction": 0.003799550235271454,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.0.r_mlp": {
+          "rate": 0.6181934475898743,
+          "at_top_fraction": 0.00014681369066238403,
+          "clipped_fraction": 1.4156103134155273e-06,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.1.la.r_in": {
+          "rate": 0.6192578077316284,
+          "at_top_fraction": 0.00012858957052230835,
+          "clipped_fraction": 1.3634562492370605e-06,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.1.la.r_out": {
+          "rate": 0.42418789863586426,
+          "at_top_fraction": 0.007722415030002594,
+          "clipped_fraction": 0.004150204360485077,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.1.r_mlp": {
+          "rate": 0.6249592900276184,
+          "at_top_fraction": 0.00010088831186294556,
+          "clipped_fraction": 9.313225746154785e-07,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.2.la.r_in": {
+          "rate": 0.6246370673179626,
+          "at_top_fraction": 0.00010917335748672485,
+          "clipped_fraction": 8.642673492431641e-07,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.2.la.r_out": {
+          "rate": 0.4084232747554779,
+          "at_top_fraction": 0.008264228701591492,
+          "clipped_fraction": 0.004264459013938904,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.2.r_mlp": {
+          "rate": 0.627937376499176,
+          "at_top_fraction": 9.449571371078491e-05,
+          "clipped_fraction": 7.674098014831543e-07,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.3.la.r_in": {
+          "rate": 0.6270648837089539,
+          "at_top_fraction": 0.0001122504472732544,
+          "clipped_fraction": 1.385807991027832e-06,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.3.la.r_out": {
+          "rate": 0.38781413435935974,
+          "at_top_fraction": 0.00804542750120163,
+          "clipped_fraction": 0.004115797579288483,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.3.r_mlp": {
+          "rate": 0.631311297416687,
+          "at_top_fraction": 8.763372898101807e-05,
+          "clipped_fraction": 1.519918441772461e-06,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.4.la.r_in": {
+          "rate": 0.6306725740432739,
+          "at_top_fraction": 9.535998106002808e-05,
+          "clipped_fraction": 2.2873282432556152e-06,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.4.la.r_out": {
+          "rate": 0.40170758962631226,
+          "at_top_fraction": 0.008026227355003357,
+          "clipped_fraction": 0.004004813730716705,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.4.r_mlp": {
+          "rate": 0.6333605647087097,
+          "at_top_fraction": 8.442997932434082e-05,
+          "clipped_fraction": 2.1010637283325195e-06,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.5.la.r_in": {
+          "rate": 0.6322017908096313,
+          "at_top_fraction": 0.00010041147470474243,
+          "clipped_fraction": 3.926455974578857e-06,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.5.la.r_out": {
+          "rate": 0.42880797386169434,
+          "at_top_fraction": 0.0070410072803497314,
+          "clipped_fraction": 0.003442324697971344,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.5.r_mlp": {
+          "rate": 0.6393731832504272,
+          "at_top_fraction": 7.517635822296143e-05,
+          "clipped_fraction": 4.120171070098877e-06,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.6.la.r_in": {
+          "rate": 0.6383815407752991,
+          "at_top_fraction": 0.0001125037670135498,
+          "clipped_fraction": 1.1458992958068848e-05,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.6.la.r_out": {
+          "rate": 0.4425625801086426,
+          "at_top_fraction": 0.006487548351287842,
+          "clipped_fraction": 0.00316610187292099,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.6.r_mlp": {
+          "rate": 0.6376606225967407,
+          "at_top_fraction": 8.463859558105469e-05,
+          "clipped_fraction": 7.115304470062256e-06,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.7.la.r_in": {
+          "rate": 0.6359269022941589,
+          "at_top_fraction": 0.00011517852544784546,
+          "clipped_fraction": 1.420825719833374e-05,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.7.la.r_out": {
+          "rate": 0.4064517319202423,
+          "at_top_fraction": 0.008378304541110992,
+          "clipped_fraction": 0.00442427396774292,
+          "silent_channel_fraction": 0.0
+        },
+        "blocks.7.r_mlp": {
+          "rate": 0.6344171762466431,
+          "at_top_fraction": 0.00014157593250274658,
+          "clipped_fraction": 1.4185905456542969e-05,
+          "silent_channel_fraction": 0.0
+        }
+      },
+      "excess_nll": 1.8637196570634842
+    }
+  },
+  "pass_max_excess_nll": 1.204253651201725,
+  "pass": false
+}

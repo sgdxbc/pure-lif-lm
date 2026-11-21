@@ -1,0 +1,8 @@
+xgph6
+NVIDIA A100 80GB PCIe
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+First batch NLL 6.1015 (logged 6.0995)
+Held-out NLL source 3.6868, default 6.0953, calibrated 6.1690, matched 5.5505
+Matched multiplier 1.1892, rate 0.6019 (default calibration rate 0.5998)
+Calibrated multiplier 2.2288, rate 0.2515, pass False (runs/g45_ft25/relay_calib.json)
