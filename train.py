@@ -33,6 +33,10 @@ Optional training methods (all off by default; the architecture is unchanged by 
         not part of the model and cost nothing at inference.
   --teacher_ema
         use the teacher checkpoint's averaged weights (its EMA) instead of its raw weights.
+  --feat_teacher PATH [--feat_positions P] [--feat_weight_frac f | --feat_weight w]
+        GLA projection distillation from a frozen no-relay EMA checkpoint. Match pairwise token cosine similarities
+        at each attention output and MLP input projection. Use P positions per sequence (default 64); calibrate w
+        at startup against the task gradient (default f=0.1), or supply w explicitly. Resumes reuse the saved w.
   --init_weights PATH
         start from another run's weights (averaged if it has them), copied by name where the shape matches; new
         parts (e.g. relays) keep their initialisation, and the optimizer and step count start fresh (docs 5.56).
@@ -50,6 +54,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 
+from feature_kd import calibrated_weight, capture_grams, feature_mse, sample_positions
 from model import Config, SpikingLM, round_weights_, restore_weights_
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -161,6 +166,12 @@ def get_args():
                    "kept on AdamW, e.g. leak_ (the leak-modulating synapses)")
     p.add_argument("--hint_weight", type=float, default=0.0, help="hidden-state distillation weight (needs --teacher)")
     p.add_argument("--hint_layers", type=int, default=0, help="layer pairs for --hint_weight (0: one per teacher layer)")
+    p.add_argument("--feat_teacher", default="", help="no-relay GLA checkpoint (EMA) for projection distillation")
+    p.add_argument("--feat_positions", type=int, default=64, help="sampled positions per sequence for --feat_teacher")
+    feat_scale = p.add_mutually_exclusive_group()
+    feat_scale.add_argument("--feat_weight_frac", type=float, default=0.1,
+                            help="target ratio of feature to task gradient norms at startup")
+    feat_scale.add_argument("--feat_weight", type=float, help="explicit feature loss weight; bypass calibration")
     a = p.parse_args()
     if a.distill_taper_steps and not 0 < a.distill_taper_steps <= a.steps:
         p.error("--distill_taper_steps must be between 0 and --steps")
@@ -173,6 +184,12 @@ def get_args():
                 "finite --relay_count_width")
     if a.mem_kq_stateless and (a.arch != "snn" or a.mem_kind != "plastic" or not a.mem_heads):
         p.error("--mem_kq_stateless needs spiking plastic memory (--mem_heads > 0)")
+    if a.feat_teacher:
+        scale = a.feat_weight_frac if a.feat_weight is None else a.feat_weight
+        if a.arch != "tf" or a.attn != "linear" or min(a.feat_positions, a.seq) < 2:
+            p.error("--feat_teacher needs GLA (--arch tf --attn linear) and at least two sampled positions")
+        if not math.isfinite(scale) or scale < 0 or (a.feat_weight is None and scale == 0):
+            p.error("--feat_weight must be finite and nonnegative; --feat_weight_frac must be finite and positive")
     if a.device == "auto":
         a.device = "cuda" if torch.cuda.is_available() else "cpu"
     return a
@@ -422,6 +439,16 @@ def main():
         for p_ in teacher.parameters():
             p_.requires_grad_(False)
         print(f"distilling from {a.teacher} (weight {a.distill_weight}, temperature {a.distill_temp})")
+    feat_teacher = None
+    if a.feat_teacher:
+        from sample import load
+        with torch.random.fork_rng(devices=[]):
+            feat_teacher, _ = load(a.feat_teacher, ema=True, device=dev)
+        match = ("attn", "vocab", "d_model", "n_layers", "n_heads", "mlp", "mlp_mult")
+        if (not isinstance(feat_teacher, GPT) or feat_teacher.relays()
+                or any(getattr(cfg, k) != getattr(feat_teacher.cfg, k) for k in match)):
+            raise ValueError("--feat_teacher must be a no-relay GLA checkpoint matching the student's shape and MLP")
+        feat_teacher.requires_grad_(False)
     hint, hint_pairs = None, []
     if a.hint_weight > 0:
         assert teacher is not None and a.arch == "snn", "--hint_weight needs a teacher and a spiking student"
@@ -463,12 +490,18 @@ def main():
     keep_steps = {int(x) for x in a.keep_ckpt.split(",") if x}
     assert all(k % a.eval_every == 0 for k in keep_steps), "--keep_ckpt steps must be multiples of --eval_every"
     assert a.schedule != "wsd" or 0 < a.decay_steps <= a.steps - a.warmup, "wsd needs 0 < --decay_steps <= steps - warmup"
-    init_path = ckpt_path if a.resume and os.path.exists(ckpt_path) else a.init_ckpt
+    resuming = a.resume and os.path.exists(ckpt_path)
+    init_path = ckpt_path if resuming else a.init_ckpt
+    feat_weight = a.feat_weight
     if init_path:
         ck = torch.load(init_path, map_location="cpu")
         model.load_state_dict(ck["model"]); opt.load_state_dict(ck["opt"]); step = ck["step"]
         if hint is not None:
             hint.load_state_dict(ck["hint"])
+        if feat_teacher is not None and resuming:
+            if "feat_weight" not in ck:
+                raise ValueError("resume checkpoint has no feature weight; start a feature continuation with --init_ckpt")
+            feat_weight = ck["feat_weight"]
         lam = torch.tensor(float(ck.get("relay_lam", 0.0)), device=dev)
         print(f"resumed from step {step}" + (f" of {init_path}" if init_path != ckpt_path else ""))
     if a.init_weights and not init_path:   # weights only, by name where the shape matches (help of --init_weights)
@@ -501,7 +534,7 @@ def main():
     print(f"params {model.num_params()/1e6:.2f}M, LIF neurons {model.num_neurons():,}, "
           f"train tokens {len(train.arr)/1e6:.0f}M, tokens/step {a.batch*a.seq:,}")
     with open(os.path.join(a.out, "args.json"), "w") as f:
-        json.dump(vars(a), f, indent=1)
+        json.dump({k: v for k, v in vars(a).items() if a.feat_teacher or not k.startswith("feat_")}, f, indent=1)
     logf = open(os.path.join(a.out, a.log_file), "a")
     prompts = ["Once upon a time", "Lily wanted to go to the park, but", "The little dog was sad because"]
     if a.data != "data":   # general text (PG-19, FineWeb-Edu)
@@ -511,6 +544,7 @@ def main():
     gn_hist = []   # gradient norms of the last 200 steps (--spike_log)
     amp = lambda: torch.autocast(dev.type, dtype=torch.bfloat16)
     state = None   # carried membrane potentials (--carry_state)
+    feat_state = None
     if teacher is not None and step == 0:   # the teacher's own loss on the validation batches, for reference
         rng, tot = np.random.default_rng(1234), 0.0
         for _ in range(a.eval_batches):
@@ -520,6 +554,74 @@ def main():
             tot += F.cross_entropy(tv.float().flatten(0, 1), yv.to(dev).flatten()).item()
         print(f"teacher val_loss {tot / a.eval_batches:.4f}", flush=True)
         logf.write(json.dumps({"step": 0, "teacher_val_loss": tot / a.eval_batches}) + "\n"); logf.flush()
+
+    def microbatch(xm, ym, distill_weight, input_state, feature_state, positions):
+        if positions is not None:
+            with torch.no_grad(), capture_grams(feat_teacher, positions) as targets, amp():
+                features = feat_teacher._features(xm, feature_state, return_state=a.carry_state)
+                feature_state = features[1] if a.carry_state else None
+                del features
+        model.keep_bus = hint is not None
+        with capture_grams(model, positions) as student_grams, amp():
+            if positions is not None and a.carry_state:
+                logits, ce, new_state, rates = model(xm, ym, state=input_state, return_state=True)
+            else:
+                logits, ce, new_state, rates = model(xm, ym, state=input_state)
+        model.keep_bus = False
+        loss, kd, hl = ce, None, None
+        if teacher is not None:
+            with torch.no_grad(), amp():
+                t_out = teacher(xm, hidden=True) if hint is not None else teacher(xm)
+                t_logits = t_out[0]
+            T = a.distill_temp
+            V = logits.size(-1)
+            if t_logits.size(-1) < V:   # e.g. GPT-2's 50257 against the padded 50304: the rest get no probability
+                t_logits = F.pad(t_logits.float(), (0, V - t_logits.size(-1)), value=-1e4)
+            kd = F.kl_div(F.log_softmax(logits.float().view(-1, V) / T, -1),
+                          F.log_softmax(t_logits.float().view(-1, V) / T, -1),
+                          log_target=True, reduction="batchmean") * T * T
+            loss = (1 - distill_weight) * ce + distill_weight * kd
+        if hint is not None:   # hidden-state distillation (see the top of this file)
+            hl = 0.0
+            for (si, ti), proj in zip(hint_pairs, hint):
+                h = t_out[2][ti].float()
+                z = (h - h.mean((0, 1))) / (h.std((0, 1)) + 1e-4)
+                b = model.last_bus[si].float()
+                b = b * torch.rsqrt(b.pow(2).mean(-1, keepdim=True) + 1e-6)
+                hl = hl + F.mse_loss(proj(b), z)
+            hl = hl / len(hint_pairs)
+            model.last_bus = None
+            loss = loss + a.hint_weight * hl
+        sp = None
+        if a.relay_target > 0:
+            sp = model.relay_spikes()
+            loss = loss + lam * sp
+        feature = None if positions is None else feature_mse(student_grams, targets)
+        return loss, feature, new_state, feature_state, (ce, kd, hl, rates, sp)
+
+    if feat_teacher is not None:
+        weight_record = {"step": step}
+        if feat_weight is None:
+            def calibration_losses(x, y, positions):
+                for xm, ym, pm in zip(x.chunk(a.accum), y.chunk(a.accum), positions.chunk(a.accum)):
+                    result = microbatch(xm, ym, distill_weight_at(step, a), None, None, pm)
+                    yield result[0], result[1]
+                    del result
+
+            def calibration_batches():
+                rng = np.random.default_rng([a.seed, step, 1])
+                for offset in range(3):
+                    x, y = (t.to(dev) for t in train.batch(a.batch, rng))
+                    pos = sample_positions(a.batch, a.seq, a.feat_positions, a.seed, step + offset, dev)
+                    yield calibration_losses(x, y, pos)
+
+            feat_weight = calibrated_weight(calibration_batches(), tuple(p for _, p in named),
+                                            a.accum, a.feat_weight_frac)
+            weight_record["feat_weight_frac"] = a.feat_weight_frac
+        weight_record["feat_weight"] = feat_weight
+        print(f"feature distillation from {a.feat_teacher} (weight {feat_weight:.6g})", flush=True)
+        logf.write(json.dumps(weight_record) + "\n"); logf.flush()
+
     while step < a.steps:
         lr = lr_at(step, a)
         distill_weight = distill_weight_at(step, a)
@@ -530,51 +632,29 @@ def main():
             x, y, keep = x.to(dev), y.to(dev), keep.to(dev)
             if state is not None:
                 state = mask_state(state, keep)
+                feat_state = mask_state(feat_state, keep)
         else:
             x, y = train.batch(a.batch)
             x, y = x.to(dev), y.to(dev)
         opt.zero_grad(set_to_none=True)
-        logged = []
+        logged, feature_logged = [], []
+        positions = (sample_positions(a.batch, a.seq, a.feat_positions, a.seed, step, dev).chunk(a.accum)
+                     if feat_teacher is not None else (None,) * a.accum)
         # --wbits: forward and backward with the weight matrices rounded; the update goes to the full-precision values
         saved = round_weights_(model, a.wbits, a.wgroup, a.wbits8) if a.wbits and step >= a.wbits_from else None
-        for xm, ym in zip(x.chunk(a.accum), y.chunk(a.accum)):   # --accum: micro-batches, gradients summed
-            model.keep_bus = hint is not None
-            with amp():
-                logits, ce, new_state, rates = model(xm, ym, state=state)
-            model.keep_bus = False
+        for xm, ym, pm in zip(x.chunk(a.accum), y.chunk(a.accum), positions):   # --accum: sum micro-batch gradients
+            loss, feature, new_state, feat_state, metrics = microbatch(
+                xm, ym, distill_weight, state, feat_state, pm)
+            ce, kd, hl, rates, sp = metrics
             if a.carry_state:
                 state = new_state
-            loss, kd, hl = ce, None, None
-            if teacher is not None:
-                with torch.no_grad(), amp():
-                    t_out = teacher(xm, hidden=True) if hint is not None else teacher(xm)
-                    t_logits = t_out[0]
-                T = a.distill_temp
-                V = logits.size(-1)
-                if t_logits.size(-1) < V:   # e.g. GPT-2's 50257 against the padded 50304: the rest get no probability
-                    t_logits = F.pad(t_logits.float(), (0, V - t_logits.size(-1)), value=-1e4)
-                kd = F.kl_div(F.log_softmax(logits.float().view(-1, V) / T, -1),
-                              F.log_softmax(t_logits.float().view(-1, V) / T, -1),
-                              log_target=True, reduction="batchmean") * T * T
-                loss = (1 - distill_weight) * ce + distill_weight * kd
-            if hint is not None:   # hidden-state distillation (see the top of this file)
-                hl = 0.0
-                for (si, ti), proj in zip(hint_pairs, hint):
-                    h = t_out[2][ti].float()
-                    z = (h - h.mean((0, 1))) / (h.std((0, 1)) + 1e-4)
-                    b = model.last_bus[si].float()
-                    b = b * torch.rsqrt(b.pow(2).mean(-1, keepdim=True) + 1e-6)
-                    hl = hl + F.mse_loss(proj(b), z)
-                hl = hl / len(hint_pairs)
-                model.last_bus = None
-                loss = loss + a.hint_weight * hl
-            sp = None
-            if a.relay_target > 0:
-                sp = model.relay_spikes()
-                loss = loss + lam * sp
+            if feature is not None:
+                loss = loss + feat_weight * feature
             (loss / a.accum).backward()
             logged.append((ce.detach(), None if kd is None else kd.detach(), hl, rates, None if sp is None else sp.detach()))
-            logits = loss = t_out = t_logits = None   # free this micro-batch's outputs before the next one
+            if feature is not None:
+                feature_logged.append(feature.detach())
+            loss = feature = metrics = None
         if saved is not None:
             restore_weights_(model, saved); saved = None
         ce = torch.stack([v[0] for v in logged]).mean()
@@ -625,6 +705,8 @@ def main():
                     rec["distill_weight"] = distill_weight
             if hl is not None:
                 rec["hint_mse"] = hl.item()
+            if feature_logged:
+                rec["feat_mse"] = torch.stack(feature_logged).mean().item()
             if sp is not None:
                 rec["relay_spikes"], rec["relay_lam"] = sp.item(), lam.item()
             mem = ""
@@ -663,6 +745,8 @@ def main():
                 ck["ema"] = ema.shadow
             if hint is not None:
                 ck["hint"] = hint.state_dict()
+            if feat_teacher is not None:
+                ck["feat_weight"] = feat_weight
             if a.relay_target > 0:
                 ck["relay_lam"] = lam.item()
             torch.save(ck, ckpt_path)
