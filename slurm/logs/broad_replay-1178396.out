@@ -1,0 +1,37 @@
+xgpi11
+NVIDIA H100 NVL
+{"timing_pilot": {"solves": 128, "oracle_wall_seconds": 7.573478868231177, "oracle_cpu_seconds": 8.121775337999988, "replay_wall_seconds": 3.6323688933625817}}
+{"budget": {"full_loss_sample": [368, 512], "final_loss_sample": [368, 512], "available_seconds": 3232.2166161006317, "seconds_per_loss_with_margin": 0.1932298113029695, "full_estimate_seconds": 170.04223394661318, "selected_estimate_seconds": 170.04223394661318}, "strata": [{"group": "eligible_names", "baseline_win": true, "population": 1080, "sample": 128, "inclusion_probability": 0.11851851851851852}, {"group": "eligible_names", "baseline_win": false, "population": 368, "sample": 368, "inclusion_probability": 1.0}, {"group": "other_competing_repeats", "baseline_win": true, "population": 33057, "sample": 128, "inclusion_probability": 0.0038720997065674443}, {"group": "other_competing_repeats", "baseline_win": false, "population": 92994, "sample": 512, "inclusion_probability": 0.005505731552573285}]}
+{
+  "tokens": 1048576,
+  "groups": {
+    "eligible_names": {
+      "tokens": 1448,
+      "prevalence": 0.00138092041015625,
+      "original_nll_ceiling": 0.006028139819954426,
+      "gain_per_all_tokens": 0.0001034617635768953
+    },
+    "other_competing_repeats": {
+      "tokens": 126051,
+      "prevalence": 0.12021160125732422,
+      "original_nll_ceiling": 0.41954322984749715,
+      "gain_per_all_tokens": 0.00586580503613334
+    },
+    "everything_else": {
+      "tokens": 921077,
+      "prevalence": 0.8784074783325195,
+      "original_nll_ceiling": 3.272686673762691,
+      "gain_per_all_tokens": 0.0
+    }
+  },
+  "gain": {
+    "mean": 0.0059692667997102355,
+    "ci95": [
+      0.0037873167710550347,
+      0.008278945782834396
+    ]
+  },
+  "reopen_training": false,
+  "elapsed_seconds": 186.20043057296425
+}
+exit 0 elapsed 408 s
