@@ -1,0 +1,108 @@
+xgpi20
+NVIDIA H100 NVL
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+{
+  "learnability": {
+    "name_probe": {
+      "128x2": {
+        "body": {
+          "name_log_odds": 0.0,
+          "two_choice_accuracy": 0.5
+        },
+        "spike": {
+          "name_log_odds": 0.003185071051120758,
+          "two_choice_accuracy": 0.50390625
+        },
+        "dense": {
+          "name_log_odds": 0.0046193599700927734,
+          "two_choice_accuracy": 0.5
+        },
+        "overlap": {
+          "name_log_odds": 0.00530967116355896,
+          "two_choice_accuracy": 0.5
+        }
+      }
+    },
+    "ordinary_nll": {
+      "body": 4.00540928542614,
+      "spike": 4.282043009996414,
+      "dense": 4.1884001940488815,
+      "overlap": 4.30374039709568
+    },
+    "ordinary_adapter_work": {
+      "spike": {
+        "state_bytes_per_stream": 17212,
+        "successful_writes_per_token": 0.05706787109375,
+        "state_bytes_read_per_token": 2310.8095703125,
+        "state_bytes_written_per_token": 198.8095703125,
+        "macs_per_token": 107219.5,
+        "adds_per_token": 533.702392578125,
+        "divides_per_token": 32.0,
+        "address_checks_per_token": 513.0,
+        "reset_bytes_per_token": 44.822916666666664
+      },
+      "overlap": {
+        "state_bytes_per_stream": 32756,
+        "successful_writes_per_token": 0.05706787109375,
+        "state_bytes_read_per_token": 776.9479166666666,
+        "state_bytes_written_per_token": 188.67431640625,
+        "macs_per_token": 107328.13842773438,
+        "adds_per_token": 1.0,
+        "divides_per_token": 32.0,
+        "address_checks_per_token": 523.47265625,
+        "reset_bytes_per_token": 85.30208333333333
+      },
+      "dense": {
+        "state_bytes_per_stream": 18700,
+        "successful_writes_per_token": 0.04571533203125,
+        "state_bytes_read_per_token": 19336.40625,
+        "state_bytes_written_per_token": 2440.40625,
+        "macs_per_token": 111543.6015625,
+        "adds_per_token": 1.0,
+        "divides_per_token": 32.0,
+        "address_checks_per_token": 1.0,
+        "reset_bytes_per_token": 48.697916666666664
+      }
+    },
+    "passed": false,
+    "last_training_interval": {
+      "stage": "easy",
+      "step": 4096,
+      "seconds": 110.07787807099521,
+      "interval_documents": 768,
+      "lr": 0.0001,
+      "arms": {
+        "spike": {
+          "name_nll": 0.7363553581138451,
+          "body_name_nll": 1.1807654413084188,
+          "paired_name_log_odds": 0.030642221555657063,
+          "ordinary_nll": 3.3710021475950875,
+          "gate_rate": 0.07074832380749285,
+          "write_rate": 0.06703040570331116,
+          "ordinary_gate_rate": 0.06518046061197916,
+          "ordinary_write_rate": 0.0609283447265625
+        },
+        "dense": {
+          "name_nll": 0.753772309049964,
+          "body_name_nll": 1.1807654413084188,
+          "paired_name_log_odds": 0.004453727538930252,
+          "ordinary_nll": 3.6725973337888718,
+          "gate_rate": 0.05729530961252749,
+          "write_rate": 0.05729530961252749,
+          "ordinary_gate_rate": 0.04593404134114583,
+          "ordinary_write_rate": 0.04593404134114583
+        }
+      }
+    }
+  },
+  "stopped_at": "128x2",
+  "allow_heldout": false,
+  "development_work_gate": null,
+  "split": "development",
+  "source_step": 20000,
+  "train_documents": 2048,
+  "eval_documents_per_cell": 128,
+  "elapsed_seconds": 112.98717044200748
+}
+exit 0 elapsed 116 s
