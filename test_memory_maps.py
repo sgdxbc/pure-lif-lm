@@ -32,7 +32,9 @@ class MemoryMapsTest(unittest.TestCase):
         for model in self.models():
             with self.subTest(config=model.cfg):
                 model.eval()
-                self.assertLess(check_reconstruction(model, self.tokens, split=77)["max_abs_error"], 3e-5)
+                result = check_reconstruction(model, self.tokens, split=77)
+                self.assertLess(result["max_abs_error"], 3e-5)
+                self.assertEqual(result["split_inputs_diverged"], [])   # tiny models: no flips, so all asserted
 
     @torch.no_grad()
     def test_tolerance_still_catches_a_slightly_wrong_decay(self):
@@ -44,6 +46,27 @@ class MemoryMapsTest(unittest.TestCase):
             return scan(q, k, v, log_lam * 1.01, S0, chunk)
         with patch.object(snn, "plastic_scan", wrong), self.assertRaises(AssertionError):
             check_reconstruction(plastic, self.tokens, split=77)
+
+    @torch.no_grad()
+    def test_upstream_divergence_is_recorded_not_asserted(self):
+        plastic = self.models()[0].eval()
+        layer = plastic.mem_layers[1]
+
+        def nudge_full_pass(module, args):      # as if a spike upstream flipped in the full pass only
+            bus = args[0]
+            if bus.size(1) != self.tokens.size(1):
+                return None
+            bus = bus.clone()
+            bus[0, 120] += .5
+            return (bus,) + args[1:]
+        hook = plastic.mems[str(layer)].register_forward_pre_hook(nudge_full_pass)
+        try:
+            result = check_reconstruction(plastic, self.tokens, split=77)
+        finally:
+            hook.remove()
+        self.assertEqual([d["layer"] for d in result["split_inputs_diverged"]], [layer])
+        firsts = {d["first_position"] for d in result["split_inputs_diverged"][0]["inputs"].values()}
+        self.assertEqual(min(firsts), 120)
 
     @torch.no_grad()
     def test_zero_sham_leaves_full_model_unchanged(self):

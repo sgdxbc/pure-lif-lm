@@ -115,12 +115,17 @@ def check_reconstruction(model, x, split=137, atol=3e-5, rel_to_terms=1e-4):
     """Check against the actual scans and, for recurrent models, against carried and explicit prefix writes.
     An element passes if |error| <= atol + rel_to_terms * (sum of the absolute terms in its read). FP32 rounding is
     at most about n * 1.2e-7 of that sum (n <= 257 terms); a wrong map (lag, decay or state) misses by a sizeable
-    fraction of it. Returns the largest absolute error and the largest share of the tolerance used."""
+    fraction of it. The split pass and the full pass can feed a layer different inputs when rounding flips a spike
+    upstream (a membrane within FP32 noise of threshold; spiking layers amplify it). The split-vs-full comparison is
+    then recorded, not asserted: every map check still runs on each pass's own inputs, the analysis itself uses
+    full passes only, and the CPU tests check the carried state exactly. Returns the largest absolute error, the
+    largest share of the tolerance used, and the layers whose inputs diverged."""
     if not 1 <= split < x.size(1):
         raise ValueError("reconstruction needs a split inside the sequence")
     _, _, full = traced_forward(model, x, query_slice=slice(0, 0))
     checks = [(f"layer {layer} map vs scan", read.reconstructed(), read.actual, read.reconstructed(True))
               for layer, read in full.items()]
+    diverged = []
     if isinstance(model, snn.SpikingLM) or model.cfg.attn == "linear":
         _, state, left = traced_forward(model, x[:, :split], query_slice=slice(0, 0))
         _, _, right = traced_forward(model, x[:, split:], state=state, query_slice=slice(0, 0))
@@ -135,9 +140,22 @@ def check_reconstruction(model, x, split=137, atol=3e-5, rel_to_terms=1e-4):
             checks.extend(((f"layer {layer} carried-state map vs scan", read.reconstructed(), read.actual,
                             read.reconstructed(True)),
                            (f"layer {layer} explicit prefix map vs carried scan", joined.reconstructed()[:, :, split:],
-                            read.actual, scale[:, :, split:]),
-                           (f"layer {layer} split scan vs full scan", torch.cat((first.actual, read.actual), 2),
-                            full[layer].actual, scale)))
+                            read.actual, scale[:, :, split:])))
+            whole = full[layer]
+            differ = {}
+            for name, a, b in (("q", joined.q, whole.q), ("k", joined.k, whole.k), ("v", joined.v, whole.v),
+                               ("log_decay", joined.log_decay, whole.log_decay.expand(*whole.q.shape[:3]))):
+                off = (a - b).abs() > atol + rel_to_terms * b.abs().amax()
+                if off.any():
+                    differ[name] = dict(entries=off.sum().item(), of=off.numel(),
+                                        first_position=off.nonzero()[:, 2].min().item())
+            joined_actual = torch.cat((first.actual, read.actual), 2)
+            if differ:
+                gap = (joined_actual - whole.actual).abs()
+                diverged.append(dict(layer=layer, inputs=differ, max_abs_output_difference=gap.max().item(),
+                                     output_elements_outside=(gap > atol + rel_to_terms * scale).sum().item()))
+            else:
+                checks.append((f"layer {layer} split scan vs full scan", joined_actual, whole.actual, scale))
     worst_abs, worst_share = 0., 0.
     for label, actual, expected, terms in checks:
         error = (actual - expected).abs()
@@ -149,7 +167,8 @@ def check_reconstruction(model, x, split=137, atol=3e-5, rel_to_terms=1e-4):
                                  f"max term sum {terms.max().item():.3g}")
         worst_abs, worst_share = max(worst_abs, error.max().item()), max(worst_share, share.max().item())
     return dict(max_abs_error=worst_abs, max_share_of_tolerance=worst_share,
-                tolerance=f"{atol:g} + {rel_to_terms:g} x sum of absolute terms")
+                tolerance=f"{atol:g} + {rel_to_terms:g} x sum of absolute terms", split=split,
+                split_inputs_diverged=diverged)
 
 
 @dataclass
