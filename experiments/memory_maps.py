@@ -77,14 +77,14 @@ def layer_ids(model):
     return model.mem_layers if isinstance(model, snn.SpikingLM) else list(range(len(model.blocks)))
 
 
-def traced_forward(model, x, state=None, intervention=None, return_reads=True, query_slice=None, trace_layers=None):
-    """Capture the real scan arguments or intervene on a single raw read before downstream processing."""
+def traced_forward(model, x, state=None, intervention=None, return_reads=True, query_slice=None, trace_layers=None,
+                   plastic_query=None):
+    """Trace scans, with optional raw-read or plastic-query edits before downstream processing."""
     traces = {}
     layers = iter(layer_ids(model))
     scan_gla, scan_plastic, attention = tf.gla_scan, snn.plastic_scan, F.scaled_dot_product_attention
 
-    def observe(q, k, v, decay, actual, incoming=None):
-        layer = next(layers)
+    def observe(layer, q, k, v, decay, actual, incoming=None):
         if intervention is None and (not return_reads or trace_layers is not None and layer not in trace_layers):
             return actual
         trace = Read(q.float(), k.float(), v.float(), decay, actual.float(), incoming)
@@ -94,17 +94,20 @@ def traced_forward(model, x, state=None, intervention=None, return_reads=True, q
 
     def gla(q, k, v, log_a, chunk=64, S0=None):
         out, after = scan_gla(q, k, v, log_a, chunk, S0)
-        return observe(q, k, v, log_a, out, S0), after
+        return observe(next(layers), q, k, v, log_a, out, S0), after
 
     def plastic(q, k, v, log_lam, S0=None, chunk=128):
+        layer = next(layers)
+        if plastic_query is not None:
+            q = plastic_query(layer, q)
         out, after = scan_plastic(q, k, v, log_lam, S0, chunk)
         decay = log_lam.float().view(1, -1, 1)
-        return observe(q, k, v, decay, out, S0), after
+        return observe(layer, q, k, v, decay, out, S0), after
 
     def softmax(q, k, v, *, is_causal):
         assert is_causal
         out = attention(q, k, v, is_causal=True)
-        return observe(q * q.size(-1) ** -.5, k, v, None, out)
+        return observe(next(layers), q * q.size(-1) ** -.5, k, v, None, out)
 
     carry = {"return_state": True} if isinstance(model, tf.GPT) and model.cfg.attn == "linear" else {}
     with patch.object(tf, "gla_scan", gla), patch.object(snn, "plastic_scan", plastic), \
