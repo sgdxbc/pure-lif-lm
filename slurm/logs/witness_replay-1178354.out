@@ -1,0 +1,32 @@
+xgpi18
+NVIDIA H100 NVL
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+{
+  "passages": 24,
+  "seed": 5664,
+  "ranking_wins": {
+    "original": 0,
+    "witness": 24,
+    "sham": 2
+  },
+  "sham_witness_matching_heads": 28,
+  "sham_witness_matching_nonzero_edits": 0,
+  "witness_logprob_gain": {
+    "original": {
+      "mean": 0.4984871745109558,
+      "ci95": [
+        0.2165687660376231,
+        0.7855824654301005
+      ]
+    },
+    "sham": {
+      "mean": 0.8846934785445532,
+      "ci95": [
+        0.530978192264835,
+        1.2719674613326786
+      ]
+    }
+  },
+  "reopen_discussion": true
+}
+exit 0 elapsed 14 s
