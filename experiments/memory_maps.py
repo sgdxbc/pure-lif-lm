@@ -62,11 +62,14 @@ class Read:
         match = match.masked_fill(~mask[:, None], 0)
         return match * log_survival.exp(), log_survival, match
 
-    def reconstructed(self):
-        out = self.parts()[0] @ self.v
+    def reconstructed(self, absolute=False):
+        """The read from the exact map. absolute=True sums the terms' absolute values instead: the scale of the
+        floating-point rounding in any order of summation (multi-level spike keys make single terms large)."""
+        f = torch.abs if absolute else (lambda t: t)
+        out = f(self.parts()[0]) @ f(self.v)
         if self.incoming is not None:
             prefix = self.log_decay.expand(*self.q.shape[:3]).cumsum(-1).exp()
-            out = out + (self.q * prefix[..., None]) @ self.incoming
+            out = out + f(self.q * prefix[..., None]) @ f(self.incoming)
         return out
 
 
@@ -108,12 +111,16 @@ def traced_forward(model, x, state=None, intervention=None, return_reads=True, q
     return logits, after, traces
 
 
-def check_reconstruction(model, x, split=137):
-    """Check against the actual scans and, for recurrent models, against carried and explicit prefix writes."""
+def check_reconstruction(model, x, split=137, atol=3e-5, rel_to_terms=1e-4):
+    """Check against the actual scans and, for recurrent models, against carried and explicit prefix writes.
+    An element passes if |error| <= atol + rel_to_terms * (sum of the absolute terms in its read). FP32 rounding is
+    at most about n * 1.2e-7 of that sum (n <= 257 terms); a wrong map (lag, decay or state) misses by a sizeable
+    fraction of it. Returns the largest absolute error and the largest share of the tolerance used."""
     if not 1 <= split < x.size(1):
         raise ValueError("reconstruction needs a split inside the sequence")
     _, _, full = traced_forward(model, x, query_slice=slice(0, 0))
-    checks = [(read.reconstructed(), read.actual) for read in full.values()]
+    checks = [(f"layer {layer} map vs scan", read.reconstructed(), read.actual, read.reconstructed(True))
+              for layer, read in full.items()]
     if isinstance(model, snn.SpikingLM) or model.cfg.attn == "linear":
         _, state, left = traced_forward(model, x[:, :split], query_slice=slice(0, 0))
         _, _, right = traced_forward(model, x[:, split:], state=state, query_slice=slice(0, 0))
@@ -124,14 +131,25 @@ def check_reconstruction(model, x, split=137):
             joined = Read(torch.cat((first.q, read.q), 2), torch.cat((first.k, read.k), 2),
                           torch.cat((first.v, read.v), 2), torch.cat((first_decay, second_decay), 2),
                           full[layer].actual)
-            checks.extend(((read.reconstructed(), read.actual),
-                           (joined.reconstructed()[:, :, split:], read.actual),
-                           (torch.cat((first.actual, read.actual), 2), full[layer].actual)))
-    errors = []
-    for actual, expected in checks:
-        torch.testing.assert_close(actual, expected, atol=3e-5, rtol=3e-4)
-        errors.append((actual - expected).abs().max().item())
-    return max(errors)
+            scale = full[layer].reconstructed(True)
+            checks.extend(((f"layer {layer} carried-state map vs scan", read.reconstructed(), read.actual,
+                            read.reconstructed(True)),
+                           (f"layer {layer} explicit prefix map vs carried scan", joined.reconstructed()[:, :, split:],
+                            read.actual, scale[:, :, split:]),
+                           (f"layer {layer} split scan vs full scan", torch.cat((first.actual, read.actual), 2),
+                            full[layer].actual, scale)))
+    worst_abs, worst_share = 0., 0.
+    for label, actual, expected, terms in checks:
+        error = (actual - expected).abs()
+        share = error / (atol + rel_to_terms * terms)
+        if not torch.isfinite(share).all() or share.max() > 1:
+            bad = share.max().item()
+            raise AssertionError(f"{label}: {(share > 1).sum().item()} of {share.numel()} elements outside "
+                                 f"tolerance; max |error| {error.max().item():.3g}, max error/tolerance {bad:.3g}, "
+                                 f"max term sum {terms.max().item():.3g}")
+        worst_abs, worst_share = max(worst_abs, error.max().item()), max(worst_share, share.max().item())
+    return dict(max_abs_error=worst_abs, max_share_of_tolerance=worst_share,
+                tolerance=f"{atol:g} + {rel_to_terms:g} x sum of absolute terms")
 
 
 @dataclass
@@ -455,7 +473,7 @@ def main():
             report["teacher_supports_alignment"] = teacher_supported
         gain = paired["held_out"]
         save_maps(model, examples, config.out / f"{name}.npz", dev, tok, paired["heads"])
-        report["models"][name] = dict(step=step, reconstruction_max_abs_error=verify, range=ranges,
+        report["models"][name] = dict(step=step, reconstruction=verify, range=ranges,
                                        repeated=induction_report(model, repeated, measure, config.seed),
                                        natural_induction=induction_report(model, natural, measure, config.seed),
                                        intervention=paired,

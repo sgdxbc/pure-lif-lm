@@ -1,5 +1,6 @@
 """Tiny CPU tests of write attribution, carried state and paired interventions."""
 import unittest
+from unittest.mock import patch
 
 import numpy as np
 import torch
@@ -31,7 +32,18 @@ class MemoryMapsTest(unittest.TestCase):
         for model in self.models():
             with self.subTest(config=model.cfg):
                 model.eval()
-                self.assertLess(check_reconstruction(model, self.tokens, split=77), 3e-5)
+                self.assertLess(check_reconstruction(model, self.tokens, split=77)["max_abs_error"], 3e-5)
+
+    @torch.no_grad()
+    def test_tolerance_still_catches_a_slightly_wrong_decay(self):
+        import model as snn
+        plastic = self.models()[0].eval()
+        scan = snn.plastic_scan
+
+        def wrong(q, k, v, log_lam, S0=None, chunk=128):     # the real scan decays 1% faster than the map says
+            return scan(q, k, v, log_lam * 1.01, S0, chunk)
+        with patch.object(snn, "plastic_scan", wrong), self.assertRaises(AssertionError):
+            check_reconstruction(plastic, self.tokens, split=77)
 
     @torch.no_grad()
     def test_zero_sham_leaves_full_model_unchanged(self):
