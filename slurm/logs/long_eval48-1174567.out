@@ -1,0 +1,37 @@
+guard ok Sat Nov 21 08:23:32 AM +08 2026
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+recall  512 tokens  full logp -17.444, exact top-1 0.0%  restart logp -17.444, exact top-1 0.0%
+recall 1024 tokens  full logp -17.861, exact top-1 0.0%  restart logp -18.175, exact top-1 0.0%
+recall 2048 tokens  full logp -18.082, exact top-1 0.0%  restart logp -18.175, exact top-1 0.0%
+recall 4096 tokens  full logp -18.010, exact top-1 0.0%  restart logp -18.175, exact top-1 0.0%
+recall 8192 tokens  full logp -18.111, exact top-1 0.0%  restart logp -18.175, exact top-1 0.0%
+g45_kd25: 102 books of >= 8192 tokens, mean 3.8485  0-64 4.167  64-128 3.750  128-256 3.740  256-512 3.725  512-1024 3.828  1024-2048 3.876  2048-4096 3.851  4096-8192 3.851
+restart 1024: loss 3.8987, gain from carrying context +0.0502
+runs/g45_kd25 done Sat Nov 21 08:24:59 AM +08 2026
+recall  512 tokens  full logp -17.107, exact top-1 0.0%  restart logp -17.107, exact top-1 0.0%
+recall 1024 tokens  full logp -17.463, exact top-1 0.0%  restart logp -17.546, exact top-1 0.0%
+recall 2048 tokens  full logp -17.560, exact top-1 0.0%  restart logp -17.546, exact top-1 0.0%
+recall 4096 tokens  full logp -17.531, exact top-1 0.0%  restart logp -17.546, exact top-1 0.0%
+recall 8192 tokens  full logp -17.528, exact top-1 0.0%  restart logp -17.546, exact top-1 0.0%
+g44_all3: 102 books of >= 8192 tokens, mean 3.7361  0-64 4.064  64-128 3.611  128-256 3.608  256-512 3.601  512-1024 3.704  1024-2048 3.759  2048-4096 3.737  4096-8192 3.743
+restart 1024: loss 3.7785, gain from carrying context +0.0423
+runs/g44_all3 done Sat Nov 21 08:27:27 AM +08 2026
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+recall  512 tokens  full logp -17.085, exact top-1 0.0%  restart logp -17.085, exact top-1 0.0%
+recall 1024 tokens  full logp -17.274, exact top-1 0.0%  restart logp -17.447, exact top-1 0.0%
+recall 2048 tokens  full logp -17.346, exact top-1 0.0%  restart logp -17.447, exact top-1 0.0%
+recall 4096 tokens  full logp -17.355, exact top-1 0.0%  restart logp -17.447, exact top-1 0.0%
+recall 8192 tokens  full logp -17.355, exact top-1 0.0%  restart logp -17.447, exact top-1 0.0%
+g40_la: 102 books of >= 8192 tokens, mean 3.6421  0-64 3.941  64-128 3.509  128-256 3.509  256-512 3.503  512-1024 3.613  1024-2048 3.672  2048-4096 3.644  4096-8192 3.648
+restart 1024: loss 3.6922, gain from carrying context +0.0501
+runs/g40_la done Sat Nov 21 08:28:44 AM +08 2026
+recall  512 tokens  full logp -14.014, exact top-1 0.0%  restart logp -14.014, exact top-1 0.0%
+recall 1024 tokens  full logp -17.595, exact top-1 0.0%  restart logp -17.595, exact top-1 0.0%
+recall 2048 tokens  full logp -17.595, exact top-1 0.0%  restart logp -17.595, exact top-1 0.0%
+recall 4096 tokens  full logp -17.595, exact top-1 0.0%  restart logp -17.595, exact top-1 0.0%
+recall 8192 tokens  full logp -17.595, exact top-1 0.0%  restart logp -17.595, exact top-1 0.0%
+g33_tf31: 102 books of >= 8192 tokens, mean 3.8034  0-64 4.209  64-128 3.730  128-256 3.732  256-512 3.702  512-1024 3.784  1024-2048 3.837  2048-4096 3.804  4096-8192 3.801
+restart 1024: loss 3.8631, gain from carrying context +0.0597
+runs/g33_tf31 done Sat Nov 21 08:29:50 AM +08 2026
