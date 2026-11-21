@@ -1,0 +1,96 @@
+{
+  "split": "development",
+  "seeds": {
+    "tables": 201,
+    "training": 204,
+    "evaluation": 202
+  },
+  "training_batches": 12,
+  "evaluation_streams": 128,
+  "learning_state_bytes": {
+    "64": {
+      "bptt": 1327360,
+      "eligibility": 20736,
+      "shared_inputs": 4096,
+      "parameters": 768
+    },
+    "256": {
+      "bptt": 5259520,
+      "eligibility": 20736,
+      "shared_inputs": 16384,
+      "parameters": 768
+    }
+  },
+  "conditions": {
+    "bptt": {
+      "nll": 0.35700984431066257,
+      "downstream_updates_per_observation": 0.007568359375,
+      "cell_events_per_observation": 0.24849700927734375,
+      "median_informative_observations_to_recover": 2.0,
+      "switches": 752,
+      "isolated_corruptions": 4173,
+      "false_switch_rate": 0.000958543014617781,
+      "bytes_per_observation": {
+        "read": 481.0,
+        "written": 128.25606536865234,
+        "input": 2.0
+      }
+    },
+    "eligibility": {
+      "nll": 0.35700984431066257,
+      "downstream_updates_per_observation": 0.007568359375,
+      "cell_events_per_observation": 0.24849700927734375,
+      "median_informative_observations_to_recover": 2.0,
+      "switches": 752,
+      "isolated_corruptions": 4173,
+      "false_switch_rate": 0.000958543014617781,
+      "bytes_per_observation": {
+        "read": 481.0,
+        "written": 128.25606536865234,
+        "input": 2.0
+      }
+    },
+    "before_training": {
+      "nll": 0.36618726458255446,
+      "downstream_updates_per_observation": 0.0071563720703125,
+      "cell_events_per_observation": 0.2397003173828125,
+      "median_informative_observations_to_recover": 3.0,
+      "switches": 752,
+      "isolated_corruptions": 4173,
+      "false_switch_rate": 0.0004792715073088905,
+      "bytes_per_observation": {
+        "read": 481.0,
+        "written": 128.24685668945312,
+        "input": 2.0
+      }
+    },
+    "always_updated": {
+      "nll": 0.3983558382161585,
+      "downstream_updates_per_observation": 1.0,
+      "cell_events_per_observation": 0.0,
+      "median_informative_observations_to_recover": 1.0,
+      "switches": 752,
+      "isolated_corruptions": 4173,
+      "false_switch_rate": 0.07165109034267912,
+      "bytes_per_observation": {
+        "read": 324.0,
+        "written": 132.0,
+        "input": 2.0
+      }
+    },
+    "likelihood_ratio": {
+      "nll": 0.33089372352548097,
+      "downstream_updates_per_observation": 1.0,
+      "cell_events_per_observation": 0.0,
+      "median_informative_observations_to_recover": 1.0,
+      "switches": 752,
+      "isolated_corruptions": 4173,
+      "false_switch_rate": 0.03858135633836569,
+      "bytes_per_observation": {
+        "read": 68.0,
+        "written": 4.0,
+        "input": 2.0
+      }
+    }
+  }
+}
