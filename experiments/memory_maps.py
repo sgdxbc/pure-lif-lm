@@ -77,7 +77,7 @@ def layer_ids(model):
     return model.mem_layers if isinstance(model, snn.SpikingLM) else list(range(len(model.blocks)))
 
 
-def traced_forward(model, x, state=None, intervention=None, return_reads=True, query_slice=None):
+def traced_forward(model, x, state=None, intervention=None, return_reads=True, query_slice=None, trace_layers=None):
     """Capture the real scan arguments or intervene on a single raw read before downstream processing."""
     traces = {}
     layers = iter(layer_ids(model))
@@ -85,6 +85,8 @@ def traced_forward(model, x, state=None, intervention=None, return_reads=True, q
 
     def observe(q, k, v, decay, actual, incoming=None):
         layer = next(layers)
+        if intervention is None and (not return_reads or trace_layers is not None and layer not in trace_layers):
+            return actual
         trace = Read(q.float(), k.float(), v.float(), decay, actual.float(), incoming)
         if return_reads:
             traces[layer] = trace
