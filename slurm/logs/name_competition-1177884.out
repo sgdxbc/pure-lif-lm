@@ -1,0 +1,8 @@
+xgpi15
+NVIDIA H100 NVL
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+scoring g13_tf163
+scoring g44_all3
+scoring g39_snngla
+scoring g38_la
+exit 0 elapsed 35 s

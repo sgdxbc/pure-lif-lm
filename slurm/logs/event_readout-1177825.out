@@ -1,0 +1,523 @@
+xgpi15
+NVIDIA H100 NVL
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+captured 8388608 new training tokens
+fit tokens=524288 fanout=32 epoch=1 nll=6.82363
+fit tokens=524288 fanout=32 epoch=2 nll=6.25245
+fit tokens=524288 fanout=128 epoch=1 nll=7.52622
+fit tokens=524288 fanout=128 epoch=2 nll=6.07302
+fit tokens=524288 fanout=512 epoch=1 nll=10.02921
+fit tokens=524288 fanout=512 epoch=2 nll=6.36394
+fit tokens=2097152 fanout=32 epoch=1 nll=6.50861
+fit tokens=2097152 fanout=32 epoch=2 nll=6.17229
+fit tokens=2097152 fanout=128 epoch=1 nll=6.69528
+fit tokens=2097152 fanout=128 epoch=2 nll=5.78247
+fit tokens=2097152 fanout=512 epoch=1 nll=8.09430
+fit tokens=2097152 fanout=512 epoch=2 nll=5.62073
+fit tokens=8388608 fanout=32 epoch=1 nll=6.39144
+fit tokens=8388608 fanout=32 epoch=2 nll=6.18050
+fit tokens=8388608 fanout=128 epoch=1 nll=6.31994
+fit tokens=8388608 fanout=128 epoch=2 nll=5.75024
+fit tokens=8388608 fanout=512 epoch=1 nll=6.99284
+fit tokens=8388608 fanout=512 epoch=2 nll=5.45493
+{
+  "scope": "5.63 direct-event rejection screen on the conventional heads' calibration windows",
+  "cache_step": 20000,
+  "heldout_tokens": 8192,
+  "conventional_calibration_kl": {
+    "linear": 0.5904573109000921,
+    "nonlinear": 0.585366802290082,
+    "shortlist": 0.24542097700759768
+  },
+  "best_conventional": "shortlist",
+  "kl_limit": 0.2574209770075977,
+  "conventional_selection": "best epochs were chosen on cal, which favors those heads on this comparison",
+  "decision": "not retired, fitting-limited",
+  "events_per_token": {
+    "mean": 158.016845703125,
+    "p50": 160.0,
+    "p90": 204.0,
+    "p99": 242.0,
+    "max": 299.0
+  },
+  "curve": [
+    {
+      "fit_tokens": 524288,
+      "fanouts": {
+        "32": {
+          "fitted_nll": 6.419962933221495,
+          "flat_nll": 3.574906896799803,
+          "fitted_kl": 2.57273596067187,
+          "untouched_kl_floor": 1.4553224976353003,
+          "untouched_nll_floor": 3.27807843570434,
+          "touched_words": {
+            "mean": 957.8009033203125,
+            "p50": 987.0,
+            "p90": 1211.0,
+            "p99": 1357.0,
+            "max": 1568.0
+          },
+          "traffic": [
+            {
+              "streams": 1,
+              "reads_bytes_per_token": {
+                "fanout_lists": 21490.291015625,
+                "stream_accumulators": 40452.3125,
+                "bias_and_normalize_sample": 15332.814453125,
+                "fixed_alias_table": 4.425706324384836
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 40452.3125,
+                "touched_list_and_cdf": 7662.4072265625
+              },
+              "static_bytes": 882184,
+              "scratch_bytes": 414976
+            },
+            {
+              "streams": 16,
+              "reads_bytes_per_token": {
+                "fanout_lists": 10179.28125,
+                "stream_accumulators": 40452.3125,
+                "bias_and_normalize_sample": 15332.814453125,
+                "fixed_alias_table": 4.425706324384836
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 40452.3125,
+                "touched_list_and_cdf": 7662.4072265625
+              },
+              "static_bytes": 882184,
+              "scratch_bytes": 6639616
+            }
+          ],
+          "train_nll_by_epoch": [
+            6.82362699508667,
+            6.252449989318848
+          ]
+        },
+        "128": {
+          "fitted_nll": 6.166162736947147,
+          "flat_nll": 3.574906896799803,
+          "fitted_kl": 2.3145238578713596,
+          "untouched_kl_floor": 0.8516208802772547,
+          "untouched_nll_floor": 2.070974828092473,
+          "touched_words": {
+            "mean": 2987.9122314453125,
+            "p50": 3070.5,
+            "p90": 3555.0,
+            "p99": 3866.1800000000003,
+            "max": 4189.0
+          },
+          "traffic": [
+            {
+              "streams": 1,
+              "reads_bytes_per_token": {
+                "fanout_lists": 82168.759765625,
+                "stream_accumulators": 161809.25,
+                "bias_and_normalize_sample": 47814.595703125,
+                "fixed_alias_table": 3.3184691443938035
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 161809.25,
+                "touched_list_and_cdf": 23903.2978515625
+              },
+              "static_bytes": 1668616,
+              "scratch_bytes": 435944
+            },
+            {
+              "streams": 16,
+              "reads_bytes_per_token": {
+                "fanout_lists": 38920.78125,
+                "stream_accumulators": 161809.25,
+                "bias_and_normalize_sample": 47814.595703125,
+                "fixed_alias_table": 3.3184691443938035
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 161809.25,
+                "touched_list_and_cdf": 23903.2978515625
+              },
+              "static_bytes": 1668616,
+              "scratch_bytes": 6975104
+            }
+          ],
+          "train_nll_by_epoch": [
+            7.526223182678223,
+            6.073020935058594
+          ]
+        },
+        "512": {
+          "fitted_nll": 6.176160182322648,
+          "flat_nll": 3.574906896799803,
+          "fitted_kl": 2.343816498432644,
+          "untouched_kl_floor": 0.40805883075555266,
+          "untouched_nll_floor": 1.0792772666923192,
+          "touched_words": {
+            "mean": 9069.980590820312,
+            "p50": 9219.0,
+            "p90": 10298.0,
+            "p99": 11167.54,
+            "max": 12380.0
+          },
+          "traffic": [
+            {
+              "streams": 1,
+              "reads_bytes_per_token": {
+                "fanout_lists": 324882.634765625,
+                "stream_accumulators": 647237.0,
+                "bias_and_normalize_sample": 145127.689453125,
+                "fixed_alias_table": 2.224165816865782
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 647237.0,
+                "touched_list_and_cdf": 72559.8447265625
+              },
+              "static_bytes": 4814344,
+              "scratch_bytes": 501472
+            },
+            {
+              "streams": 16,
+              "reads_bytes_per_token": {
+                "fanout_lists": 153886.78125,
+                "stream_accumulators": 647237.0,
+                "bias_and_normalize_sample": 145127.689453125,
+                "fixed_alias_table": 2.224165816865782
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 647237.0,
+                "touched_list_and_cdf": 72559.8447265625
+              },
+              "static_bytes": 4814344,
+              "scratch_bytes": 8023552
+            }
+          ],
+          "train_nll_by_epoch": [
+            10.02921199798584,
+            6.363941669464111
+          ]
+        }
+      }
+    },
+    {
+      "fit_tokens": 2097152,
+      "fanouts": {
+        "32": {
+          "fitted_nll": 6.212905448078069,
+          "flat_nll": 3.574906896799803,
+          "fitted_kl": 2.358686456265197,
+          "untouched_kl_floor": 1.2818039641061634,
+          "untouched_nll_floor": 3.0022750852801137,
+          "touched_words": {
+            "mean": 1015.1251220703125,
+            "p50": 1041.0,
+            "p90": 1303.0,
+            "p99": 1480.2700000000004,
+            "max": 1739.0
+          },
+          "traffic": [
+            {
+              "streams": 1,
+              "reads_bytes_per_token": {
+                "fanout_lists": 21490.291015625,
+                "stream_accumulators": 40452.3125,
+                "bias_and_normalize_sample": 16250.001953125,
+                "fixed_alias_table": 4.342888594432987
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 40452.3125,
+                "touched_list_and_cdf": 8121.0009765625
+              },
+              "static_bytes": 882184,
+              "scratch_bytes": 416344
+            },
+            {
+              "streams": 16,
+              "reads_bytes_per_token": {
+                "fanout_lists": 10179.28125,
+                "stream_accumulators": 40452.3125,
+                "bias_and_normalize_sample": 16250.001953125,
+                "fixed_alias_table": 4.342888594432987
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 40452.3125,
+                "touched_list_and_cdf": 8121.0009765625
+              },
+              "static_bytes": 882184,
+              "scratch_bytes": 6661504
+            }
+          ],
+          "train_nll_by_epoch": [
+            6.508613586425781,
+            6.172293186187744
+          ]
+        },
+        "128": {
+          "fitted_nll": 5.833018684759998,
+          "flat_nll": 3.574906896799803,
+          "fitted_kl": 1.990263807883876,
+          "untouched_kl_floor": 0.6886115949824082,
+          "untouched_nll_floor": 1.785206115570659,
+          "touched_words": {
+            "mean": 3301.5291748046875,
+            "p50": 3398.0,
+            "p90": 4006.0,
+            "p99": 4412.0,
+            "max": 4930.0
+          },
+          "traffic": [
+            {
+              "streams": 1,
+              "reads_bytes_per_token": {
+                "fanout_lists": 82168.759765625,
+                "stream_accumulators": 161809.25,
+                "bias_and_normalize_sample": 52832.466796875,
+                "fixed_alias_table": 3.0050208595543886
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 161809.25,
+                "touched_list_and_cdf": 26412.2333984375
+              },
+              "static_bytes": 1668616,
+              "scratch_bytes": 441872
+            },
+            {
+              "streams": 16,
+              "reads_bytes_per_token": {
+                "fanout_lists": 38920.78125,
+                "stream_accumulators": 161809.25,
+                "bias_and_normalize_sample": 52832.466796875,
+                "fixed_alias_table": 3.0050208595543886
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 161809.25,
+                "touched_list_and_cdf": 26412.2333984375
+              },
+              "static_bytes": 1668616,
+              "scratch_bytes": 7069952
+            }
+          ],
+          "train_nll_by_epoch": [
+            6.695283889770508,
+            5.782467365264893
+          ]
+        },
+        "512": {
+          "fitted_nll": 5.576893686756027,
+          "flat_nll": 3.574906896799803,
+          "fitted_kl": 1.7776372196308448,
+          "untouched_kl_floor": 0.24016446850534515,
+          "untouched_nll_floor": 0.7487411575822669,
+          "touched_words": {
+            "mean": 9967.460571289062,
+            "p50": 10164.0,
+            "p90": 11424.0,
+            "p99": 12389.54,
+            "max": 13566.0
+          },
+          "traffic": [
+            {
+              "streams": 1,
+              "reads_bytes_per_token": {
+                "fanout_lists": 324882.634765625,
+                "stream_accumulators": 647237.0,
+                "bias_and_normalize_sample": 159487.369140625,
+                "fixed_alias_table": 1.6378764226401097
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 647237.0,
+                "touched_list_and_cdf": 79739.6845703125
+              },
+              "static_bytes": 4814344,
+              "scratch_bytes": 510960
+            },
+            {
+              "streams": 16,
+              "reads_bytes_per_token": {
+                "fanout_lists": 153886.78125,
+                "stream_accumulators": 647237.0,
+                "bias_and_normalize_sample": 159487.369140625,
+                "fixed_alias_table": 1.6378764226401097
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 647237.0,
+                "touched_list_and_cdf": 79739.6845703125
+              },
+              "static_bytes": 4814344,
+              "scratch_bytes": 8175360
+            }
+          ],
+          "train_nll_by_epoch": [
+            8.09429931640625,
+            5.620730400085449
+          ]
+        }
+      }
+    },
+    {
+      "fit_tokens": 8388608,
+      "fanouts": {
+        "32": {
+          "fitted_nll": 6.179535369275746,
+          "flat_nll": 3.574906896799803,
+          "fitted_kl": 2.329242616659634,
+          "untouched_kl_floor": 1.2419880876714608,
+          "untouched_nll_floor": 2.9441005703644074,
+          "touched_words": {
+            "mean": 1040.059814453125,
+            "p50": 1068.0,
+            "p90": 1339.0,
+            "p99": 1534.0900000000001,
+            "max": 1820.0
+          },
+          "traffic": [
+            {
+              "streams": 1,
+              "reads_bytes_per_token": {
+                "fanout_lists": 21490.291015625,
+                "stream_accumulators": 40452.3125,
+                "bias_and_normalize_sample": 16648.95703125,
+                "fixed_alias_table": 4.3683960809119995
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 40452.3125,
+                "touched_list_and_cdf": 8320.478515625
+              },
+              "static_bytes": 882184,
+              "scratch_bytes": 416992
+            },
+            {
+              "streams": 16,
+              "reads_bytes_per_token": {
+                "fanout_lists": 10179.28125,
+                "stream_accumulators": 40452.3125,
+                "bias_and_normalize_sample": 16648.95703125,
+                "fixed_alias_table": 4.3683960809119995
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 40452.3125,
+                "touched_list_and_cdf": 8320.478515625
+              },
+              "static_bytes": 882184,
+              "scratch_bytes": 6671872
+            }
+          ],
+          "train_nll_by_epoch": [
+            6.391441822052002,
+            6.180498123168945
+          ]
+        },
+        "128": {
+          "fitted_nll": 5.710425649438501,
+          "flat_nll": 3.574906896799803,
+          "fitted_kl": 1.8971630215169077,
+          "untouched_kl_floor": 0.6146521478994798,
+          "untouched_nll_floor": 1.638420935681012,
+          "touched_words": {
+            "mean": 3436.6156005859375,
+            "p50": 3535.5,
+            "p90": 4215.0,
+            "p99": 4681.450000000001,
+            "max": 5327.0
+          },
+          "traffic": [
+            {
+              "streams": 1,
+              "reads_bytes_per_token": {
+                "fanout_lists": 82168.759765625,
+                "stream_accumulators": 161809.25,
+                "bias_and_normalize_sample": 54993.849609375,
+                "fixed_alias_table": 3.0123731056695515
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 161809.25,
+                "touched_list_and_cdf": 27492.9248046875
+              },
+              "static_bytes": 1668616,
+              "scratch_bytes": 445048
+            },
+            {
+              "streams": 16,
+              "reads_bytes_per_token": {
+                "fanout_lists": 38920.78125,
+                "stream_accumulators": 161809.25,
+                "bias_and_normalize_sample": 54993.849609375,
+                "fixed_alias_table": 3.0123731056695515
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 161809.25,
+                "touched_list_and_cdf": 27492.9248046875
+              },
+              "static_bytes": 1668616,
+              "scratch_bytes": 7120768
+            }
+          ],
+          "train_nll_by_epoch": [
+            6.319939613342285,
+            5.750244617462158
+          ]
+        },
+        "512": {
+          "fitted_nll": 5.359051697957983,
+          "flat_nll": 3.574906896799803,
+          "fitted_kl": 1.597501889291536,
+          "untouched_kl_floor": 0.17846328939516498,
+          "untouched_nll_floor": 0.596299757579287,
+          "touched_words": {
+            "mean": 10703.835693359375,
+            "p50": 10925.0,
+            "p90": 12429.800000000001,
+            "p99": 13479.18,
+            "max": 14561.0
+          },
+          "traffic": [
+            {
+              "streams": 1,
+              "reads_bytes_per_token": {
+                "fanout_lists": 324882.634765625,
+                "stream_accumulators": 647237.0,
+                "bias_and_normalize_sample": 171269.37109375,
+                "fixed_alias_table": 1.554059752526244
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 647237.0,
+                "touched_list_and_cdf": 85630.685546875
+              },
+              "static_bytes": 4814344,
+              "scratch_bytes": 518920
+            },
+            {
+              "streams": 16,
+              "reads_bytes_per_token": {
+                "fanout_lists": 153886.78125,
+                "stream_accumulators": 647237.0,
+                "bias_and_normalize_sample": 171269.37109375,
+                "fixed_alias_table": 1.554059752526244
+              },
+              "writes_bytes_per_token": {
+                "stream_accumulators": 647237.0,
+                "touched_list_and_cdf": 85630.685546875
+              },
+              "static_bytes": 4814344,
+              "scratch_bytes": 8302720
+            }
+          ],
+          "train_nll_by_epoch": [
+            6.992836952209473,
+            5.454933166503906
+          ]
+        }
+      }
+    }
+  ],
+  "elapsed_seconds": 282.9395232796669,
+  "capture_bytes": 2164260864,
+  "peak_allocated_bytes": 2473942016,
+  "layout": {
+    "fanout_entry": "16-bit word plus 16-bit delta",
+    "fit_precision": "BF16 projection on CUDA, FP32 loss and learned deltas; FP64 sparse vs explicit check",
+    "stream_scratch": "32-bit accumulator plus 32-bit epoch tag per word, reused every token",
+    "simultaneous_rows": "16 equal contiguous cache shards, broadcast each active fan-out list once per tick",
+    "sampling": "unit temperature, touched CDF plus fixed alias table with rejection of touched words",
+    "omissions": "initial scratch clear, bank conflicts, body traffic and latency, arithmetic and fitted-weight quantization error"
+  }
+}
+exit 0 elapsed 285 s peak GPU memory 31333 MiB
