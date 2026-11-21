@@ -1,0 +1,10 @@
+xgpi11
+NVIDIA H100 NVL
+scipy 1.18.1
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+diagnosing g44_all3
+diagnosing g39_snngla
+diagnosing g38_la
+diagnosing g13_tf163
+screening fresh FineWeb windows
+exit 0 elapsed 310 s
