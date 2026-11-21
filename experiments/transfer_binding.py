@@ -166,7 +166,7 @@ def binding_verdict(report, preferences, dev_work_ok):
             "advance": bool(dev_work_ok and gap >= .20 and interval[0] > 0 and excess <= .02)}
 
 
-def main():
+def main(development_revision=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", type=Path, default=ROOT / "runs/g48_gla31")
     parser.add_argument("--data", type=Path, help="override the checkpoint run's FineWeb directory")
@@ -176,6 +176,8 @@ def main():
     parser.add_argument("--train-docs", type=int, default=FIT_DOCS, help="reduce for development smoke tests")
     parser.add_argument("--eval-docs", type=int, default=EVAL_DOCS, help="reduce for development smoke tests")
     parser.add_argument("--held-out", action="store_true", help="use once, after the spec is recorded")
+    if development_revision:
+        parser.add_argument("--smoke-steps", type=int, help="shorten each stage for an unregistered CPU smoke run")
     args = parser.parse_args()
     if not (3 <= args.train_docs <= FIT_DOCS and 1 <= args.eval_docs <= EVAL_DOCS and args.batch > 0):
         parser.error("invalid development sample or batch size")
@@ -188,6 +190,16 @@ def main():
     result_path = args.out / ("heldout.json" if args.held_out else "development.json")
     spec_run = ROOT / "runs/g48_gla31"
     registered = args.run.resolve() == spec_run.resolve() and args.data is None
+    if development_revision:
+        if args.smoke_steps is not None:
+            if args.device != "cpu" or args.smoke_steps < 1 or args.held_out:
+                parser.error("--smoke-steps requires CPU development and a positive step cap")
+            registered = False
+        if not args.held_out:
+            if any(args.out.iterdir()):
+                parser.error("the development revision requires a fresh output directory")
+            original = ROOT / "runs/transfer_binding/development.json"
+            prior_seconds = json.loads(original.read_text())["elapsed_seconds"]
     if args.held_out:
         if not registered or result_path.exists():
             parser.error("held-out evaluation requires the registered source and may only run once")
@@ -223,17 +235,19 @@ def main():
         report, preferences = evaluate(body, models, generator, cells, args, budget)
         report["verdict"] = binding_verdict(report, preferences, saved["work_gate"])
     else:
-        training = fit(body, models, Passages(tok, data / "train.bin", "train"), args, budget)
+        train = Passages(tok, data / "train.bin", "train")
         generator = Passages(tok, data / "valid.bin", "dev")
-        report, _ = evaluate(body, models, generator, ((256, 2), (256, 8)), args, budget)
-        chance = max(report["name_probe"]["256x8"][arm]["two_choice_accuracy"] for arm in models)
-        passed = chance > .5
-        work_gate = within_work_budget(report)
-        report.update(training=training, allow_heldout=passed, development_work_gate=work_gate)
+        if development_revision:
+            report = development_revision(body, models, train, generator, args, budget)
+        else:
+            training = fit(body, models, train, args, budget)
+            report, _ = evaluate(body, models, generator, ((256, 2), (256, 8)), args, budget)
+            chance = max(report["name_probe"]["256x8"][arm]["two_choice_accuracy"] for arm in models)
+            report.update(training=training, allow_heldout=chance > .5, development_work_gate=within_work_budget(report))
         budget()
         torch.save({"registered": registered and (args.train_docs, args.eval_docs, args.batch) == (FIT_DOCS, EVAL_DOCS, 8),
-                    "allow_heldout": passed, "work_gate": work_gate, "source_step": step,
-                    "elapsed_seconds": time.monotonic() - started,
+                    "allow_heldout": report["allow_heldout"], "work_gate": report["development_work_gate"],
+                    "source_step": step, "elapsed_seconds": prior_seconds + time.monotonic() - started,
                     "models": {name: model.state_dict() for name, model in models.items()}}, checkpoint)
     budget()
     report.update(split="held-out" if args.held_out else "development", source_step=step,

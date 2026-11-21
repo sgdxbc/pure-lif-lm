@@ -1,6 +1,8 @@
 from pathlib import Path
 import tempfile
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
 import numpy as np
 import torch
@@ -9,6 +11,7 @@ from tokenizers import Tokenizer
 from experiments.transfer_binding import binding_verdict, name_log_odds
 from experiments.transfer_binding_data import NAMES, Passages
 from experiments.transfer_binding_memory import BindingMemory, persistent_read, reset_features
+from experiments import transfer_binding_r1 as revision
 from model_tf import GPT, TFConfig
 
 
@@ -99,6 +102,36 @@ class TransferBindingTest(unittest.TestCase):
         self.assertFalse(binding_verdict(result, prefs, False)["advance"])
         prefs["2048x8"]["dense"] += .10
         self.assertFalse(binding_verdict(result, prefs, True)["advance"])
+
+    def test_revision_penalty_uses_masked_hard_gate_and_has_gradient(self):
+        logits = torch.tensor([[1., -1., 1.]], requires_grad=True)
+        prob = logits.sigmoid()
+        gate = (logits >= 0).float() + (prob - prob.detach())
+        key = torch.tensor([[[0.], [0.], [1.]]])
+        opening, written = revision.rates(gate, key, torch.tensor([[1]]))
+        self.assertEqual(opening.item(), .5)
+        self.assertEqual(written.item(), 0.)
+        (opening - revision.TARGET).square().backward()
+        self.assertTrue((logits.grad[0, :2] > 0).all())
+        self.assertEqual(logits.grad[0, 2].item(), 0.)
+
+    def test_revision_stages_stop_at_the_registered_edges(self):
+        dev = SimpleNamespace(tok=None, data=SimpleNamespace(filename="valid.bin"))
+        def result(cell, acc):
+            row = {arm: {"two_choice_accuracy": val} for arm, val in (("dense", acc), ("spike", .5))}
+            return {"name_probe": {cell: row}}, {}
+        for easy, mixed in ((.60, None), (.61, .50), (.61, .51)):
+            with self.subTest(easy=easy, mixed=mixed), tempfile.TemporaryDirectory() as out:
+                args = SimpleNamespace(eval_docs=128, out=Path(out))
+                results = [result("128x2", easy)]
+                if mixed is not None:
+                    results.append(result("256x8", mixed))
+                with patch.object(revision, "Passages"), patch.object(revision, "stage", return_value={}) as fit, \
+                     patch.object(revision, "evaluate", side_effect=results), \
+                     patch.object(revision, "within_work_budget", return_value=False):
+                    report = revision.revise(None, {"spike": None, "dense": None}, None, dev, args, None)
+                self.assertEqual(fit.call_count, len(results))
+                self.assertEqual(report["allow_heldout"], mixed == .51)
 
 
 if __name__ == "__main__":

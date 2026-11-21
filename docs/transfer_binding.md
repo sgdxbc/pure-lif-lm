@@ -89,3 +89,47 @@ The first round is capped at one H100-hour including feature extraction,
 training and evaluation. Default execution uses development data only. Run
 held-out evaluation once after this spec is recorded and only from a
 development checkpoint that clears the stop rule.
+
+## One development revision after the failed assay
+
+The original 256×8 stop stands. Both learned arms scored 50%. Their reported
+training name NLLs average the whole pass. A write adds to shared rows of
+an outer-product matrix. High write frequency can cause interference, but
+the ordinary-text frequency alone cannot identify the cause of the failure.
+
+Use experiments/transfer_binding_r1.py in a fresh output directory. Keep the
+original body, adapters, value projection from the current token, name and
+ordinary-text objectives, work accounting and held-out rules. Add the same
+penalty to both learners. On paired story prefixes through the prediction
+position and on unmodified donor text, separately measure the mean binary
+gate opening rate r. Add the mean over the two domains of 10 × (r − 0.04)²
+to the loss. Use the gate's existing sigmoid surrogate for the derivative.
+A spike write also needs a nonempty coincidence. Report its effective rate
+alongside gate openings. No name or source-position labels control writes.
+
+First train both arms only at gap 128 with two competitors. Use 2,048 donors
+and regenerate assignments, templates and filler placement on subsequent
+passes over them. Keep donor text fixed across passes. Use the original fit
+seed and exclusions. Use a maximum of 4,096 updates or four minutes of
+training, whichever comes first. Score once on 128 development documents at
+128×2. Reserve the original development documents (both 256-token cells and
+ordinary NLL) before drawing these additional development passages. The
+larger fit proceeds only if at least one learned arm scores strictly above
+60% two-choice accuracy. A failure closes the revision before held-out.
+
+If the easy check passes, carry both arms' weights into the original mix of
+128×2, 256×2 and 256×8. Draw another 2,048 donors disjoint from the easy fit,
+with fresh assignments on subsequent passes. Train for at most 65,536
+updates or 35 minutes. Each stage starts fresh AdamW at a peak of 0.001.
+Warm up over the first 5% of stage progress and cosine-decay to 0.0001.
+Progress is the larger of elapsed training-time fraction and update fraction.
+The two arms see identical batches and use the same schedule. Evaluation
+uses the final weights and occurs once at each stage boundary.
+
+Log interval-average training name NLL, frozen-body name NLL on the same
+pairs, paired mean log odds, ordinary NLL, gate opening and effective write
+rates to training.jsonl every 100 updates and at each stage end. Report the
+last interval's metrics. The original development stop at 256×8, the work
+gate and the held-out decision thresholds apply after the mixed fit. A second
+failure closes the arm. Charge the original development run's elapsed time
+against the shared H100-hour along with both stages and any later evaluation.

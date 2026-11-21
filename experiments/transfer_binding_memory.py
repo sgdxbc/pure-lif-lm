@@ -92,7 +92,7 @@ class BindingMemory(nn.Module):
         nn.init.constant_(self.gate.bias, -1.5)
         nn.init.normal_(self.decode.weight, std=.02)
 
-    def encode(self, x):
+    def encode(self, x, return_gate=False):
         trace, key, query = self.trace(x), self.key(x), self.query(x)
         prob = self.gate(x).sigmoid()
         gate = (prob >= .5).to(x.dtype) + (prob - prob.detach())
@@ -102,12 +102,14 @@ class BindingMemory(nn.Module):
         else:
             touched = (key + F.pad(trace[:, :-1], (0, 0, 1, 0))).sigmoid() / math.sqrt(self.addresses)
             query = query.sigmoid() / math.sqrt(self.addresses)
-        return query, touched * gate, self.value(x)
+        codes = query, touched * gate, self.value(x)
+        return (codes, gate.squeeze(-1)) if return_gate else codes
 
-    def forward(self, x, positions):
-        q, k, v = self.encode(x)
-        delta = self.decode(select_positions(persistent_read(q, k, v), positions))
-        return select_positions(x, positions) + delta, (q, k, v)
+    def forward(self, x, positions, return_gate=False):
+        codes, gate = self.encode(x, return_gate=True)
+        delta = self.decode(select_positions(persistent_read(*codes), positions))
+        result = select_positions(x, positions) + delta, codes
+        return (*result, gate) if return_gate else result
 
     def digital(self, x, positions, codes):
         return select_positions(x, positions) + self.decode(overlap_read(*codes, positions, self.slots))
