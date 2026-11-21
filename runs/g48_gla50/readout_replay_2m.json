@@ -1,0 +1,2018 @@
+{
+ "step": 20000,
+ "ema": true,
+ "split": "valid",
+ "sequence_tokens": 1024,
+ "validation_tokens": 2097152,
+ "refresh_tokens": 128,
+ "refresh_count": 16384,
+ "refresh_rate": 0.0078125,
+ "refresh_policy": "sequence start and every refresh_tokens thereafter",
+ "fpga_device": "u55c",
+ "weight_bits": 4,
+ "add_cost": 1.0,
+ "cache_bytes_per_stream": 202752,
+ "cache_traffic_bytes_per_token": 405504,
+ "calibration_tokens": 8192,
+ "rms_delta": [
+  3.6049771308898926,
+  4.256004810333252,
+  4.033597946166992,
+  3.5961661338806152,
+  3.3772528171539307,
+  5.250415802001953,
+  3.6905014514923096,
+  3.666579008102417,
+  4.126069068908691,
+  4.14804744720459,
+  4.39625883102417,
+  3.9316635131835938,
+  3.027621269226074,
+  3.7915167808532715,
+  3.858173370361328,
+  4.079181671142578,
+  3.8492591381073,
+  3.9579315185546875,
+  4.063769340515137,
+  3.625000476837158,
+  5.3907036781311035,
+  4.199346542358398,
+  3.56999135017395,
+  3.6905863285064697,
+  4.536610126495361,
+  4.613470554351807,
+  4.197135925292969,
+  3.5885703563690186,
+  3.7871103286743164,
+  5.525581359863281,
+  3.8628616333007812,
+  4.115408897399902,
+  3.8819761276245117,
+  4.211687088012695,
+  3.2105209827423096,
+  4.027767181396484,
+  3.315446138381958,
+  3.9129390716552734,
+  3.7193896770477295,
+  3.566169500350952,
+  5.449418544769287,
+  3.897395372390747,
+  4.541453838348389,
+  3.931633472442627,
+  3.5872228145599365,
+  3.96897029876709,
+  4.051328182220459,
+  6.113732814788818,
+  3.659520149230957,
+  3.7965636253356934,
+  3.686565637588501,
+  3.7699835300445557,
+  3.9474213123321533,
+  4.535481929779053,
+  4.245225429534912,
+  4.171523571014404,
+  3.749903678894043,
+  4.348815441131592,
+  3.7398853302001953,
+  4.168625831604004,
+  3.6544265747070312,
+  4.202944755554199,
+  4.009433269500732,
+  6.111892223358154,
+  3.702138900756836,
+  3.4924004077911377,
+  6.686788082122803,
+  3.849390983581543,
+  3.787822961807251,
+  4.1196064949035645,
+  4.227927207946777,
+  4.126517295837402,
+  4.379702091217041,
+  4.1374006271362305,
+  3.15863299369812,
+  4.411139011383057,
+  3.9766106605529785,
+  3.5139403343200684,
+  4.112194061279297,
+  3.833040475845337,
+  5.114682674407959,
+  4.0565080642700195,
+  4.036967754364014,
+  3.892493963241577,
+  3.188939332962036,
+  4.127228260040283,
+  4.326282024383545,
+  3.1061580181121826,
+  3.756459951400757,
+  4.0939202308654785,
+  3.6738715171813965,
+  3.953540325164795,
+  3.77433443069458,
+  4.352476119995117,
+  4.16601037979126,
+  4.010626316070557,
+  3.82138991355896,
+  3.488173007965088,
+  3.787184476852417,
+  3.7566561698913574,
+  3.683729648590088,
+  3.9819679260253906,
+  3.969503164291382,
+  3.6943819522857666,
+  3.486182928085327,
+  3.931528091430664,
+  4.210396766662598,
+  3.4741952419281006,
+  3.7433176040649414,
+  4.374753475189209,
+  4.813589096069336,
+  3.6150450706481934,
+  3.8662357330322266,
+  4.120502948760986,
+  8.948319435119629,
+  3.9418911933898926,
+  4.300357818603516,
+  4.013216972351074,
+  4.110560894012451,
+  3.4450840950012207,
+  4.444972038269043,
+  4.124610424041748,
+  3.242673873901367,
+  7.585265636444092,
+  4.1047492027282715,
+  3.7478787899017334,
+  4.375816822052002,
+  4.6414947509765625,
+  3.3145158290863037,
+  4.327539920806885,
+  3.9745426177978516,
+  4.464809894561768,
+  4.823750019073486,
+  3.977771520614624,
+  3.2454140186309814,
+  3.990300416946411,
+  4.85482120513916,
+  3.810404062271118,
+  3.989359140396118,
+  4.621816635131836,
+  3.852792739868164,
+  4.107229232788086,
+  3.8452701568603516,
+  3.2802438735961914,
+  4.037070274353027,
+  3.9464120864868164,
+  4.725549697875977,
+  3.954584836959839,
+  10.842791557312012,
+  4.134709358215332,
+  4.286597728729248,
+  4.0440287590026855,
+  3.9495694637298584,
+  4.165582656860352,
+  4.666844844818115,
+  3.341171979904175,
+  3.856160879135132,
+  3.78790283203125,
+  3.8214306831359863,
+  3.8028461933135986,
+  3.7443559169769287,
+  3.593581199645996,
+  3.7390758991241455,
+  4.136500835418701,
+  4.5899248123168945,
+  3.6141977310180664,
+  4.120154857635498,
+  3.831728458404541,
+  3.7871224880218506,
+  4.16693115234375,
+  3.794642686843872,
+  3.882551431655884,
+  3.979734420776367,
+  3.3877294063568115,
+  4.71323823928833,
+  3.7658777236938477,
+  4.036324501037598,
+  7.7570576667785645,
+  4.1645073890686035,
+  3.7828774452209473,
+  4.284348487854004,
+  3.714639902114868,
+  3.685887098312378,
+  3.9187803268432617,
+  3.686755418777466,
+  4.251790523529053,
+  4.13223123550415,
+  4.047975540161133,
+  3.9405176639556885,
+  3.5679402351379395,
+  7.0418171882629395,
+  4.0847978591918945,
+  3.768826961517334,
+  3.7233481407165527,
+  3.5788626670837402,
+  4.21245813369751,
+  4.073486328125,
+  5.994155406951904,
+  3.9197099208831787,
+  4.288642883300781,
+  3.6559689044952393,
+  4.126555919647217,
+  3.6917169094085693,
+  3.711850881576538,
+  6.0040364265441895,
+  3.9880332946777344,
+  4.008988857269287,
+  4.836646556854248,
+  4.784373760223389,
+  4.351327419281006,
+  4.076930046081543,
+  3.7154793739318848,
+  3.6892573833465576,
+  4.09806489944458,
+  3.3030993938446045,
+  3.938528537750244,
+  4.06899881362915,
+  3.8892390727996826,
+  8.292891502380371,
+  3.705508232116699,
+  3.6424901485443115,
+  4.327264785766602,
+  3.667969226837158,
+  3.8367981910705566,
+  3.9274535179138184,
+  4.287642955780029,
+  3.5606863498687744,
+  4.488882064819336,
+  3.8281612396240234,
+  3.7224950790405273,
+  3.64713978767395,
+  4.0316081047058105,
+  4.014636993408203,
+  3.8028640747070312,
+  4.0287861824035645,
+  3.8280868530273438,
+  3.518184185028076,
+  3.8053665161132812,
+  3.9470434188842773,
+  3.731114625930786,
+  3.6623644828796387,
+  3.217881441116333,
+  5.03073263168335,
+  3.378331184387207,
+  3.5744457244873047,
+  6.392918109893799,
+  3.9300949573516846,
+  3.818296432495117,
+  3.5925445556640625,
+  4.273599624633789,
+  3.697147846221924,
+  3.955653429031372,
+  3.8538966178894043,
+  7.11008882522583,
+  4.253528594970703,
+  3.7489264011383057,
+  3.7858126163482666,
+  3.670499801635742,
+  4.096434116363525,
+  3.8603901863098145,
+  4.332144260406494,
+  4.161591529846191,
+  3.269775390625,
+  4.084940433502197,
+  4.045650482177734,
+  3.874443769454956,
+  4.598972797393799,
+  3.667926788330078,
+  3.798900842666626,
+  3.8838694095611572,
+  4.659038543701172,
+  3.796341896057129,
+  3.5173542499542236,
+  3.80948543548584,
+  3.929363489151001,
+  3.32646107673645,
+  4.590116500854492,
+  3.815769910812378,
+  4.8974809646606445,
+  3.640409469604492,
+  3.6348540782928467,
+  4.2102837562561035,
+  3.838737964630127,
+  4.268012523651123,
+  3.7126963138580322,
+  3.906418561935425,
+  3.9681789875030518,
+  3.6163458824157715,
+  6.3662519454956055,
+  3.6231305599212646,
+  4.744263172149658,
+  3.6490039825439453,
+  3.9283366203308105,
+  3.7070631980895996,
+  3.7038583755493164,
+  4.034978866577148,
+  4.466490745544434,
+  3.769357681274414,
+  4.000446319580078,
+  3.8570163249969482,
+  3.881502151489258,
+  3.817330837249756,
+  3.9532690048217773,
+  3.6970086097717285,
+  4.102177619934082,
+  3.9565021991729736,
+  3.56492280960083,
+  3.6138598918914795,
+  3.4416165351867676,
+  3.8482704162597656,
+  3.8884527683258057,
+  3.772030830383301,
+  4.42324686050415,
+  3.8733971118927,
+  4.077884674072266,
+  3.3638079166412354,
+  3.7676217555999756,
+  4.057387828826904,
+  4.138759136199951,
+  3.770861864089966,
+  3.702770471572876,
+  3.4039719104766846,
+  3.9117443561553955,
+  3.730797052383423,
+  4.4670538902282715,
+  3.8603758811950684,
+  3.6379055976867676,
+  3.526451587677002,
+  3.708824396133423,
+  3.962679862976074,
+  3.7889955043792725,
+  3.3766603469848633,
+  3.6023974418640137,
+  3.543219566345215,
+  3.9765889644622803,
+  3.4305734634399414,
+  5.152189254760742,
+  4.335376262664795,
+  3.6282920837402344,
+  3.6253139972686768,
+  4.487926959991455,
+  4.195181846618652,
+  3.6706039905548096,
+  4.170299530029297,
+  3.6815972328186035,
+  3.5419511795043945,
+  3.9946274757385254,
+  4.151937007904053,
+  3.6998069286346436,
+  3.594581365585327,
+  3.617008924484253,
+  3.867880344390869,
+  3.6211016178131104,
+  3.8388803005218506,
+  3.639569044113159,
+  3.7870960235595703,
+  3.910080671310425,
+  3.4435627460479736,
+  3.8706986904144287,
+  4.1108012199401855,
+  4.063250541687012,
+  4.117208003997803,
+  3.58955979347229,
+  4.302015781402588,
+  4.140876770019531,
+  3.7323882579803467,
+  3.953303337097168,
+  4.0666184425354,
+  3.897005081176758,
+  4.402242660522461,
+  4.0562615394592285,
+  3.475593328475952,
+  3.677154541015625,
+  3.356224536895752,
+  4.094390869140625,
+  5.611266613006592,
+  3.6499075889587402,
+  4.0750603675842285,
+  4.1554388999938965,
+  3.631627321243286,
+  3.527960777282715,
+  6.987794876098633,
+  3.8055810928344727,
+  3.962053060531616
+ ],
+ "exact": {
+  "nll": 3.6708343372422654,
+  "cost": {
+   "1": {
+    "streams": 1,
+    "where": "weights on chip, word tables in HBM",
+    "bytes_per_step": 192.0,
+    "ops_per_step": 31302144.0,
+    "state_bytes": 504576,
+    "kv_bytes": 0,
+    "required_onchip_bytes": 15936960.0,
+    "onchip_budget_bytes": 38340000.0,
+    "placement": {
+     "dense_weights": {
+      "onchip_bytes": 15432384.0,
+      "hbm_bytes": 0.0,
+      "hbm_bytes_per_step": 0.0
+     },
+     "sparse_weights": {
+      "onchip_bytes": 0.0,
+      "hbm_bytes": 0.0,
+      "hbm_bytes_per_step": 0.0
+     },
+     "state": {
+      "onchip_bytes": 504576.0,
+      "hbm_bytes": 0.0,
+      "hbm_bytes_per_step": 0.0
+     },
+     "kv": {
+      "onchip_bytes": 0.0,
+      "hbm_bytes": 0.0,
+      "hbm_bytes_per_step": 0.0
+     },
+     "word_tables": {
+      "onchip_bytes": 0.0,
+      "hbm_bytes": 9658368.0,
+      "hbm_bytes_per_step": 192.0
+     }
+    },
+    "bound": "compute",
+    "tok_s": 103783.30634476668,
+    "ms_per_token": 0.009635460992907801,
+    "mJ_per_token": 1.44531914893617,
+    "cache_required_GB_s": 0.0
+   },
+   "16": {
+    "streams": 16,
+    "where": "weights on chip, word tables in HBM",
+    "bytes_per_step": 3072.0,
+    "ops_per_step": 500834304.0,
+    "state_bytes": 8073216,
+    "kv_bytes": 0,
+    "required_onchip_bytes": 23505600.0,
+    "onchip_budget_bytes": 38340000.0,
+    "placement": {
+     "dense_weights": {
+      "onchip_bytes": 15432384.0,
+      "hbm_bytes": 0.0,
+      "hbm_bytes_per_step": 0.0
+     },
+     "sparse_weights": {
+      "onchip_bytes": 0.0,
+      "hbm_bytes": 0.0,
+      "hbm_bytes_per_step": 0.0
+     },
+     "state": {
+      "onchip_bytes": 8073216.0,
+      "hbm_bytes": 0.0,
+      "hbm_bytes_per_step": 0.0
+     },
+     "kv": {
+      "onchip_bytes": 0.0,
+      "hbm_bytes": 0.0,
+      "hbm_bytes_per_step": 0.0
+     },
+     "word_tables": {
+      "onchip_bytes": 0.0,
+      "hbm_bytes": 9658368.0,
+      "hbm_bytes_per_step": 3072.0
+     }
+    },
+    "bound": "compute",
+    "tok_s": 103783.30634476668,
+    "ms_per_token": 0.15416737588652482,
+    "mJ_per_token": 1.44531914893617,
+    "cache_required_GB_s": 0.0
+   }
+  }
+ },
+ "replays": {
+  "0.125": {
+   "events": {
+    "threshold_multiplier": 0.125,
+    "codec": "events",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 334.7844627560593,
+      "p50": 335,
+      "p90": 348,
+      "p99": 357
+     },
+     "fraction": {
+      "mean": 0.8718345384272378,
+      "p50": 0.8723958333333334,
+      "p90": 0.90625,
+      "p99": 0.9296875
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 335.1689591407776,
+      "p50": 335,
+      "p90": 348,
+      "p99": 360
+     },
+     "fraction": {
+      "mean": 0.872835831095775,
+      "p50": 0.8723958333333334,
+      "p90": 0.90625,
+      "p99": 0.9375
+     }
+    },
+    "all_token_crossing_fraction": 0.865023331095775,
+    "kl_exact_to_replay": 3.1098796354007985,
+    "nll": 6.955677412383256,
+    "nll_delta": 3.2848430751409907,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 28846460.489576817,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 112618.32283284258,
+      "ms_per_token": 0.008879549746840775,
+      "mJ_per_token": 1.3319324620261161,
+      "cache_required_GB_s": 45.66718038200899
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 461543367.83322906,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 112618.32283284258,
+      "ms_per_token": 0.1420727959494524,
+      "mJ_per_token": 1.3319324620261161,
+      "cache_required_GB_s": 45.66718038200899
+     }
+    },
+    "energy_savings": {
+     "1": 0.07845096842002852,
+     "16": 0.07845096842002852
+    }
+   },
+   "int4": {
+    "threshold_multiplier": 0.125,
+    "codec": "int4",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 361.6501181294599,
+      "p50": 362,
+      "p90": 369,
+      "p99": 374
+     },
+     "fraction": {
+      "mean": 0.9417971826288017,
+      "p50": 0.9427083333333334,
+      "p90": 0.9609375,
+      "p99": 0.9739583333333334
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 361.8247265815735,
+      "p50": 362,
+      "p90": 369,
+      "p99": 376
+     },
+     "fraction": {
+      "mean": 0.9422518921395143,
+      "p50": 0.9427083333333334,
+      "p90": 0.9609375,
+      "p99": 0.9791666666666666
+     }
+    },
+    "all_token_crossing_fraction": 0.9344393921395142,
+    "kl_exact_to_replay": 0.6139580315190581,
+    "nll": 4.344257268506478,
+    "nll_delta": 0.6734229312642128,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 30187378.870686054,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 107615.83554227177,
+      "ms_per_token": 0.009292312743389866,
+      "mJ_per_token": 1.3938469115084797,
+      "cache_required_GB_s": 43.63865177573337
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 482998061.93097687,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 107615.83554227177,
+      "ms_per_token": 0.14867700389423785,
+      "mJ_per_token": 1.3938469115084797,
+      "cache_required_GB_s": 43.63865177573337
+     }
+    },
+    "energy_savings": {
+     "1": 0.03561305990139041,
+     "16": 0.03561305990139041
+    }
+   }
+  },
+  "0.25": {
+   "events": {
+    "threshold_multiplier": 0.25,
+    "codec": "events",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 287.77358263871804,
+      "p50": 289,
+      "p90": 310,
+      "p99": 325
+     },
+     "fraction": {
+      "mean": 0.7494103714549949,
+      "p50": 0.7526041666666666,
+      "p90": 0.8072916666666666,
+      "p99": 0.8463541666666666
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 288.525351524353,
+      "p50": 289,
+      "p90": 311,
+      "p99": 330
+     },
+     "fraction": {
+      "mean": 0.7513681029280027,
+      "p50": 0.7526041666666666,
+      "p90": 0.8098958333333334,
+      "p99": 0.859375
+     }
+    },
+    "all_token_crossing_fraction": 0.7435556029280027,
+    "kl_exact_to_replay": 2.387341000785323,
+    "nll": 6.202370810681272,
+    "nll_delta": 2.5315364734390062,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 26500053.80843258,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 122589.93975952799,
+      "ms_per_token": 0.008157276216642218,
+      "mJ_per_token": 1.2235914324963328,
+      "cache_required_GB_s": 49.710710932247636
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 424000860.93492126,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 122589.93975952799,
+      "ms_per_token": 0.13051641946627549,
+      "mJ_per_token": 1.2235914324963328,
+      "cache_required_GB_s": 49.710710932247636
+     }
+    },
+    "energy_savings": {
+     "1": 0.15341090346934128,
+     "16": 0.15341090346934128
+    }
+   },
+   "int4": {
+    "threshold_multiplier": 0.25,
+    "codec": "int4",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 341.9465668445497,
+      "p50": 344,
+      "p90": 354,
+      "p99": 361
+     },
+     "fraction": {
+      "mean": 0.8904858511576815,
+      "p50": 0.8958333333333334,
+      "p90": 0.921875,
+      "p99": 0.9401041666666666
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 342.27510929107666,
+      "p50": 344,
+      "p90": 354,
+      "p99": 364
+     },
+     "fraction": {
+      "mean": 0.8913414304455122,
+      "p50": 0.8958333333333334,
+      "p90": 0.921875,
+      "p99": 0.9479166666666666
+     }
+    },
+    "all_token_crossing_fraction": 0.8835289304455122,
+    "kl_exact_to_replay": 0.10214624125666612,
+    "nll": 3.7899425725623166,
+    "nll_delta": 0.11910823532005121,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 29203935.37288761,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 111239.80239375467,
+      "ms_per_token": 0.008989588065432801,
+      "mJ_per_token": 1.34843820981492,
+      "cache_required_GB_s": 45.10818482987709
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 467262965.9662018,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 111239.80239375467,
+      "ms_per_token": 0.14383340904692482,
+      "mJ_per_token": 1.34843820981492,
+      "cache_required_GB_s": 45.10818482987709
+     }
+    },
+    "energy_savings": {
+     "1": 0.06703082789192927,
+     "16": 0.06703082789192927
+    }
+   }
+  },
+  "0.5": {
+   "events": {
+    "threshold_multiplier": 0.5,
+    "codec": "events",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 207.04436198557457,
+      "p50": 208,
+      "p90": 241,
+      "p99": 265
+     },
+     "fraction": {
+      "mean": 0.5391780260041005,
+      "p50": 0.5416666666666666,
+      "p90": 0.6276041666666666,
+      "p99": 0.6901041666666666
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 208.42682790756226,
+      "p50": 208,
+      "p90": 243,
+      "p99": 273
+     },
+     "fraction": {
+      "mean": 0.5427781976759434,
+      "p50": 0.5416666666666666,
+      "p90": 0.6328125,
+      "p99": 0.7109375
+     }
+    },
+    "all_token_crossing_fraction": 0.5349656976759435,
+    "kl_exact_to_replay": 1.5486573624816333,
+    "nll": 5.327928088587172,
+    "nll_delta": 1.6570937513449069,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 22470697.57788992,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 144572.28079988513,
+      "ms_per_token": 0.006916955272941883,
+      "mJ_per_token": 1.0375432909412825,
+      "cache_required_GB_s": 58.624638153476624
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 359531161.2462387,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 144572.28079988513,
+      "ms_per_token": 0.11067128436707013,
+      "mJ_per_token": 1.0375432909412825,
+      "cache_required_GB_s": 58.624638153476624
+     }
+    },
+    "energy_savings": {
+     "1": 0.28213551193522324,
+     "16": 0.28213551193522324
+    }
+   },
+   "int4": {
+    "threshold_multiplier": 0.5,
+    "codec": "int4",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 302.923614742249,
+      "p50": 306,
+      "p90": 324,
+      "p99": 335
+     },
+     "fraction": {
+      "mean": 0.7888635800579401,
+      "p50": 0.796875,
+      "p90": 0.84375,
+      "p99": 0.8723958333333334
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 303.5570240020752,
+      "p50": 306,
+      "p90": 324,
+      "p99": 339
+     },
+     "fraction": {
+      "mean": 0.7905130833387375,
+      "p50": 0.796875,
+      "p90": 0.84375,
+      "p99": 0.8828125
+     }
+    },
+    "all_token_crossing_fraction": 0.7827005833387375,
+    "kl_exact_to_replay": 0.05371576531279311,
+    "nll": 3.725654227117446,
+    "nll_delta": 0.05481988987518083,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 27256222.092424393,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 119188.9319431004,
+      "ms_per_token": 0.008390040783966334,
+      "mJ_per_token": 1.25850611759495,
+      "cache_required_GB_s": 48.33158865865499
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 436099553.4787903,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 119188.9319431004,
+      "ms_per_token": 0.13424065254346135,
+      "mJ_per_token": 1.25850611759495,
+      "cache_required_GB_s": 48.33158865865499
+     }
+    },
+    "energy_savings": {
+     "1": 0.12925382707253574,
+     "16": 0.12925382707253574
+    }
+   }
+  },
+  "1.0": {
+   "events": {
+    "threshold_multiplier": 1.0,
+    "codec": "events",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 99.28833344226747,
+      "p50": 98,
+      "p90": 136,
+      "p99": 166
+     },
+     "fraction": {
+      "mean": 0.2585633683392382,
+      "p50": 0.2552083333333333,
+      "p90": 0.3541666666666667,
+      "p99": 0.4322916666666667
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 101.51264333724976,
+      "p50": 99,
+      "p90": 137,
+      "p99": 176
+     },
+     "fraction": {
+      "mean": 0.2643558420240879,
+      "p50": 0.2578125,
+      "p90": 0.3567708333333333,
+      "p99": 0.4583333333333333
+     }
+    },
+    "all_token_crossing_fraction": 0.2565433420240879,
+    "kl_exact_to_replay": 1.325312016501485,
+    "nll": 5.086067288155086,
+    "nll_delta": 1.415232950912821,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 17092379.52308035,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 190063.64769827775,
+      "ms_per_token": 0.0052613953910191184,
+      "mJ_per_token": 0.7892093086528678,
+      "cache_required_GB_s": 77.07156939624241
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 273478072.3692856,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 190063.64769827775,
+      "ms_per_token": 0.0841823262563059,
+      "mJ_per_token": 0.7892093086528678,
+      "cache_required_GB_s": 77.07156939624241
+     }
+    },
+    "energy_savings": {
+     "1": 0.4539549903329193,
+     "16": 0.4539549903329193
+    }
+   },
+   "int4": {
+    "threshold_multiplier": 1.0,
+    "codec": "int4",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 234.07617764210138,
+      "p50": 238,
+      "p90": 266,
+      "p99": 283
+     },
+     "fraction": {
+      "mean": 0.6095733792763057,
+      "p50": 0.6197916666666666,
+      "p90": 0.6927083333333334,
+      "p99": 0.7369791666666666
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 235.24745750427246,
+      "p50": 238,
+      "p90": 267,
+      "p99": 290
+     },
+     "fraction": {
+      "mean": 0.6126235872507095,
+      "p50": 0.6197916666666666,
+      "p90": 0.6953125,
+      "p99": 0.7552083333333334
+     }
+    },
+    "all_token_crossing_fraction": 0.6048110872507095,
+    "kl_exact_to_replay": 0.20382840018678094,
+    "nll": 3.874955444592788,
+    "nll_delta": 0.20412110735052247,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 23819909.349752426,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 136383.3905620537,
+      "ms_per_token": 0.007332271150312878,
+      "mJ_per_token": 1.0998406725469316,
+      "cache_required_GB_s": 55.30401040647503
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 381118549.5960388,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 136383.3905620537,
+      "ms_per_token": 0.11731633840500605,
+      "mJ_per_token": 1.0998406725469316,
+      "cache_required_GB_s": 55.30401040647503
+     }
+    },
+    "energy_savings": {
+     "1": 0.23903265700418386,
+     "16": 0.23903265700418386
+    }
+   }
+  },
+  "2.0": {
+   "events": {
+    "threshold_multiplier": 2.0,
+    "codec": "events",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 20.064973125307578,
+      "p50": 18,
+      "p90": 35,
+      "p99": 54
+     },
+     "fraction": {
+      "mean": 0.05225253418048848,
+      "p50": 0.046875,
+      "p90": 0.09114583333333333,
+      "p99": 0.140625
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 22.908215522766113,
+      "p50": 18,
+      "p90": 36,
+      "p99": 60
+     },
+     "fraction": {
+      "mean": 0.05965681125720342,
+      "p50": 0.046875,
+      "p90": 0.09375,
+      "p99": 0.15625
+     }
+    },
+    "all_token_crossing_fraction": 0.051844311257203415,
+    "kl_exact_to_replay": 3.1757629728095473,
+    "nll": 6.984558211630034,
+    "nll_delta": 3.313723874387769,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 13138183.78187275,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 247267.05410243018,
+      "ms_per_token": 0.0040442104332498365,
+      "mJ_per_token": 0.6066315649874755,
+      "cache_required_GB_s": 100.26777950675185
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 210210940.509964,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 247267.05410243018,
+      "ms_per_token": 0.06470736693199738,
+      "mJ_per_token": 0.6066315649874755,
+      "cache_required_GB_s": 100.26777950675185
+     }
+    },
+    "energy_savings": {
+     "1": 0.5802784696833306,
+     "16": 0.5802784696833306
+    }
+   },
+   "int4": {
+    "threshold_multiplier": 2.0,
+    "codec": "int4",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 142.09157436100517,
+      "p50": 144,
+      "p90": 176,
+      "p99": 198
+     },
+     "fraction": {
+      "mean": 0.37003014156511765,
+      "p50": 0.375,
+      "p90": 0.4583333333333333,
+      "p99": 0.515625
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 143.98148393630981,
+      "p50": 144,
+      "p90": 177,
+      "p99": 208
+     },
+     "fraction": {
+      "mean": 0.3749517810841401,
+      "p50": 0.375,
+      "p90": 0.4609375,
+      "p99": 0.5416666666666666
+     }
+    },
+    "all_token_crossing_fraction": 0.3671392810841402,
+    "kl_exact_to_replay": 0.782531634859485,
+    "nll": 4.453464224484832,
+    "nll_delta": 0.7826298872425665,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 19228774.549416065,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 168946.80374203325,
+      "ms_per_token": 0.005919022898633295,
+      "mJ_per_token": 0.8878534347949941,
+      "cache_required_GB_s": 68.50860470460945
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 307660392.79065704,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 168946.80374203325,
+      "ms_per_token": 0.09470436637813272,
+      "mJ_per_token": 0.8878534347949941,
+      "cache_required_GB_s": 68.50860470460945
+     }
+    },
+    "energy_savings": {
+     "1": 0.385704233249452,
+     "16": 0.385704233249452
+    }
+   }
+  },
+  "4.0": {
+   "events": {
+    "threshold_multiplier": 4.0,
+    "codec": "events",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 0.4659298874261811,
+      "p50": 0,
+      "p90": 1,
+      "p99": 4
+     },
+     "fraction": {
+      "mean": 0.0012133590818390132,
+      "p50": 0.0,
+      "p90": 0.0026041666666666665,
+      "p99": 0.010416666666666666
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 3.462289810180664,
+      "p50": 0,
+      "p90": 2,
+      "p99": 5
+     },
+     "fraction": {
+      "mean": 0.009016379714012146,
+      "p50": 0.0,
+      "p90": 0.005208333333333333,
+      "p99": 0.013020833333333334
+     }
+    },
+    "all_token_crossing_fraction": 0.001203879714012146,
+    "kl_exact_to_replay": 6.054878171955549,
+    "nll": 9.948403250501546,
+    "nll_delta": 6.27756891325928,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 12159956.488901138,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 267158.8506887471,
+      "ms_per_token": 0.003743091413299454,
+      "mJ_per_token": 0.5614637119949181,
+      "cache_required_GB_s": 108.3339825896897
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 194559303.8224182,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 267158.8506887471,
+      "ms_per_token": 0.05988946261279127,
+      "mJ_per_token": 0.5614637119949181,
+      "cache_required_GB_s": 108.3339825896897
+     }
+    },
+    "energy_savings": {
+     "1": 0.6115295971770771,
+     "16": 0.6115295971770771
+    }
+   },
+   "int4": {
+    "threshold_multiplier": 4.0,
+    "codec": "int4",
+    "nonrefresh_burst": {
+     "channels": {
+      "mean": 43.61229555625615,
+      "p50": 43,
+      "p90": 66,
+      "p99": 84
+     },
+     "fraction": {
+      "mean": 0.11357368634441706,
+      "p50": 0.11197916666666667,
+      "p90": 0.171875,
+      "p99": 0.21875
+     }
+    },
+    "projection_row_burst": {
+     "channels": {
+      "mean": 46.2715744972229,
+      "p50": 43,
+      "p90": 66,
+      "p99": 92
+     },
+     "fraction": {
+      "mean": 0.1204988919198513,
+      "p50": 0.11197916666666667,
+      "p90": 0.171875,
+      "p99": 0.23958333333333334
+     }
+    },
+    "all_token_crossing_fraction": 0.1126863919198513,
+    "kl_exact_to_replay": 3.003003415556105,
+    "nll": 6.749423741389309,
+    "nll_delta": 3.078589404147044,
+    "cost": {
+     "1": {
+      "streams": 1,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 192.0,
+      "ops_per_step": 14313477.555082798,
+      "state_bytes": 707328,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 16139712.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 707328.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 192.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 226963.71217254535,
+      "ms_per_token": 0.004405990677662898,
+      "mJ_per_token": 0.6608986016494347,
+      "cache_required_GB_s": 92.03469314081583
+     },
+     "16": {
+      "streams": 16,
+      "where": "weights on chip, word tables in HBM",
+      "bytes_per_step": 3072.0,
+      "ops_per_step": 229015640.88132477,
+      "state_bytes": 11317248,
+      "kv_bytes": 0,
+      "required_onchip_bytes": 26749632.0,
+      "onchip_budget_bytes": 38340000.0,
+      "placement": {
+       "dense_weights": {
+        "onchip_bytes": 5774016.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "sparse_weights": {
+        "onchip_bytes": 9658368.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "state": {
+        "onchip_bytes": 11317248.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "kv": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 0.0,
+        "hbm_bytes_per_step": 0.0
+       },
+       "word_tables": {
+        "onchip_bytes": 0.0,
+        "hbm_bytes": 9658368.0,
+        "hbm_bytes_per_step": 3072.0
+       }
+      },
+      "bound": "compute",
+      "tok_s": 226963.71217254535,
+      "ms_per_token": 0.07049585084260637,
+      "mJ_per_token": 0.6608986016494347,
+      "cache_required_GB_s": 92.03469314081583
+     }
+    },
+    "energy_savings": {
+     "1": 0.5427317197479253,
+     "16": 0.5427317197479253
+    }
+   }
+  }
+ }
+}

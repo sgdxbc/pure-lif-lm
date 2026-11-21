@@ -1,0 +1,52 @@
+guard ok Sat Nov 21 09:00:04 AM +08 2026
+recall  512 tokens  full minus warm preference +0.000 nats/answer
+recall 1024 tokens  full minus warm preference +0.000 nats/answer
+recall 2048 tokens  full minus warm preference +0.000 nats/answer
+recall 4096 tokens  full minus warm preference +0.000 nats/answer
+recall 8192 tokens  full minus warm preference +0.000 nats/answer
+recall  512 tokens  full minus warm preference +0.000 nats/answer
+g33_tf31: 102 books of >= 8192 tokens, mean 3.8034  0-64 4.209  64-128 3.730  128-256 3.732  256-512 3.702  512-1024 3.784  1024-2048 3.837  2048-4096 3.804  4096-8192 3.801
+warm 1024: loss 3.8034, gain from carrying context +0.0000
+runs/g33_tf31 done Sat Nov 21 09:01:16 AM +08 2026
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+recall  512 tokens  full minus warm preference +0.000 nats/answer
+recall 1024 tokens  full minus warm preference +0.000 nats/answer
+recall 2048 tokens  full minus warm preference +0.026 nats/answer
+recall 4096 tokens  full minus warm preference +0.060 nats/answer
+recall 8192 tokens  full minus warm preference -0.006 nats/answer
+recall  512 tokens  full minus warm preference +0.000 nats/answer
+g45_kd25: 102 books of >= 8192 tokens, mean 3.8485  0-64 4.167  64-128 3.750  128-256 3.740  256-512 3.725  512-1024 3.828  1024-2048 3.876  2048-4096 3.851  4096-8192 3.851
+warm 1024: loss 3.8493, gain from carrying context +0.0008
+runs/g45_kd25 done Sat Nov 21 09:03:05 AM +08 2026
+recall  512 tokens  full minus warm preference +0.000 nats/answer
+recall 1024 tokens  full minus warm preference +0.000 nats/answer
+recall 2048 tokens  full minus warm preference -0.046 nats/answer
+recall 4096 tokens  full minus warm preference -0.018 nats/answer
+recall 8192 tokens  full minus warm preference -0.000 nats/answer
+recall  512 tokens  full minus warm preference +0.000 nats/answer
+g44_all3: 102 books of >= 8192 tokens, mean 3.7361  0-64 4.064  64-128 3.611  128-256 3.608  256-512 3.601  512-1024 3.704  1024-2048 3.759  2048-4096 3.737  4096-8192 3.743
+warm 1024: loss 3.7356, gain from carrying context -0.0005
+runs/g44_all3 done Sat Nov 21 09:06:01 AM +08 2026
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+recall  512 tokens  full minus warm preference +0.000 nats/answer
+recall 1024 tokens  full minus warm preference +0.000 nats/answer
+recall 2048 tokens  full minus warm preference +0.016 nats/answer
+recall 4096 tokens  full minus warm preference -0.000 nats/answer
+recall 8192 tokens  full minus warm preference -0.003 nats/answer
+recall  512 tokens  full minus warm preference +0.000 nats/answer
+g40_la: 102 books of >= 8192 tokens, mean 3.6421  0-64 3.941  64-128 3.509  128-256 3.509  256-512 3.503  512-1024 3.613  1024-2048 3.672  2048-4096 3.644  4096-8192 3.648
+warm 1024: loss 3.6422, gain from carrying context +0.0001
+runs/g40_la done Sat Nov 21 09:07:34 AM +08 2026
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+recall  512 tokens  full minus warm preference +0.000 nats/answer
+recall 1024 tokens  full minus warm preference +0.000 nats/answer
+recall 2048 tokens  full minus warm preference +0.014 nats/answer
+recall 4096 tokens  full minus warm preference +0.000 nats/answer
+recall 8192 tokens  full minus warm preference -0.000 nats/answer
+recall  512 tokens  full minus warm preference +0.000 nats/answer
+g48_gla50: 102 books of >= 8192 tokens, mean 3.7001  0-64 3.991  64-128 3.562  128-256 3.580  256-512 3.563  512-1024 3.671  1024-2048 3.728  2048-4096 3.702  4096-8192 3.706
+warm 1024: loss 3.7005, gain from carrying context +0.0004
+runs/g48_gla50 done Sat Nov 21 09:08:52 AM +08 2026

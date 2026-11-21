@@ -1,0 +1,32 @@
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+0.125 events  NLL 6.85447  KL 2.88502  active 87.47%  energy savings 10.2%/10.2%
+0.125 int4    NLL 4.45230  KL 0.58080  active 94.33%  energy savings 4.6%/4.6%
+0.25 events  NLL 6.17279  KL 2.23128  active 75.47%  energy savings 19.9%/19.9%
+0.25 int4    NLL 3.94068  KL 0.10258  active 89.40%  energy savings 8.6%/8.6%
+0.5 events  NLL 5.35499  KL 1.44521  active 54.73%  energy savings 36.7%/36.7%
+0.5 int4    NLL 3.87012  KL 0.04655  active 79.56%  energy savings 16.6%/16.6%
+1 events  NLL 5.07842  KL 1.18663  active 26.54%  energy savings 59.6%/59.6%
+1 int4    NLL 3.99068  KL 0.16825  active 61.90%  energy savings 30.9%/30.9%
+2 events  NLL 6.71606  KL 2.78924  active 5.36%  energy savings 76.8%/76.8%
+2 int4    NLL 4.47051  KL 0.64436  active 37.84%  energy savings 50.4%/50.4%
+4 events  NLL 9.72386  KL 5.71043  active 0.12%  energy savings 81.0%/81.0%
+4 int4    NLL 6.39911  KL 2.51828  active 11.91%  energy savings 71.5%/71.5%
+exact NLL 3.82278 on 2097152 tokens. Wrote runs/g45_kd25/readout_replay_2m.json
+g45_kd25 exit 0
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+0.125 events  NLL 6.95568  KL 3.10988  active 87.18%  energy savings 7.8%/7.8%
+0.125 int4    NLL 4.34426  KL 0.61396  active 94.18%  energy savings 3.6%/3.6%
+0.25 events  NLL 6.20237  KL 2.38734  active 74.94%  energy savings 15.3%/15.3%
+0.25 int4    NLL 3.78994  KL 0.10215  active 89.05%  energy savings 6.7%/6.7%
+0.5 events  NLL 5.32793  KL 1.54866  active 53.92%  energy savings 28.2%/28.2%
+0.5 int4    NLL 3.72565  KL 0.05372  active 78.89%  energy savings 12.9%/12.9%
+1 events  NLL 5.08607  KL 1.32531  active 25.86%  energy savings 45.4%/45.4%
+1 int4    NLL 3.87496  KL 0.20383  active 60.96%  energy savings 23.9%/23.9%
+2 events  NLL 6.98456  KL 3.17576  active 5.23%  energy savings 58.0%/58.0%
+2 int4    NLL 4.45346  KL 0.78253  active 37.00%  energy savings 38.6%/38.6%
+4 events  NLL 9.94840  KL 6.05488  active 0.12%  energy savings 61.2%/61.2%
+4 int4    NLL 6.74942  KL 3.00300  active 11.36%  energy savings 54.3%/54.3%
+exact NLL 3.67083 on 2097152 tokens. Wrote runs/g48_gla50/readout_replay_2m.json
+g48_gla50 exit 0
