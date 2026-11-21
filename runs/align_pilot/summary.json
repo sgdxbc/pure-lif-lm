@@ -1,0 +1,47 @@
+{
+  "source_mass_rose": false,
+  "manipulation": {
+    "plain": {
+      "source_mass": 0.16061504365643486,
+      "teacher_source_mass": 0.2832802645962147,
+      "kl_to_teacher": 0.9742237515747547,
+      "silent_head_row_fraction": 0.0
+    },
+    "sham": {
+      "source_mass": 0.11608678800985217,
+      "teacher_source_mass": 0.2832802645962147,
+      "kl_to_teacher": 0.847134767100215,
+      "silent_head_row_fraction": 0.0
+    },
+    "aligned": {
+      "source_mass": 0.1332269282611378,
+      "teacher_source_mass": 0.2832802645962147,
+      "kl_to_teacher": 0.8093279972672462,
+      "silent_head_row_fraction": 0.0
+    }
+  },
+  "fresh_lambada_n": 256,
+  "aligned_logprob_gain": {
+    "plain": {
+      "mean": -0.023386625107377768,
+      "ci95": [
+        -0.04591927159926854,
+        -0.0001102334528695843
+      ]
+    },
+    "sham": {
+      "mean": 0.05663661495782435,
+      "ci95": [
+        0.03393671181984246,
+        0.07931847223080694
+      ]
+    }
+  },
+  "validation_nll_delta": 0.0009532253618917963,
+  "full_lambada_accuracy_delta": -0.0031049873859887445,
+  "cost_fraction_delta": {
+    "1": 2.100565251850206e-05,
+    "16": 2.100565251850206e-05
+  },
+  "advance": false
+}

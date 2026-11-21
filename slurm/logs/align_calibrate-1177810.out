@@ -1,0 +1,4 @@
+xgpi20
+NVIDIA H100 NVL
+{'task': 0.7598281502723694, 'aligned_kl': 2.4794859886169434, 'sham_kl': 6.1839436292648315, 'teacher_source_mass': 0.03152951039373875, 'sham_source_mass': 0.0052317227236926556, 'grad_norms': [0.14257404208183289, 9959.5791015625, 24509.134765625], 'weight': 1.43152678067957e-06, 'calibrated_grad_ratio': {'aligned': 0.1, 'sham': 0.24608604957793756, 'plain': 0.0}, 'student_step': 20000, 'plan_sha256': '73d8f20bfe08a2926e3b6c13cf0c52d2faecc62660c9847737740ab9f50741d1', 'aligned_target_has_more_source_mass': True}
+exit 0

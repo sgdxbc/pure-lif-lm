@@ -1,0 +1,25 @@
+xgpi14
+NVIDIA H100 NVL
+plain 50 {'task': 0.7229095846414566, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 100 {'task': 0.7478655278682709, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 150 {'task': 0.7369042187929153, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 200 {'task': 0.735341802239418, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 250 {'task': 0.7038442343473434, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 300 {'task': 0.7566832154989243, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 350 {'task': 0.7302372306585312, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 400 {'task': 0.747428297996521, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 450 {'task': 0.757548451423645, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 500 {'task': 0.7333998680114746, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 550 {'task': 0.7352175414562225, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 600 {'task': 0.7418803721666336, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 650 {'task': 0.7400408834218979, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 700 {'task': 0.754248633980751, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 750 {'task': 0.73049096763134, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 800 {'task': 0.7470978498458862, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 850 {'task': 0.7382960021495819, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 900 {'task': 0.7428315430879593, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 950 {'task': 0.742820531129837, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+plain 1000 {'task': 0.7256749719381332, 'aligned_kl': 0.0, 'sham_kl': 0.0, 'teacher_source_mass': 0.0, 'sham_source_mass': 0.0}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+plain finished
+exit 0 elapsed 960 s

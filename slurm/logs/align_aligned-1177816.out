@@ -1,0 +1,25 @@
+xgpi18
+NVIDIA H100 NVL
+aligned 50 {'task': 0.7227379828691483, 'aligned_kl': 2.2306079268455505, 'sham_kl': 5.31317400932312, 'teacher_source_mass': 0.026215199381113052, 'sham_source_mass': 0.004547505988739431}
+aligned 100 {'task': 0.7482451647520065, 'aligned_kl': 1.928343504667282, 'sham_kl': 5.016836881637573, 'teacher_source_mass': 0.036981516517698765, 'sham_source_mass': 0.011714549735188484}
+aligned 150 {'task': 0.7373964190483093, 'aligned_kl': 2.134233385324478, 'sham_kl': 4.203092634677887, 'teacher_source_mass': 0.033433567732572556, 'sham_source_mass': 0.0037768404581584036}
+aligned 200 {'task': 0.7361625581979752, 'aligned_kl': 1.9255499243736267, 'sham_kl': 4.723725080490112, 'teacher_source_mass': 0.04596937261521816, 'sham_source_mass': 0.00486692605772987}
+aligned 250 {'task': 0.7043636441230774, 'aligned_kl': 2.04609078168869, 'sham_kl': 4.158640027046204, 'teacher_source_mass': 0.029574650805443525, 'sham_source_mass': 0.00502692413283512}
+aligned 300 {'task': 0.7566903233528137, 'aligned_kl': 2.3695268034934998, 'sham_kl': 4.482457995414734, 'teacher_source_mass': 0.04083158541470766, 'sham_source_mass': 0.006880773231387138}
+aligned 350 {'task': 0.7311567217111588, 'aligned_kl': 1.9269913733005524, 'sham_kl': 4.221559166908264, 'teacher_source_mass': 0.03463006019592285, 'sham_source_mass': 0.009792099706828594}
+aligned 400 {'task': 0.7479687482118607, 'aligned_kl': 2.1131352186203003, 'sham_kl': 4.351172924041748, 'teacher_source_mass': 0.04136304184794426, 'sham_source_mass': 0.006952332827495411}
+aligned 450 {'task': 0.7583313584327698, 'aligned_kl': 1.9055360555648804, 'sham_kl': 3.8117794394493103, 'teacher_source_mass': 0.027882091235369444, 'sham_source_mass': 0.008074913173913956}
+aligned 500 {'task': 0.7342888712882996, 'aligned_kl': 1.9019720554351807, 'sham_kl': 3.9236409664154053, 'teacher_source_mass': 0.04414952173829079, 'sham_source_mass': 0.005243511172011495}
+aligned 550 {'task': 0.7362713664770126, 'aligned_kl': 1.8971010148525238, 'sham_kl': 3.7758209705352783, 'teacher_source_mass': 0.036689553409814835, 'sham_source_mass': 0.010872066835872829}
+aligned 600 {'task': 0.7430141866207123, 'aligned_kl': 1.9407956898212433, 'sham_kl': 3.9479750990867615, 'teacher_source_mass': 0.03887066151946783, 'sham_source_mass': 0.004622245323844254}
+aligned 650 {'task': 0.7406840771436691, 'aligned_kl': 1.985132098197937, 'sham_kl': 3.705702245235443, 'teacher_source_mass': 0.03477235417813063, 'sham_source_mass': 0.031248328275978565}
+aligned 700 {'task': 0.7553136795759201, 'aligned_kl': 2.032343804836273, 'sham_kl': 3.9440271854400635, 'teacher_source_mass': 0.03779231011867523, 'sham_source_mass': 0.005142680485732853}
+aligned 750 {'task': 0.731047198176384, 'aligned_kl': 1.9777085185050964, 'sham_kl': 3.9436007142066956, 'teacher_source_mass': 0.04508871491998434, 'sham_source_mass': 0.010534042841754854}
+aligned 800 {'task': 0.7477339953184128, 'aligned_kl': 1.845700442790985, 'sham_kl': 3.667292892932892, 'teacher_source_mass': 0.0519975982606411, 'sham_source_mass': 0.015828818548470736}
+aligned 850 {'task': 0.7389221042394638, 'aligned_kl': 1.8565754890441895, 'sham_kl': 3.760584533214569, 'teacher_source_mass': 0.0401704297401011, 'sham_source_mass': 0.0052581538911908865}
+aligned 900 {'task': 0.7434583753347397, 'aligned_kl': 2.01436123251915, 'sham_kl': 3.7085840702056885, 'teacher_source_mass': 0.03154978062957525, 'sham_source_mass': 0.004573494341457263}
+aligned 950 {'task': 0.743091031908989, 'aligned_kl': 1.968050479888916, 'sham_kl': 3.718715488910675, 'teacher_source_mass': 0.03087084088474512, 'sham_source_mass': 0.01356521772686392}
+aligned 1000 {'task': 0.7263999283313751, 'aligned_kl': 1.9521215856075287, 'sham_kl': 3.8496673107147217, 'teacher_source_mass': 0.04368325788527727, 'sham_source_mass': 0.005580186785664409}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+aligned finished
+exit 0 elapsed 1006 s

@@ -1,0 +1,5 @@
+xcnc30
+W1122 02:02:51.269000 1009719 torch/utils/cpp_extension.py:140] No CUDA runtime is found, using CUDA_HOME='/usr'
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Saved 256 of 2100 eligible fresh LAMBADA passages to runs/align_pilot/plan.json
+exit 0
