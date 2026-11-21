@@ -1,0 +1,17 @@
+xgpi18
+NVIDIA H100 NVL
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+analyzing g13_tf163
+analyzing g44_all3
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/experiments/memory_maps.py", line 489, in <module>
+    main()
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/experiments/memory_maps.py", line 465, in main
+    verify = check_reconstruction(model, torch.tensor(prefix[None, :], device=dev))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/experiments/memory_maps.py", line 147, in check_reconstruction
+    raise AssertionError(f"{label}: {(share > 1).sum().item()} of {share.numel()} elements outside "
+AssertionError: layer 11 split scan vs full scan: 2842 of 131584 elements outside tolerance; max |error| 1.59, max error/tolerance 1.19e+03, max term sum 537

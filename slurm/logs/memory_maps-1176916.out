@@ -1,0 +1,23 @@
+xgpi20
+NVIDIA H100 NVL
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+analyzing g13_tf163
+analyzing g44_all3
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/experiments/memory_maps.py", line 471, in <module>
+    main()
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/experiments/memory_maps.py", line 447, in main
+    verify = check_reconstruction(model, torch.tensor(prefix[None, :], device=dev))
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/experiments/memory_maps.py", line 132, in check_reconstruction
+    torch.testing.assert_close(actual, expected, atol=3e-5, rtol=3e-4)
+  File "/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/testing/_comparison.py", line 1600, in assert_close
+    raise error_metas[0].to_error(msg)
+AssertionError: Tensor-likes are not close!
+
+Mismatched elements: 4 / 131584 (0.0%)
+Greatest absolute difference: 0.0001277923583984375 at index (0, 0, 208, 35) (up to 3e-05 allowed)
+Greatest relative difference: 0.002594015561044216 at index (0, 0, 144, 7) (up to 0.0003 allowed)
