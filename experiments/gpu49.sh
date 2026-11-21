@@ -1,16 +1,17 @@
 #!/bin/bash
 # GPU wave 49 (docs/experiments.md 5.61): does giving the true next word more weight late in training help a distilled
-# spiking-relay network? Agreed with the GPT advisor (docs/discussions.md). Two continuations of g46_kd25s1 (relays at
+# spiking-relay network? Agreed with the GPT advisor (docs/discussions.md). Three continuations of g46_kd25s1 (relays at
 # 0.25, distilled from g13_tf163 at weight 0.9, seed 1) from its step-15000 checkpoint to step 20000, with exactly its
-# flags; both read the same batches (the data order restarts at seed + 15000), so they are paired with each other, not
+# flags; all read the same batches (the data order restarts at seed + 15000), so they are paired with each other, not
 # with g46_kd25s1's own last 5,000 steps:
 #   kdc   distillation weight kept at 0.9 (the control)
 #   kdt   distillation weight lowered linearly from 0.9 to 0 over the last 5,000 updates (--distill_taper_steps 5000)
 #   kds   distillation kept at 0.9, the relays' spike-count gradient switched from straight-through to a smooth one
 #         (--relay_count_grad smooth, width 0.5; added in wave 50, docs 5.62): a late-training screen, paired with kdc
 # From the repository root:
-#   bash experiments/gpu49.sh [NAME]     both runs, or only NAME; GPU=... / ACCUM=n to override (both runs on the same
-#                                        card type and accum; default h100-96 with accum 2, as g46_kd25s1); NICE=n
+#   bash experiments/gpu49.sh [NAME]     every run, or only NAME; GPU=... / ACCUM=n to override (all runs on the same
+#                                        card type and accum; default a100-80 with accum 2, where all three and g51_kdf
+#                                        ran; g46_kd25s1 itself ran on h100-96, also accum 2); NICE=n
 set -e
 cd "$(dirname "$0")/.."   # the repository root
 mkdir -p slurm/logs
@@ -25,7 +26,7 @@ Q25="--relay quant --relay_levels 4 --relay_target 0.25"
 NAMES="kdc kdt kds"
 only=$1
 case " $NAMES " in *" ${only:-kdc} "*) ;; *) echo "NAME is one of: $NAMES"; exit 1 ;; esac
-gpu=${GPU:-h100-96}
+gpu=${GPU:-a100-80}
 case $gpu in h200-141) acc=1 ;; h100-96|a100-80) acc=2 ;; *) acc=4 ;; esac
 acc=${ACCUM:-$acc}
 for name in $NAMES; do

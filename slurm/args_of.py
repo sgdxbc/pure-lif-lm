@@ -24,6 +24,8 @@ flags = []
 for k, v in a.items():
     if k in SKIP or v is None or v == "":
         continue
+    if k == "feat_weight_frac" and a.get("feat_weight") is not None:
+        continue   # an explicit --feat_weight was given; train.py does not accept both
     if k in REMOVED_OFF:
         assert REMOVED_OFF[k] is None or v == REMOVED_OFF[k], f"{k}={v}: removed from the code (see model.Config.from_dict for the commit that has it)"
         continue

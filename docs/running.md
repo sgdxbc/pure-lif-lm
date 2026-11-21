@@ -81,6 +81,7 @@ python3 train.py --device cuda --out runs/my_snn \
 | `experiments/wbits_sens.py runs/X` | 哪类权重矩阵取整到 4 位损失最大；把最敏感的几类留在 8 位时的损失和多用的存储（5.38） |
 | `fpga_est.py runs/X [--device u55c --cards 2]` | 脉冲网络在 FPGA 上的延迟、吞吐量和能耗估算（默认 AMD Alveo V80 的参数，5.25；U55C 和多卡流水线见 5.44；从 5.60 节起放不下时按"部分放置"：状态、稠密权重、KV 缓存、稀疏行按每字节省下的 HBM 读写依次留在片上，只读放不下的部分） |
 | `experiments/fpga_compare.py [--runs A B ...] [--readout 8192 225] [--add_cost c]` | 同样的假设下，在同一块 FPGA 上估算 Transformer 和线性注意力网络（`model_tf.py` 的运行，含 0/1 单元、中继、三值权重；5.51–5.54）。`--runs` 按训练时的读出和最后一次评估的发放率估算；`--readout` 可换成假设的两级读出（表中标的是原运行的损失）。`--add_cost` 是一次加法相对一次乘加的代价（小于 1 只是敏感性检查） |
+| `experiments/relay_calib.py runs/X [--seed 0] [--calibration-batches 4] [--heldout-batches 16]` | 不训练地检查"按数据定中继阈值"（5.62 节）：X 是用 `--init_weights` 把中继接到训好的不带中继网络上的运行（如 `g45_ft25`）。重放它第 1 步的批次核对记下的损失；再在训练集里互不重叠的位置上，比原网络、默认阈值、按各通道输入均方根定阈值（从前往后逐个定，再用一个共同的倍数把加权脉冲数定到 `--relay_target`）、以及同样定法但脉冲数和默认阈值相同的四种情况多出的损失，并报告每个中继的发放、顶格和不发放的比例 | `relay_calib.json` |
 | `experiments/readout_replay.py runs/X [--refresh 128] [--thresholds ...] [--max-tokens N] [--lambada]` | 读出层的"时间上的脉冲"重放（5.62 节，不训练）：最后一层归一化以后的输出只在越过阈值时发带正负号的事件，缓存的词分数按事件加减对应的行，每 `--refresh` 个词精确算一次；同时做"跳过零的 4 位差分编码"对照。报告每个阈值下越过的通道比例和分位数、和精确词分数的 KL、验证集损失，以及一张 U55C、4 位时单路和 16 路的估算代价（含整行更新和词分数缓存的读写）；`--lambada` 对一个阈值再测 LAMBADA | `readout_replay.json` |
 | `bench_gpu.py --model 名字` | Transformer 在 GPU 上用 vLLM 实测：吞吐量、每 token 延迟、每 token 能耗（5.25） |
 | `bench_gpu_lean.py --shape D,L,H` | 同样的量，但用最简的生成程序（固定大小的键值缓存、CUDA graph），给出 GPU 本身能做到多少的界限（5.43）；`--check` 在 CPU 上核对 |
@@ -165,6 +166,7 @@ python3 train.py --device cuda --out runs/my_snn \
 - `--ema d`：同时保存权重的滑动平均（例如 0.999），评估时两种权重都报告；`evaluate.py --ema`、`sample.py --ema` 等使用平均后的权重。
 - `--neuron_lr_mult m`：神经元自身参数（β、θ、γ）的学习率倍数。
 - `--carry_state`：每个 batch 的每一行沿着训练文本连续往下读，上一段结束时的膜电位作为下一段的起点（梯度在段与段之间截断）。
+  只用于 `--arch snn`（`model_tf.py` 训练时不带状态，以前加了也不起作用，第 4 次自我审计后改成直接报错）。
   不加时每段都从静息状态开始。
 - `--optim muon`：层内的二维权重用 Muon（动量 `--muon_momentum`，默认 0.95；更新乘以 0.2·√max(行数, 列数)，
   所以 AdamW 的学习率可以直接沿用），输入和读出的突触、偏置和神经元自身的参数仍用 AdamW。对 Transformer 有效，对脉冲网络无效（5.27 节）。
@@ -205,6 +207,10 @@ python3 train.py --device cuda --out runs/my_snn \
 `--relay_target_start s --relay_target_steps n`（5.56 节）：目标从 s 开始，在前 n 步里线性降到 r（逐步收紧脉冲数）。
 `--relay_count_grad ste|smooth`（5.57 节，默认 `ste`）：`smooth` 用于设置了 `--relay_target` 的 `quant` 中继，脉冲数惩罚的反向传播用
 各阈值处的 sigmoid 梯度。前向传播、脉冲数统计和 λ 的更新仍用硬脉冲。`--relay_count_width` 是 sigmoid 的宽度，以阈值 θ 为单位，默认 0.5。
+`--feat_teacher PATH`（5.62 节，只用于 `--arch tf`）：逐层特征蒸馏。PATH 是同形状、不带中继的冻结网络（用它的平均权重）；
+每块在注意力输出投影和 MLP 输入投影两处，在同一批随机位置上比两两余弦相似度矩阵（学生对老师，均方误差）。
+`--feat_positions P`：每条序列取样的位置数，默认 64。权重二选一：`--feat_weight_frac f`（默认 0.1）在开始时（续跑也一样）用 3 个训练批次
+把这一项的梯度定成任务梯度的 f 倍，之后固定，存进检查点，`--resume` 时沿用；或者 `--feat_weight w` 直接给定。取样批次用自己的随机数，不改训练数据的顺序。
 `--mlp_mult m`（5.56 节）：MLP 的隐藏单元是 d 的 m 倍（默认 4，即 GPT-2 的设置）。
 `--wq ternary`（5.51 节）：块里的矩阵用三值权重（BitNet b1.58 的取整）。
 `--mlp lif`（5.50 节）：隐藏单元换成 LIF 神经元（泄漏、阈值、复位每个单元各自可学习，初始化和脉冲网络的神经元群一样）。

@@ -385,6 +385,9 @@ def main():
     a = get_args()
     assert a.batch % a.accum == 0 and (a.accum == 1 or not a.carry_state), "--accum must divide --batch; not with --carry_state"
     assert not a.wbits or a.arch == "snn", "--wbits is for the spiking network"
+    # (audit 4) model_tf.py's training forward never returned its state, so --carry_state did nothing for --arch tf,
+    # except with --feat_teacher, which did carry it: refuse the combination instead of behaving two ways
+    assert not (a.carry_state and a.arch == "tf"), "--carry_state is for --arch snn (model_tf.py does not carry state in training)"
     dev = torch.device(a.device)
     if dev.type == "cpu":
         torch.set_num_threads(a.threads)

@@ -165,7 +165,10 @@
   notes included; explain MLP, U55C and model sizes in plain words or leave them out).
 - (audit 3) Cluster messages: read every event since the last one read (by created_at, not "the last N"), keep a short
   list of what the cluster reported or changed, and check a run's state with list_events before stating it to the
-  owner or the advisor. Before writing any comparison, diff the two runs' args.json (teacher, steps, data, schedule,
+  owner or the advisor. (audit 4, after repeated misses) Page with `after_id` from the last event id read, which is kept
+  in /home/user/advisor_ctx/cluster_last_read, on every wake; say "queued" unless the cluster said "started".
+  A continuation pilot with a new code path counts as a new code path: a few hundred CPU steps with the option on and
+  a dry run with one evaluation on its card before launching. Before writing any comparison, diff the two runs' args.json (teacher, steps, data, schedule,
   learning rate). Before relaying a number the advisor computed, recompute it.
 
 ## The GPT research advisor (owner, 2026-11-20)
@@ -174,12 +177,13 @@
   analyses results, checks conclusions and drafts plans and code; this session is the project manager: it decides the
   final research and experiment plans, manages the advisor and the cluster session, and reports to the owner. It may
   propose to the owner that the advisor be dismissed, with reasons. No usage limit. Models: the owner (2026-11-21)
-  approved Astra for research discussions: proposing or ranking research directions, designing experiments,
-  interpreting results that decide the plan, and reviewing this session's conclusions use
-  `-m gpt-6.2-astra` (the most capable model; check ~/.codex/models_cache.json if the name changes). Code
-  drafts, routine result reading, pings and confirmations stay on Sol (the model set in ~/.codex/config.toml,
-  gpt-6.2-sol, default reasoning effort high). Both can resume the same discussion thread (Codex warns about the
-  switch; the context carries over, checked 2026-11-21). Set the effort per call with
+  approved the most capable model for research discussions: proposing or ranking research directions, designing
+  experiments, interpreting results that decide the plan, and reviewing this session's conclusions use it with `-m`
+  (its name is in /home/user/advisor_ctx/models.md, outside the repository; check ~/.codex/models_cache.json if it
+  changes). Code drafts, routine result reading, pings and confirmations stay on the default model set in
+  ~/.codex/config.toml (default reasoning effort high). Both can resume the same discussion thread (the context
+  carries over, checked 2026-11-21). (audit 4) Never write the advisor's model names in the repository or in commit
+  messages: say "the most capable model" / "the default model". Set the effort per call with
   `-c model_reasoning_effort=...` by the task: low for pings and simple checks; medium for short factual replies
   and agreeing details of a plan already discussed; high for code drafts with tests and routine reading of results;
   xhigh for designing experiments, interpreting results that decide the plan, and reviewing this session's
@@ -194,13 +198,15 @@
   /home/user/snn_lm), on branches advisor/<topic>, never pushes and never touches /home/user/snn_lm. This session
   reviews its branches, merges what both accept, commits and pushes (one committer: commits are the cluster's wake-up
   signal). Only this session talks to the cluster session and the owner. Its standing instructions are in
-  ~/.codex/AGENTS.md. Call it with `cd /home/user/advisor && codex exec ... < /dev/null` (stdin must be closed or it
-  waits forever), `-o FILE` for its last message, `codex exec resume <id>` to continue a discussion; run long calls in
+  ~/.codex/AGENTS.md. Call it with `cd /home/user/advisor && env -u CLAUDE_CODE_USER_EMAIL codex exec ... < /dev/null`
+  (audit 4: the environment holds the owner's e-mail and Codex inherits it; stdin must be closed or it waits forever), `-o FILE` for its last message, `codex exec resume <id>` to continue a discussion; run long calls in
   the background (<= 115 minutes). Record each discussion's points and decision briefly in docs/discussions.md, in
   this session's words, saying whether the advisor agreed explicitly. (audit 3) Before committing a wave plan, send the
   final run list and numeric rules to the advisor for an explicit OK (medium effort); every merge of advisor code gets
   this session's own check that default-off behaviour equals main. The transcript copy also removes the bare user part
-  of the owner's e-mail address (never search for it with a pattern that contains it).
+  of the owner's e-mail address (never search for it with a pattern that contains it; build the pattern from the
+  environment variable instead). (audit 4) Run refresh_transcript.sh before every research discussion so the copy is
+  current. Commit a plan change only after the advisor's explicit OK has come back, never in the same minute as asking.
 - The container can restart: ~/.codex (login, config) and /home/user/advisor survived so far; if the login is lost,
   ask the owner for a new device-code login (`codex login --device-auth`), never for a password.
 
