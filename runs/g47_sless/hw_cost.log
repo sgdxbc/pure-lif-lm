@@ -1,0 +1,1 @@
+g47_sless                snn  125.8M  8-bit  125.8 MB  dense MACs   63.5M + sparse adds  1.87M  state 1456.1 KB  MB/token 8-bit: 1 stream   64.5, 16 streams   4.9  (rate 0.052)
