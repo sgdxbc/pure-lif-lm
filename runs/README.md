@@ -63,6 +63,7 @@
 | `hw_cost.json`、`quant.json`、`fpga_est.json` | 硬件代价、低精度模拟、FPGA 估算 |
 | `long_*.json` | 按位置的 loss（`eval_long.py`）。注意：`g13_*` 的 `long_valid.json` 是原始权重、没有"从头开始"对照的旧结果；`g33_tf31`、`g40_la`、`g44_all3`、`g45_kd25` 的同名文件是平均权重、带对照的结果；`long_valid_warm.json` 是热启动对照 |
 | `readout_replay*.json`、`relay_calib.json` | 读出层重放、中继阈值校准检查（都不训练，5.62 节） |
+| `runs/add_cost_probe.json`（不在某个运行目录里） | 硬件探针：U55C 上一次加法相当于多少次乘加（5.62 节） |
 | `*.log`、`done` | 评测脚本的输出；`done` 表示训练和评测都已完成 |
 
 ## 顶层的文件
