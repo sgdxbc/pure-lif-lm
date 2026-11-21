@@ -27,25 +27,34 @@ EOT = "<|endoftext|>"
 WORD = re.compile(r" ?([A-Za-z]{2,})")
 
 
-def lexical_positions(pieces):
-    """Full single-token words and name-like positions in a visible GPT-2 prefix."""
+def lexical_words(pieces):
+    """Full single-token words and positions at sentence starts."""
     decoder = decoders.ByteLevel()
     words, initial = {}, set()
+    decoded = {raw: decoder.decode([raw]) for raw in set(pieces)}
     for pos, raw in enumerate(pieces):
-        piece = decoder.decode([raw])
+        piece = decoded[raw]
         match = WORD.fullmatch(piece)
         if not match:
             continue
-        following = decoder.decode([pieces[pos + 1]]) if pos + 1 < len(pieces) else ""
+        following = decoded[pieces[pos + 1]] if pos + 1 < len(pieces) else ""
         if following and following[0].isalnum():
             continue
-        preceding = decoder.decode(list(pieces[:pos]))
+        preceding = decoder.decode(list(pieces[:pos])) if not piece.startswith(" ") or match[1][0].isupper() else ""
         if not piece.startswith(" ") and preceding and preceding[-1].isalnum():
             continue
         words[pos] = match[1]
+        if not match[1][0].isupper():
+            continue
         previous = preceding.rstrip(" \t\r\"'“”‘’([{")
         if not previous or previous.endswith((EOT, ".", "?", "!", "\n")):
             initial.add(pos)
+    return words, initial
+
+
+def lexical_positions(pieces):
+    """Full single-token words and name-like positions in a visible GPT-2 prefix."""
+    words, initial = lexical_words(pieces)
     title = {pos: word for pos, word in words.items() if word[0].isupper() and word[1:].islower()}
     repeated = Counter(title.values())
     lowercase = {word for word in words.values() if word.islower()}
