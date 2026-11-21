@@ -1,0 +1,43 @@
+xgpi11
+NVIDIA H100 NVL
+{'arm': 'plain', 'weight': 0.0, 'initial_gradient_ratio': 0.0}
+plain 50 {'task': np.float64(0.7453240156173706), 'true_nll': np.float64(2.1977818760217405), 'sham_nll': np.float64(3.987955074684293), 'eligible_positions': 51}
+plain 100 {'task': np.float64(0.7511416524648666), 'true_nll': np.float64(2.3438591888972686), 'sham_nll': np.float64(4.322126606532505), 'eligible_positions': 35}
+plain 150 {'task': np.float64(0.7851804792881012), 'true_nll': np.float64(2.363929488829204), 'sham_nll': np.float64(5.152543595858983), 'eligible_positions': 56}
+plain 200 {'task': np.float64(0.7435270398855209), 'true_nll': np.float64(2.230045856431473), 'sham_nll': np.float64(4.114848292151162), 'eligible_positions': 43}
+plain 250 {'task': np.float64(0.7482489049434662), 'true_nll': np.float64(2.7699031752924768), 'sham_nll': np.float64(4.513107645896174), 'eligible_positions': 31}
+plain 300 {'task': np.float64(0.7530891001224518), 'true_nll': np.float64(2.3896388477749295), 'sham_nll': np.float64(3.8236439757876926), 'eligible_positions': 18}
+plain 350 {'task': np.float64(0.7383321672677994), 'true_nll': np.float64(2.514672964811325), 'sham_nll': np.float64(5.42270784576734), 'eligible_positions': 48}
+plain 400 {'task': np.float64(0.7492292672395706), 'true_nll': np.float64(2.700662486958054), 'sham_nll': np.float64(5.368899516339573), 'eligible_positions': 53}
+plain 450 {'task': np.float64(0.7047099769115448), 'true_nll': np.float64(2.312646336025662), 'sham_nll': np.float64(7.226028000866925), 'eligible_positions': 27}
+plain 500 {'task': np.float64(0.731150895357132), 'true_nll': np.float64(2.4420129587483963), 'sham_nll': np.float64(4.344703729762587), 'eligible_positions': 43}
+plain 550 {'task': np.float64(0.7425335198640823), 'true_nll': np.float64(2.313926937488409), 'sham_nll': np.float64(4.152901777854333), 'eligible_positions': 52}
+plain 600 {'task': np.float64(0.7529096454381943), 'true_nll': np.float64(2.6427853595126756), 'sham_nll': np.float64(4.803440099412744), 'eligible_positions': 44}
+plain 650 {'task': np.float64(0.7602756917476654), 'true_nll': np.float64(2.600882621606191), 'sham_nll': np.float64(6.037103374799093), 'eligible_positions': 60}
+plain 700 {'task': np.float64(0.7478180527687073), 'true_nll': np.float64(2.7476898630460105), 'sham_nll': np.float64(4.595455264051756), 'eligible_positions': 48}
+plain 750 {'task': np.float64(0.7220470607280731), 'true_nll': np.float64(2.4462058862050373), 'sham_nll': np.float64(6.060533311631944), 'eligible_positions': 45}
+plain 800 {'task': np.float64(0.7865734994411469), 'true_nll': np.float64(2.364452782799216), 'sham_nll': np.float64(4.84116044698977), 'eligible_positions': 51}
+plain 850 {'task': np.float64(0.7390886545181274), 'true_nll': np.float64(2.915571822060479), 'sham_nll': np.float64(4.91867662359167), 'eligible_positions': 27}
+plain 900 {'task': np.float64(0.72716423869133), 'true_nll': np.float64(2.466742865741253), 'sham_nll': np.float64(5.26464556157589), 'eligible_positions': 32}
+plain 950 {'task': np.float64(0.7195018380880356), 'true_nll': np.float64(2.596824095362708), 'sham_nll': np.float64(4.34021424679529), 'eligible_positions': 42}
+plain 1000 {'task': np.float64(0.7645236998796463), 'true_nll': np.float64(2.6400029322375422), 'sham_nll': np.float64(4.939443971799768), 'eligible_positions': 46}
+plain manipulation {'source_mass': 0.15991577243494248, 'passages': 512, 'source_mass_name_subset': 0.15897175615121212, 'mean_margin': 0.058041276223957536, 'win_rate': 0.6714285714285714}
+Traceback (most recent call last):
+  File "/home/s/sung/pure-lif-lm/experiments/query_pilot.py", line 351, in <module>
+    main()
+  File "/home/s/sung/pure-lif-lm/experiments/query_pilot.py", line 347, in main
+    run(args.stage, args.out, device, args.arm)
+  File "/home/s/sung/pure-lif-lm/experiments/query_pilot.py", line 287, in run
+    res = align.assess(student, None, plan, args, data, device, eot, manipulation_results=manip, seed=SEED)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/experiments/align_pilot.py", line 300, in assess
+    clean, _ = score_cases(fresh)
+               ^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/experiments/align_pilot.py", line 297, in score_cases
+    return measure_cases(student, cases, MICRO, dev, eot, **kw)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/s/sung/pure-lif-lm/experiments/memory_maps.py", line 311, in measure_cases
+    scores[indices] = logits[rows, positions].float().log_softmax(-1)[rows, answer].cpu().numpy()
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Can't call numpy() on Tensor that requires grad. Use tensor.detach().numpy() instead.
+exit 1 elapsed 1065 s peak GPU memory 43960 MiB

@@ -1,0 +1,79 @@
+xcnc36
+W1122 05:02:47.920000 3137 torch/utils/cpp_extension.py:140] No CUDA runtime is found, using CUDA_HOME='/usr'
+Manipulation {
+  "plain": {
+    "source_mass": 0.15991577243494248,
+    "passages": 512,
+    "source_mass_name_subset": 0.15897175615121212,
+    "mean_margin": 0.058041276223957536,
+    "win_rate": 0.6714285714285714
+  },
+  "sham": {
+    "source_mass": 0.1541040553129278,
+    "passages": 512,
+    "source_mass_name_subset": 0.15284907223124589,
+    "mean_margin": 0.05444725542994482,
+    "win_rate": 0.6785714285714286
+  },
+  "true": {
+    "source_mass": 0.16803553226820606,
+    "passages": 512,
+    "source_mass_name_subset": 0.17011494539412006,
+    "mean_margin": 0.06375490598979273,
+    "win_rate": 0.6642857142857143
+  }
+}
+{
+  "fresh_lambada_n": 512,
+  "margin_n": 140,
+  "margin_gain_vs_plain": {
+    "mean": 0.005713629765835192,
+    "ci95": [
+      0.002764271463965997,
+      0.009308495214458421
+    ]
+  },
+  "stage1_passed": true,
+  "true_logprob_gain": {
+    "plain": {
+      "mean": 0.019615151097241323,
+      "ci95": [
+        0.010402492959656229,
+        0.029240597438183608
+      ]
+    },
+    "sham": {
+      "mean": 0.02036975535156671,
+      "ci95": [
+        0.01035941588888818,
+        0.03077759230036463
+      ]
+    }
+  },
+  "validation_nll_delta": 3.827180974713684e-05,
+  "full_lambada_accuracy_delta": 0.00019406171162429653,
+  "cost_fraction_delta": {
+    "1": -1.234379109971151e-05,
+    "16": -1.234379109971151e-05
+  },
+  "stage2_passed": false,
+  "advance": false,
+  "original_name_competition": {
+    "plain": {
+      "wins": 33,
+      "passages": 57,
+      "win_rate": 0.5789473684210527
+    },
+    "sham": {
+      "wins": 32,
+      "passages": 57,
+      "win_rate": 0.5614035087719298
+    },
+    "true": {
+      "wins": 33,
+      "passages": 57,
+      "win_rate": 0.5789473684210527
+    }
+  }
+}
+exit 0

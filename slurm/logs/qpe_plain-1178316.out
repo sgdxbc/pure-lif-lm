@@ -1,0 +1,6 @@
+xgpi20
+NVIDIA H100 NVL
+plain manipulation {'source_mass': 0.15991577243494248, 'passages': 512, 'source_mass_name_subset': 0.15897175615121212, 'mean_margin': 0.058041276223957536, 'win_rate': 0.6714285714285714}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+plain finished
+exit 0 elapsed 139 s peak GPU memory 36128 MiB

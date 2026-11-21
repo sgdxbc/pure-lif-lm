@@ -1,0 +1,6 @@
+xgpi12
+NVIDIA H100 NVL
+sham manipulation {'source_mass': 0.1541040553129278, 'passages': 512, 'source_mass_name_subset': 0.15284907223124589, 'mean_margin': 0.05444725542994482, 'win_rate': 0.6785714285714286}
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+sham finished
+exit 0 elapsed 129 s peak GPU memory 16179 MiB

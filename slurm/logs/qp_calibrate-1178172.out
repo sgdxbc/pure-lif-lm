@@ -1,0 +1,4 @@
+xgpi20
+NVIDIA H100 NVL
+{'task': np.float64(0.7337575256824493), 'true_nll': np.float64(2.7014429779613716), 'sham_nll': np.float64(4.778474302852855), 'eligible_positions': 34, 'grad_norms': {'task': 0.017395835369825363, 'true': 0.7014116048812866, 'sham': 5720.15380859375}, 'weights': {'plain': 0.0, 'true': 0.002480117986181537, 'sham': 3.041148184457994e-07}, 'achieved_ratios': {'plain': 0.0, 'true': 0.10000000000000002, 'sham': 0.1}, 'plan_sha256': '97107c7a0f07c97a75e0153b38d36e9392ebf36ac660c07b4bb80359b32b5650', 'student_step': 20000}
+exit 0 elapsed 10 s peak GPU memory 69364 MiB

@@ -1,0 +1,17 @@
+xgpi20
+NVIDIA H100 NVL
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Prepared 512 decision passages, 140 for the margin
+Screened step 0/1000, 34 eligible positions in this batch
+Screened step 100/1000, 35 eligible positions in this batch
+Screened step 200/1000, 43 eligible positions in this batch
+Screened step 300/1000, 18 eligible positions in this batch
+Screened step 400/1000, 53 eligible positions in this batch
+Screened step 500/1000, 43 eligible positions in this batch
+Screened step 600/1000, 44 eligible positions in this batch
+Screened step 700/1000, 48 eligible positions in this batch
+Screened step 800/1000, 51 eligible positions in this batch
+Screened step 900/1000, 32 eligible positions in this batch
+Screened step 1000/1000, 46 eligible positions in this batch
+{'calibration': 34, 'training': 41682, 'empty_updates': 0, 'per_million': 1272.03369140625, 'sham_lag_gap_quantiles': {'p50': 2.0, 'p90': 17.0, 'p99': 106.0}}
+exit 0 elapsed 685 s peak GPU memory 43002 MiB
