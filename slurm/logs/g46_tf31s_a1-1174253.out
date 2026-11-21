@@ -1,0 +1,27 @@
+queued the next part of runs/g46_tf31s_a1: job 1174363
+xgpi3 NVIDIA H100 NVL | runs/g46_tf31s_a1 | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --arch tf --d_model 256 --n_layers 6 --n_heads 4 --lr 1e-3 --ema 0.999 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --accum 1
+params 30.74M, LIF neurons 0, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3009
+== eval step 2500 val_loss 4.5184 (EMA weights 4.4714)
+== eval step 5000 val_loss 4.2322 (EMA weights 4.1567)
+== eval step 7500 val_loss 4.1271 (EMA weights 4.0525)
+== eval step 10000 val_loss 4.0609 (EMA weights 3.9947)
+== eval step 12500 val_loss 4.0043 (EMA weights 3.9551)
+== eval step 15000 val_loss 3.9610 (EMA weights 3.9291)
+== eval step 17500 val_loss 4.1068 (EMA weights 5.1175)
+== eval step 20000 val_loss 4.1815 (EMA weights 4.9099)
+hellaswag        acc 0.2635  acc_norm 0.2624
+lambada_openai   perplexity 6013.7608  acc 0.0739
+piqa             acc 0.5724  acc_norm 0.5473
+arc_easy         acc 0.3611  acc_norm 0.3434
+arc_challenge    acc 0.1800  acc_norm 0.2235
+winogrande       acc 0.5059
+hellaswag        acc 0.2609  acc_norm 0.2552
+lambada_openai   perplexity 16768.5640  acc 0.0266
+piqa             acc 0.5686  acc_norm 0.5533
+arc_easy         acc 0.3636  acc_norm 0.3388
+arc_challenge    acc 0.1706  acc_norm 0.2329
+winogrande       acc 0.5107
+ "val_loss": 4.190397370050824,
+   " need to get a good meal. If you eat one meal, you may lose weight.\nRemember to eat a low-fat diet. While it is not a good thing to do, the calories per day is no less than 30 percent.\nThe calorie you eat\nA healthy diet for a healthy person is enough to lose weight.\nIf you are taking a diet that you are having a low-fat diet, you are trying to consume less sugar, sugar, and sugar, which is not necessary for weight loss.\nIt is important to avoid saturated fats, which are considered bad for weight loss.\nThis article appeared last month last month on the American Academy of Nutrition and Nutrition.\nThe American Dietetic Association (AP) also has developed a method of eating high-fat food with the American Journal of Clinical Nutrition.\nThe American Dietetic Association (ACDA) has developed a method to eat high levels of saturated fat.\nThe American Diabetes Association (ACDA) was founded in 1997 to help the American dietetic Association (HA) to encourage individuals and individuals to avoid saturated fat. The United States\u2019 Food and Drug Administration (FDA) is also a group of individuals who take a \u201chealthy diet\ufffd",
+done Sat Nov 21 08:47:34 AM +08 2026
