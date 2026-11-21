@@ -66,6 +66,7 @@
 | `runs/add_cost_probe.json`（不在某个运行目录里） | 硬件探针：U55C 上一次加法相当于多少次乘加（5.62 节） |
 | `runs/head_screen/`、`runs/memory_maps/`（在集群上跑） | 固定主体只换两级读出的测试、记忆的诊断和保存的图（5.63 节） |
 | `runs/probe_binding_*.json`、`runs/probe_regime_*.json` | 第一轮探索的两个小实验（CPU）：开发阶段 `_dev`、留出阶段 `_heldout`（5.64 节） |
+| `runs/transfer_binding/`、`runs/transfer_regime_bound.json` | 第二轮探索：学出来的绑定记忆放进真实文本（在集群上跑）、按"意外"更新的上限估算（5.65 节） |
 | `*.log`、`done` | 评测脚本的输出；`done` 表示训练和评测都已完成 |
 
 ## 顶层的文件

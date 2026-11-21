@@ -1,0 +1,29 @@
+{
+  "run": "runs/g48_gla31",
+  "bits": 4,
+  "refreshable_blocks": 1,
+  "min_saving_fraction": 0.2,
+  "rows": [
+    {
+      "streams": 1,
+      "always_refresh_bytes_per_token": 9681664.0,
+      "suppressible_bytes_per_token": 540416.0,
+      "minimum_detector_bytes_per_token": 545,
+      "best_case_bytes_per_token": 9141793.0,
+      "maximum_saving_fraction": 0.05576221195034242,
+      "required_suppressible_bytes_at_this_baseline": 1936877.8,
+      "clears_bound": false
+    },
+    {
+      "streams": 16,
+      "always_refresh_bytes_per_token": 1235944.0,
+      "suppressible_bytes_per_token": 138896.0,
+      "minimum_detector_bytes_per_token": 545,
+      "best_case_bytes_per_token": 1097593.0,
+      "maximum_saving_fraction": 0.11193953771368283,
+      "required_suppressible_bytes_at_this_baseline": 247733.80000000002,
+      "clears_bound": false
+    }
+  ],
+  "build_text_probe": false
+}
