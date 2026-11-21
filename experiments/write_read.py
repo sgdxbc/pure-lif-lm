@@ -204,14 +204,30 @@ def teacher_hits(probabilities, candidates):
     return ((source >= SOURCE_MIN) & (source > best)).cpu().tolist()
 
 
-def screen_offsets(n_tokens, seq, old_offsets, count=SCREEN_WINDOWS):
+@torch.no_grad()
+def passed_candidates(teacher, batch, indexed, heads, device):
+    if not indexed:
+        return []
+    x = torch.as_tensor(batch[:, :-1], device=device)
+    layers = {layer for layer, _ in heads}
+    _, _, traces = traced_forward(teacher, x, query_slice=slice(0, 0), trace_layers=layers)
+    passed = []
+    for start in range(0, len(indexed), 64):
+        chunk = indexed[start:start + 64]
+        q = torch.tensor([[b, c.query] for b, c in chunk], device=device)
+        group = group_distribution(traces, heads, q, teacher=True)
+        passed.extend(row for row, hit in zip(chunk, teacher_hits(group, [c for _, c in chunk])) if hit)
+    return passed
+
+
+def screen_offsets(n_tokens, seq, old_offsets, count=SCREEN_WINDOWS, seed=SCREEN_SEED):
     size = seq + 1
     blocks = np.arange(n_tokens // size) * size
     old = np.sort(np.ravel(old_offsets))
     nearby = np.searchsorted(old, blocks - seq)
     overlap = np.r_[old, n_tokens + size][nearby] <= blocks + seq
     choices = blocks[(blocks >= FREQUENCY_TOKENS) & ~overlap]
-    return np.random.default_rng(SCREEN_SEED).choice(choices, count, replace=False)
+    return np.random.default_rng(seed).choice(choices, count, replace=False)
 
 
 def lag_summary(lags, tokens):
@@ -230,7 +246,6 @@ def screen(teacher, train, tok, heads, device, seq, eot):
     windows = np.zeros(len(offsets), dtype=int)
     unique = 0
     pieces = [tok.id_to_token(i) for i in range(tok.get_vocab_size())]
-    layers = {layer for layer, _ in heads}
     for start in range(0, len(offsets), 8):
         batch = np.stack([train[o:o + seq + 1] for o in offsets[start:start + 8]]).astype(np.int64)
         indexed = []
@@ -242,20 +257,11 @@ def screen(teacher, train, tok, heads, device, seq, eot):
                 lags["unique_with_wrong_name"].append(c.query - c.source)
                 if c.name_source:
                     lags["name_source_with_wrong_name"].append(c.query - c.source)
-        if not indexed:
-            continue
-        x = torch.as_tensor(batch[:, :-1], device=device)
-        _, _, traces = traced_forward(teacher, x, query_slice=slice(0, 0), trace_layers=layers)
-        for i in range(0, len(indexed), 64):
-            chunk = indexed[i:i + 64]
-            q = torch.tensor([[b, c.query] for b, c in chunk], device=device)
-            group = group_distribution(traces, heads, q, teacher=True)
-            for (stream, c), passed in zip(chunk, teacher_hits(group, [c for _, c in chunk])):
-                if passed:
-                    lags["teacher_pass"].append(c.query - c.source)
-                    if c.name_source:
-                        lags["name_source_teacher_pass"].append(c.query - c.source)
-                        windows[start + stream] += 1
+        for stream, c in passed_candidates(teacher, batch, indexed, heads, device):
+            lags["teacher_pass"].append(c.query - c.source)
+            if c.name_source:
+                lags["name_source_teacher_pass"].append(c.query - c.source)
+                windows[start + stream] += 1
     tokens = len(offsets) * seq
     per_window = interval(windows.tolist())
     forecast = [x * 32_000 for x in per_window["ci95"]]

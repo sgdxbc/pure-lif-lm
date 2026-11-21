@@ -91,7 +91,7 @@ class Passage:
     pairs: list[tuple[int, int]]
 
 
-def describe(case, pieces, counts):
+def describe(case, pieces, counts=None):
     words, names = lexical_positions(pieces)
     answer = words.get(case.source, "").casefold()
     # The diagnostic identifies the earlier answer by token ID. The lexical
@@ -102,7 +102,7 @@ def describe(case, pieces, counts):
     spellings = {words[p].casefold() for p in names}
     controls = [p for p, word in words.items() if p < case.query and word.islower()
                 and word != answer and word not in spellings and case.ids[p] != case.answer]
-    pairs = match_controls(case.ids, case.query, wrong, controls, counts) if name_answer else []
+    pairs = match_controls(case.ids, case.query, wrong, controls, counts) if name_answer and counts is not None else []
     return Passage(case.label, case.source, name_answer, wrong, pairs)
 
 

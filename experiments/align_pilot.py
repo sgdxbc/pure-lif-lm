@@ -46,14 +46,15 @@ class SelectedRows(nn.Module):
         return frozen.index_copy(0, self.ids, self.rows)
 
 
-def train_rows(model, heads):
+def train_rows(model, heads, query_only=False):
     model.requires_grad_(False)
     projections = []
     for layer in sorted({layer for layer, _ in heads}):
         m = model.mems[str(layer)]
         width, nheads = m.cfg.mem_keys, m.cfg.mem_heads
         selected = sorted(h for l, h in heads if l == layer)
-        ids = [k for qk in range(2) for head in selected
+        halves = (1,) if query_only else (0, 1)
+        ids = [k for qk in halves for head in selected
                for k in range((qk * nheads + head) * width, (qk * nheads + head + 1) * width)]
         for name in ("weight", "bias"):
             parametrize.register_parametrization(m.kq_in, name, SelectedRows(getattr(m.kq_in, name), ids))
@@ -140,6 +141,14 @@ def sham_targets(target, queries, seed):
     return target.gather(1, torch.as_tensor(order, device=target.device))
 
 
+def task_loss(pred, logits, y):
+    student_lp = pred.float().log_softmax(-1)
+    target_lp = logits.float().log_softmax(-1)
+    kd = F.kl_div(student_lp.flatten(0, 1), target_lp.flatten(0, 1), reduction="batchmean", log_target=True)
+    ce = F.nll_loss(student_lp.flatten(0, 1), y.flatten())
+    return .1 * ce + .9 * kd
+
+
 def losses(student, teacher, windows, queries, dev, auxiliary, seed):
     t = torch.as_tensor(windows, device=dev)
     x, y = t[:, :-1].contiguous(), t[:, 1:].contiguous()
@@ -148,11 +157,7 @@ def losses(student, teacher, windows, queries, dev, auxiliary, seed):
         pred, trace = capture(student, x, STUDENT) if align else (student(x)[0], None)
         with torch.no_grad():
             logits, ref = capture(teacher, x, TEACHER) if align else (teacher(x)[0], None)
-    student_lp = pred.float().log_softmax(-1)
-    target_lp = logits.float().log_softmax(-1)
-    kd = F.kl_div(student_lp.flatten(0, 1), target_lp.flatten(0, 1), reduction="batchmean", log_target=True)
-    ce = F.nll_loss(student_lp.flatten(0, 1), y.flatten())
-    task = .1 * ce + .9 * kd
+    task = task_loss(pred, logits, y)
     if not align:
         return task, None, None, None
     q = torch.as_tensor(queries, device=dev)
@@ -287,11 +292,11 @@ def lambada_accuracy(student, args, dev, eot):
     return sum(bool(correct[-n:].all()) for (_, n), (_, correct) in zip(examples, values)) / len(examples)
 
 
-def assess(student, teacher, plan, args, data, dev, eot):
+def assess(student, teacher, plan, args, data, dev, eot, *, manipulation_results=None, seed=SEED):
     def score_cases(cases, **kw):
         return measure_cases(student, cases, MICRO, dev, eot, **kw)
     fresh = [Case(**c) for c in plan["lambada"]]
-    manip = manipulation(student, teacher, fresh, dev, eot)
+    manip = manipulation_results if manipulation_results is not None else manipulation(student, teacher, fresh, dev, eot)
     clean, _ = score_cases(fresh)
     redirect, _ = score_cases(fresh, selected=STUDENT, arm="source")
     sham = np.mean([score_cases(fresh, selected=STUDENT, arm=arm)[0] for arm in ("sham0", "sham1")], axis=0)
@@ -301,15 +306,15 @@ def assess(student, teacher, plan, args, data, dev, eot):
         intact, _ = score_cases(cases)
         replaced, _ = score_cases(cases, arm="replace")
         copies[name] = {"intact": float(intact.mean()), "replaced": float(replaced.mean()),
-                        "replacement_drop": paired_bootstrap(intact - replaced, seed=SEED)}
+                        "replacement_drop": paired_bootstrap(intact - replaced, seed=seed)}
     val, tokens = full_val_loss(student, SEQ, MICRO, str(data))
     activity = firing(student, 64, dev=dev, data=str(data))
     rows = fpga_est.estimate(snn_cost(student, activity), args, 4,
                             dict(fpga_est.DEVICES["u55c"], cards=1, eff=.6))
     return {"manipulation": manip, "lambada_ids": [c.label for c in fresh],
             "unassisted_logp": clean.tolist(), "redirect_logp_mean": float(redirect.mean()),
-            "redirect_headroom": paired_bootstrap(redirect - clean, seed=SEED),
-            "redirect_vs_sham": paired_bootstrap(redirect - sham, seed=SEED), "copy": copies,
+            "redirect_headroom": paired_bootstrap(redirect - clean, seed=seed),
+            "redirect_vs_sham": paired_bootstrap(redirect - sham, seed=seed), "copy": copies,
             "validation_nll": val, "validation_tokens": tokens,
             "full_lambada_accuracy": lambada_accuracy(student, args, dev, eot),
             "u55c_mJ_per_token": {str(r["streams"]): r["mJ_per_token"] for r in rows if r["streams"] in (1, 16)}}
