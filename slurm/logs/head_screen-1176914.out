@@ -1,0 +1,10 @@
+xgpi18
+NVIDIA H100 NVL
+all: g45_kd25 (linear, shortlist)
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+all: g46_kd25s1 (linear, shortlist)
+all: g48_gla31 (linear, shortlist)
+g48_gla31 shortlist: lowest calibration KL was at the last epoch
+all: g48_gla50 (linear, shortlist)

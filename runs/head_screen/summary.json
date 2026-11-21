@@ -1,0 +1,106 @@
+{
+  "runs": [
+    "g45_kd25",
+    "g46_kd25s1",
+    "g48_gla31",
+    "g48_gla50"
+  ],
+  "linear": {
+    "by_stream": {
+      "1": {
+        "D_per_seed": [
+          -0.014003376984207172,
+          -0.00999070076544406
+        ],
+        "D_mean": -0.011997038874825616,
+        "band": "parity",
+        "credit": false,
+        "dominating_dense_indices_per_seed": [
+          [],
+          []
+        ]
+      },
+      "16": {
+        "D_per_seed": [
+          -0.014003376984207172,
+          -0.00999070076544406
+        ],
+        "D_mean": -0.011997038874825616,
+        "band": "parity",
+        "credit": false,
+        "dominating_dense_indices_per_seed": [
+          [],
+          []
+        ]
+      },
+      "256": {
+        "D_per_seed": [
+          null,
+          null
+        ],
+        "D_mean": null,
+        "band": "outside_dense_bracket",
+        "credit": false,
+        "dominating_dense_indices_per_seed": [
+          [
+            1
+          ],
+          [
+            1
+          ]
+        ]
+      }
+    },
+    "modeled_advantage": false,
+    "full_evaluation": true
+  },
+  "shortlist": {
+    "by_stream": {
+      "1": {
+        "D_per_seed": [
+          -0.05503219222439437,
+          -0.048240530474153775
+        ],
+        "D_mean": -0.051636361349274074,
+        "band": "favors_dense",
+        "credit": false,
+        "dominating_dense_indices_per_seed": [
+          [],
+          []
+        ]
+      },
+      "16": {
+        "D_per_seed": [
+          -0.05503219222439437,
+          -0.048240530474153775
+        ],
+        "D_mean": -0.051636361349274074,
+        "band": "favors_dense",
+        "credit": false,
+        "dominating_dense_indices_per_seed": [
+          [],
+          []
+        ]
+      },
+      "256": {
+        "D_per_seed": [
+          null,
+          null
+        ],
+        "D_mean": null,
+        "band": "outside_dense_bracket",
+        "credit": false,
+        "dominating_dense_indices_per_seed": [
+          [
+            1
+          ],
+          [
+            1
+          ]
+        ]
+      }
+    },
+    "modeled_advantage": false,
+    "full_evaluation": true
+  }
+}
