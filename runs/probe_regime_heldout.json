@@ -1,0 +1,107 @@
+{
+  "split": "held-out",
+  "seeds": {
+    "tables": 201,
+    "training": 204,
+    "evaluation": [
+      2001,
+      2002,
+      2003
+    ]
+  },
+  "training_batches": 12,
+  "evaluation_streams": 768,
+  "learning_state_bytes": {
+    "64": {
+      "bptt": 1327360,
+      "eligibility": 20736,
+      "shared_inputs": 4096,
+      "parameters": 768
+    },
+    "256": {
+      "bptt": 5259520,
+      "eligibility": 20736,
+      "shared_inputs": 16384,
+      "parameters": 768
+    }
+  },
+  "conditions": {
+    "bptt": {
+      "nll": 0.3553804285747894,
+      "downstream_updates_per_observation": 0.007459004720052083,
+      "cell_events_per_observation": 0.24845250447591147,
+      "median_informative_observations_to_recover": 2.0,
+      "switches": 4533,
+      "isolated_corruptions": 24532,
+      "false_switch_rate": 0.001019077123756726,
+      "bytes_per_observation": {
+        "read": 481.0,
+        "written": 128.25591150919595,
+        "input": 2.0
+      }
+    },
+    "eligibility": {
+      "nll": 0.3553804285747894,
+      "downstream_updates_per_observation": 0.007459004720052083,
+      "cell_events_per_observation": 0.24845250447591147,
+      "median_informative_observations_to_recover": 2.0,
+      "switches": 4533,
+      "isolated_corruptions": 24532,
+      "false_switch_rate": 0.001019077123756726,
+      "bytes_per_observation": {
+        "read": 481.0,
+        "written": 128.25591150919595,
+        "input": 2.0
+      }
+    },
+    "before_training": {
+      "nll": 0.36443277195318746,
+      "downstream_updates_per_observation": 0.007250467936197917,
+      "cell_events_per_observation": 0.23993301391601562,
+      "median_informative_observations_to_recover": 3.0,
+      "switches": 4533,
+      "isolated_corruptions": 24532,
+      "false_switch_rate": 0.0007744986140551116,
+      "bytes_per_observation": {
+        "read": 481.0,
+        "written": 128.2471834818522,
+        "input": 2.0
+      }
+    },
+    "always_updated": {
+      "nll": 0.3972807655479478,
+      "downstream_updates_per_observation": 1.0,
+      "cell_events_per_observation": 0.0,
+      "median_informative_observations_to_recover": 1.0,
+      "switches": 4533,
+      "isolated_corruptions": 24532,
+      "false_switch_rate": 0.07365889450513614,
+      "bytes_per_observation": {
+        "read": 324.0,
+        "written": 132.0,
+        "input": 2.0
+      }
+    },
+    "likelihood_ratio": {
+      "nll": 0.3296518360573348,
+      "downstream_updates_per_observation": 1.0,
+      "cell_events_per_observation": 0.0,
+      "median_informative_observations_to_recover": 1.0,
+      "switches": 4533,
+      "isolated_corruptions": 24532,
+      "false_switch_rate": 0.03481167454752976,
+      "bytes_per_observation": {
+        "read": 68.0,
+        "written": 4.0,
+        "input": 2.0
+      }
+    }
+  },
+  "switches_per_seed": [
+    1505,
+    1515,
+    1513
+  ],
+  "advance_detector": true,
+  "advance_local_rule": true
+}
