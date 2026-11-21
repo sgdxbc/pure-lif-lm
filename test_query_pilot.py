@@ -1,5 +1,6 @@
 import math
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 import numpy as np
@@ -115,6 +116,29 @@ class QueryPilotTests(unittest.TestCase):
                                       opt=opt, weight=.1)
             self.assertTrue(np.isfinite(row["task"]))
 
+
+    def test_evaluation_runs_without_gradients_on_a_reloaded_checkpoint(self):
+        # Regression: a reloaded checkpoint requires grad by default, and measure_cases calls .numpy().
+        import tempfile
+        student = SpikingLM(Config(vocab=16, d_model=8, d_hidden=16, n_layers=1,
+                                   mem_heads=2, mem_keys=3, mem_dv=4, mem_theta=.05, mem_every=1))
+        self.assertTrue(any(p.requires_grad for p in student.parameters()))
+        seen = []
+
+        def check(*_, **__):
+            seen.append((torch.is_grad_enabled(), any(p.requires_grad for p in student.parameters())))
+            return {}
+        calibration = dict(weights={"true": .1}, achieved_ratios={"true": .1}, rates_before={})
+        with tempfile.TemporaryDirectory() as tmp, \
+                patch.object(pilot, "load", return_value=(student, 1)), \
+                patch.object(pilot, "snapshot", side_effect=lambda *a, **k: (check(), {})), \
+                patch.object(align, "assess", side_effect=check), patch.object(align, "kq_rates", side_effect=check), \
+                patch.object(pilot, "key_drift", side_effect=check), \
+                patch.object(pilot, "old_name_competition", side_effect=check):
+            pilot.evaluate_arm(Path(tmp), "true", dict(wrong_names={}, eligible_positions={}), "d", calibration,
+                               [], {}, {}, None, None, None, torch.device("cpu"), 0)
+            self.assertTrue((Path(tmp) / "metrics.json").exists())
+        self.assertEqual(seen, [(False, False)] * 5)
 
 if __name__ == "__main__":
     unittest.main()

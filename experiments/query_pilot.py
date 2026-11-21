@@ -263,6 +263,19 @@ def run(stage, folder, device, arm):
     weight, ratio = calibration["weights"][arm], calibration["achieved_ratios"][arm]
     cases = [Case(**c) for c in plan["lambada"]]
     _, keys_before = snapshot(student, cases, plan["wrong_names"], device, eot)
+    if stage == "evaluate":
+        # Re-score an arm whose training finished and saved ckpt.pt but whose evaluation did not.
+        out = folder / arm
+        if not (out / "ckpt.pt").exists() or not (out / "training.jsonl").exists():
+            raise ValueError(f"{out} has no finished training to evaluate")
+        if (out / "metrics.json").exists():
+            raise ValueError(f"{out / 'metrics.json'} already exists")
+        steps = sum(1 for _ in (out / "training.jsonl").open())
+        if steps != STEPS or torch.load(out / "ckpt.pt", map_location="cpu")["step"] != start + STEPS:
+            raise ValueError(f"{out} training is incomplete ({steps} logged updates)")
+        del teacher, params, layers
+        evaluate_arm(out, arm, plan, digest, calibration, cases, keys_before, args, data, tok, rate_data, device, eot)
+        return
     opt = torch.optim.AdamW(params, lr=align.LR, weight_decay=align.WD)
     out = folder / arm
     out.mkdir()
@@ -281,7 +294,15 @@ def run(stage, folder, device, arm):
     checkpoint = out / "ckpt.pt"
     torch.save(dict(model=student.state_dict(), cfg=asdict(student.cfg), arch="snn", step=start + STEPS), checkpoint)
     del student, teacher, opt, params, layers
-    student, _ = load(checkpoint, device=device)
+    evaluate_arm(out, arm, plan, digest, calibration, cases, keys_before, args, data, tok, rate_data, device, eot)
+
+
+@torch.no_grad()
+def evaluate_arm(out, arm, plan, digest, calibration, cases, keys_before, args, data, tok, rate_data, device, eot):
+    """Score a saved final checkpoint. Reloaded weights require grad by default, so switch it off."""
+    student, _ = load(out / "ckpt.pt", device=device)
+    student.requires_grad_(False)
+    weight, ratio = calibration["weights"][arm], calibration["achieved_ratios"][arm]
     manip, keys_after = snapshot(student, cases, plan["wrong_names"], device, eot)
     print(f"{arm} manipulation", {k: v for k, v in manip.items() if k not in ("margins", "margin_ids")}, flush=True)
     res = align.assess(student, None, plan, args, data, device, eot, manipulation_results=manip, seed=SEED)
@@ -325,7 +346,8 @@ def summarize(folder):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("stage", choices=("prepare", "calibrate", "train", "summarize"))
+    parser.add_argument("stage", choices=("prepare", "calibrate", "train", "evaluate", "summarize"),
+                        help="evaluate: score an arm's saved final ckpt.pt after a failed evaluation")
     parser.add_argument("--arm", choices=ARMS)
     parser.add_argument("--out", type=Path, default=Path("runs/query_pilot"))
     parser.add_argument("--device", default="cuda")
@@ -342,8 +364,8 @@ def main():
     elif args.stage == "summarize":
         summarize(args.out)
     else:
-        if args.stage == "train" and args.arm is None:
-            parser.error("train requires --arm")
+        if args.stage in ("train", "evaluate") and args.arm is None:
+            parser.error(f"{args.stage} requires --arm")
         run(args.stage, args.out, device, args.arm)
 
 
