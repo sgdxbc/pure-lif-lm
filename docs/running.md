@@ -64,7 +64,7 @@ python3 train.py --device cuda --out runs/my_snn \
 | `eval_lm.py [--ema] runs/X`，`eval_lm.py --hf 名字` | 零样本基准（lm-evaluation-harness：HellaSwag、LAMBADA、PIQA、ARC、WinoGrande），也可测 Hugging Face 上的参考模型 | `zeroshot[_ema].json` |
 | `ref_loss.py 名字...` | 用 GPT-2 分词器的 Hugging Face 模型在 FineWeb-Edu 验证集上的 loss（和 `evaluate.py` 同样的算法） | `runs/ref_loss.json` |
 | `probe_lambada.py [--ema] runs/X 名字...` | LAMBADA 诊断：最后一个词读完整段 / 只读最后 16 个 token 时的 loss，按是否在前文出现过分组 | `runs/lambada_probe.json` |
-| `eval_long.py [--ema] [--length N] [--window W] [--restart R] [--recall] runs/X` | 从书或文档的开头读起，按位置区间报告 loss；`--window` 让 Transformer 只看最近 W 个 token；`--restart R`（5.60 节）把同样的目标再算一遍，但状态（脉冲网络、可塑突触、线性注意力）每 R 个词从头开始，两者之差就是用到 R 个词以外的上文的多少；`--recall` 加埋入回忆测试：在普通文本里埋一句"某某的号码是 XXXX"，隔 512–8k 个词后提问，报告答案的对数概率和完全答对的比例（同样有从头开始的对照；`--max_trials` 每个距离的次数，默认 200）。集群上：`LONG_ARGS="--restart 1024 --recall" sbatch -J long_eval --gres=gpu:a100-40:1 slurm/long_eval.sbatch runs/A ...` | `long_valid*.json` |
+| `eval_long.py [--ema] [--length N] [--window W] [--restart R] [--recall] runs/X` | 从书或文档的开头读起，按位置区间报告 loss；`--window` 让 Transformer 只看最近 W 个 token；`--restart R`（5.60 节）把同样的目标再算一遍，但状态（脉冲网络、可塑突触、线性注意力）每 R 个词从头开始，两者之差就是用到 R 个词以外的上文的多少；`--recall` 加埋入回忆测试：在普通文本里埋一句"某某的号码是 XXXX"，隔 512–8k 个词后提问，报告答案的对数概率和完全答对的比例（同样有从头开始的对照；`--max_trials` 每个距离的次数，默认 200）。`--warmup W`（5.62 节）把"从头开始"改成"热启动"：每个计分的 R 个词前面先用全新的状态读 W 个词，两边之差就只剩 R+W 个词以外的上文；回忆测试同时拿换成同长度假号码的句子作对照（报告"真答案比假答案更可能"的程度和配对自助法区间），另加一个 512 距离、只答一个词的容易测试作阳性对照；写到 `long_valid_warm.json`。FineWeb 只有验证集，要在 `LONG_ARGS` 里加 `--split valid`。集群上：`LONG_ARGS="--split valid --restart 1024 --recall" sbatch -J long_eval --gres=gpu:a100-40:1 slurm/long_eval.sbatch runs/A ...`（热启动再加 `--warmup 1024`） | `long_valid*.json` |
 | `probe_memory.py`、`probe_recall.py` | TinyStories 上的两种回看测量（截断上文；重复出现的词按距离分组，docs/experiments.md 5.1） | `probe_memory*.json`、`recall*.json` |
 | `scaling.py runs/g13_*` | 验证 loss 对训练算力的图 | `runs/scaling*.png/.json` |
 | `sample.py --ckpt ... [-i]` | 文本补全（`-i` 交互） | |
@@ -81,6 +81,7 @@ python3 train.py --device cuda --out runs/my_snn \
 | `experiments/wbits_sens.py runs/X` | 哪类权重矩阵取整到 4 位损失最大；把最敏感的几类留在 8 位时的损失和多用的存储（5.38） |
 | `fpga_est.py runs/X [--device u55c --cards 2]` | 脉冲网络在 FPGA 上的延迟、吞吐量和能耗估算（默认 AMD Alveo V80 的参数，5.25；U55C 和多卡流水线见 5.44；从 5.60 节起放不下时按"部分放置"：状态、稠密权重、KV 缓存、稀疏行按每字节省下的 HBM 读写依次留在片上，只读放不下的部分） |
 | `experiments/fpga_compare.py [--runs A B ...] [--readout 8192 225] [--add_cost c]` | 同样的假设下，在同一块 FPGA 上估算 Transformer 和线性注意力网络（`model_tf.py` 的运行，含 0/1 单元、中继、三值权重；5.51–5.54）。`--runs` 按训练时的读出和最后一次评估的发放率估算；`--readout` 可换成假设的两级读出（表中标的是原运行的损失）。`--add_cost` 是一次加法相对一次乘加的代价（小于 1 只是敏感性检查） |
+| `experiments/readout_replay.py runs/X [--refresh 128] [--thresholds ...] [--max-tokens N] [--lambada]` | 读出层的"时间上的脉冲"重放（5.62 节，不训练）：最后一层归一化以后的输出只在越过阈值时发带正负号的事件，缓存的词分数按事件加减对应的行，每 `--refresh` 个词精确算一次；同时做"跳过零的 4 位差分编码"对照。报告每个阈值下越过的通道比例和分位数、和精确词分数的 KL、验证集损失，以及一张 U55C、4 位时单路和 16 路的估算代价（含整行更新和词分数缓存的读写）；`--lambada` 对一个阈值再测 LAMBADA | `readout_replay.json` |
 | `bench_gpu.py --model 名字` | Transformer 在 GPU 上用 vLLM 实测：吞吐量、每 token 延迟、每 token 能耗（5.25） |
 | `bench_gpu_lean.py --shape D,L,H` | 同样的量，但用最简的生成程序（固定大小的键值缓存、CUDA graph），给出 GPU 本身能做到多少的界限（5.43）；`--check` 在 CPU 上核对 |
 

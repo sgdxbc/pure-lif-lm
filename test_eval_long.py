@@ -109,6 +109,49 @@ class LongEvalTest(unittest.TestCase):
         self.assertEqual(scores, dict(mean_answer_logprob=-3., mean_token_logprob=-2.,
                                       token_top1=2 / 3, answer_top1=0.5))
 
+    def test_warm_restarts_preserve_softmax_windows_and_prefill_recurrence(self):
+        opts = dict(vocab=32, d_model=12, n_layers=2, n_heads=2)
+        tf = GPT(TFConfig(**opts, max_len=12)).eval()
+        full = eval_long.score(tf, self.x, 7, 12, CPU, restart=19, first=8, top1=True)
+        warm = eval_long.score(tf, self.x, 7, 12, CPU, restart=19, first=8, top1=True, reset=True, warmup=12)
+        self.assertTrue(all(torch.equal(a, b) for a, b in zip(full, warm)))
+
+        gla = GPT(TFConfig(**opts, attn="linear")).eval()
+        for model, window in ((gla, 0), (tf, 12)):
+            args = (model, self.x, 7, window, CPU, 19, True)
+            torch.testing.assert_close(eval_long.score(*args, warmup=0)[0], eval_long.score(*args)[0],
+                                       atol=0, rtol=0)
+        warm = eval_long.score(gla, self.x, 7, 0, CPU, restart=19, reset=True, warmup=19)[0]
+        expected = []
+        for lo in range(0, 82, 19):
+            prefix = max(0, lo - 19)
+            scores, _ = eval_long.score(gla, self.x[:, prefix:lo + 20], 7, 0, CPU,
+                                        restart=19, first=lo - prefix)
+            expected.append(scores)
+        torch.testing.assert_close(warm, torch.cat(expected, 1), atol=0, rtol=0)
+
+    def test_matched_recall_and_seeded_bootstrap(self):
+        tok = Tokenizer.from_file(str(TOKENIZER))
+        noise = tok.encode(" noise").ids[-1]
+        arr = np.full(1400, noise, np.uint16)
+        for distance, one_token in ((128, False), (512, True)):
+            _, x, counts, swapped = next(eval_long.recall_trials(
+                tok, arr, np.array([0]), np.array([1400]), (distance,), 64, 8, matched=True, one_token=one_token))
+            self.assertEqual(x.shape, swapped.shape)
+            for row, foil in zip(x.tolist(), swapped.tolist()):
+                fact = [i for i, token in enumerate(row) if token != noise]
+                end = next(i for i in fact if row[i + 1] == noise) + 1
+                self.assertEqual(row[end:], foil[end:])
+                self.assertEqual(row[:fact[0]], foil[:fact[0]])
+                self.assertNotEqual(row[fact[0]:end], foil[fact[0]:end])
+            if one_token:
+                self.assertTrue(torch.equal(counts, torch.ones_like(counts)))
+        delta = [0., 0.1, 0.4, 1., 2.]
+        report = eval_long.paired_bootstrap(delta, seed=41)
+        self.assertEqual(report, eval_long.paired_bootstrap(delta, seed=41))
+        self.assertAlmostEqual(report["mean"], 0.7)
+        self.assertEqual(eval_long.paired_bootstrap([0., 0.])["ci95"], [0., 0.])
+
     def test_legacy_and_paired_json_paths(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)
@@ -119,7 +162,7 @@ class LongEvalTest(unittest.TestCase):
             (path / "args.json").write_text(json.dumps({"data": directory, "seq": 128, "ema": 0.999,
                                                       "tokenizer": str(TOKENIZER)}))
             np.save(path / "valid_books.npy", np.array([0]))
-            (np.arange(256) % 32).astype(np.uint16).tofile(path / "valid.bin")
+            (np.arange(900) % 32).astype(np.uint16).tofile(path / "valid.bin")
             opts = ["eval_long.py", directory, "--length", "128", "--chunk", "17", "--ema"]
             with patch("sys.argv", opts):
                 eval_long.main()
@@ -134,6 +177,15 @@ class LongEvalTest(unittest.TestCase):
             self.assertEqual(pair["full"]["buckets"].keys(), pair["restart"]["buckets"].keys())
             self.assertAlmostEqual(pair["gain"]["mean"], pair["restart"]["mean"] - pair["full"]["mean"], places=5)
             self.assertEqual(report["planted_recall"]["by_distance"]["96"]["trials"], 2)
+            cold = (path / "long_valid.json").read_bytes()
+            with patch("sys.argv", opts + ["--restart", "64", "--warmup", "64", "--recall",
+                                           "--distances", "32", "96", "--max_trials", "2"]):
+                eval_long.main()
+            warm = json.loads((path / "long_valid_warm.json").read_text())
+            self.assertEqual(warm["warm_restart_control"]["warmup_tokens"], 64)
+            self.assertEqual(warm["planted_recall"]["positive_control"]["answer_tokens"], 2)
+            self.assertIn("ci95", warm["planted_recall"]["by_distance"]["96"]["full_minus_warm_preference"])
+            self.assertEqual((path / "long_valid.json").read_bytes(), cold)
 
 
 if __name__ == "__main__":

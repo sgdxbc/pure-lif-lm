@@ -211,6 +211,9 @@ def estimate_tf(t, dev):
     budget = n * 0.9 * dev["onchip_mb"] * 1e6
     sparse = [(r, n_in * rb) for r, n_in, rb in t["sparse_layers"]]
     dense = t["weight_bytes_onchip"] - sum(size for _, size in sparse)
+    replay = t.get("readout_replay")
+    if replay:
+        dense -= replay["weight_bytes"]
     table = t["table_weights"] * t["bits"] / 8
     rows = []
     for B in STREAMS:
@@ -220,6 +223,12 @@ def estimate_tf(t, dev):
         regions = [("state", state, 2 * state), ("dense_weights", dense, t["dense_bytes"]), ("kv", kv, kv)]
         # A multi-spike rate upper-bounds the probability of needing a row. Keep the existing independent-stream model.
         regions.extend(("sparse_weights", size, (1 - (1 - min(r, 1.0)) ** B) * size) for r, size in sparse)
+        if replay:
+            # Dense refreshes are synchronized across streams. One copy of each row serves both modes.
+            refresh, active = replay["refresh_rate"], replay["active_rate"]
+            share = refresh + (1 - refresh) * (1 - (1 - active) ** B)
+            size = replay["weight_bytes"]
+            regions.append(("sparse_weights", size, share * size))
         read, where, split = place(regions, budget, table, own)
         tm = max(read / (bw * busy), B * ops / (rate * busy))
         rows.append({"streams": B, "where": where, "bytes_per_step": read, "ops_per_step": B * ops,
