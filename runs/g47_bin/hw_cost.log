@@ -1,0 +1,1 @@
+g47_bin                  snn  125.8M  8-bit  125.8 MB  dense MACs   63.5M + sparse adds  1.51M  state 1493.0 KB  MB/token 8-bit: 1 stream   64.4, 16 streams   4.9  (rate 0.049)

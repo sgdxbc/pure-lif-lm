@@ -1,0 +1,53 @@
+queued the next part of runs/g47_bin: job 1174328
+xgph0 NVIDIA A100 80GB PCIe | runs/g47_bin | --data data/fineweb --tokenizer gpt2.json --vocab 50304 --batch 32 --seq 1024 --steps 20000 --warmup 1000 --eval_every 2500 --eval_batches 40 --log_every 500 --teacher runs/g13_tf163/ckpt.pt --distill_weight 0.9 --distill_temp 1 --hard_reset true --sg fast_sigmoid --detach_reset false --reset_learn true --gamma_init 0.999 --gamma_init_min 0.05 --d_model 768 --d_hidden 3072 --n_layers 12 --leak_rank 96 --ema 0.999 --neuron_lr_mult 10 --lr 6e-4 --spike_skip 10 --mem_heads 8 --mem_write_avg true --out_classes 225 --out_short 8192 --class_file runs/classes/tf163_head225_s8192.npy --in_groups 2 --in_short 2048 --in_class_file runs/classes/tf163_embed220_s2048.npy --bus_norm true --mem_kq_levels 4 --mem_delays 4 --mem_gate channel --seed 1 --mem_kq_levels 1 --accum 2
+params 125.77M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+teacher val_loss 3.3008
+== eval step 2500 val_loss 4.4199 (EMA weights 4.3579)
+== eval step 5000 val_loss 4.1153 (EMA weights 4.0501)
+== eval step 7500 val_loss 3.9715 (EMA weights 3.9153)
+params 125.77M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 10000 val_loss 3.8802 (EMA weights 3.8351)
+== eval step 12500 val_loss 3.8145 (EMA weights 3.7813)
+== eval step 15000 val_loss 3.7654 (EMA weights 3.7461)
+params 125.77M, LIF neurons 36,864, train tokens 9944M, tokens/step 32,768
+== eval step 17500 val_loss 3.7341 (EMA weights 3.7236)
+== eval step 20000 val_loss 3.7169 (EMA weights 3.7100)
+hellaswag        acc 0.2683  acc_norm 0.2703
+lambada_openai   perplexity 3315.8181  acc 0.0621
+piqa             acc 0.5778  acc_norm 0.5745
+arc_easy         acc 0.4415  acc_norm 0.3918
+arc_challenge    acc 0.1886  acc_norm 0.2270
+winogrande       acc 0.5185
+hellaswag        acc 0.2679  acc_norm 0.2714
+lambada_openai   perplexity 3173.3766  acc 0.0633
+piqa             acc 0.5854  acc_norm 0.5653
+arc_easy         acc 0.4352  acc_norm 0.3969
+arc_challenge    acc 0.1834  acc_norm 0.2261
+winogrande       acc 0.5051
+ "val_loss": 3.7278620110495666,
+g47_bin                  snn  125.8M  8-bit  125.8 MB  dense MACs   63.5M + sparse adds  1.51M  state 1493.0 KB  MB/token 8-bit: 1 stream   64.4, 16 streams   4.9  (rate 0.049)
+  weights rounded to 8 bits: "val_loss": 3.7208983898651153,
+  weights rounded to 4 bits: "val_loss": 3.7854740710241392,
+model (bf16, fused kernel) 3.8073
+fp32                   3.8058  (+0.0000 vs fp32)
+W8                     3.8069  (+0.0011 vs fp32)
+W4                     3.9036  (+0.0979 vs fp32)
+W4g128                 3.8700  (+0.0643 vs fp32)
+A8                     3.8152  (+0.0094 vs fp32)
+V24                    3.8064  (+0.0006 vs fp32)
+V16                    3.8160  (+0.0102 vs fp32)
+B16                    3.8046  (-0.0012 vs fp32)
+B12                    3.8051  (-0.0006 vs fp32)
+W8 A8 V24 B16          3.8173  (+0.0116 vs fp32)
+W8 A8 V16 B12          3.8259  (+0.0202 vs fp32)
+W4g128 A8 V24 B16      3.8811  (+0.0754 vs fp32)
+W4g128 A8 V16 B12      3.8915  (+0.0857 vs fp32)
+V16p                   3.8101  (+0.0043 vs fp32)
+W8 A8 V16p B12         3.8203  (+0.0145 vs fp32)
+S24                    3.8053  (-0.0005 vs fp32)
+S16                    3.8130  (+0.0072 vs fp32)
+S12                    3.8443  (+0.0386 vs fp32)
+W8 A8 V24 B16 S16      3.8223  (+0.0166 vs fp32)
+W8 A8 V24 B16 S12      3.8565  (+0.0507 vs fp32)
+B16 T10                3.8045  (-0.0012 vs fp32)
+done Sat Nov 21 07:49:00 AM +08 2026
