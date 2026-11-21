@@ -206,9 +206,12 @@ def make_case(ids, target, source, label):
     return Case(list(ids), target, source, shams, label) if shams is not None else None
 
 
-def natural_cases(tok, seq, limit):
+def natural_cases(tok, seq, limit, labels=None):
     eot = tok.token_to_id("<|endoftext|>")
     for i, (context, word) in enumerate(passages(limit)):
+        label = f"lambada:{i}"
+        if labels is not None and label not in labels:
+            continue
         ctx = tok.encode(context).ids
         whole = tok.encode(context + word).ids
         suffix = whole[len(ctx):] if whole[:len(ctx)] == ctx else tok.encode(word).ids
@@ -218,7 +221,7 @@ def natural_cases(tok, seq, limit):
         target = suffix[0]
         locations = [s for s, token in enumerate(ids) if token == target]
         if len(locations) == 1:
-            case = make_case(ids, target, locations[0], f"lambada:{i}")
+            case = make_case(ids, target, locations[0], label)
             if case:
                 yield case
 
