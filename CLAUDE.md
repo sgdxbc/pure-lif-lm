@@ -173,8 +173,13 @@
   with `npm install -g @openai/codex`) as a research advisor reporting to this session: it proposes research ideas,
   analyses results, checks conclusions and drafts plans and code; this session is the project manager: it decides the
   final research and experiment plans, manages the advisor and the cluster session, and reports to the owner. It may
-  propose to the owner that the advisor be dismissed, with reasons. No usage limit; prefer the Sol models
-  (the model set in ~/.codex/config.toml, default reasoning effort high). Set the effort per call with
+  propose to the owner that the advisor be dismissed, with reasons. No usage limit. Models: the owner (2026-11-21)
+  approved Astra for research discussions: proposing or ranking research directions, designing experiments,
+  interpreting results that decide the plan, and reviewing this session's conclusions use
+  `-m gpt-6.2-astra` (the most capable model; check ~/.codex/models_cache.json if the name changes). Code
+  drafts, routine result reading, pings and confirmations stay on Sol (the model set in ~/.codex/config.toml,
+  gpt-6.2-sol, default reasoning effort high). Both can resume the same discussion thread (Codex warns about the
+  switch; the context carries over, checked 2026-11-21). Set the effort per call with
   `-c model_reasoning_effort=...` by the task: low for pings and simple checks; medium for short factual replies
   and agreeing details of a plan already discussed; high for code drafts with tests and routine reading of results;
   xhigh for designing experiments, interpreting results that decide the plan, and reviewing this session's
