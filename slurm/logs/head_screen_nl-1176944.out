@@ -1,0 +1,4 @@
+xgph12
+NVIDIA A100 80GB PCIe
+all: g45_kd25 (nonlinear)
+[2026-11-21T21:24:01.499] error: *** JOB 1176944 ON xgph12 CANCELLED AT 2026-11-21T21:24:01 DUE to SIGNAL Terminated ***

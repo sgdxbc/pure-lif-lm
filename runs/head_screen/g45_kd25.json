@@ -563,5 +563,176 @@
     },
     "passes_nll": false,
     "passes": false
+  },
+  "nonlinear": {
+    "valid_nll": 4.3559461344302015,
+    "lambada": 0.022123035125169804,
+    "cost": {
+      "1": {
+        "streams": 1,
+        "where": "weights on chip, word tables in HBM",
+        "bytes_per_step": 57600.0,
+        "ops_per_step": 6159976.990661621,
+        "state_bytes": 897024,
+        "kv_bytes": 0,
+        "required_onchip_bytes": 14725760.0,
+        "onchip_budget_bytes": 38340000.0,
+        "placement": {
+          "dense_weights": {
+            "onchip_bytes": 180864.0,
+            "hbm_bytes": 0.0,
+            "hbm_bytes_per_step": 0.0
+          },
+          "sparse_weights": {
+            "onchip_bytes": 13647872.0,
+            "hbm_bytes": 0.0,
+            "hbm_bytes_per_step": 0.0
+          },
+          "state": {
+            "onchip_bytes": 897024.0,
+            "hbm_bytes": 0.0,
+            "hbm_bytes_per_step": 0.0
+          },
+          "kv": {
+            "onchip_bytes": 0.0,
+            "hbm_bytes": 0.0,
+            "hbm_bytes_per_step": 0.0
+          },
+          "word_tables": {
+            "onchip_bytes": 0.0,
+            "hbm_bytes": 25780224.0,
+            "hbm_bytes_per_step": 57600.0
+          }
+        },
+        "bound": "compute",
+        "tok_s": 527378.5932844979,
+        "ms_per_token": 0.0018961710102263166,
+        "mJ_per_token": 0.2844256515339475
+      },
+      "16": {
+        "streams": 16,
+        "where": "weights on chip, word tables in HBM",
+        "bytes_per_step": 921600.0,
+        "ops_per_step": 98559631.85058594,
+        "state_bytes": 14352384,
+        "kv_bytes": 0,
+        "required_onchip_bytes": 28181120.0,
+        "onchip_budget_bytes": 38340000.0,
+        "placement": {
+          "dense_weights": {
+            "onchip_bytes": 180864.0,
+            "hbm_bytes": 0.0,
+            "hbm_bytes_per_step": 0.0
+          },
+          "sparse_weights": {
+            "onchip_bytes": 13647872.0,
+            "hbm_bytes": 0.0,
+            "hbm_bytes_per_step": 0.0
+          },
+          "state": {
+            "onchip_bytes": 14352384.0,
+            "hbm_bytes": 0.0,
+            "hbm_bytes_per_step": 0.0
+          },
+          "kv": {
+            "onchip_bytes": 0.0,
+            "hbm_bytes": 0.0,
+            "hbm_bytes_per_step": 0.0
+          },
+          "word_tables": {
+            "onchip_bytes": 0.0,
+            "hbm_bytes": 25780224.0,
+            "hbm_bytes_per_step": 921600.0
+          }
+        },
+        "bound": "compute",
+        "tok_s": 527378.5932844979,
+        "ms_per_token": 0.030338736163621066,
+        "mJ_per_token": 0.2844256515339475
+      },
+      "256": {
+        "streams": 256,
+        "where": "weights in HBM, word tables in HBM, state split between on chip and HBM",
+        "bytes_per_step": 411035242.4033972,
+        "ops_per_step": 1576954109.609375,
+        "state_bytes": 229638144,
+        "kv_bytes": 0,
+        "required_onchip_bytes": 243466880.0,
+        "onchip_budget_bytes": 38340000.0,
+        "placement": {
+          "dense_weights": {
+            "onchip_bytes": 0.0,
+            "hbm_bytes": 180864.0,
+            "hbm_bytes_per_step": 176512.0
+          },
+          "sparse_weights": {
+            "onchip_bytes": 0.0,
+            "hbm_bytes": 13647872.0,
+            "hbm_bytes_per_step": 13516842.403397216
+          },
+          "state": {
+            "onchip_bytes": 38340000.0,
+            "hbm_bytes": 191298144.0,
+            "hbm_bytes_per_step": 382596288.0
+          },
+          "kv": {
+            "onchip_bytes": 0.0,
+            "hbm_bytes": 0.0,
+            "hbm_bytes_per_step": 0.0
+          },
+          "word_tables": {
+            "onchip_bytes": 0.0,
+            "hbm_bytes": 25780224.0,
+            "hbm_bytes_per_step": 14745600.0
+          }
+        },
+        "bound": "memory",
+        "tok_s": 171897.66888810223,
+        "ms_per_token": 1.4892581246499899,
+        "mJ_per_token": 0.8726121824121034
+      }
+    },
+    "fit": {
+      "epoch": 4,
+      "calibration_kl": 0.585366802290082,
+      "budget": {
+        "epochs": 20,
+        "lr": 0.003,
+        "batch": 512,
+        "seed": 0
+      },
+      "calibration_kl_by_epoch": [
+        0.6186368502676487,
+        0.6428844854235649,
+        0.6183423940092325,
+        0.585366802290082,
+        0.6286870799958706,
+        0.6058378238230944,
+        0.5972818043082952,
+        0.5996386893093586,
+        0.606608934700489,
+        0.5983467772603035,
+        0.5972560532391071,
+        0.6043748371303082,
+        0.6040667556226254,
+        0.6058472003787756,
+        0.6021497026085854,
+        0.6146120317280293,
+        0.5980755444616079,
+        0.5855136215686798,
+        0.5874738488346338,
+        0.6015952900052071
+      ],
+      "best_epoch_is_last": false
+    },
+    "excess_nll": 0.5446234149244686,
+    "lambada_drop_pp": 5.8994760333786145,
+    "modeled_savings": {
+      "1": 0.8044239657072658,
+      "16": 0.8044239657072658,
+      "256": 0.399976657550812
+    },
+    "passes_nll": false,
+    "passes": false
   }
 }

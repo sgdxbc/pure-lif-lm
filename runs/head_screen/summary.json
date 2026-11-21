@@ -102,5 +102,54 @@
     },
     "modeled_advantage": false,
     "full_evaluation": true
+  },
+  "nonlinear": {
+    "by_stream": {
+      "1": {
+        "D_per_seed": [
+          -0.03140233018480565,
+          -0.0289947274818827
+        ],
+        "D_mean": -0.030198528833344174,
+        "band": "favors_dense",
+        "credit": false,
+        "dominating_dense_indices_per_seed": [
+          [],
+          []
+        ]
+      },
+      "16": {
+        "D_per_seed": [
+          -0.03140233018480565,
+          -0.0289947274818827
+        ],
+        "D_mean": -0.030198528833344174,
+        "band": "favors_dense",
+        "credit": false,
+        "dominating_dense_indices_per_seed": [
+          [],
+          []
+        ]
+      },
+      "256": {
+        "D_per_seed": [
+          null,
+          null
+        ],
+        "D_mean": null,
+        "band": "outside_dense_bracket",
+        "credit": false,
+        "dominating_dense_indices_per_seed": [
+          [
+            1
+          ],
+          [
+            1
+          ]
+        ]
+      }
+    },
+    "modeled_advantage": false,
+    "full_evaluation": true
   }
 }

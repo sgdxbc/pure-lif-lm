@@ -1,0 +1,8 @@
+xgpi20
+NVIDIA H100 NVL
+all: g45_kd25 (nonlinear)
+/home/s/sung/venv-lif/lib/python3.12/site-packages/torch/nn/functional.py:2954: UserWarning: Mismatch dtype between input and weight: input dtype = c10::BFloat16, weight dtype = float, Cannot dispatch to fused implementation. (Triggered internally at /pytorch/aten/src/ATen/native/layer_norm.cpp:344.)
+  return torch.rms_norm(input, normalized_shape, weight, eps)
+all: g46_kd25s1 (nonlinear)
+all: g48_gla31 (nonlinear)
+all: g48_gla50 (nonlinear)
